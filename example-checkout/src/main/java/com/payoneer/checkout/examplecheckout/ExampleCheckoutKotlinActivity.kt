@@ -12,11 +12,15 @@ package com.payoneer.checkout.examplecheckout
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding
 
 class ExampleCheckoutKotlinActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityExamplecheckoutBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_examplecheckout)
+        binding = ActivityExamplecheckoutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 }

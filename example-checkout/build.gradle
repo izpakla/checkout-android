@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.browserstack.gradle'
+apply plugin: 'kotlin-android'
 
 assemble.dependsOn('lint')
 
@@ -69,6 +70,10 @@ android {
                 outputFileName = "ExampleCheckout-${variant.buildType.name}_${getBranchLabel()}.apk"
             }
         }
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 

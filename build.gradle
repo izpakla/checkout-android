@@ -64,6 +64,7 @@ ext {
     compileSdkVersion = 31
     targetSdkVersion = 31
     lombokVersion = '1.18.22'
+    coreKtx = "1.7.0"
 
     gsonVersion = '2.8.9'
     androidMaterialVersion = '1.4.0'

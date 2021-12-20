@@ -143,7 +143,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
             val code = interaction.code
             val reason = interaction.reason
             val cause = paymentResult.cause
-            val error = cause.message ?: ""
+            val error = cause?.message
 
             binding.apply {
                 labelResultheader.isVisible = true
@@ -151,7 +151,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
                 textResultinfo.setLabel(info)
                 textInteractioncode.setLabel(code)
                 textInteractionreason.setLabel(reason)
-                textPaymenterror.setLabel(error)
+                textPaymenterror.setLabel(error ?: "")
                 textResultcode.setLabel(PaymentActivityResult.resultCodeToString(resultCode))
             }
         }

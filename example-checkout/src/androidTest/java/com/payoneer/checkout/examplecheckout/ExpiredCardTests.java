@@ -40,9 +40,7 @@ public final class ExpiredCardTests extends AbstractTest {
     @Test
     public void testExpiredCard() {
         ListSettings settings = createDefaultListSettings();
-        String networkCode = PaymentNetworkCodes.VISA;
-        AccountInputData inputData = TestDataProvider.expiredAccountInputData();
-        String registrationId = registerAccount(settings, networkCode, inputData);
+        String registrationId = registerExpiredAccount(settings);
 
         settings.setRegistrationId(registrationId);
         enterListUrl(createListUrl(settings));

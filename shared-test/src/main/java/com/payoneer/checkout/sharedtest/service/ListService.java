@@ -85,7 +85,8 @@ public final class ListService {
      * @return registrationId of the user
      * @throws ListServiceException
      */
-    public String registerAccount(ListSettings settings, String networkCode, AccountInputData inputData) throws ListServiceException {
+    public String registerAccount(ListSettings settings, String networkCode, AccountInputData inputData, boolean autoRegistration,
+        boolean allowRecurrence) throws ListServiceException {
         try {
             ListResult listResult = createListResult(settings);
             ApplicableNetwork network = PaymentUtils.getApplicableNetwork(listResult, networkCode);
@@ -96,8 +97,8 @@ public final class ListService {
             Operation operation = Operation.fromApplicableNetwork(network);
             operation.setAccountInputData(inputData);
 
-            operation.putBooleanValue(PaymentInputCategory.REGISTRATION, PaymentInputType.AUTO_REGISTRATION, true);
-            operation.putBooleanValue(PaymentInputCategory.REGISTRATION, PaymentInputType.ALLOW_RECURRENCE, true);
+            operation.putBooleanValue(PaymentInputCategory.REGISTRATION, PaymentInputType.AUTO_REGISTRATION, autoRegistration);
+            operation.putBooleanValue(PaymentInputCategory.REGISTRATION, PaymentInputType.ALLOW_RECURRENCE, allowRecurrence);
 
             OperationResult result = paymentConnection.postOperation(operation);
             String registrationId = PaymentUtils.getCustomerRegistrationId(result);

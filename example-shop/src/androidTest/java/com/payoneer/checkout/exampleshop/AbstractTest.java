@@ -120,6 +120,8 @@ class AbstractTest {
         ListSettings settings = new ListSettings(com.payoneer.checkout.exampleshop.test.R.raw.listtemplate)
             .setAppId(context.getPackageName())
             .setOperationType(operationType);
-        return ListService.createListWithSettings(paymentApiListUrl, merchantCode, merchantPaymentToken, settings);
+
+        ListService service = ListService.createInstance(paymentApiListUrl, merchantCode, merchantPaymentToken);
+        return service.newListSelfUrl(settings);
     }
 }

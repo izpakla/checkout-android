@@ -7,9 +7,6 @@
  */
 package com.payoneer.checkout.examplecheckout;
 
-import static com.payoneer.checkout.examplecheckout.utils.ConstantsKt.CHARGE_PRESET_ACCOUNT_REQUEST_CODE;
-import static com.payoneer.checkout.examplecheckout.utils.ConstantsKt.PAYMENT_REQUEST_CODE;
-
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.payoneer.checkout.model.Interaction;
@@ -39,6 +36,8 @@ import androidx.test.espresso.IdlingResource;
  */
 public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
 
+    private final static int PAYMENT_REQUEST_CODE = 1;
+    private final static int CHARGE_PRESET_ACCOUNT_REQUEST_CODE = 2;
     private PaymentActivityResult activityResult;
     private EditText listInput;
     private View resultLayout;

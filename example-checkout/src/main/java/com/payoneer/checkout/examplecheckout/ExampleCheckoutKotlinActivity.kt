@@ -20,8 +20,6 @@ import androidx.core.view.isVisible
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding
-import com.payoneer.checkout.examplecheckout.utils.CHARGE_PRESET_ACCOUNT_REQUEST_CODE
-import com.payoneer.checkout.examplecheckout.utils.PAYMENT_REQUEST_CODE
 import com.payoneer.checkout.examplecheckout.utils.setLabel
 import com.payoneer.checkout.ui.PaymentActivityResult
 import com.payoneer.checkout.ui.PaymentTheme
@@ -32,6 +30,11 @@ import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
  * This is the main Activity of this example app demonstrating how to use the Checkout SDK in kotlin
  */
 class ExampleCheckoutKotlinActivity : AppCompatActivity() {
+
+    companion object {
+        const val PAYMENT_REQUEST_CODE = 1
+        const val CHARGE_PRESET_ACCOUNT_REQUEST_CODE = 2
+    }
 
     private lateinit var binding: ActivityExamplecheckoutBinding
     private val paymentUI = PaymentUI.getInstance()

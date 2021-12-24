@@ -14,6 +14,7 @@ import static com.payoneer.checkout.sharedtest.checkout.MagicNumbers.CHARGE_PROC
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.InteractionReason;
@@ -22,8 +23,12 @@ import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 
 import androidx.test.espresso.IdlingResource;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 
+@RunWith(AndroidJUnit4.class)
+@LargeTest
 public class CheckoutJavaTests extends CheckoutJavaAbstractTest {
 
     @SuppressWarnings("deprecation")

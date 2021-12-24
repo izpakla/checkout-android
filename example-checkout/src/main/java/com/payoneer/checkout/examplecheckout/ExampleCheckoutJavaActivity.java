@@ -48,8 +48,8 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         binding = ActivityExamplecheckoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.buttonChargePresetAcount.setOnClickListener(v -> openPaymentPage());
-        binding.buttonShowPaymentList.setOnClickListener(v -> chargePresetAccount());
+        binding.buttonShowPaymentList.setOnClickListener(v -> openPaymentPage());
+        binding.buttonChargePresetAcount.setOnClickListener(v -> chargePresetAccount());
     }
 
     @Override

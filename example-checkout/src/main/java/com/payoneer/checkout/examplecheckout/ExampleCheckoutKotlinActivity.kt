@@ -14,13 +14,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding
-import com.payoneer.checkout.examplecheckout.utils.setLabel
 import com.payoneer.checkout.ui.PaymentActivityResult
 import com.payoneer.checkout.ui.PaymentTheme
 import com.payoneer.checkout.ui.PaymentUI
@@ -158,6 +158,11 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
                 textResultcode.setLabel(PaymentActivityResult.resultCodeToString(resultCode))
             }
         }
+    }
+
+    private fun TextView.setLabel(message: String) {
+        val label = if (message.isEmpty()) this.context.getString(R.string.empty_label) else message
+        this.text = label
     }
 
     /**

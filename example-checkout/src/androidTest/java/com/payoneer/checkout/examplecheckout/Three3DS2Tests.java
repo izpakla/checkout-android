@@ -1,9 +1,11 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
- * https://www.payoneer.com
  *
- * This file is open source and available under the MIT license.
- * See the LICENSE file for more information.
+ *  * Copyright (c) 2021 Payoneer Germany GmbH
+ *  * https://www.payoneer.com
+ *  *
+ *  * This file is open source and available under the MIT license.
+ *  * See the LICENSE file for more information.
+ *  *
  */
 
 package com.payoneer.checkout.examplecheckout;
@@ -31,7 +33,7 @@ import androidx.test.rule.ActivityTestRule;
 public final class Three3DS2Tests extends AbstractTest {
 
     @Rule
-    public ActivityTestRule<ExampleCheckoutJavaActivity> rule = new ActivityTestRule<>(ExampleCheckoutJavaActivity.class);
+    public ActivityTestRule<ExampleCheckoutKotlinActivity> rule = new ActivityTestRule<>(ExampleCheckoutKotlinActivity.class);
 
     @Test
     public void test3DS2FrictionlessFlow_success() {

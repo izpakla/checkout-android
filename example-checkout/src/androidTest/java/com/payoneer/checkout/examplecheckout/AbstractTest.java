@@ -52,7 +52,7 @@ public class AbstractTest {
     }
 
     public IdlingResource getResultIdlingResource() {
-        ExampleCheckoutJavaActivity activity = (ExampleCheckoutJavaActivity) ActivityHelper.getCurrentActivity();
+        ExampleCheckoutKotlinActivity activity = (ExampleCheckoutKotlinActivity) ActivityHelper.getCurrentActivity();
         return activity.getResultHandledIdlingResource();
     }
 

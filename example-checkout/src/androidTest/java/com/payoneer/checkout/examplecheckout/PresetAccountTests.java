@@ -1,11 +1,11 @@
 /*
  *
- *   Copyright (c) 2021 Payoneer Germany GmbH
- *   https://www.payoneer.com
- *
- *   This file is open source and available under the MIT license.
- *   See the LICENSE file for more information.
- *
+ *  * Copyright (c) 2021 Payoneer Germany GmbH
+ *  * https://www.payoneer.com
+ *  *
+ *  * This file is open source and available under the MIT license.
+ *  * See the LICENSE file for more information.
+ *  *
  */
 
 package com.payoneer.checkout.examplecheckout;
@@ -33,7 +33,7 @@ public class PresetAccountTests extends AbstractTest {
 
     @Rule
     @SuppressWarnings("deprecation")
-    public ActivityTestRule<ExampleCheckoutJavaActivity> rule = new ActivityTestRule<>(ExampleCheckoutJavaActivity.class);
+    public ActivityTestRule<ExampleCheckoutKotlinActivity> rule = new ActivityTestRule<>(ExampleCheckoutKotlinActivity.class);
 
     @Test
     public void testMissingPresetAccount_ABORT_CLIENTSIDE_ERROR() {

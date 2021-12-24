@@ -31,7 +31,7 @@ import androidx.test.rule.ActivityTestRule;
 public final class Three3DS2Tests extends AbstractTest {
 
     @Rule
-    public ActivityTestRule<ExampleCheckoutActivity> rule = new ActivityTestRule<>(ExampleCheckoutActivity.class);
+    public ActivityTestRule<ExampleCheckoutJavaActivity> rule = new ActivityTestRule<>(ExampleCheckoutJavaActivity.class);
 
     @Test
     public void test3DS2FrictionlessFlow_success() {

@@ -14,7 +14,7 @@
             android:theme="@style/PaymentTheme.Toolbar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ExampleCheckoutActivity"
+            android:name=".ExampleCheckoutJavaActivity"
             android:exported="true"
             android:theme="@style/PaymentTheme.Toolbar"
             android:windowSoftInputMode="stateHidden">

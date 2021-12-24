@@ -37,7 +37,7 @@ import androidx.test.espresso.IdlingResource;
 /**
  * This is the main Activity of this example app demonstrating how to use the Checkout SDK
  */
-public final class ExampleCheckoutActivity extends AppCompatActivity {
+public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
 
     private PaymentActivityResult activityResult;
     private EditText listInput;

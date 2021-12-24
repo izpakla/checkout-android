@@ -29,7 +29,7 @@ public final class ExtraElementTests extends AbstractTest {
     private final static String EXTRAELEMENTS_TOPBOTTOM_CONFIG = "UITests-ExtraElements-TopBottom";
 
     @Rule
-    public ActivityTestRule<ExampleCheckoutActivity> rule = new ActivityTestRule<>(ExampleCheckoutActivity.class);
+    public ActivityTestRule<ExampleCheckoutJavaActivity> rule = new ActivityTestRule<>(ExampleCheckoutJavaActivity.class);
 
     @Test
     public void testGroupedNetworks_topElement_clickLink() {

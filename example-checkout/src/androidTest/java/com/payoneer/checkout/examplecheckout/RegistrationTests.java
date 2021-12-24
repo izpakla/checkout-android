@@ -28,7 +28,7 @@ import androidx.test.rule.ActivityTestRule;
 public final class RegistrationTests extends AbstractTest {
 
     @Rule
-    public ActivityTestRule<ExampleCheckoutActivity> rule = new ActivityTestRule<>(ExampleCheckoutActivity.class);
+    public ActivityTestRule<ExampleCheckoutJavaActivity> rule = new ActivityTestRule<>(ExampleCheckoutJavaActivity.class);
 
     @Test
     public void testRegistration_PROCEED_OK() {

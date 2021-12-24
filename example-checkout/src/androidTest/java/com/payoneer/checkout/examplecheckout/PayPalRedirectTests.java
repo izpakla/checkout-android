@@ -32,7 +32,7 @@ import androidx.test.rule.ActivityTestRule;
 public final class PayPalRedirectTests extends AbstractTest {
 
     @Rule
-    public ActivityTestRule<ExampleCheckoutActivity> rule = new ActivityTestRule<>(ExampleCheckoutActivity.class);
+    public ActivityTestRule<ExampleCheckoutJavaActivity> rule = new ActivityTestRule<>(ExampleCheckoutJavaActivity.class);
 
     @Test
     public void testPayPalRedirect_directCharge_browserClosed() {

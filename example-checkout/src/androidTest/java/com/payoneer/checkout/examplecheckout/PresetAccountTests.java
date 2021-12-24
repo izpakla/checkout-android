@@ -33,7 +33,7 @@ public class PresetAccountTests extends AbstractTest {
 
     @Rule
     @SuppressWarnings("deprecation")
-    public ActivityTestRule<ExampleCheckoutActivity> rule = new ActivityTestRule<>(ExampleCheckoutActivity.class);
+    public ActivityTestRule<ExampleCheckoutJavaActivity> rule = new ActivityTestRule<>(ExampleCheckoutJavaActivity.class);
 
     @Test
     public void testMissingPresetAccount_ABORT_CLIENTSIDE_ERROR() {

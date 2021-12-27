@@ -148,7 +148,7 @@ public final class CardPaymentTests extends AbstractTest {
     public void testRiskDeniedCard_ABORT() {
         IdlingResource resultIdlingResource = getResultIdlingResource();
 
-        enterListUrl(createListUrl());
+        enterListUrl(createDefaultListUrl());
         clickShowPaymentListButton();
 
         int groupCardIndex = 1;

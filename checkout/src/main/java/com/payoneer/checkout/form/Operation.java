@@ -18,6 +18,7 @@ import com.google.gson.JsonSyntaxException;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.PaymentInputType;
 import com.payoneer.checkout.model.AccountInputData;
+import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.BrowserData;
 import com.payoneer.checkout.model.OperationData;
 import com.payoneer.checkout.model.PresetAccount;
@@ -52,9 +53,12 @@ public class Operation implements Parcelable {
         this.paymentMethod = paymentMethod;
         this.operationType = operationType;
         this.url = url;
-
         operationData = new OperationData();
         operationData.setAccount(new AccountInputData());
+    }
+
+    public void setAccountInputData(AccountInputData inputData) {
+        operationData.setAccount(inputData);
     }
 
     public void setBrowserData(BrowserData browserData) {
@@ -168,6 +172,7 @@ public class Operation implements Parcelable {
 
     private void putInputElementStringValue(String name, String value) throws PaymentException {
         AccountInputData account = operationData.getAccount();
+
         switch (name) {
             case PaymentInputType.HOLDER_NAME:
                 account.setHolderName(value);
@@ -274,5 +279,15 @@ public class Operation implements Parcelable {
             throw new IllegalArgumentException("PresetAccount does not contain an operation url");
         }
         return new Operation(account.getCode(), account.getMethod(), account.getOperationType(), url);
+    }
+
+    public static Operation fromApplicableNetwork(ApplicableNetwork network) {
+        Map<String, URL> links = network.getLinks();
+        URL url = links != null ? links.get("operation") : null;
+
+        if (url == null) {
+            throw new IllegalArgumentException("PresetAccount does not contain an operation url");
+        }
+        return new Operation(network.getCode(), network.getMethod(), network.getOperationType(), url);
     }
 }

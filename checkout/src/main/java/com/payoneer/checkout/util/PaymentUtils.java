@@ -16,6 +16,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -142,6 +147,38 @@ public final class PaymentUtils {
             return null;
         }
         return PaymentUtils.format("%1$02d / %2$d", month, (year % 100));
+    }
+
+    public static boolean isCardValid(AccountMask mask, LocalDate dateToday) {
+        int month = mask.getExpiryMonth();
+        int year = mask.getExpiryYear();
+
+        LocalDate cardDate = parseDateFromMask(month, year);
+        return cardDate.isAfter(dateToday) || cardDate.isEqual(dateToday);
+    }
+
+    /**
+     * This method parses the month and year into a date object for checking card expiry.
+     * We set the date as the last day of the month because we need to check for the very
+     * end of the month set as the expiry. An expiration date is considered in the past
+     * if the current system time/date is past the last day on the expiry month and year
+     * (e.g. 09/21 is not expired until 23:59:59 on the 30th of September 2021, but is
+     * expired at 00:00:00 on the 1st of October 2021)
+     *
+     * @param month is expiry month
+     * @param year is expiry year
+     * @return the date object for checking if the card is expired
+     */
+    private static LocalDate parseDateFromMask(int year, int month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        int numDaysInMonth = yearMonth.lengthOfMonth();
+
+        DateTimeFormatter dateFormat = new DateTimeFormatterBuilder()
+            .appendPattern("MM/yyyy")
+            .parseDefaulting(ChronoField.DAY_OF_MONTH, numDaysInMonth)
+            .toFormatter();
+        String dateString = String.format("%d/%d", month, year);
+        return LocalDate.parse(dateString, dateFormat);
     }
 
     /**

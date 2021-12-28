@@ -153,7 +153,7 @@ public final class PaymentUtils {
         int month = mask.getExpiryMonth();
         int year = mask.getExpiryYear();
 
-        LocalDate cardDate = parseDateFromMask(month, year);
+        LocalDate cardDate = parseDateFromMask (year,month);
         return cardDate.isAfter(dateToday) || cardDate.isEqual(dateToday);
     }
 

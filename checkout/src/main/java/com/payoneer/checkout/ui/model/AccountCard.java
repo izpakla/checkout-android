@@ -79,7 +79,7 @@ public final class AccountCard extends PaymentCard {
     }
 
     @Override
-    public boolean isExpired() {
+    public boolean isValid() {
         Instant instantOfNow = Instant.now();
         AccountMask accountMask = account.getMaskedAccount();
         LocalDate dateToday

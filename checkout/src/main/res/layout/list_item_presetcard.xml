@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_preset"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -48,6 +49,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/image_expired_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/pmborder_xxsmall"
+                android:contentDescription="@string/pmpage_contentdescription"
+                android:src="@drawable/ic_error"
+                app:tint="@color/pm_red" />
         </LinearLayout>
 
         <LinearLayout

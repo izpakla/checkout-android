@@ -10,7 +10,6 @@
 
 package com.payoneer.checkout.examplecheckout;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,19 +18,15 @@ import com.payoneer.checkout.sharedtest.service.ListSettings;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public final class ExtraElementTests extends AbstractTest {
+public final class ExtraElementTests extends BaseKotlinTest {
 
     private final static String DIVISION = "ExtraElements";
     private final static String EXTRAELEMENTS_BOTTOM_CONFIG = "UITests-ExtraElements-Bottom";
     private final static String EXTRAELEMENTS_TOP_CONFIG = "UITests-ExtraElements-Top";
     private final static String EXTRAELEMENTS_TOPBOTTOM_CONFIG = "UITests-ExtraElements-TopBottom";
-
-    @Rule
-    public ActivityTestRule<ExampleCheckoutKotlinActivity> rule = new ActivityTestRule<>(ExampleCheckoutKotlinActivity.class);
 
     @Test
     public void testGroupedNetworks_topElement_clickLink() {

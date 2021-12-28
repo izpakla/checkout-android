@@ -10,7 +10,6 @@
 
 package com.payoneer.checkout.examplecheckout;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,15 +24,10 @@ import com.payoneer.checkout.sharedtest.service.ListSettings;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class PresetAccountTests extends AbstractTest {
-
-    @Rule
-    @SuppressWarnings("deprecation")
-    public ActivityTestRule<ExampleCheckoutKotlinActivity> rule = new ActivityTestRule<>(ExampleCheckoutKotlinActivity.class);
+public class PresetAccountTests extends BaseKotlinTest {
 
     @Test
     public void testMissingPresetAccount_ABORT_CLIENTSIDE_ERROR() {

@@ -10,7 +10,6 @@
 
 package com.payoneer.checkout.examplecheckout;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,14 +22,10 @@ import com.payoneer.checkout.sharedtest.service.ListSettings;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public final class RegistrationTests extends AbstractTest {
-
-    @Rule
-    public ActivityTestRule<ExampleCheckoutKotlinActivity> rule = new ActivityTestRule<>(ExampleCheckoutKotlinActivity.class);
+public final class RegistrationTests extends BaseKotlinTest {
 
     @Test
     public void testRegistration_PROCEED_OK() {

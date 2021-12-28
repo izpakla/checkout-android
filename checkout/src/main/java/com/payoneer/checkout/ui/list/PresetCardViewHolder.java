@@ -17,6 +17,7 @@ import com.payoneer.checkout.util.PaymentUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,12 +29,14 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
     private final TextView titleView;
     private final TextView subtitleView;
     private final MaterialCardView card;
+    private final ImageView expiredErrowView;
 
     private PresetCardViewHolder(ListAdapter adapter, View parent, PresetCard presetCard) {
         super(adapter, parent, presetCard);
         titleView = parent.findViewById(R.id.text_title);
         subtitleView = parent.findViewById(R.id.text_subtitle);
         card = parent.findViewById(R.id.card_preset);
+        this.expiredErrowView = parent.findViewById(R.id.image_expired_card);
         card.setCheckable(true);
 
         addExtraElementWidgets(presetCard.getTopExtraElements());
@@ -58,6 +61,9 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
 
         for (FormWidget widget : widgets.values()) {
             bindFormWidget(widget);
+        }
+        if (!card.isValid()) {
+            expiredErrowView.setVisibility(View.VISIBLE);
         }
     }
 

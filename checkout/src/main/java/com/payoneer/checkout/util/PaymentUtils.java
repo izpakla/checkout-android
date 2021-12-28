@@ -177,7 +177,12 @@ public final class PaymentUtils {
             .appendPattern("MM/yyyy")
             .parseDefaulting(ChronoField.DAY_OF_MONTH, numDaysInMonth)
             .toFormatter();
-        String dateString = String.format("%d/%d", month, year);
+        String dateString;
+        if (String.valueOf(month).length() < 2) {
+            dateString = String.format("%02d/%d", month, year);
+        } else {
+            dateString = String.format("%d/%d", month, year);
+        }
         return LocalDate.parse(dateString, dateFormat);
     }
 

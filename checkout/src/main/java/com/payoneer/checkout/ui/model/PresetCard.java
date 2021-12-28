@@ -98,7 +98,7 @@ public final class PresetCard extends PaymentCard {
     }
 
     @Override
-    public boolean isCardValid() {
+    public boolean isExpired() {
         Instant instantOfNow = Instant.now();
         AccountMask accountMask = account.getMaskedAccount();
         LocalDate dateToday

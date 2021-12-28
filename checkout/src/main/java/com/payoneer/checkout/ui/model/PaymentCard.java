@@ -344,5 +344,5 @@ public abstract class PaymentCard {
      *
      * @return whether the card is valid or not
      */
-    public abstract boolean isCardValid();
+    public abstract boolean isExpired();
 }

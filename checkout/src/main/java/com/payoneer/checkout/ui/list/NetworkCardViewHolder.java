@@ -58,7 +58,7 @@ final class NetworkCardViewHolder extends PaymentCardViewHolder {
 
     void onBind() {
         NetworkCard networkCard = (NetworkCard) paymentCard;
-        bindLabel(titleView, networkCard.getTitle(), false);
+        bindLabel(titleView, networkCard.getTitle(), false, networkCard.isExpired());
 
         if (networkCard.getPaymentNetworkCount() == 1) {
             bindCardLogo(networkCard.getNetworkCode(), networkCard.getLogoLink());

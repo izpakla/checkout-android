@@ -22,7 +22,6 @@ import org.junit.Before;
 
 import com.payoneer.checkout.sharedtest.service.ListService;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
-import com.payoneer.checkout.sharedtest.view.ActivityHelper;
 import com.payoneer.checkout.sharedtest.view.UiDeviceHelper;
 import com.payoneer.checkout.ui.page.ChargePaymentActivity;
 import com.payoneer.checkout.ui.page.PaymentListActivity;
@@ -33,7 +32,7 @@ import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-public class AbstractTest {
+public abstract class BaseTest {
 
     public final static String CHROME_CLOSE_BUTTON = "com.android.chrome:id/close_button";
 
@@ -47,13 +46,10 @@ public class AbstractTest {
         Intents.release();
     }
 
+    protected abstract IdlingResource getResultIdlingResource();
+
     protected void enterListUrl(String listUrl) {
         onView(withId(R.id.input_listurl)).perform(typeText(listUrl));
-    }
-
-    public IdlingResource getResultIdlingResource() {
-        ExampleCheckoutKotlinActivity activity = (ExampleCheckoutKotlinActivity) ActivityHelper.getCurrentActivity();
-        return activity.getResultHandledIdlingResource();
     }
 
     protected void matchResultInteraction(String interactionCode, String interactionReason) {

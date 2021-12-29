@@ -10,14 +10,20 @@
 
 package com.payoneer.checkout.examplecheckout;
 
+import org.junit.Rule;
+
 import com.payoneer.checkout.sharedtest.view.ActivityHelper;
 
 import androidx.test.espresso.IdlingResource;
+import androidx.test.rule.ActivityTestRule;
 
-public class CheckoutJavaAbstractTest extends AbstractTest {
+public abstract class BaseJavaTest extends BaseTest {
 
-    @Override
-    public IdlingResource getResultIdlingResource() {
+    @SuppressWarnings("deprecation")
+    @Rule
+    public ActivityTestRule<ExampleCheckoutJavaActivity> rule = new ActivityTestRule<>(ExampleCheckoutJavaActivity.class);
+
+    protected IdlingResource getResultIdlingResource() {
         ExampleCheckoutJavaActivity activity = (ExampleCheckoutJavaActivity) ActivityHelper.getCurrentActivity();
         return activity.getResultHandledIdlingResource();
     }

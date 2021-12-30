@@ -1,5 +1,6 @@
 <resources>
     <string name="pmpage_contentdescription">PaymentImage</string>
+    <string name="expired_contentdescription">Expired card warning</string>
 
     <string name="error_connection_title">Oops!</string>
     <string name="error_connection_text">There was a problem with your internet connection</string>
@@ -18,6 +19,4 @@
     <string name="list_header_accounts_update">Edit your payment methods</string>
     <string name="list_header_networks_update">Add a payment method</string>
     <string name="networks_registration_label">I authorize saving this payment method for future purchases</string>
-
-
 </resources>

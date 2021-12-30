@@ -44,6 +44,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -340,6 +341,15 @@ public abstract class PaymentCardViewHolder extends RecyclerView.ViewHolder {
         int visibility = (hideWhenEmpty && TextUtils.isEmpty(label)) ? View.GONE : View.VISIBLE;
         view.setVisibility(visibility);
         view.setText(label);
+    }
+
+    void bindLabel(TextView view, String label, boolean hideWhenEmpty, boolean isValid) {
+        int visibility = (hideWhenEmpty && TextUtils.isEmpty(label)) ? View.GONE : View.VISIBLE;
+        view.setVisibility(visibility);
+        view.setText(label);
+        if (!isValid) {
+            view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.pm_red));
+        }
     }
 
     void bindCardLogo(int logoResId) {

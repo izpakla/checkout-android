@@ -11,6 +11,10 @@ package com.payoneer.checkout.ui.model;
 import static com.payoneer.checkout.ui.model.PaymentSession.LINK_LANGUAGE;
 
 import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 
@@ -72,6 +76,15 @@ public final class AccountCard extends PaymentCard {
     public String getSubtitle() {
         AccountMask accountMask = account.getMaskedAccount();
         return accountMask != null ? PaymentUtils.getExpiryDateString(accountMask) : null;
+    }
+
+    @Override
+    public boolean isValid() {
+        Instant instantOfNow = Instant.now();
+        AccountMask accountMask = account.getMaskedAccount();
+        LocalDate dateToday
+            = LocalDateTime.ofInstant(instantOfNow, ZoneOffset.systemDefault()).toLocalDate();
+        return accountMask != null && PaymentUtils.isCardValid(accountMask, dateToday);
     }
 
     @Override

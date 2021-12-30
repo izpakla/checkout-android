@@ -29,7 +29,7 @@ import android.text.TextUtils;
  */
 public abstract class PaymentCard {
 
-    private ExtraElements extraElements;
+    private final ExtraElements extraElements;
     private boolean checkable;
     private boolean hideInputForm;
     private boolean disabled;
@@ -338,4 +338,11 @@ public abstract class PaymentCard {
      * @return list of InputElements, this must not return null
      */
     public abstract List<InputElement> getInputElements();
+
+    /**
+     * Check card validity
+     *
+     * @return whether the card is valid or not
+     */
+    public abstract boolean isValid();
 }

@@ -51,12 +51,13 @@
                     android:textColor="?attr/colorOnSurface" />
             </LinearLayout>
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/image_expired_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/pmborder_xxsmall"
-                android:contentDescription="@string/pmpage_contentdescription"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/expired_contentdescription"
                 android:src="@drawable/ic_error"
                 android:visibility="gone"
                 app:tint="@color/pm_red" />

@@ -1,9 +1,11 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
- * https://www.payoneer.com
  *
- * This file is open source and available under the MIT license.
- * See the LICENSE file for more information.
+ *  * Copyright (c) 2021 Payoneer Germany GmbH
+ *  * https://www.payoneer.com
+ *  *
+ *  * This file is open source and available under the MIT license.
+ *  * See the LICENSE file for more information.
+ *  *
  */
 
 package com.payoneer.checkout.examplecheckout;
@@ -11,7 +13,6 @@ package com.payoneer.checkout.examplecheckout;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,14 +26,10 @@ import com.payoneer.checkout.ui.page.PaymentListActivity;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public final class PayPalRedirectTests extends AbstractTest {
-
-    @Rule
-    public ActivityTestRule<ExampleCheckoutActivity> rule = new ActivityTestRule<>(ExampleCheckoutActivity.class);
+public final class PayPalRedirectTests extends BaseKotlinTest {
 
     @Test
     public void testPayPalRedirect_directCharge_browserClosed() {

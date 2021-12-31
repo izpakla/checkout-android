@@ -1,16 +1,15 @@
 /*
  *
- *   Copyright (c) 2021 Payoneer Germany GmbH
- *   https://www.payoneer.com
- *
- *   This file is open source and available under the MIT license.
- *   See the LICENSE file for more information.
- *
+ *  * Copyright (c) 2021 Payoneer Germany GmbH
+ *  * https://www.payoneer.com
+ *  *
+ *  * This file is open source and available under the MIT license.
+ *  * See the LICENSE file for more information.
+ *  *
  */
 
 package com.payoneer.checkout.examplecheckout;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,15 +24,10 @@ import com.payoneer.checkout.sharedtest.service.ListSettings;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class PresetAccountTests extends AbstractTest {
-
-    @Rule
-    @SuppressWarnings("deprecation")
-    public ActivityTestRule<ExampleCheckoutActivity> rule = new ActivityTestRule<>(ExampleCheckoutActivity.class);
+public class PresetAccountTests extends BaseKotlinTest {
 
     @Test
     public void testMissingPresetAccount_ABORT_CLIENTSIDE_ERROR() {

@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
- * https://www.payoneer.com
  *
- * This file is open source and available under the MIT license.
- * See the LICENSE file for more information.
+ *  * Copyright (c) 2021 Payoneer Germany GmbH
+ *  * https://www.payoneer.com
+ *  *
+ *  * This file is open source and available under the MIT license.
+ *  * See the LICENSE file for more information.
+ *  *
  */
 
 package com.payoneer.checkout.examplecheckout;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,19 +18,15 @@ import com.payoneer.checkout.sharedtest.service.ListSettings;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public final class ExtraElementTests extends AbstractTest {
+public final class ExtraElementTests extends BaseKotlinTest {
 
     private final static String DIVISION = "ExtraElements";
     private final static String EXTRAELEMENTS_BOTTOM_CONFIG = "UITests-ExtraElements-Bottom";
     private final static String EXTRAELEMENTS_TOP_CONFIG = "UITests-ExtraElements-Top";
     private final static String EXTRAELEMENTS_TOPBOTTOM_CONFIG = "UITests-ExtraElements-TopBottom";
-
-    @Rule
-    public ActivityTestRule<ExampleCheckoutActivity> rule = new ActivityTestRule<>(ExampleCheckoutActivity.class);
 
     @Test
     public void testGroupedNetworks_topElement_clickLink() {

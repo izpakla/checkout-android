@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.browserstack.gradle'
+apply plugin: 'kotlin-android'
 
 assemble.dependsOn('lint')
 
@@ -70,12 +71,17 @@ android {
             }
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.google.android.material:material:${rootProject.androidMaterialVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
+    implementation "androidx.core:core-ktx:${rootProject.coreKtx}"
     implementation project(":checkout")
 
     androidTestImplementation project(":shared-test")

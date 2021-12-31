@@ -22,7 +22,6 @@ import org.junit.Before;
 
 import com.payoneer.checkout.sharedtest.service.ListService;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
-import com.payoneer.checkout.sharedtest.view.ActivityHelper;
 import com.payoneer.checkout.sharedtest.view.UiDeviceHelper;
 import com.payoneer.checkout.ui.page.ChargePaymentActivity;
 import com.payoneer.checkout.ui.page.PaymentListActivity;
@@ -33,7 +32,7 @@ import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-class AbstractTest {
+public abstract class BaseTest {
 
     public final static String CHROME_CLOSE_BUTTON = "com.android.chrome:id/close_button";
 
@@ -47,69 +46,66 @@ class AbstractTest {
         Intents.release();
     }
 
-    void enterListUrl(String listUrl) {
+    protected abstract IdlingResource getResultIdlingResource();
+
+    protected void enterListUrl(String listUrl) {
         onView(withId(R.id.input_listurl)).perform(typeText(listUrl));
     }
 
-    IdlingResource getResultIdlingResource() {
-        ExampleCheckoutActivity activity = (ExampleCheckoutActivity) ActivityHelper.getCurrentActivity();
-        return activity.getResultHandledIdlingResource();
-    }
-
-    void matchResultInteraction(String interactionCode, String interactionReason) {
+    protected void matchResultInteraction(String interactionCode, String interactionReason) {
         onView(withId(R.id.text_interactioncode)).check(matches(withText(interactionCode)));
         onView(withId(R.id.text_interactionreason)).check(matches(withText(interactionReason)));
     }
 
-    ListSettings createDefaultListSettings() {
+    protected ListSettings createDefaultListSettings() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         ListSettings settings = new ListSettings(com.payoneer.checkout.examplecheckout.test.R.raw.listtemplate);
         return settings.setAppId(context.getPackageName());
     }
 
-    String createListUrl() {
+    protected String createListUrl() {
         return createListUrl(createDefaultListSettings());
     }
 
-    String createListUrl(ListSettings settings) {
+    protected String createListUrl(ListSettings settings) {
         String paymentApiListUrl = BuildConfig.paymentApiListUrl;
         String merchantCode = BuildConfig.merchantCode;
         String merchantPaymentToken = BuildConfig.merchantPaymentToken;
         return ListService.createListWithSettings(paymentApiListUrl, merchantCode, merchantPaymentToken, settings);
     }
 
-    void clickShowPaymentListButton() {
+    protected void clickShowPaymentListButton() {
         onView(withId(R.id.button_show_payment_list)).perform(click());
         intended(hasComponent(PaymentListActivity.class.getName()));
     }
 
-    void clickChargePresetAccountButton() {
+    protected void clickChargePresetAccountButton() {
         onView(withId(R.id.button_charge_preset_acount)).perform(click());
         intended(hasComponent(ChargePaymentActivity.class.getName()));
     }
 
-    void register(IdlingResource resource) {
+    protected void register(IdlingResource resource) {
         IdlingRegistry.getInstance().register(resource);
     }
 
-    void unregister(IdlingResource resource) {
+    protected void unregister(IdlingResource resource) {
         IdlingRegistry.getInstance().unregister(resource);
     }
 
-    void clickDeviceCollectionPagePageButton(String buttonId) {
+    protected void clickDeviceCollectionPagePageButton(String buttonId) {
         clickBrowserPageButton("simulation of Device Data Collection (DDC) page", buttonId);
     }
 
-    void clickCustomerDecisionPageButton(String buttonId) {
+    protected void clickCustomerDecisionPageButton(String buttonId) {
         clickBrowserPageButton("customer decision page", buttonId);
     }
 
-    void clickBrowserPageButton(String textOnPage, String buttonId) {
+    protected void clickBrowserPageButton(String textOnPage, String buttonId) {
         UiDeviceHelper.checkUiObjectContainsText(textOnPage);
         UiDeviceHelper.clickUiObjectByResourceName(buttonId);
     }
 
-    void waitForAppRelaunch() {
+    protected void waitForAppRelaunch() {
         UiDeviceHelper.waitUiObjectHasPackage("com.payoneer.checkout.examplecheckout");
     }
 }

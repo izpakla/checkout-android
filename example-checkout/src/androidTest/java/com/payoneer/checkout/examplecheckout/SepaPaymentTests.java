@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
- * https://www.payoneer.com
  *
- * This file is open source and available under the MIT license.
- * See the LICENSE file for more information.
+ *  * Copyright (c) 2021 Payoneer Germany GmbH
+ *  * https://www.payoneer.com
+ *  *
+ *  * This file is open source and available under the MIT license.
+ *  * See the LICENSE file for more information.
+ *  *
  */
 
 package com.payoneer.checkout.examplecheckout;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,14 +21,10 @@ import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public final class SepaPaymentTests extends AbstractTest {
-
-    @Rule
-    public ActivityTestRule<ExampleCheckoutActivity> rule = new ActivityTestRule<>(ExampleCheckoutActivity.class);
+public final class SepaPaymentTests extends BaseKotlinTest {
 
     @Test
     public void testSepa_PROCEED_SCHEDULED() {

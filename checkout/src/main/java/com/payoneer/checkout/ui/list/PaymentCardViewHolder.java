@@ -346,11 +346,11 @@ public abstract class PaymentCardViewHolder extends RecyclerView.ViewHolder {
         view.setText(label);
     }
 
-    void bindLabel(TextView view, String label, boolean hideWhenEmpty, boolean isValid) {
+    void bindLabel(TextView view, String label, boolean hideWhenEmpty, boolean isExpired) {
         int visibility = (hideWhenEmpty && TextUtils.isEmpty(label)) ? View.GONE : View.VISIBLE;
         view.setVisibility(visibility);
         view.setText(label);
-        if (!isValid) {
+        if (isExpired) {
             setTextColor(view, R.attr.colorError);
         }
     }

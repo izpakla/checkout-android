@@ -72,13 +72,13 @@ public final class AccountCardViewHolder extends PaymentCardViewHolder {
         cardView.setCheckable(card.isCheckable());
 
         bindLabel(titleView, card.getTitle(), false);
-        bindLabel(subtitleView, card.getSubtitle(), true, card.isValid());
+        bindLabel(subtitleView, card.getSubtitle(), true, card.isExpired());
         bindCardLogo(card.getNetworkCode(), card.getLogoLink());
 
         for (FormWidget widget : widgets.values()) {
             bindFormWidget(widget);
         }
-        if (!card.isValid()) {
+        if (card.isExpired()) {
             expiredErrowView.setVisibility(View.VISIBLE);
         }
         bindAccountIcon(card.getAccountIcon());

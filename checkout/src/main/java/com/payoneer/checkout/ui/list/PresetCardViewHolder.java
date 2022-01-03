@@ -56,13 +56,13 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
         PresetCard card = (PresetCard) paymentCard;
 
         bindLabel(titleView, card.getTitle(), false);
-        bindLabel(subtitleView, card.getSubtitle(), true, card.isValid());
+        bindLabel(subtitleView, card.getSubtitle(), true, card.isExpired());
         bindCardLogo(paymentCard.getNetworkCode(), card.getLogoLink());
 
         for (FormWidget widget : widgets.values()) {
             bindFormWidget(widget);
         }
-        if (!card.isValid()) {
+        if (card.isExpired()) {
             expiredErrowView.setVisibility(View.VISIBLE);
         }
     }

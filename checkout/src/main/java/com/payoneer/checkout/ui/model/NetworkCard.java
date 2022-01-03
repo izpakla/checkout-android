@@ -95,7 +95,7 @@ public final class NetworkCard extends PaymentCard {
     }
 
     @Override
-    public boolean isValid() {
+    public boolean isExpired() {
         return false;
     }
 

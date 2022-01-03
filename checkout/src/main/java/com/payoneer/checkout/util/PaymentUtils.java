@@ -149,12 +149,12 @@ public final class PaymentUtils {
         return PaymentUtils.format("%1$02d / %2$d", month, (year % 100));
     }
 
-    public static boolean isCardValid(AccountMask mask, LocalDate dateToday) {
+    public static boolean isExpired(AccountMask mask, LocalDate dateToday) {
         int month = mask.getExpiryMonth();
         int year = mask.getExpiryYear();
 
-        LocalDate cardDate = parseDateFromMask (year,month);
-        return cardDate.isAfter(dateToday) || cardDate.isEqual(dateToday);
+        LocalDate cardDate = parseDateFromMask(year, month);
+        return cardDate.isBefore(dateToday);
     }
 
     /**

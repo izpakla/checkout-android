@@ -37,7 +37,10 @@ import com.payoneer.checkout.ui.widget.VerificationCodeWidget;
 import com.payoneer.checkout.util.NetworkLogoLoader;
 import com.payoneer.checkout.util.PaymentUtils;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -348,7 +351,7 @@ public abstract class PaymentCardViewHolder extends RecyclerView.ViewHolder {
         view.setVisibility(visibility);
         view.setText(label);
         if (!isValid) {
-            view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.pm_red));
+            setTextColor(view, R.attr.colorError);
         }
     }
 
@@ -373,5 +376,16 @@ public abstract class PaymentCardViewHolder extends RecyclerView.ViewHolder {
                 break;
             }
         }
+    }
+
+    private void setTextColor(TextView view, int tintResId) {
+        Context context = view.getContext();
+        int[] attrs = { tintResId };
+        TypedArray ta = context.obtainStyledAttributes(attrs);
+        TypedValue tv = ta.peekValue(0);
+
+        int colorResId = tv != null ? tv.resourceId : tintResId;
+        ta.recycle();
+        view.setTextColor(ContextCompat.getColor(context, colorResId));
     }
 }

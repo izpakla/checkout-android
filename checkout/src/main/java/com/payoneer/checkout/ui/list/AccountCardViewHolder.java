@@ -40,7 +40,7 @@ public final class AccountCardViewHolder extends PaymentCardViewHolder {
         super(listAdapter, parent, accountCard);
         this.titleView = parent.findViewById(R.id.text_title);
         this.subtitleView = parent.findViewById(R.id.text_subtitle);
-        this.expiredErrowView = parent.findViewById(R.id.image_expired_card);
+        this.expiredErrowView = parent.findViewById(R.id.image_expired_icon);
 
         iconView = new IconView(parent);
         iconView.setListener(new IconView.IconClickListener() {
@@ -48,6 +48,9 @@ public final class AccountCardViewHolder extends PaymentCardViewHolder {
             public void onIconClick(int index) {
                 handleIconClicked(index);
             }
+        });
+        expiredErrowView.setOnClickListener(icon -> {
+            // Handle click here
         });
         cardView = parent.findViewById(R.id.card_account);
 
@@ -79,7 +82,7 @@ public final class AccountCardViewHolder extends PaymentCardViewHolder {
             bindFormWidget(widget);
         }
         if (card.isExpired()) {
-            expiredErrowView.setVisibility(View.VISIBLE);
+            //  expiredErrowView.setVisibility(View.VISIBLE);
         }
         bindAccountIcon(card.getAccountIcon());
     }

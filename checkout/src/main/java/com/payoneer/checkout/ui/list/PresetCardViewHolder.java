@@ -36,8 +36,12 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
         titleView = parent.findViewById(R.id.text_title);
         subtitleView = parent.findViewById(R.id.text_subtitle);
         card = parent.findViewById(R.id.card_preset);
-        this.expiredErrowView = parent.findViewById(R.id.image_expired_card);
+        this.expiredErrowView = parent.findViewById(R.id.image_expired_icon);
         card.setCheckable(true);
+
+        expiredErrowView.setOnClickListener(icon -> {
+            // Handle click here
+        });
 
         addExtraElementWidgets(presetCard.getTopExtraElements());
         addExtraElementWidgets(presetCard.getTopExtraElements());

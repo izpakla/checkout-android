@@ -17,6 +17,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +99,51 @@ public class PaymentUtilsTest {
     }
 
     @Test
+    public void given_past_date_return_expired_true() {
+        // Given
+        AccountMask accountMask = new AccountMask();
+        accountMask.setExpiryYear(2021);
+        accountMask.setExpiryMonth(12);
+        LocalDate fixedDate = provideFixedTimeForTesting();
+
+        // When checking if the card is expired
+        boolean isExpired = PaymentUtils.isExpired(accountMask, fixedDate);
+
+        // Should be true
+        assertTrue(isExpired);
+    }
+
+    @Test
+    public void given_future_date_return_expired_false() {
+        // Given
+        AccountMask accountMask = new AccountMask();
+        accountMask.setExpiryYear(2022);
+        accountMask.setExpiryMonth(12);
+        LocalDate fixedDate = provideFixedTimeForTesting();
+
+        // When checking if the card is expired
+        boolean isExpired = PaymentUtils.isExpired(accountMask, fixedDate);
+
+        // Should be false
+        assertFalse(isExpired);
+    }
+
+    @Test
+    public void given_current_date_return_expired_false() {
+        // Given
+        AccountMask accountMask = new AccountMask();
+        accountMask.setExpiryYear(2022);
+        accountMask.setExpiryMonth(1);
+        LocalDate fixedDate = provideFixedTimeForTesting();
+
+        // When checking if the card is expired
+        boolean isExpired = PaymentUtils.isExpired(accountMask, fixedDate);
+
+        // Should be false
+        assertFalse(isExpired);
+    }
+
+    @Test
     public void isCardPaymentMethod() {
         assertTrue(PaymentUtils.isCardPaymentMethod(CREDIT_CARD));
         assertTrue(PaymentUtils.isCardPaymentMethod(DEBIT_CARD));
@@ -121,5 +174,19 @@ public class PaymentUtilsTest {
     public void readRawResource_contains_resource() throws IOException {
         Resources res = ApplicationProvider.getApplicationContext().getResources();
         assertNotNull(PaymentUtils.readRawResource(res, R.raw.groups));
+    }
+
+    private static LocalDate provideFixedTimeForTesting() {
+        ZoneId zoneId = ZoneId.systemDefault();
+
+        LocalDate localDate = LocalDate.of(2022, 1, 31);
+        LocalTime localTime = LocalTime.MAX;
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDate, localTime, zoneId);
+
+        Instant instant = zonedDateTime.toInstant();
+        Clock clock = Clock.fixed(instant, zoneId);
+
+        Instant timeNow = Instant.now(clock);
+        return LocalDateTime.ofInstant(timeNow, ZoneOffset.systemDefault()).toLocalDate();
     }
 }

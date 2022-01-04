@@ -66,7 +66,10 @@ class CardEventHandler implements WidgetPresenter {
     }
 
     public void onExpiredIconClicked() {
-        getCardListener().onExpiredIconClicked();
+        if (holder.hasValidPosition()) {
+            PaymentCard card = holder.getPaymentCard();
+            getCardListener().onExpiredIconClicked(card.getNetworkCode());
+        }
     }
 
     @Override

@@ -50,7 +50,7 @@ interface PaymentCardListener {
     /**
      * Notify this listener that the expired hint icon is clicked
      */
-    void onExpiredIconClicked();
+    void onExpiredIconClicked(String networkCode);
 
     /**
      * Notify that an action is required for the paymentCard

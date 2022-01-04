@@ -58,8 +58,8 @@ public final class LocalizationKey {
     public final static String LABEL_TITLE = "title";
     public final static String LABEL_TEXT = "text";
 
-    public final static String DIALOG_EXPIRED_TITLE = "accounts.expired.badge.title";
-    public static final String DIALOG_EXPIRED_TEXT = "accounts.expired.badge.text";
+    public final static String DIALOG_EXPIRED_BADGE_TITLE = "accounts.expired.badge.title";
+    public static final String DIALOG_EXPIRED_BADGE_TEXT = "accounts.expired.badge.text";
 
     public static String errorKey(String error) {
         return "error." + error;

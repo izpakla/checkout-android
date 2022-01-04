@@ -138,8 +138,8 @@ public final class PaymentList {
             }
 
             @Override
-            public void onExpiredIconClicked() {
-                handleExpiredIconClicked();
+            public void onExpiredIconClicked(String networkCode) {
+                handleExpiredIconClicked(networkCode);
             }
         };
     }
@@ -169,8 +169,8 @@ public final class PaymentList {
         listener.onHintClicked(networkCode, type);
     }
 
-    private void handleExpiredIconClicked() {
-        listener.onExpiredIconClicked();
+    private void handleExpiredIconClicked(String networkCode) {
+        listener.onExpiredIconClicked(networkCode);
     }
 
     private void handleActionClicked(PaymentCard paymentCard, Map<String, FormWidget> widgets) {

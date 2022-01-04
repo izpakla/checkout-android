@@ -186,8 +186,8 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public void onExpiredIconClicked() {
-        view.showExpiredDialog();
+    public void onExpiredIconClicked(String networkCode) {
+        view.showExpiredDialog(networkCode);
     }
 
     @Override

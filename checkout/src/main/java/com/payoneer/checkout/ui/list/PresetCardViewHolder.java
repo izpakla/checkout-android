@@ -40,7 +40,7 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
         card.setCheckable(true);
 
         expiredErrowView.setOnClickListener(icon -> {
-            // Handle click here
+            cardHandler.onExpiredIconClicked();
         });
 
         addExtraElementWidgets(presetCard.getTopExtraElements());

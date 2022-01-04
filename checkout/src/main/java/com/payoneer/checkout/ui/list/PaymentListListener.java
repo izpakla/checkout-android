@@ -40,4 +40,9 @@ public interface PaymentListListener {
      * @param type of the input field
      */
     void onHintClicked(String code, String type);
+
+    /**
+     * Notify that the user clicked the expired hint button in the payment card.
+     */
+    void onExpiredIconClicked();
 }

@@ -65,6 +65,10 @@ class CardEventHandler implements WidgetPresenter {
         }
     }
 
+    public void onExpiredIconClicked() {
+        getCardListener().onExpiredIconClicked();
+    }
+
     @Override
     public void hideKeyboard() {
         if (holder.hasValidPosition()) {

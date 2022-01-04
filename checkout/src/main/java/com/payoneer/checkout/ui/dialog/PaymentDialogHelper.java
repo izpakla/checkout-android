@@ -16,6 +16,8 @@ import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_DELETE;
 import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_OK;
 import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_REFRESH;
 import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_RETRY;
+import static com.payoneer.checkout.localization.LocalizationKey.DIALOG_EXPIRED_TEXT;
+import static com.payoneer.checkout.localization.LocalizationKey.DIALOG_EXPIRED_TITLE;
 import static com.payoneer.checkout.localization.LocalizationKey.ERROR_CONNECTION_TEXT;
 import static com.payoneer.checkout.localization.LocalizationKey.ERROR_CONNECTION_TITLE;
 import static com.payoneer.checkout.localization.LocalizationKey.ERROR_DEFAULT_TEXT;
@@ -61,6 +63,16 @@ public class PaymentDialogHelper {
         dialog.setTag("dialog_hint");
         dialog.setPositiveButton(Localization.translate(BUTTON_OK));
         dialog.setListener(listener);
+        return dialog;
+    }
+
+    public static PaymentDialogFragment createExpiredDialog() {
+        PaymentDialogFragment dialog = new PaymentDialogFragment();
+        dialog.setTitle(Localization.translate(DIALOG_EXPIRED_TITLE));
+        dialog.setMessage(Localization.translate(DIALOG_EXPIRED_TEXT));
+        dialog.setTag("dialog_expired_icon");
+        dialog.setPositiveButton(Localization.translate(BUTTON_OK));
+        dialog.setListener(null);
         return dialog;
     }
 

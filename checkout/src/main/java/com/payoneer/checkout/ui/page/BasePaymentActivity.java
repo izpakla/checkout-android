@@ -107,6 +107,12 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     }
 
     @Override
+    public void showExpiredDialog() {
+        PaymentDialogFragment dialog = PaymentDialogHelper.createExpiredDialog();
+        showPaymentDialog(dialog);
+    }
+
+    @Override
     public Activity getActivity() {
         return this;
     }

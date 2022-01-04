@@ -95,15 +95,12 @@ public class PaymentUtilsTest {
         elements.add(month);
         elements.add(year);
         assertTrue(PaymentUtils.containsExpiryDate(elements));
-
     }
 
     @Test
     public void given_past_date_return_expired_true() {
         // Given
-        AccountMask accountMask = new AccountMask();
-        accountMask.setExpiryYear(2021);
-        accountMask.setExpiryMonth(12);
+        AccountMask accountMask = getAccountMask(2021, 12);
         LocalDate fixedDate = provideFixedTimeForTesting();
 
         // When checking if the card is expired
@@ -116,9 +113,7 @@ public class PaymentUtilsTest {
     @Test
     public void given_future_date_return_expired_false() {
         // Given
-        AccountMask accountMask = new AccountMask();
-        accountMask.setExpiryYear(2022);
-        accountMask.setExpiryMonth(12);
+        AccountMask accountMask = getAccountMask(2022, 12);
         LocalDate fixedDate = provideFixedTimeForTesting();
 
         // When checking if the card is expired
@@ -131,9 +126,7 @@ public class PaymentUtilsTest {
     @Test
     public void given_current_date_return_expired_false() {
         // Given
-        AccountMask accountMask = new AccountMask();
-        accountMask.setExpiryYear(2022);
-        accountMask.setExpiryMonth(1);
+        AccountMask accountMask = getAccountMask(2022, 1);
         LocalDate fixedDate = provideFixedTimeForTesting();
 
         // When checking if the card is expired
@@ -174,6 +167,13 @@ public class PaymentUtilsTest {
     public void readRawResource_contains_resource() throws IOException {
         Resources res = ApplicationProvider.getApplicationContext().getResources();
         assertNotNull(PaymentUtils.readRawResource(res, R.raw.groups));
+    }
+
+    private AccountMask getAccountMask(final int year, final int month) {
+        AccountMask accountMask = new AccountMask();
+        accountMask.setExpiryYear(year);
+        accountMask.setExpiryMonth(month);
+        return accountMask;
     }
 
     private static LocalDate provideFixedTimeForTesting() {

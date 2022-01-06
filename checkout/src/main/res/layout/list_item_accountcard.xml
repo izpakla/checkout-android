@@ -59,7 +59,6 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/expired_contentdescription"
                 android:src="@drawable/ic_error"
-                android:visibility="gone"
                 app:tint="?attr/colorError" />
 
             <FrameLayout

@@ -15,6 +15,7 @@ import com.payoneer.checkout.ui.widget.WidgetPresenter;
 import com.payoneer.checkout.validation.ValidationResult;
 import com.payoneer.checkout.validation.Validator;
 
+import android.util.Log;
 import android.view.View;
 
 /**

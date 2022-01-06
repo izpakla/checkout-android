@@ -68,8 +68,8 @@ public class PaymentDialogHelper {
 
     public static PaymentDialogFragment createExpiredDialog(String networkCode) {
         PaymentDialogFragment dialog = new PaymentDialogFragment();
-        dialog.setTitle(Localization.translate(DIALOG_EXPIRED_BADGE_TITLE, networkCode));
-        dialog.setMessage(Localization.translate(DIALOG_EXPIRED_BADGE_TEXT, networkCode));
+        dialog.setTitle(Localization.translate(networkCode, DIALOG_EXPIRED_BADGE_TITLE));
+        dialog.setMessage(Localization.translate(networkCode, DIALOG_EXPIRED_BADGE_TEXT));
         dialog.setTag("dialog_expired_icon");
         dialog.setPositiveButton(Localization.translate(BUTTON_OK));
         dialog.setListener(null);

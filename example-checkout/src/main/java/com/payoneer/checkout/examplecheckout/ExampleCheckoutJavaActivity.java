@@ -8,7 +8,7 @@
 package com.payoneer.checkout.examplecheckout;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.ui.PaymentActivityResult;
 import com.payoneer.checkout.ui.PaymentResult;
@@ -24,8 +24,6 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,20 +32,12 @@ import androidx.test.espresso.IdlingResource;
 /**
  * This is the main Activity of this example app demonstrating how to use the Checkout SDK
  */
-public final class ExampleCheckoutActivity extends AppCompatActivity {
+public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
 
     private final static int PAYMENT_REQUEST_CODE = 1;
     private final static int CHARGE_PRESET_ACCOUNT_REQUEST_CODE = 2;
+    private ActivityExamplecheckoutBinding binding;
     private PaymentActivityResult activityResult;
-    private EditText listInput;
-    private View resultLayout;
-    private SwitchMaterial themeSwitch;
-    private TextView resultHeaderView;
-    private TextView resultInfoView;
-    private TextView resultCodeView;
-    private TextView interactionCodeView;
-    private TextView interactionReasonView;
-    private TextView paymentErrorView;
     private SimpleIdlingResource resultHandledIdlingResource;
     private boolean resultHandled;
     private final PaymentUI paymentUI = PaymentUI.getInstance();
@@ -55,22 +45,11 @@ public final class ExampleCheckoutActivity extends AppCompatActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_examplecheckout);
+        binding = ActivityExamplecheckoutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        themeSwitch = findViewById(R.id.switch_theme);
-        listInput = findViewById(R.id.input_listurl);
-        resultLayout = findViewById(R.id.layout_result);
-        resultHeaderView = findViewById(R.id.label_resultheader);
-        resultCodeView = findViewById(R.id.text_resultcode);
-        resultInfoView = findViewById(R.id.text_resultinfo);
-        interactionCodeView = findViewById(R.id.text_interactioncode);
-        interactionReasonView = findViewById(R.id.text_interactionreason);
-        paymentErrorView = findViewById(R.id.text_paymenterror);
-
-        Button chargePresetAccountButton = findViewById(R.id.button_charge_preset_acount);
-        Button showPaymentScreenButton = findViewById(R.id.button_show_payment_list);
-        showPaymentScreenButton.setOnClickListener(v -> openPaymentPage());
-        chargePresetAccountButton.setOnClickListener(v -> chargePresetAccount());
+        binding.buttonShowPaymentList.setOnClickListener(v -> openPaymentPage());
+        binding.buttonChargePresetAcount.setOnClickListener(v -> chargePresetAccount());
     }
 
     @Override
@@ -93,16 +72,16 @@ public final class ExampleCheckoutActivity extends AppCompatActivity {
 
     private void clearPaymentResult() {
         setResultHandledIdleState(false);
-        resultHeaderView.setVisibility(View.GONE);
-        resultLayout.setVisibility(View.GONE);
+        binding.labelResultheader.setVisibility(View.GONE);
+        binding.layoutResult.setVisibility(View.GONE);
         this.activityResult = null;
     }
 
     private void showPaymentActivityResult(PaymentActivityResult sdkResult) {
         int resultCode = sdkResult.getResultCode();
-        resultHeaderView.setVisibility(View.VISIBLE);
-        resultLayout.setVisibility(View.VISIBLE);
-        setText(resultCodeView, PaymentActivityResult.resultCodeToString(resultCode));
+        binding.labelResultheader.setVisibility(View.VISIBLE);
+        binding.layoutResult.setVisibility(View.VISIBLE);
+        setText(binding.textResultcode, PaymentActivityResult.resultCodeToString(resultCode));
 
         String info = null;
         String code = null;
@@ -118,10 +97,10 @@ public final class ExampleCheckoutActivity extends AppCompatActivity {
             Throwable cause = paymentResult.getCause();
             error = cause != null ? cause.getMessage() : null;
         }
-        setText(resultInfoView, info);
-        setText(interactionCodeView, code);
-        setText(interactionReasonView, reason);
-        setText(paymentErrorView, error);
+        setText(binding.textResultinfo, info);
+        setText(binding.textInteractioncode, code);
+        setText(binding.textInteractionreason, reason);
+        setText(binding.textPaymenterror, error);
     }
 
     private void setText(TextView textView, String text) {
@@ -163,7 +142,7 @@ public final class ExampleCheckoutActivity extends AppCompatActivity {
     }
 
     private boolean setListUrl() {
-        String listUrl = listInput.getText().toString().trim();
+        String listUrl = binding.inputListurl.getText().toString().trim();
         if (TextUtils.isEmpty(listUrl) || !Patterns.WEB_URL.matcher(listUrl).matches()) {
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid));
             return false;
@@ -173,7 +152,7 @@ public final class ExampleCheckoutActivity extends AppCompatActivity {
     }
 
     private PaymentTheme createPaymentTheme() {
-        if (themeSwitch.isChecked()) {
+        if (binding.switchTheme.isChecked()) {
             return PaymentTheme.createBuilder().
                 setPaymentListTheme(R.style.CustomTheme_Toolbar).
                 setChargePaymentTheme(R.style.CustomTheme_NoToolbar).
@@ -212,7 +191,7 @@ public final class ExampleCheckoutActivity extends AppCompatActivity {
     private void closeKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            IBinder binder = listInput.getWindowToken();
+            IBinder binder = binding.inputListurl.getWindowToken();
             imm.hideSoftInputFromWindow(binder, 0);
         }
     }

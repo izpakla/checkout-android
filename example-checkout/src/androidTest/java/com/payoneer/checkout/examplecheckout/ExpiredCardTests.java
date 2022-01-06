@@ -19,10 +19,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.payoneer.checkout.core.PaymentNetworkCodes;
-import com.payoneer.checkout.model.AccountInputData;
 import com.payoneer.checkout.sharedtest.checkout.PaymentListHelper;
-import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 
 import android.view.View;
@@ -52,6 +49,7 @@ public final class ExpiredCardTests extends AbstractTest {
 
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInPaymentCard(accountCardIndex, withText("12 / 19"), R.id.text_subtitle)));
+        onView(list).check(matches(isViewInPaymentCard(accountCardIndex, withId(R.id.image_expired_icon), R.id.image_expired_icon)));
     }
 }
 

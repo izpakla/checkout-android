@@ -9,8 +9,10 @@
 package com.payoneer.checkout.examplecheckout;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isViewInPaymentCard;
@@ -54,29 +56,6 @@ public final class ExpiredCardTests extends AbstractTest {
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInPaymentCard(accountCardIndex, withText("12 / 19"), R.id.text_subtitle)));
         onView(list).check(matches(isViewInPaymentCard(accountCardIndex, withId(R.id.image_expired_icon), R.id.image_expired_icon)));
-        onView(list).perform(
-            RecyclerViewActions.actionOnItemAtPosition(accountCardIndex, clickChildViewWithId(R.id.image_expired_icon)));
-        Thread.sleep(50000);
-    }
-
-    private ViewAction clickChildViewWithId(final int id) {
-        return new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return isAssignableFrom(View.class);
-            }
-
-            @Override
-            public String getDescription() {
-                return "Click on a child view with id " + id;
-            }
-
-            @Override
-            public void perform(UiController uiController, View view) {
-                View v = view.findViewById(id);
-                v.performClick();
-            }
-        };
     }
 }
 

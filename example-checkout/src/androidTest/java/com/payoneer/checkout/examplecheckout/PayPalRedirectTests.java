@@ -34,7 +34,7 @@ public final class PayPalRedirectTests extends BaseKotlinTest {
     @Test
     public void testPayPalRedirect_directCharge_browserClosed() {
         IdlingResource resultIdlingResource = getResultIdlingResource();
-        enterListUrl(createDefaultListUrl());
+        enterListUrl(createListUrl());
         clickShowPaymentListButton();
 
         int networkCardIndex = 3;
@@ -53,7 +53,7 @@ public final class PayPalRedirectTests extends BaseKotlinTest {
     @Test
     public void testPayPalRedirect_directCharge_customerAccept() {
         IdlingResource resultIdlingResource = getResultIdlingResource();
-        enterListUrl(createDefaultListUrl());
+        enterListUrl(createListUrl());
         clickShowPaymentListButton();
 
         int networkCardIndex = 3;
@@ -71,7 +71,7 @@ public final class PayPalRedirectTests extends BaseKotlinTest {
 
     @Test
     public void testPayPalRedirect_directCharge_customerAbort() {
-        enterListUrl(createDefaultListUrl());
+        enterListUrl(createListUrl());
         clickShowPaymentListButton();
 
         int networkCardIndex = 3;

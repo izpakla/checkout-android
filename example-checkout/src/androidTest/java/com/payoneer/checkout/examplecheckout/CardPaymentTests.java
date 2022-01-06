@@ -145,7 +145,7 @@ public final class CardPaymentTests extends BaseKotlinTest {
     public void testRiskDeniedCard_ABORT() {
         IdlingResource resultIdlingResource = getResultIdlingResource();
 
-        enterListUrl(createDefaultListUrl());
+        enterListUrl(createListUrl());
         clickShowPaymentListButton();
 
         int groupCardIndex = 1;

@@ -29,7 +29,7 @@ public final class SepaPaymentTests extends BaseKotlinTest {
     @Test
     public void testSepa_PROCEED_SCHEDULED() {
         IdlingResource resultIdlingResource = getResultIdlingResource();
-        enterListUrl(createDefaultListUrl());
+        enterListUrl(createListUrl());
         clickShowPaymentListButton();
 
         int cardIndex = 2;

@@ -20,6 +20,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import org.junit.After;
 import org.junit.Before;
 
+import com.payoneer.checkout.core.PaymentNetworkCodes;
+import com.payoneer.checkout.model.AccountInputData;
+import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListService;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 import com.payoneer.checkout.sharedtest.view.UiDeviceHelper;
@@ -74,6 +77,13 @@ public abstract class BaseTest {
         return ListService.createListWithSettings(paymentApiListUrl, merchantCode, merchantPaymentToken, settings);
     }
 
+    String registerExpiredAccount(ListSettings settings) {
+        ListService service = createListService();
+        String networkCode = PaymentNetworkCodes.VISA;
+        AccountInputData inputData = TestDataProvider.expiredAccountInputData();
+        return service.registerAccount(settings, networkCode, inputData, true, true);
+    }
+
     protected void clickShowPaymentListButton() {
         onView(withId(R.id.button_show_payment_list)).perform(click());
         intended(hasComponent(PaymentListActivity.class.getName()));
@@ -103,6 +113,13 @@ public abstract class BaseTest {
     protected void clickBrowserPageButton(String textOnPage, String buttonId) {
         UiDeviceHelper.checkUiObjectContainsText(textOnPage);
         UiDeviceHelper.clickUiObjectByResourceName(buttonId);
+    }
+
+    private ListService createListService() {
+        String paymentApiListUrl = BuildConfig.paymentApiListUrl;
+        String merchantCode = BuildConfig.merchantCode;
+        String merchantPaymentToken = BuildConfig.merchantPaymentToken;
+        return ListService.createInstance(paymentApiListUrl, merchantCode, merchantPaymentToken);
     }
 
     protected void waitForAppRelaunch() {

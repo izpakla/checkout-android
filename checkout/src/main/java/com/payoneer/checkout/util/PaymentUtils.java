@@ -150,9 +150,11 @@ public final class PaymentUtils {
     }
 
     public static boolean isExpired(AccountMask mask, LocalDate dateToday) {
-        int month = mask.getExpiryMonth();
-        int year = mask.getExpiryYear();
-
+        int month = toInt(mask.getExpiryMonth());
+        int year = toInt(mask.getExpiryYear());
+        if (month == 0 || year == 0) {
+            return false;
+        }
         LocalDate cardDate = parseDateFromMask(year, month);
         return cardDate.isBefore(dateToday);
     }

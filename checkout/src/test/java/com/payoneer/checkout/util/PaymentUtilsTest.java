@@ -111,6 +111,19 @@ public class PaymentUtilsTest {
     }
 
     @Test
+    public void given_no_date_return_false() {
+        // Given
+        AccountMask accountMask = getAccountMask(null, null);
+        LocalDate fixedDate = provideFixedTimeForTesting();
+
+        // When checking if the card is expired
+        boolean isExpired = PaymentUtils.isExpired(accountMask, fixedDate);
+
+        // Should be true
+        assertFalse(isExpired);
+    }
+
+    @Test
     public void given_future_date_return_expired_false() {
         // Given
         AccountMask accountMask = getAccountMask(2022, 12);
@@ -169,7 +182,7 @@ public class PaymentUtilsTest {
         assertNotNull(PaymentUtils.readRawResource(res, R.raw.groups));
     }
 
-    private AccountMask getAccountMask(final int year, final int month) {
+    private AccountMask getAccountMask(final Integer year, final Integer month) {
         AccountMask accountMask = new AccountMask();
         accountMask.setExpiryYear(year);
         accountMask.setExpiryMonth(month);

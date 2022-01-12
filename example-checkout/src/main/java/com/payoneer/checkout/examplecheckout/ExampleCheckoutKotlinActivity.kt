@@ -12,6 +12,7 @@ package com.payoneer.checkout.examplecheckout
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Patterns
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
@@ -54,7 +55,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         super.onResume()
         resultHandled = false
         if (activityResult != null) {
-            showPaymentActivityResult(activityResult)
+            showPaymentActivityResult(activityResult!!)
             setResultHandledIdleState(true)
         }
     }
@@ -136,32 +137,30 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         PaymentTheme.createDefault()
     }
 
-    private fun showPaymentActivityResult(sdkResult: PaymentActivityResult?) {
-        if (sdkResult != null) {
-            val resultCode = sdkResult.resultCode
-            val paymentResult = sdkResult.paymentResult
+    private fun showPaymentActivityResult(sdkResult: PaymentActivityResult) {
+        val resultCode = sdkResult.resultCode
+        val paymentResult = sdkResult.paymentResult
 
-            val info = paymentResult.resultInfo
-            val interaction = paymentResult.interaction
-            val code = interaction.code
-            val reason = interaction.reason
-            val cause = paymentResult.cause
-            val error = cause?.message
+        val info = paymentResult?.resultInfo
+        val interaction = paymentResult?.interaction
+        val code = interaction?.code
+        val reason = interaction?.reason
+        val cause = paymentResult?.cause
+        val error = cause?.message
 
-            binding.apply {
-                labelResultheader.isVisible = true
-                layoutResult.isVisible = true
-                textResultinfo.setLabel(info)
-                textInteractioncode.setLabel(code)
-                textInteractionreason.setLabel(reason)
-                textPaymenterror.setLabel(error ?: "")
-                textResultcode.setLabel(PaymentActivityResult.resultCodeToString(resultCode))
-            }
+        binding.apply {
+            labelResultheader.isVisible = true
+            layoutResult.isVisible = true
+            textResultinfo.setLabel(info)
+            textInteractioncode.setLabel(code)
+            textInteractionreason.setLabel(reason)
+            textPaymenterror.setLabel(error)
+            textResultcode.setLabel(PaymentActivityResult.resultCodeToString(resultCode))
         }
     }
 
-    private fun TextView.setLabel(message: String) {
-        val label = if (message.isEmpty()) this.context.getString(R.string.empty_label) else message
+    private fun TextView.setLabel(message: String?) {
+        val label = if (TextUtils.isEmpty(message)) this.context.getString(R.string.empty_label) else message
         this.text = label
     }
 

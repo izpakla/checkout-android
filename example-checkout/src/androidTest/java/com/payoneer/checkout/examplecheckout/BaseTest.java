@@ -14,6 +14,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -23,9 +24,11 @@ import org.junit.Before;
 import com.payoneer.checkout.sharedtest.service.ListService;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 import com.payoneer.checkout.sharedtest.view.UiDeviceHelper;
+import com.payoneer.checkout.ui.PaymentActivityResult;
 import com.payoneer.checkout.ui.page.ChargePaymentActivity;
 import com.payoneer.checkout.ui.page.PaymentListActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
@@ -55,6 +58,15 @@ public abstract class BaseTest {
     protected void matchResultInteraction(String interactionCode, String interactionReason) {
         onView(withId(R.id.text_interactioncode)).check(matches(withText(interactionCode)));
         onView(withId(R.id.text_interactionreason)).check(matches(withText(interactionReason)));
+    }
+
+    protected void matchResultCodeCanceled() {
+        String resultCode = PaymentActivityResult.resultCodeToString(Activity.RESULT_CANCELED);
+        this.matchResultCode(resultCode);
+    }
+
+    protected void matchResultCode(String resultCode) {
+        onView(withId(R.id.text_resultcode)).check(matches(withText(resultCode)));
     }
 
     protected ListSettings createDefaultListSettings() {
@@ -107,5 +119,9 @@ public abstract class BaseTest {
 
     protected void waitForAppRelaunch() {
         UiDeviceHelper.waitUiObjectHasPackage("com.payoneer.checkout.examplecheckout");
+    }
+
+    protected void pressActionBarUp() {
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
     }
 }

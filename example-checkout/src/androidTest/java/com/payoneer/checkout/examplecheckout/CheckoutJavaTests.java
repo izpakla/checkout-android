@@ -30,6 +30,20 @@ import androidx.test.filters.LargeTest;
 public class CheckoutJavaTests extends BaseJavaTest {
 
     @Test
+    public void testCancelPaymentClickActionBarUp() {
+        IdlingResource resultIdlingResource = getResultIdlingResource();
+        enterListUrl(createListUrl());
+        clickShowPaymentListButton();
+
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        pressActionBarUp();
+
+        register(resultIdlingResource);
+        matchResultCodeCanceled();
+        unregister(resultIdlingResource);
+    }
+
+    @Test
     public void testPayPalRedirect_directCharge_customerAccept() {
         IdlingResource resultIdlingResource = getResultIdlingResource();
         enterListUrl(createListUrl());

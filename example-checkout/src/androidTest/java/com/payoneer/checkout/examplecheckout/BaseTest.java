@@ -86,7 +86,8 @@ public abstract class BaseTest {
         String paymentApiListUrl = BuildConfig.paymentApiListUrl;
         String merchantCode = BuildConfig.merchantCode;
         String merchantPaymentToken = BuildConfig.merchantPaymentToken;
-        return ListService.createListWithSettings(paymentApiListUrl, merchantCode, merchantPaymentToken, settings);
+        ListService service = ListService.createInstance(paymentApiListUrl, merchantCode, merchantPaymentToken);
+        return service.newListSelfUrl(settings);
     }
 
     String registerExpiredAccount(ListSettings settings) {

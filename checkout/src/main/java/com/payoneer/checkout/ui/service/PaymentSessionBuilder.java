@@ -333,9 +333,12 @@ public final class PaymentSessionBuilder {
     }
 
     private boolean isExpired(AccountMask accountMask) {
+        if (accountMask == null) {
+            return false;
+        }
         Instant instantOfNow = Instant.now();
         LocalDate dateToday
             = LocalDateTime.ofInstant(instantOfNow, ZoneOffset.systemDefault()).toLocalDate();
-        return accountMask != null && PaymentUtils.isExpired(accountMask, dateToday);
+        return PaymentUtils.isExpired(accountMask, dateToday);
     }
 }

@@ -34,7 +34,7 @@ public abstract class PaymentCard {
     private boolean hideInputForm;
     private boolean disabled;
     private boolean preselected;
-    private boolean isExpired;
+    private boolean expired;
     final List<String> userInputTypes;
 
     /**
@@ -346,10 +346,10 @@ public abstract class PaymentCard {
      * @return whether the card is valid or not
      */
     public boolean isExpired() {
-        return isExpired;
+        return expired;
     }
 
     public void setExpired(final boolean expired) {
-        this.isExpired = expired;
+        this.expired = expired;
     }
 }

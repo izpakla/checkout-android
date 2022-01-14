@@ -29,17 +29,17 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
     private final TextView titleView;
     private final TextView subtitleView;
     private final MaterialCardView card;
-    private final ImageView expiredErrowView;
+    private final ImageView expiredIconView;
 
     private PresetCardViewHolder(ListAdapter adapter, View parent, PresetCard presetCard) {
         super(adapter, parent, presetCard);
         titleView = parent.findViewById(R.id.text_title);
         subtitleView = parent.findViewById(R.id.text_subtitle);
         card = parent.findViewById(R.id.card_preset);
-        this.expiredErrowView = parent.findViewById(R.id.image_expired_icon);
+        this.expiredIconView = parent.findViewById(R.id.image_expired_icon);
         card.setCheckable(true);
 
-        expiredErrowView.setOnClickListener(icon -> {
+        expiredIconView.setOnClickListener(icon -> {
             cardHandler.onExpiredIconClicked();
         });
 
@@ -67,7 +67,7 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
             bindFormWidget(widget);
         }
         if (card.isExpired()) {
-            expiredErrowView.setVisibility(View.VISIBLE);
+            expiredIconView.setVisibility(View.VISIBLE);
         }
     }
 

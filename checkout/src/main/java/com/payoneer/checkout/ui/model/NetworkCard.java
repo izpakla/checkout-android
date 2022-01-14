@@ -95,11 +95,6 @@ public final class NetworkCard extends PaymentCard {
     }
 
     @Override
-    public boolean isExpired() {
-        return false;
-    }
-
-    @Override
     public String getButton() {
         return getVisibleNetwork().getButton();
     }

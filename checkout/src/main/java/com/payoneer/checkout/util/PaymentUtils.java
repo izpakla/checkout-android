@@ -10,6 +10,7 @@ package com.payoneer.checkout.util;
 
 import static com.payoneer.checkout.model.PaymentMethod.CREDIT_CARD;
 import static com.payoneer.checkout.model.PaymentMethod.DEBIT_CARD;
+import static com.payoneer.checkout.validation.Validator.MAX_EXPIRY_YEAR;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,10 +18,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -150,42 +147,26 @@ public final class PaymentUtils {
     }
 
     public static boolean isExpired(AccountMask mask, LocalDate dateToday) {
-        int month = toInt(mask.getExpiryMonth());
-        int year = toInt(mask.getExpiryYear());
-        if (month == 0 || year == 0) {
+        int expMonth = toInt(mask.getExpiryMonth());
+        int expYear = toInt(mask.getExpiryYear());
+        if (expMonth == 0 || expYear == 0) {
             return false;
         }
-        LocalDate cardDate = parseDateFromMask(year, month);
-        return cardDate.isBefore(dateToday);
+        return !isCardExpired(expMonth, expYear);
     }
 
-    /**
-     * This method parses the month and year into a date object for checking card expiry.
-     * We set the date as the last day of the month because we need to check for the very
-     * end of the month set as the expiry. An expiration date is considered in the past
-     * if the current system time/date is past the last day on the expiry month and year
-     * (e.g. 09/21 is not expired until 23:59:59 on the 30th of September 2021, but is
-     * expired at 00:00:00 on the 1st of October 2021)
-     *
-     * @param month is expiry month
-     * @param year is expiry year
-     * @return the date object for checking if the card is expired
-     */
-    private static LocalDate parseDateFromMask(int year, int month) {
-        YearMonth yearMonth = YearMonth.of(year, month);
-        int numDaysInMonth = yearMonth.lengthOfMonth();
+    public static boolean isCardExpired(final int expMonth, final int expYear) {
+        Calendar cal = Calendar.getInstance();
+        int curMonth = cal.get(Calendar.MONTH) + 1;
+        int curYear = cal.get(Calendar.YEAR);
 
-        DateTimeFormatter dateFormat = new DateTimeFormatterBuilder()
-            .appendPattern("MM/yyyy")
-            .parseDefaulting(ChronoField.DAY_OF_MONTH, numDaysInMonth)
-            .toFormatter();
-        String dateString;
-        if (String.valueOf(month).length() < 2) {
-            dateString = String.format("%02d/%d", month, year);
-        } else {
-            dateString = String.format("%d/%d", month, year);
+        if (expYear < curYear) {
+            return false;
         }
-        return LocalDate.parse(dateString, dateFormat);
+        if (expYear == curYear) {
+            return expMonth >= curMonth;
+        }
+        return expYear <= (curYear + MAX_EXPIRY_YEAR);
     }
 
     /**

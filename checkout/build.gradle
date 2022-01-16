@@ -17,8 +17,6 @@ android {
     }
 
     compileOptions {
-        // Flag to enable support for the new language APIs
-        coreLibraryDesugaringEnabled true
         sourceCompatibility rootProject.javaCompatVersion
         targetCompatibility rootProject.javaCompatVersion
     }
@@ -55,7 +53,6 @@ dependencies {
     implementation "androidx.browser:browser:${rootProject.androidxBrowserVersion}"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${rootProject.androidxSwiperefreshlayoutVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${rootProject.desugaringVersion}" // Enable newer APIs without updating minsdk
 
     compileOnly "org.projectlombok:lombok:${rootProject.lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${rootProject.lombokVersion}"

@@ -20,10 +20,6 @@ import static com.payoneer.checkout.model.NetworkOperationType.PRESET;
 import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 import static com.payoneer.checkout.model.RegistrationType.NONE;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -336,9 +332,6 @@ public final class PaymentSessionBuilder {
         if (accountMask == null) {
             return false;
         }
-        Instant instantOfNow = Instant.now();
-        LocalDate dateToday
-            = LocalDateTime.ofInstant(instantOfNow, ZoneOffset.systemDefault()).toLocalDate();
-        return PaymentUtils.isExpired(accountMask, dateToday);
+        return PaymentUtils.isExpired(accountMask);
     }
 }

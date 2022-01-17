@@ -10,14 +10,12 @@ package com.payoneer.checkout.util;
 
 import static com.payoneer.checkout.model.PaymentMethod.CREDIT_CARD;
 import static com.payoneer.checkout.model.PaymentMethod.DEBIT_CARD;
-import static com.payoneer.checkout.validation.Validator.MAX_EXPIRY_YEAR;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -146,27 +144,27 @@ public final class PaymentUtils {
         return PaymentUtils.format("%1$02d / %2$d", month, (year % 100));
     }
 
-    public static boolean isExpired(AccountMask mask, LocalDate dateToday) {
+    public static boolean isExpired(AccountMask mask) {
         int expMonth = toInt(mask.getExpiryMonth());
         int expYear = toInt(mask.getExpiryYear());
         if (expMonth == 0 || expYear == 0) {
             return false;
         }
-        return !isCardExpired(expMonth, expYear);
+        return isDateExpired(expMonth, expYear);
     }
 
-    public static boolean isCardExpired(final int expMonth, final int expYear) {
+    public static boolean isDateExpired(final int expMonth, final int expYear) {
         Calendar cal = Calendar.getInstance();
         int curMonth = cal.get(Calendar.MONTH) + 1;
         int curYear = cal.get(Calendar.YEAR);
 
         if (expYear < curYear) {
-            return false;
+            return true;
         }
         if (expYear == curYear) {
-            return expMonth >= curMonth;
+            return expMonth < curMonth;
         }
-        return expYear <= (curYear + MAX_EXPIRY_YEAR);
+        return false;
     }
 
     /**

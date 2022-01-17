@@ -8,6 +8,7 @@
 
 package com.payoneer.checkout.validation;
 
+import java.util.Calendar;
 import java.util.Map;
 
 import com.payoneer.checkout.core.PaymentInputType;
@@ -297,15 +298,19 @@ public class Validator {
     }
 
     private boolean isValidExpiryDate(String month, String year) {
-
         if (!(month.matches(REGEX_MONTH) && year.matches(REGEX_YEAR))) {
             return false;
         }
         try {
             int expMonth = Integer.parseInt(month);
             int expYear = Integer.parseInt(year);
+            Calendar cal = Calendar.getInstance();
+            int curYear = cal.get(Calendar.YEAR);
 
-            return PaymentUtils.isCardExpired(expMonth, expYear);
+            if (PaymentUtils.isDateExpired(expMonth, expYear)){
+                return false;
+            }
+             return expYear <= (curYear + MAX_EXPIRY_YEAR);
         } catch (NumberFormatException e) {
             // this should never happen since the regex makes sure both are integers
             Log.w("sdk_Validator", e);

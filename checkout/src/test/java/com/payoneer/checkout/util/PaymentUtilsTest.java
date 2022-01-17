@@ -17,15 +17,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,53 +92,42 @@ public class PaymentUtilsTest {
 
     @Test
     public void given_past_date_return_expired_true() {
-        // Given
-        AccountMask accountMask = getAccountMask(2021, 12);
-        LocalDate fixedDate = provideFixedTimeForTesting();
+        AccountMask accountMask = createAccountMask(12, 2021);
 
-        // When checking if the card is expired
-        boolean isExpired = PaymentUtils.isExpired(accountMask, fixedDate);
+        boolean isExpired = PaymentUtils.isExpired(accountMask);
 
-        // Should be true
         assertTrue(isExpired);
     }
 
     @Test
     public void given_no_date_return_false() {
-        // Given
-        AccountMask accountMask = getAccountMask(null, null);
-        LocalDate fixedDate = provideFixedTimeForTesting();
+        AccountMask accountMask = createAccountMask(null, null);
 
-        // When checking if the card is expired
-        boolean isExpired = PaymentUtils.isExpired(accountMask, fixedDate);
+        boolean isExpired = PaymentUtils.isExpired(accountMask);
 
-        // Should be true
         assertFalse(isExpired);
     }
 
     @Test
     public void given_future_date_return_expired_false() {
-        // Given
-        AccountMask accountMask = getAccountMask(2022, 12);
-        LocalDate fixedDate = provideFixedTimeForTesting();
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR) + 10;
+        AccountMask accountMask = createAccountMask(1, year);
 
-        // When checking if the card is expired
-        boolean isExpired = PaymentUtils.isExpired(accountMask, fixedDate);
+        boolean isExpired = PaymentUtils.isExpired(accountMask);
 
-        // Should be false
         assertFalse(isExpired);
     }
 
     @Test
     public void given_current_date_return_expired_false() {
-        // Given
-        AccountMask accountMask = getAccountMask(2022, 1);
-        LocalDate fixedDate = provideFixedTimeForTesting();
+        Calendar cal = Calendar.getInstance();
+        int curMonth = cal.get(Calendar.MONTH) + 1;
+        int curYear = cal.get(Calendar.YEAR);
+        AccountMask accountMask = createAccountMask(curMonth, curYear);
 
-        // When checking if the card is expired
-        boolean isExpired = PaymentUtils.isExpired(accountMask, fixedDate);
+        boolean isExpired = PaymentUtils.isExpired(accountMask);
 
-        // Should be false
         assertFalse(isExpired);
     }
 
@@ -182,24 +164,10 @@ public class PaymentUtilsTest {
         assertNotNull(PaymentUtils.readRawResource(res, R.raw.groups));
     }
 
-    private AccountMask getAccountMask(final Integer year, final Integer month) {
+    private AccountMask createAccountMask(final Integer month, final Integer year) {
         AccountMask accountMask = new AccountMask();
         accountMask.setExpiryYear(year);
         accountMask.setExpiryMonth(month);
         return accountMask;
-    }
-
-    private static LocalDate provideFixedTimeForTesting() {
-        ZoneId zoneId = ZoneId.systemDefault();
-
-        LocalDate localDate = LocalDate.of(2022, 1, 31);
-        LocalTime localTime = LocalTime.MAX;
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDate, localTime, zoneId);
-
-        Instant instant = zonedDateTime.toInstant();
-        Clock clock = Clock.fixed(instant, zoneId);
-
-        Instant timeNow = Instant.now(clock);
-        return LocalDateTime.ofInstant(timeNow, ZoneOffset.systemDefault()).toLocalDate();
     }
 }

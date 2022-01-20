@@ -61,8 +61,14 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
         }
     }
 
+    @Override
     void expand(boolean expand) {
         super.expand(expand);
-        card.setChecked(expand);
+        card.setChecked(true);
+    }
+
+    @Override
+    void handleCardClicked(final View view) {
+        cardHandler.onActionClicked();
     }
 }

@@ -80,11 +80,12 @@ public final class PresetCard extends PaymentCard {
 
     @Override
     public String getTitle() {
+        String networkLabel = Localization.translateNetworkLabel(account.getCode());
         AccountMask accountMask = account.getMaskedAccount();
         if (accountMask != null) {
-            return PaymentUtils.getAccountMaskLabel(accountMask, getPaymentMethod());
+            return PaymentUtils.getAccountMaskLabel(accountMask, getPaymentMethod(), networkLabel);
         }
-        return Localization.translateNetworkLabel(getNetworkCode());
+        return networkLabel;
     }
 
     @Override

@@ -106,9 +106,9 @@ public class PaymentUtilsTest {
         accountMask.setNumber(numberLabel);
         accountMask.setDisplayLabel(displayLabel);
 
-        assertEquals(numberLabel, PaymentUtils.getAccountMaskLabel(accountMask, CREDIT_CARD));
-        assertEquals(numberLabel, PaymentUtils.getAccountMaskLabel(accountMask, DEBIT_CARD));
-        assertEquals(displayLabel, PaymentUtils.getAccountMaskLabel(accountMask, WALLET));
+        assertEquals(numberLabel, PaymentUtils.getAccountMaskLabel(accountMask, CREDIT_CARD, ""));
+        assertEquals(numberLabel, PaymentUtils.getAccountMaskLabel(accountMask, DEBIT_CARD, ""));
+        assertEquals(displayLabel, PaymentUtils.getAccountMaskLabel(accountMask, WALLET, ""));
     }
 
     @Test(expected = IOException.class)

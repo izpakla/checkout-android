@@ -117,8 +117,24 @@ public final class PaymentUtils {
      * @param paymentMethod to which this accountMask belongs to
      * @return the label for this AccountMask
      */
-    public static String getAccountMaskLabel(AccountMask accountMask, String paymentMethod) {
-        return isCardPaymentMethod(paymentMethod) ? accountMask.getNumber() : accountMask.getDisplayLabel();
+    public static String getAccountMaskLabel(AccountMask accountMask, String paymentMethod, String networkLabel) {
+        return isCardPaymentMethod(paymentMethod) ? getFormattedMaskedDisplay(accountMask.getNumber(), networkLabel)
+            : accountMask.getDisplayLabel();
+    }
+
+    private static String getFormattedMaskedDisplay(String number, String networkLabel) {
+        if (number == null) {
+            return "";
+        }
+        String dottedSpace = " •••• ";
+        int lastStarIndex = number.lastIndexOf('*');
+        String maskedNumber;
+        if (lastStarIndex == -1) {
+            maskedNumber = number;
+        } else {
+            maskedNumber = number.substring(lastStarIndex + 1).trim();
+        }
+        return networkLabel + dottedSpace + maskedNumber;
     }
 
     /**

@@ -99,15 +99,17 @@ public class PaymentUtilsTest {
 
     @Test
     public void getAccountMaskLabel() {
-        String numberLabel = "numberLabel";
+        String numberLabel = "41 *** 1111";
         String displayLabel = "displayLabel";
+        String visaLabel = "VISA •••• 1111";
+        String americanExpressLabel = "American Express •••• 1111";
 
         AccountMask accountMask = new AccountMask();
         accountMask.setNumber(numberLabel);
         accountMask.setDisplayLabel(displayLabel);
 
-        assertEquals(numberLabel, PaymentUtils.getAccountMaskLabel(accountMask, CREDIT_CARD, ""));
-        assertEquals(numberLabel, PaymentUtils.getAccountMaskLabel(accountMask, DEBIT_CARD, ""));
+        assertEquals(visaLabel, PaymentUtils.getAccountMaskLabel(accountMask, CREDIT_CARD, "VISA"));
+        assertEquals(americanExpressLabel, PaymentUtils.getAccountMaskLabel(accountMask, DEBIT_CARD, "American Express"));
         assertEquals(displayLabel, PaymentUtils.getAccountMaskLabel(accountMask, WALLET, ""));
     }
 

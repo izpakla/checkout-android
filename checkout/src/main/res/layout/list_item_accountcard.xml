@@ -55,7 +55,7 @@
                 android:id="@+id/image_expired_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/pmborder_xxsmall"
+                android:layout_marginEnd="@dimen/pmborder_xsmall"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/expired_contentdescription"
                 android:src="@drawable/ic_error"

@@ -27,6 +27,7 @@ import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.Parameter;
 
 import android.content.res.Resources;
+import android.text.TextUtils;
 import android.view.View;
 
 /**
@@ -118,8 +119,12 @@ public final class PaymentUtils {
      * @return the label for this AccountMask
      */
     public static String getAccountMaskLabel(AccountMask accountMask, String paymentMethod, String networkLabel) {
-        return isCardPaymentMethod(paymentMethod) ? getFormattedMaskedDisplay(accountMask.getNumber(), networkLabel)
-            : accountMask.getDisplayLabel();
+        if (isCardPaymentMethod(paymentMethod)) {
+            return getFormattedMaskedDisplay(accountMask.getNumber(), networkLabel);
+        } else if (!TextUtils.isEmpty(accountMask.getIban())) {
+            return getFormattedMaskedDisplay(accountMask.getIban(), networkLabel);
+        }
+        return accountMask.getDisplayLabel();
     }
 
     private static String getFormattedMaskedDisplay(String number, String networkLabel) {

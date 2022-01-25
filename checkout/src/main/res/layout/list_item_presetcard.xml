@@ -59,7 +59,7 @@
                 android:id="@+id/image_expired_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/pmborder_xsmall"
+                android:layout_marginEnd="@dimen/pmborder_medium"
                 android:layout_weight="0.1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/expired_contentdescription"

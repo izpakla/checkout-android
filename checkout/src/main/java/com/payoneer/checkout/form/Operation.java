@@ -18,6 +18,7 @@ import com.google.gson.JsonSyntaxException;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.PaymentInputType;
 import com.payoneer.checkout.model.AccountInputData;
+import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.BrowserData;
 import com.payoneer.checkout.model.OperationData;
 import com.payoneer.checkout.model.PresetAccount;
@@ -52,9 +53,18 @@ public class Operation implements Parcelable {
         this.paymentMethod = paymentMethod;
         this.operationType = operationType;
         this.url = url;
-
         operationData = new OperationData();
         operationData.setAccount(new AccountInputData());
+    }
+
+    public static Operation fromApplicableNetwork(ApplicableNetwork network) {
+        Map<String, URL> links = network.getLinks();
+        URL url = links != null ? links.get("operation") : null;
+
+        if (url == null) {
+            throw new IllegalArgumentException("PresetAccount does not contain an operation url");
+        }
+        return new Operation(network.getCode(), network.getMethod(), network.getOperationType(), url);
     }
 
     public void setBrowserData(BrowserData browserData) {
@@ -166,8 +176,63 @@ public class Operation implements Parcelable {
         }
     }
 
+    public static Operation fromPresetAccount(PresetAccount account) {
+        Map<String, URL> links = account.getLinks();
+        URL url = links != null ? links.get("operation") : null;
+
+        if (url == null) {
+            throw new IllegalArgumentException("PresetAccount does not contain an operation url");
+        }
+        return new Operation(account.getCode(), account.getMethod(), account.getOperationType(), url);
+    }
+
+    public void setAccountInputData(AccountInputData inputData) {
+        operationData.setAccount(inputData);
+    }
+
+    private void putRegistrationBooleanValue(String name, boolean value) throws PaymentException {
+        switch (name) {
+            case PaymentInputType.ALLOW_RECURRENCE:
+                operationData.setAllowRecurrence(value);
+                break;
+            case PaymentInputType.AUTO_REGISTRATION:
+                operationData.setAutoRegistration(value);
+                break;
+            default:
+                String msg = "Operation.Registration.setBooleanValue failed for name: " + name;
+                throw new PaymentException(msg);
+        }
+    }
+
+    /**
+     * Get the type of this operation, this will either be PRESET, CHARGE, UPDATE, ACTIVATION or PAYOUT.
+     *
+     * @return the type of the operation.
+     */
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public String getNetworkCode() {
+        return networkCode;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public String toJson() {
+        GsonHelper gson = GsonHelper.getInstance();
+        return gson.toJson(operationData);
+    }
+
+    public URL getURL() {
+        return url;
+    }
+
     private void putInputElementStringValue(String name, String value) throws PaymentException {
         AccountInputData account = operationData.getAccount();
+
         switch (name) {
             case PaymentInputType.HOLDER_NAME:
                 account.setHolderName(value);
@@ -224,55 +289,5 @@ public class Operation implements Parcelable {
                 String msg = "Operation.Account.putStringValue failed for name: " + name;
                 throw new PaymentException(msg);
         }
-    }
-
-    private void putRegistrationBooleanValue(String name, boolean value) throws PaymentException {
-        switch (name) {
-            case PaymentInputType.ALLOW_RECURRENCE:
-                operationData.setAllowRecurrence(value);
-                break;
-            case PaymentInputType.AUTO_REGISTRATION:
-                operationData.setAutoRegistration(value);
-                break;
-            default:
-                String msg = "Operation.Registration.setBooleanValue failed for name: " + name;
-                throw new PaymentException(msg);
-        }
-    }
-
-    /**
-     * Get the type of this operation, this will either be PRESET, CHARGE, UPDATE, ACTIVATION or PAYOUT.
-     *
-     * @return the type of the operation.
-     */
-    public String getOperationType() {
-        return operationType;
-    }
-
-    public String getNetworkCode() {
-        return networkCode;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public String toJson() {
-        GsonHelper gson = GsonHelper.getInstance();
-        return gson.toJson(operationData);
-    }
-
-    public URL getURL() {
-        return url;
-    }
-
-    public static Operation fromPresetAccount(PresetAccount account) {
-        Map<String, URL> links = account.getLinks();
-        URL url = links != null ? links.get("operation") : null;
-
-        if (url == null) {
-            throw new IllegalArgumentException("PresetAccount does not contain an operation url");
-        }
-        return new Operation(account.getCode(), account.getMethod(), account.getOperationType(), url);
     }
 }

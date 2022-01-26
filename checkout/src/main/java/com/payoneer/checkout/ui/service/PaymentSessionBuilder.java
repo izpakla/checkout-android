@@ -28,6 +28,7 @@ import java.util.Map;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.localization.LocalizationKey;
+import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.AccountRegistration;
 import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.ExtraElements;
@@ -44,6 +45,7 @@ import com.payoneer.checkout.ui.model.PaymentSection;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.ui.model.PresetCard;
 import com.payoneer.checkout.ui.model.RegistrationOptions;
+import com.payoneer.checkout.util.AccountMaskUtils;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.text.TextUtils;
@@ -148,6 +150,7 @@ public final class PaymentSessionBuilder {
 
         PresetCard card = new PresetCard(account, buttonKey, extraElements);
         card.setCheckable(true);
+        card.setExpired(isExpired(card.getMaskedAccount()));
         card.setHideInputForm(true);
         return card;
     }
@@ -174,6 +177,7 @@ public final class PaymentSessionBuilder {
         card.setDeletable(deletable);
         card.setHideInputForm(!hasFormElements);
         card.setCheckable(true);
+        card.setExpired(isExpired(card.getMaskedAccount()));
 
         int expandedIcon = deletable ? R.drawable.ic_delete : R.drawable.ic_transparent;
         AccountIcon icon = new AccountIcon(R.drawable.ic_edit, expandedIcon);
@@ -184,6 +188,7 @@ public final class PaymentSessionBuilder {
     private AccountCard buildDefaultAccountCard(AccountRegistration account, ListResult listResult) {
         String buttonKey = LocalizationKey.operationButtonKey(account.getOperationType());
         AccountCard card = new AccountCard(account, buttonKey, listResult.getExtraElements());
+        card.setExpired(isExpired(card.getMaskedAccount()));
         boolean deletable = PaymentUtils.toBoolean(listResult.getAllowDelete(), false);
 
         if (deletable) {
@@ -323,5 +328,12 @@ public final class PaymentSessionBuilder {
         if ((card instanceof PresetCard) || cards.size() == 1) {
             card.setPreselected(true);
         }
+    }
+
+    private boolean isExpired(AccountMask accountMask) {
+        if (accountMask == null) {
+            return false;
+        }
+        return AccountMaskUtils.isExpired(accountMask);
     }
 }

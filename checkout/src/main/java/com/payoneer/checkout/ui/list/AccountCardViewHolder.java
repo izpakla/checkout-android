@@ -18,6 +18,7 @@ import com.payoneer.checkout.util.PaymentUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
@@ -33,19 +34,17 @@ public final class AccountCardViewHolder extends PaymentCardViewHolder {
     private final TextView subtitleView;
     private final IconView iconView;
     private final MaterialCardView cardView;
+    private final ImageView expiredIconView;
 
     private AccountCardViewHolder(ListAdapter listAdapter, View parent, AccountCard accountCard) {
         super(listAdapter, parent, accountCard);
         this.titleView = parent.findViewById(R.id.text_title);
         this.subtitleView = parent.findViewById(R.id.text_subtitle);
+        this.expiredIconView = parent.findViewById(R.id.image_expired_icon);
 
         iconView = new IconView(parent);
-        iconView.setListener(new IconView.IconClickListener() {
-
-            public void onIconClick(int index) {
-                handleIconClicked(index);
-            }
-        });
+        iconView.setListener(index -> handleIconClicked(index));
+        expiredIconView.setOnClickListener(icon -> cardHandler.onExpiredIconClicked());
         cardView = parent.findViewById(R.id.card_account);
 
         addExtraElementWidgets(accountCard.getTopExtraElements());
@@ -69,11 +68,14 @@ public final class AccountCardViewHolder extends PaymentCardViewHolder {
         cardView.setCheckable(card.isCheckable());
 
         bindLabel(titleView, card.getTitle(), false);
-        bindLabel(subtitleView, card.getSubtitle(), true);
+        bindLabel(subtitleView, card.getSubtitle(), true, card.isExpired());
         bindCardLogo(card.getNetworkCode(), card.getLogoLink());
 
         for (FormWidget widget : widgets.values()) {
             bindFormWidget(widget);
+        }
+        if (card.isExpired()) {
+            expiredIconView.setVisibility(View.VISIBLE);
         }
         bindAccountIcon(card.getAccountIcon());
     }

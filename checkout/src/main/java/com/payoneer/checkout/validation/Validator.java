@@ -14,6 +14,7 @@ import java.util.Map;
 import com.payoneer.checkout.core.PaymentInputType;
 import com.payoneer.checkout.model.PaymentMethod;
 import com.payoneer.checkout.resource.ValidationGroup;
+import com.payoneer.checkout.util.AccountMaskUtils;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -297,23 +298,17 @@ public class Validator {
     }
 
     private boolean isValidExpiryDate(String month, String year) {
-
         if (!(month.matches(REGEX_MONTH) && year.matches(REGEX_YEAR))) {
             return false;
         }
         try {
             int expMonth = Integer.parseInt(month);
             int expYear = Integer.parseInt(year);
-
             Calendar cal = Calendar.getInstance();
-            int curMonth = cal.get(Calendar.MONTH) + 1;
             int curYear = cal.get(Calendar.YEAR);
 
-            if (expYear < curYear) {
+            if (AccountMaskUtils.isDateExpired(expMonth, expYear)) {
                 return false;
-            }
-            if (expYear == curYear) {
-                return expMonth >= curMonth;
             }
             return expYear <= (curYear + MAX_EXPIRY_YEAR);
         } catch (NumberFormatException e) {

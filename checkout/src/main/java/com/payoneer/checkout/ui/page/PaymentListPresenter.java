@@ -186,6 +186,11 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
+    public void onExpiredIconClicked(String networkCode) {
+        view.showExpiredDialog(networkCode);
+    }
+
+    @Override
     public void onPaymentSessionSuccess(PaymentSession session) {
         ListResult listResult = session.getListResult();
         Interaction interaction = listResult.getInteraction();

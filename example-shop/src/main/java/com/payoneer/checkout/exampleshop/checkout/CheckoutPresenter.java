@@ -12,14 +12,11 @@ import static com.payoneer.checkout.model.RedirectType.SUMMARY;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
 
-import java.util.Objects;
-
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;
-import com.payoneer.checkout.model.OperationResult;
-import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.ui.PaymentActivityResult;
 import com.payoneer.checkout.ui.PaymentResult;
+import com.payoneer.checkout.util.PaymentUtils;
 
 /**
  * CheckoutPresenter takes care of handling the response from the Checkout SDK.
@@ -59,13 +56,9 @@ final class CheckoutPresenter {
         if (interaction == null) {
             return;
         }
-        OperationResult op = result.getOperationResult();
-        if (op != null) {
-            Redirect redirect = op.getRedirect();
-            if (redirect != null && Objects.equals(SUMMARY, redirect.getType())) {
-                view.showPaymentSummary();
-                return;
-            }
+        if (PaymentUtils.containsRedirectType(result.getOperationResult(), SUMMARY)) {
+            view.showPaymentSummary();
+            return;
         }
         view.showPaymentConfirmation();
     }

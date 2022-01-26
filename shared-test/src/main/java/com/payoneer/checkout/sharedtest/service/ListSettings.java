@@ -22,6 +22,7 @@ public final class ListSettings {
     private String operationType;
     private String division;
     private String checkoutConfigurationName;
+    private String registrationId;
 
     public ListSettings(int listResId) {
         this.listResId = listResId;
@@ -55,6 +56,15 @@ public final class ListSettings {
 
     public ListSettings setDivision(final String division) {
         this.division = division;
+        return this;
+    }
+
+    public String getRegistrationId() {
+        return registrationId;
+    }
+
+    public ListSettings setRegistrationId(final String registrationId) {
+        this.registrationId = registrationId;
         return this;
     }
 

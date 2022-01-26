@@ -15,15 +15,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import com.payoneer.checkout.core.PaymentInputType;
+import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.InputElement;
+import com.payoneer.checkout.model.ListResult;
+import com.payoneer.checkout.model.Networks;
+import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Parameter;
+import com.payoneer.checkout.model.Redirect;
 
 import android.content.res.Resources;
 import android.view.View;
@@ -190,6 +197,73 @@ public final class PaymentUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * Get the self URL from the listResult
+     *
+     * @param listResult containing the self url
+     * @return the self url from the listResult or null if not found
+     */
+    public static URL getSelfURL(ListResult listResult) {
+        Map<String, URL> links = listResult.getLinks();
+        return links != null ? links.get("self") : null;
+    }
+
+    /**
+     * Get the applicableNetwork from the listResult
+     *
+     * @param listResult contains the applicableNetwork
+     * @param networkCode network code of the applicable network
+     * @return the applicableNetwork or null if not found
+     */
+    public static ApplicableNetwork getApplicableNetwork(ListResult listResult, String networkCode) {
+        Networks networks = listResult.getNetworks();
+        if (networks == null) {
+            return null;
+        }
+        List<ApplicableNetwork> list = networks.getApplicable();
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        for (ApplicableNetwork network : list) {
+            if (network.getCode().equals(networkCode)) {
+                return network;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Obtain the customer registration id from the PaymentResult
+     *
+     * @param operationResult the result that may contain the customer registration id
+     * @return the customer registration id or null if not found
+     */
+    public static String getCustomerRegistrationId(OperationResult operationResult) {
+        if (operationResult == null) {
+            return null;
+        }
+        Redirect redirect = operationResult.getRedirect();
+        if (redirect == null) {
+            return null;
+        }
+        return getParameterValue("customerRegistrationId", redirect.getParameters());
+    }
+
+    /**
+     * Check if the redirect type exists in the OperationResult
+     *
+     * @param operationResult contains the Redirect object
+     * @param redirectType to match the redirect type to
+     * @return true when it is a match, false otherwise
+     */
+    public static boolean containsRedirectType(OperationResult operationResult, String redirectType) {
+        if (operationResult == null) {
+            return false;
+        }
+        Redirect redirect = operationResult.getRedirect();
+        return (redirect != null) && (Objects.equals(redirectType, redirect.getType()));
     }
 
     /**

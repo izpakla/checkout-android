@@ -13,6 +13,10 @@ import static com.payoneer.checkout.model.PaymentMethod.DEBIT_CARD;
 import static com.payoneer.checkout.model.PaymentMethod.ONLINE_BANK_TRANSFER;
 import static com.payoneer.checkout.model.PaymentMethod.WALLET;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Calendar;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,5 +81,53 @@ public class AccountMaskUtilsTest {
         assertEquals("AB1", AccountMaskUtils.formatIbanAccountMaskLabel("AB1"));
         assertEquals("AA12345678", AccountMaskUtils.formatIbanAccountMaskLabel("AA12345678"));
         assertEquals("GB33 •••• 55", AccountMaskUtils.formatIbanAccountMaskLabel("GB33BUKB2020155555 *** 55"));
+    }
+
+    @Test
+    public void given_past_date_return_expired_true() {
+        AccountMask accountMask = createAccountMask(12, 2021);
+
+        boolean isExpired = AccountMaskUtils.isExpired(accountMask);
+
+        assertTrue(isExpired);
+    }
+
+    @Test
+    public void given_no_date_return_false() {
+        AccountMask accountMask = createAccountMask(null, null);
+
+        boolean isExpired = AccountMaskUtils.isExpired(accountMask);
+
+        assertFalse(isExpired);
+    }
+
+    @Test
+    public void given_future_date_return_expired_false() {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR) + 10;
+        AccountMask accountMask = createAccountMask(1, year);
+
+        boolean isExpired = AccountMaskUtils.isExpired(accountMask);
+
+        assertFalse(isExpired);
+    }
+
+    @Test
+    public void given_current_date_return_expired_false() {
+        Calendar cal = Calendar.getInstance();
+        int curMonth = cal.get(Calendar.MONTH) + 1;
+        int curYear = cal.get(Calendar.YEAR);
+        AccountMask accountMask = createAccountMask(curMonth, curYear);
+
+        boolean isExpired = AccountMaskUtils.isExpired(accountMask);
+
+        assertFalse(isExpired);
+    }
+
+    private AccountMask createAccountMask(final Integer month, final Integer year) {
+        AccountMask accountMask = new AccountMask();
+        accountMask.setExpiryYear(year);
+        accountMask.setExpiryMonth(month);
+        return accountMask;
     }
 }

@@ -37,13 +37,17 @@ import com.payoneer.checkout.ui.widget.VerificationCodeWidget;
 import com.payoneer.checkout.util.NetworkLogoLoader;
 import com.payoneer.checkout.util.PaymentUtils;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -342,6 +346,15 @@ public abstract class PaymentCardViewHolder extends RecyclerView.ViewHolder {
         view.setText(label);
     }
 
+    void bindLabel(TextView view, String label, boolean hideWhenEmpty, boolean error) {
+        int visibility = (hideWhenEmpty && TextUtils.isEmpty(label)) ? View.GONE : View.VISIBLE;
+        view.setVisibility(visibility);
+        view.setText(label);
+        if (error) {
+            setTextColor(view, R.attr.colorError);
+        }
+    }
+
     void bindCardLogo(int logoResId) {
         cardLogoView.setImageResource(logoResId);
     }
@@ -363,5 +376,16 @@ public abstract class PaymentCardViewHolder extends RecyclerView.ViewHolder {
                 break;
             }
         }
+    }
+
+    private void setTextColor(TextView view, int tintResId) {
+        Context context = view.getContext();
+        int[] attrs = { tintResId };
+        TypedArray ta = context.obtainStyledAttributes(attrs);
+        TypedValue tv = ta.peekValue(0);
+
+        int colorResId = tv != null ? tv.resourceId : tintResId;
+        ta.recycle();
+        view.setTextColor(ContextCompat.getColor(context, colorResId));
     }
 }

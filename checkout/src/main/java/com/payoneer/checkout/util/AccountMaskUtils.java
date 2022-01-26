@@ -8,6 +8,8 @@
 
 package com.payoneer.checkout.util;
 
+import java.util.Calendar;
+
 import com.payoneer.checkout.model.AccountMask;
 
 import android.text.TextUtils;
@@ -90,5 +92,28 @@ public final class AccountMaskUtils {
             return null;
         }
         return PaymentUtils.format("%1$02d / %2$d", month, (year % 100));
+    }
+
+    public static boolean isExpired(AccountMask mask) {
+        int expMonth = PaymentUtils.toInt(mask.getExpiryMonth());
+        int expYear = PaymentUtils.toInt(mask.getExpiryYear());
+        if (expMonth == 0 || expYear == 0) {
+            return false;
+        }
+        return isDateExpired(expMonth, expYear);
+    }
+
+    public static boolean isDateExpired(final int expMonth, final int expYear) {
+        Calendar cal = Calendar.getInstance();
+        int curMonth = cal.get(Calendar.MONTH) + 1;
+        int curYear = cal.get(Calendar.YEAR);
+
+        if (expYear < curYear) {
+            return true;
+        }
+        if (expYear == curYear) {
+            return expMonth < curMonth;
+        }
+        return false;
     }
 }

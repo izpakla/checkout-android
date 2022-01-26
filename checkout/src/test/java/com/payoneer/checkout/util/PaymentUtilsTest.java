@@ -97,22 +97,6 @@ public class PaymentUtilsTest {
         assertFalse(PaymentUtils.isCardPaymentMethod(WALLET));
     }
 
-    @Test
-    public void getAccountMaskLabel() {
-        String numberLabel = "41 *** 1111";
-        String displayLabel = "displayLabel";
-        String visaLabel = "VISA •••• 1111";
-        String americanExpressLabel = "American Express •••• 1111";
-
-        AccountMask accountMask = new AccountMask();
-        accountMask.setNumber(numberLabel);
-        accountMask.setDisplayLabel(displayLabel);
-
-        assertEquals(visaLabel, PaymentUtils.getAccountMaskLabel(accountMask, CREDIT_CARD, "VISA"));
-        assertEquals(americanExpressLabel, PaymentUtils.getAccountMaskLabel(accountMask, DEBIT_CARD, "American Express"));
-        assertEquals(displayLabel, PaymentUtils.getAccountMaskLabel(accountMask, WALLET, ""));
-    }
-
     @Test(expected = IOException.class)
     public void readRawResource_missing_resource() throws IOException {
         Resources res = ApplicationProvider.getApplicationContext().getResources();

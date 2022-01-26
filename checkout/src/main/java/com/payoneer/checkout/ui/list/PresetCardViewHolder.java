@@ -38,6 +38,7 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
         card = parent.findViewById(R.id.card_preset);
         this.expiredIconView = parent.findViewById(R.id.image_expired_icon);
         card.setCheckable(true);
+        card.setChecked(true);
 
         expiredIconView.setOnClickListener(icon -> {
             cardHandler.onExpiredIconClicked();
@@ -71,8 +72,8 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
         }
     }
 
-    void expand(boolean expand) {
-        super.expand(expand);
-        card.setChecked(expand);
+    @Override
+    void handleCardClicked(final View view) {
+        cardHandler.onActionClicked();
     }
 }

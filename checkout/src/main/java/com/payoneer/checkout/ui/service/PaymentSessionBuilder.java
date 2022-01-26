@@ -150,6 +150,7 @@ public final class PaymentSessionBuilder {
         PresetCard card = new PresetCard(account, buttonKey, extraElements);
         card.setCheckable(true);
         card.setExpired(isExpired(card.getMaskedAccount()));
+        card.setHideInputForm(true);
         return card;
     }
 

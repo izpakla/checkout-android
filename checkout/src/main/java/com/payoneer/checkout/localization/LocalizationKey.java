@@ -15,10 +15,7 @@ import com.payoneer.checkout.model.Interaction;
  */
 public final class LocalizationKey {
 
-    public final static String AUTO_REGISTRATION_OPTIONAL = "networks.registration.optional.label";
-    public final static String AUTO_REGISTRATION_FORCED = "networks.registration.forced.label";
-    public final static String ALLOW_RECURRENCE_OPTIONAL = "networks.recurrence.optional.label";
-    public final static String ALLOW_RECURRENCE_FORCED = "networks.recurrence.forced.label";
+    public final static String NETWORKS_REGISTRATION_LABEL = "networks.registration.label";
 
     public final static String BUTTON_OK = "button.ok.label";
     public final static String BUTTON_CANCEL = "button.cancel.label";
@@ -29,6 +26,7 @@ public final class LocalizationKey {
 
     public final static String LIST_TITLE = "paymentpage.title";
     public final static String LIST_HEADER_PRESET = "networks.preset.title";
+    public final static String LIST_HEADER_PRESET_WARNING = "networks.preset.conditional.text";
     public final static String LIST_HEADER_ACCOUNTS = "accounts.title";
     public final static String LIST_HEADER_NETWORKS = "networks.title";
     public final static String LIST_HEADER_NETWORKS_OTHER = "networks.other.title";
@@ -59,6 +57,9 @@ public final class LocalizationKey {
 
     public final static String LABEL_TITLE = "title";
     public final static String LABEL_TEXT = "text";
+
+    public final static String DIALOG_EXPIRED_BADGE_TITLE = "accounts.expired.badge.title";
+    public static final String DIALOG_EXPIRED_BADGE_TEXT = "accounts.expired.badge.text";
 
     public static String errorKey(String error) {
         return "error." + error;

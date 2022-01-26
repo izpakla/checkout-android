@@ -4,15 +4,16 @@ apply from: 'version.gradle'
 buildscript {
     repositories {
         google()
+        // Required for Browserstack gradle plugin
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url 'https://plugins.gradle.org/m2/'
         }
-        mavenLocal()
     }
 
     dependencies {
-        classpath "gradle.plugin.com.browserstack.gradle:browserstack-gradle-plugin:3.0.2"
-        classpath "com.android.tools.build:gradle:4.0.2"
+        classpath 'gradle.plugin.com.browserstack.gradle:browserstack-gradle-plugin:3.0.3'
+        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -21,88 +22,81 @@ buildscript {
 allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
+            // Uncomment to see details deprecation warnings
             //options.compilerArgs.add("-Xlint:deprecation")
         }
     }
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+    dependsOn(":checkout:clean")
+    dependsOn(":example-checkout:clean")
+    dependsOn(":example-shop:clean")
+    dependsOn(":shared-test:clean")
 }
 
 ext {
-    versionCode = VERSIONCODE
-    versionName = VERSIONNAME
-
+    versionCode = getVersionCode()
+    versionName = getVersionName()
     javaCompatVersion = JavaVersion.VERSION_1_8
 
+    nexusUser = System.getenv('NEXUS_USER')
+    nexusPassword = System.getenv('NEXUS_PASSWORD')
+    packageCloudToken = System.getenv('PACKAGECLOUD_TOKEN')
+    browserStackUser = System.getenv('BROWSERSTACK_USER')
+    browserStackKey = System.getenv('BROWSERSTACK_KEY')
+
+    merchantCode = System.getenv('MOBILE_MERCHANT_CODE')
+    merchantPaymentToken = System.getenv('MOBILE_MERCHANT_PAYMENT_TOKEN')
+    paymentApiListUrl = System.getenv('PAYMENTAPI_LISTURL')
+
+    playstoreStoreFile = System.getenv('PLAYSTORE_UPLOAD_STOREFILE')
+    playstoreStorePassword = System.getenv('PLAYSTORE_UPLOAD_STOREPASSWORD')
+    playstoreKeyAlias = System.getenv('PLAYSTORE_UPLOAD_KEYALIAS')
+    playstoreKeyPassword = System.getenv('PLAYSTORE_UPLOAD_KEYPASSWORD')
+
     minSdkVersion = 21
-    compileSdkVersion = 30
-    targetSdkVersion = 30
-    packagecloudWagonVersion = "0.0.6"
-    lombokVersion = "1.18.18"
+    compileSdkVersion = 31
+    targetSdkVersion = 31
+    lombokVersion = '1.18.22'
+    coreKtx = "1.7.0"
 
-    gsonVersion = "2.8.7"
-    bumptechGlideVersion = "4.12.0"
+    gsonVersion = '2.8.9'
+    androidMaterialVersion = '1.4.0'
+    androidxBrowserVersion = '1.4.0'
+    androidxSwiperefreshlayoutVersion = '1.1.0'
+    androidxTestCoreVersion = '1.4.0'
+    androidxTestRunnerVersion = '1.4.0'
+    androidxTestRulesVersion = '1.4.0'
+    androidxTestEspressoVersion = '3.4.0'
+    androidxTestJunitVersion = '1.1.3'
+    androidxTestUIAutomatorVersion = '2.2.0'
 
-    androidMaterialVersion = "1.4.0"
-    androidxBrowserVersion = "1.3.0"
-    androidxSwiperefreshlayoutVersion = "1.1.0"
-    androidxTestCoreVersion = "1.4.0"
-    androidxTestRunnerVersion = "1.4.0"
-    androidxTestRulesVersion = "1.4.0"
-    androidxTestEspressoVersion = "3.4.0"
-    androidxTestJunitVersion = "1.1.3"
-    androidxTestUIAutomatorVersion = "2.2.0"
-
-    rxjavaVersion = "3.0.8"
-    rxandroidVersion = "3.0.0"
-
-    mockitoCoreVersion = "2.23.4"
-    robolectricVersion = "4.5.1"
-    runnerVersion = "1.0.2"
-    rulesVersion = "1.0.2"
-    tngDataProviderVersion = "2.8"
-    jsonsnapshotVersion = "1.0.17"
-    harmcrestVersion = "2.2"
+    junitVersion = '4.13.2'
+    rxjavaVersion = '3.1.3'
+    rxandroidVersion = '3.0.0'
+    mockitoCoreVersion = '2.23.4'
+    robolectricVersion = '4.7.3'
+    jsonsnapshotVersion = '1.0.17'
+    tngDataProviderVersion = '2.8'
 }
 
-task buildci(type: GradleBuild) {
-    if (versionName.endsWith('SNAPSHOT')) {
-        // tasks for SNAPSHOT builds
-        printf "Task for SNAPSHOT builds, uploading only to Nexus."
-        tasks = [
-                'clean',
-                ':checkout:test',
-                ':checkout:assemble',
-                ':example-checkout:runFunctionalTest',
-                ':example-shop:runFunctionalTest',
-                ':checkout:uploadArchives'
-        ]
-    } else {
-        // tasks for RELEASE builds, this will also upload to the external packagecloud.io
-        printf "Task for RELEASE builds, uploading to Nexus and packagecloud.io."
-        tasks = [
-                'clean',
-                ':checkout:test',
-                ':checkout:assemble',
-                ':example-checkout:runFunctionalTest',
-                ':example-shop:runFunctionalTest',
-                ':checkout:uploadArchives',
-                ':checkout:uploadExternal'
-        ]
-    }
-}
-
-static def getCurrentBranch() {
-    def branch = ""
-    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+static def getBranchName() {
+    def branch = ''
+    def proc = 'git rev-parse --abbrev-ref HEAD'.execute()
     proc.in.eachLine { line -> branch = line }
     proc.err.eachLine { line -> println line }
     proc.waitFor()
     branch
 }
+
+static def getBranchLabel() {
+    return getBranchName().replace('/', '-')
+}
+
+apply from: 'ci.gradle'

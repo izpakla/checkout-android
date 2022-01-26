@@ -20,6 +20,9 @@ public final class ListSettings {
     private BigDecimal amount;
     private String appId;
     private String operationType;
+    private String division;
+    private String checkoutConfigurationName;
+    private String registrationId;
 
     public ListSettings(int listResId) {
         this.listResId = listResId;
@@ -45,6 +48,33 @@ public final class ListSettings {
 
     public String getLanguage() {
         return language;
+    }
+
+    public String getDivision() {
+        return division;
+    }
+
+    public ListSettings setDivision(final String division) {
+        this.division = division;
+        return this;
+    }
+
+    public String getRegistrationId() {
+        return registrationId;
+    }
+
+    public ListSettings setRegistrationId(final String registrationId) {
+        this.registrationId = registrationId;
+        return this;
+    }
+
+    public ListSettings setCheckoutConfigurationName(final String checkoutConfigurationName) {
+        this.checkoutConfigurationName = checkoutConfigurationName;
+        return this;
+    }
+
+    public String getCheckoutConfigurationName() {
+        return checkoutConfigurationName;
     }
 
     public ListSettings setOperationType(String operationType) {

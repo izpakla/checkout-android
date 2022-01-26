@@ -13,10 +13,14 @@ import static com.payoneer.checkout.ui.model.PaymentSession.LINK_OPERATION;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.payoneer.checkout.model.ExtraElement;
+import com.payoneer.checkout.model.ExtraElements;
 import com.payoneer.checkout.model.InputElement;
+import com.payoneer.checkout.util.PaymentUtils;
 
 import android.text.TextUtils;
 
@@ -25,19 +29,41 @@ import android.text.TextUtils;
  */
 public abstract class PaymentCard {
 
-    private final boolean checkable;
+    private final ExtraElements extraElements;
+    private boolean checkable;
     private boolean hideInputForm;
+    private boolean disabled;
+    private boolean preselected;
+    private boolean expired;
     final List<String> userInputTypes;
 
     /**
      * Construct a PaymentCard, when a card is checkable and marked as checked
      * a highlighted border is drawn around the card.
      *
-     * @param checkable is the PaymentCard checkable
+     * @param extraElements optional elements to be shown in this PaymentCard
      */
-    public PaymentCard(boolean checkable) {
-        this.checkable = checkable;
+    public PaymentCard(ExtraElements extraElements) {
+        this.extraElements = extraElements;
         this.userInputTypes = new ArrayList<>();
+    }
+
+    public void setDisabled(final boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    /**
+     * Mark this card as checkable, if the card is checkable and checked
+     * a highlighted border is drawn around the card.
+     *
+     * @param checkable true if checkable, false otherwise
+     */
+    public void setCheckable(final boolean checkable) {
+        this.checkable = checkable;
     }
 
     /**
@@ -107,6 +133,27 @@ public abstract class PaymentCard {
     }
 
     /**
+     * Get the ExtraElement given the name
+     *
+     * @param name of the ExtraElement to be returned
+     * @return the ExtraElement with the given name or null if not found
+     */
+    public ExtraElement getExtraElement(String name) {
+        for (ExtraElement element : getTopExtraElements()) {
+            if (element.getName().equals(name)) {
+                return element;
+            }
+        }
+        for (ExtraElement element : getBottomExtraElements()) {
+            if (element.getName().equals(name)) {
+                return element;
+            }
+        }
+        return null;
+    }
+
+
+    /**
      * Is the input form hidden from the user or not.
      *
      * @return true when the input form should be hidden, false otherwise
@@ -126,12 +173,31 @@ public abstract class PaymentCard {
     }
 
     /**
-     * Does this PaymentCard has an empty form
+     * Set the PaymentCard to being preselected, this means that the card will be expanded
+     * when the list is shown for the first time.
      *
-     * @return true when the input form is empty, false otherwise
+     * @param preselected expand the card when true, false show a collapsed card
      */
-    public boolean hasEmptyInputForm() {
-        return false;
+    public void setPreselected(final boolean preselected) {
+        this.preselected = preselected;
+    }
+
+    /**
+     * Is this card preselected
+     *
+     * @return true when preselected, false otherwise
+     */
+    public boolean isPreselected() {
+        return preselected;
+    }
+
+    /**
+     * Does this PaymentCard has any form elements
+     *
+     * @return true when the form has elements, false otherwise
+     */
+    public boolean hasFormElements() {
+        return (getInputElements().size() > 0) || (getTopExtraElements().size() > 0) || (getBottomExtraElements().size() > 0);
     }
 
     /**
@@ -154,6 +220,30 @@ public abstract class PaymentCard {
     }
 
     /**
+     * Get the top ExtraElements that should be shown to the user in the top of the payment card
+     *
+     * @return list with optional top ExtraElements
+     */
+    public List<ExtraElement> getTopExtraElements() {
+        if (extraElements == null) {
+            return Collections.emptyList();
+        }
+        return PaymentUtils.emptyListIfNull(extraElements.getTop());
+    }
+
+    /**
+     * Get the bottom ExtraElements that should be shown to the user in the bottom of the payment card
+     *
+     * @return list with optional bottom ExtraElements
+     */
+    public List<ExtraElement> getBottomExtraElements() {
+        if (extraElements == null) {
+            return Collections.emptyList();
+        }
+        return PaymentUtils.emptyListIfNull(extraElements.getBottom());
+    }
+
+    /**
      * Set the user input data. Add the type to the userInputTypes list if the text is not empty,
      * remove it otherwise. If the list has elements it implies that the user has entered text in this
      * PaymentCard.
@@ -168,6 +258,13 @@ public abstract class PaymentCard {
             userInputTypes.add(type);
         }
     }
+
+    /**
+     * Does this PaymentCard has a network that is selected by the Payment API
+     *
+     * @return true when selected, false otherwise
+     */
+    public abstract boolean hasSelectedNetwork();
 
     /**
      * Check if this card contains a link with the provided name. If the card contains multiple networks then
@@ -216,13 +313,6 @@ public abstract class PaymentCard {
     public abstract String getNetworkCode();
 
     /**
-     * Is this card preselected
-     *
-     * @return true when preselected, false otherwise
-     */
-    public abstract boolean isPreselected();
-
-    /**
      * Get the title of this PaymentCard
      *
      * @return title of this PaymentCard
@@ -249,4 +339,17 @@ public abstract class PaymentCard {
      * @return list of InputElements, this must not return null
      */
     public abstract List<InputElement> getInputElements();
+
+    /**
+     * Check card validity
+     *
+     * @return whether the card is valid or not
+     */
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(final boolean expired) {
+        this.expired = expired;
+    }
 }

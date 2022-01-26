@@ -186,6 +186,11 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
+    public void onExpiredIconClicked(String networkCode) {
+        view.showExpiredDialog(networkCode);
+    }
+
+    @Override
     public void onPaymentSessionSuccess(PaymentSession session) {
         ListResult listResult = session.getListResult();
         Interaction interaction = listResult.getInteraction();
@@ -447,7 +452,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
             networkService.setListener(this);
 
             URL url = card.getLink("self");
-            deleteAccount = new DeleteAccount(url);
+            deleteAccount = new DeleteAccount(url, session.getListOperationType());
             deleteAccount(deleteAccount);
         } catch (PaymentException e) {
             closeWithErrorCode(PaymentResultHelper.fromThrowable(e));

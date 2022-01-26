@@ -75,6 +75,11 @@ interface BasePaymentView {
     void showHintDialog(String networkCode, String type, PaymentDialogListener listener);
 
     /**
+     * Show expired dialog
+     */
+    void showExpiredDialog(String networkCode);
+
+    /**
      * Set the current activity payment result, this is either PaymentUI.RESULT_CODE_OK,
      * PaymentUI.RESULT_CODE_ERROR
      *

@@ -15,16 +15,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import com.payoneer.checkout.core.PaymentInputType;
-import com.payoneer.checkout.model.AccountMask;
+import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.InputElement;
+import com.payoneer.checkout.model.ListResult;
+import com.payoneer.checkout.model.Networks;
+import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Parameter;
+import com.payoneer.checkout.model.Redirect;
 
 import android.content.res.Resources;
 import android.view.View;
@@ -37,11 +43,33 @@ public final class PaymentUtils {
     /**
      * Check if the Boolean object is true, the Boolean object may be null.
      *
-     * @param val the value to check
+     * @param value the value to check
      * @return true when the val is not null and true
      */
-    public static boolean isTrue(Boolean val) {
-        return val != null && val;
+    public static boolean isTrue(Boolean value) {
+        return value != null && value;
+    }
+
+    /**
+     * Return the boolean value given the Boolean Object.
+     * If the Object is null then return the default value.
+     *
+     * @param value the value to check
+     * @return defaultValue if value is null, else the boolean value
+     */
+    public static boolean toBoolean(Boolean value, boolean defaultValue) {
+        return (value == null) ? defaultValue : value.booleanValue();
+    }
+
+    /**
+     * Get the base integer value given the Integer object.
+     * If the object is null then return the 0 value.
+     *
+     * @param value to convert to an integer
+     * @return the value as an integer or 0 if the value is null
+     */
+    public static int toInt(Integer value) {
+        return value == null ? 0 : value;
     }
 
     /**
@@ -85,45 +113,6 @@ public final class PaymentUtils {
         String str1 = obj1 != null ? obj1.toString() : null;
         String str2 = obj2 != null ? obj2.toString() : null;
         return str1 != null && (str1.equals(str2));
-    }
-
-    /**
-     * Get the base integer value given the Integer object.
-     * If the object is null then return the 0 value.
-     *
-     * @param value to convert to an integer
-     * @return the value as an integer or 0 if the value is null
-     */
-    public static int toInt(Integer value) {
-        return value == null ? 0 : value;
-    }
-
-    /**
-     * Get the label for this AccountMask, if the paymentMethod is a card then return the
-     * number from the mask. Else return the DisplayLabel from this mask.
-     *
-     * @param accountMask containing the label information
-     * @param paymentMethod to which this accountMask belongs to
-     * @return the label for this AccountMask
-     */
-    public static String getAccountMaskLabel(AccountMask accountMask, String paymentMethod) {
-        return isCardPaymentMethod(paymentMethod) ? accountMask.getNumber() : accountMask.getDisplayLabel();
-    }
-
-    /**
-     * Create am expiry date string from the AccountMask.
-     * If the AccountMask does not contain the expiryMonth and expiryYear values then return null.
-     *
-     * @param mask AccountMask containing the expiryMonth and expiryYear fields
-     * @return the expiry date or null if it could not be created
-     */
-    public static String getExpiryDateString(AccountMask mask) {
-        int month = toInt(mask.getExpiryMonth());
-        int year = toInt(mask.getExpiryYear());
-        if (month == 0 || year == 0) {
-            return null;
-        }
-        return PaymentUtils.format("%1$02d / %2$d", month, (year % 100));
     }
 
     /**
@@ -211,6 +200,73 @@ public final class PaymentUtils {
     }
 
     /**
+     * Get the self URL from the listResult
+     *
+     * @param listResult containing the self url
+     * @return the self url from the listResult or null if not found
+     */
+    public static URL getSelfURL(ListResult listResult) {
+        Map<String, URL> links = listResult.getLinks();
+        return links != null ? links.get("self") : null;
+    }
+
+    /**
+     * Get the applicableNetwork from the listResult
+     *
+     * @param listResult contains the applicableNetwork
+     * @param networkCode network code of the applicable network
+     * @return the applicableNetwork or null if not found
+     */
+    public static ApplicableNetwork getApplicableNetwork(ListResult listResult, String networkCode) {
+        Networks networks = listResult.getNetworks();
+        if (networks == null) {
+            return null;
+        }
+        List<ApplicableNetwork> list = networks.getApplicable();
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        for (ApplicableNetwork network : list) {
+            if (network.getCode().equals(networkCode)) {
+                return network;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Obtain the customer registration id from the PaymentResult
+     *
+     * @param operationResult the result that may contain the customer registration id
+     * @return the customer registration id or null if not found
+     */
+    public static String getCustomerRegistrationId(OperationResult operationResult) {
+        if (operationResult == null) {
+            return null;
+        }
+        Redirect redirect = operationResult.getRedirect();
+        if (redirect == null) {
+            return null;
+        }
+        return getParameterValue("customerRegistrationId", redirect.getParameters());
+    }
+
+    /**
+     * Check if the redirect type exists in the OperationResult
+     *
+     * @param operationResult contains the Redirect object
+     * @param redirectType to match the redirect type to
+     * @return true when it is a match, false otherwise
+     */
+    public static boolean containsRedirectType(OperationResult operationResult, String redirectType) {
+        if (operationResult == null) {
+            return false;
+        }
+        Redirect redirect = operationResult.getRedirect();
+        return (redirect != null) && (Objects.equals(redirectType, redirect.getType()));
+    }
+
+    /**
      * Return an empty list when the provided list is null.
      *
      * @param list to be checked if null
@@ -238,6 +294,6 @@ public final class PaymentUtils {
      * @param name the name of the view i.e. holderName
      */
     public static void setTestId(View view, String type, String name) {
-        view.setContentDescription(type + "_" + name);
+        view.setContentDescription(type + "." + name);
     }
 }

@@ -21,8 +21,8 @@ import com.payoneer.checkout.model.PaymentMethod;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.ui.PaymentUI;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
+import com.payoneer.checkout.util.AccountMaskUtils;
 import com.payoneer.checkout.util.NetworkLogoLoader;
-import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -85,17 +85,9 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
         presetSubtitle = findViewById(R.id.label_subtitle);
 
         Button edit = findViewById(R.id.button_edit);
-        edit.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showPaymentList();
-            }
-        });
+        edit.setOnClickListener(v -> showPaymentList());
         Button button = findViewById(R.id.button_pay);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                onPayClicked();
-            }
-        });
+        button.setOnClickListener(v -> onPayClicked());
         this.presenter = new SummaryPresenter(this);
     }
 
@@ -184,7 +176,7 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
             case PaymentMethod.CREDIT_CARD:
             case PaymentMethod.DEBIT_CARD:
                 presetTitle.setText(mask.getNumber());
-                String date = PaymentUtils.getExpiryDateString(mask);
+                String date = AccountMaskUtils.getExpiryDateString(mask);
                 if (date != null) {
                     presetSubtitle.setVisibility(View.VISIBLE);
                     presetSubtitle.setText(date);
@@ -274,7 +266,7 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
     private void onPayClicked() {
         if (presetAccount != null) {
             PaymentUI paymentUI = PaymentUI.getInstance();
-            paymentUI.chargePresetAccount(this, PAYMENT_REQUEST_CODE, presetAccount);
+            paymentUI.chargePresetAccount(this, PAYMENT_REQUEST_CODE);
         }
     }
 

@@ -11,11 +11,13 @@ package com.payoneer.checkout.ui.list;
 import com.google.android.material.card.MaterialCardView;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.ui.model.PresetCard;
+import com.payoneer.checkout.ui.widget.FormWidget;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,14 +29,23 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
     private final TextView titleView;
     private final TextView subtitleView;
     private final MaterialCardView card;
+    private final ImageView expiredIconView;
 
     private PresetCardViewHolder(ListAdapter adapter, View parent, PresetCard presetCard) {
         super(adapter, parent, presetCard);
         titleView = parent.findViewById(R.id.text_title);
         subtitleView = parent.findViewById(R.id.text_subtitle);
         card = parent.findViewById(R.id.card_preset);
+        this.expiredIconView = parent.findViewById(R.id.image_expired_icon);
         card.setCheckable(true);
+        card.setChecked(true);
 
+        expiredIconView.setOnClickListener(icon -> {
+            cardHandler.onExpiredIconClicked();
+        });
+
+        addExtraElementWidgets(presetCard.getTopExtraElements());
+        addExtraElementWidgets(presetCard.getTopExtraElements());
         addButtonWidget();
         layoutWidgets();
     }
@@ -46,18 +57,23 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
     }
 
     void onBind() {
-        super.onBind();
-
         PaymentUtils.setTestId(itemView, "card", "preset");
         PresetCard card = (PresetCard) paymentCard;
 
         bindLabel(titleView, card.getTitle(), false);
-        bindLabel(subtitleView, card.getSubtitle(), true);
+        bindLabel(subtitleView, card.getSubtitle(), true, card.isExpired());
         bindCardLogo(paymentCard.getNetworkCode(), card.getLogoLink());
+
+        for (FormWidget widget : widgets.values()) {
+            bindFormWidget(widget);
+        }
+        if (card.isExpired()) {
+            expiredIconView.setVisibility(View.VISIBLE);
+        }
     }
 
-    void expand(boolean expand) {
-        super.expand(expand);
-        card.setChecked(expand);
+    @Override
+    void handleCardClicked(final View view) {
+        cardHandler.onActionClicked();
     }
 }

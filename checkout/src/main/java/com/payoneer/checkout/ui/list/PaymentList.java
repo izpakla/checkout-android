@@ -91,11 +91,18 @@ public final class PaymentList {
         setVisible(true);
         adapter.notifyDataSetChanged();
 
-        recyclerView.scrollToPosition(itemList.getSelectedIndex());
+        int scrollPosition = calculateScrollPosition(itemList.getSelectedIndex());
+        recyclerView.scrollToPosition(scrollPosition);
     }
 
     public void setVisible(boolean visible) {
         recyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private int calculateScrollPosition(int index) {
+        int headerIndex = index - 1;
+        ListItem item = itemList.getItem(headerIndex);
+        return (HeaderItem.isHeaderItem(item)) ? headerIndex : index;
     }
 
     private PaymentCardListener createCardListener() {
@@ -129,6 +136,11 @@ public final class PaymentList {
             public void onCardClicked(int position) {
                 handleCardClicked(position);
             }
+
+            @Override
+            public void onExpiredIconClicked(String networkCode) {
+                handleExpiredIconClicked(networkCode);
+            }
         };
     }
 
@@ -157,6 +169,10 @@ public final class PaymentList {
         listener.onHintClicked(networkCode, type);
     }
 
+    private void handleExpiredIconClicked(String networkCode) {
+        listener.onExpiredIconClicked(networkCode);
+    }
+
     private void handleActionClicked(PaymentCard paymentCard, Map<String, FormWidget> widgets) {
         hideKeyboard();
         listener.onActionClicked(paymentCard, widgets);
@@ -172,7 +188,7 @@ public final class PaymentList {
             itemList.setSelectedIndex(position);
             adapter.notifyItemChanged(curIndex);
             adapter.notifyItemChanged(position);
-            scrollAndCloseKeyboard(position);
+            scrollAndCloseKeyboard(calculateScrollPosition(position));
         }
     }
 
@@ -203,7 +219,7 @@ public final class PaymentList {
     }
 
     private void addPaymentSectionItems(PaymentSection section) {
-        itemList.addItem(new HeaderItem(nextViewType(), section.getLabel()), false);
+        itemList.addItem(new HeaderItem(nextViewType(), section.getTitle(), section.getMessage()), false);
         for (PaymentCard card : section.getPaymentCards()) {
             PaymentCardItem item = new PaymentCardItem(nextViewType(), card);
             itemList.addItem(item, card.isPreselected());

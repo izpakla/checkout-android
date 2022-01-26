@@ -11,11 +11,14 @@ package com.payoneer.checkout.ui.list;
 import com.google.android.material.card.MaterialCardView;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.ui.model.AccountCard;
+import com.payoneer.checkout.ui.model.AccountCard.AccountIcon;
+import com.payoneer.checkout.ui.widget.FormWidget;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
@@ -24,28 +27,29 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
  */
 public final class AccountCardViewHolder extends PaymentCardViewHolder {
 
-    private final static int ICON_PENCIL = 0;
-    private final static int ICON_TRASHCAN = 1;
+    private final static int ICON_COLLAPSED = 0;
+    private final static int ICON_EXPANDED = 1;
 
     private final TextView titleView;
     private final TextView subtitleView;
     private final IconView iconView;
     private final MaterialCardView cardView;
+    private final ImageView expiredIconView;
 
     private AccountCardViewHolder(ListAdapter listAdapter, View parent, AccountCard accountCard) {
         super(listAdapter, parent, accountCard);
         this.titleView = parent.findViewById(R.id.text_title);
         this.subtitleView = parent.findViewById(R.id.text_subtitle);
+        this.expiredIconView = parent.findViewById(R.id.image_expired_icon);
 
         iconView = new IconView(parent);
-        iconView.setListener(new IconView.IconClickListener() {
-
-            public void onIconClick(int index) {
-                handleIconClicked(index);
-            }
-        });
+        iconView.setListener(index -> handleIconClicked(index));
+        expiredIconView.setOnClickListener(icon -> cardHandler.onExpiredIconClicked());
         cardView = parent.findViewById(R.id.card_account);
-        addElementWidgets(accountCard);
+
+        addExtraElementWidgets(accountCard.getTopExtraElements());
+        addInputElementWidgets(accountCard.getInputElements());
+        addExtraElementWidgets(accountCard.getBottomExtraElements());
         addButtonWidget();
         layoutWidgets();
         setLastImeOptions();
@@ -59,36 +63,50 @@ public final class AccountCardViewHolder extends PaymentCardViewHolder {
 
     @Override
     void onBind() {
-        super.onBind();
-
         PaymentUtils.setTestId(itemView, "card", "account");
         AccountCard card = (AccountCard) paymentCard;
         cardView.setCheckable(card.isCheckable());
 
         bindLabel(titleView, card.getTitle(), false);
-        bindLabel(subtitleView, card.getSubtitle(), true);
+        bindLabel(subtitleView, card.getSubtitle(), true, card.isExpired());
         bindCardLogo(card.getNetworkCode(), card.getLogoLink());
+
+        for (FormWidget widget : widgets.values()) {
+            bindFormWidget(widget);
+        }
+        if (card.isExpired()) {
+            expiredIconView.setVisibility(View.VISIBLE);
+        }
+        bindAccountIcon(card.getAccountIcon());
     }
 
     @Override
     void expand(boolean expand) {
         super.expand(expand);
-
         AccountCard accountCard = (AccountCard) paymentCard;
         if (accountCard.isCheckable()) {
             cardView.setChecked(expand);
         }
+        int icon = (expand) ? ICON_EXPANDED : ICON_COLLAPSED;
+        iconView.showIcon(icon);
+    }
 
-        if (accountCard.isDeletable()) {
-            iconView.showIcon(expand ? ICON_TRASHCAN : ICON_PENCIL);
+    private void bindAccountIcon(AccountIcon icon) {
+        if (icon != null) {
+            iconView.setVisible(true);
+            iconView.setIconResource(ICON_COLLAPSED, icon.getCollapsedResId());
+            iconView.setIconResource(ICON_EXPANDED, icon.getExpandedResId());
+        } else {
+            iconView.setVisible(false);
         }
     }
 
     private void handleIconClicked(int index) {
-        if (index == 0) {
-            cardHandler.onCardClicked();
-        } else {
+        boolean deletable = ((AccountCard) paymentCard).isDeletable();
+        if (index == ICON_EXPANDED && deletable) {
             cardHandler.onDeleteClicked();
+        } else {
+            cardHandler.onCardClicked();
         }
     }
 }

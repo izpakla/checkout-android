@@ -17,17 +17,22 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anyOf;
 
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 
 import com.payoneer.checkout.ui.list.PaymentCardViewHolder;
 import com.payoneer.checkout.ui.widget.FormWidget;
 import com.payoneer.checkout.util.PaymentUtils;
 
+import android.text.SpannableString;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -66,15 +71,15 @@ public final class PaymentActions {
                 checkNotNull(viewHolder);
 
                 if (!(viewHolder instanceof PaymentCardViewHolder)) {
-                    throw createPerformException("ViewHolder is not of type PaymentCardViewHolder");
+                    throw createPerformException("ViewHolder is not of type PaymentCardViewHolder", "PaymentCardViewHolder");
                 }
                 FormWidget widget = ((PaymentCardViewHolder) viewHolder).getFormWidget(widgetName);
                 if (widget == null) {
-                    throw createPerformException(PaymentUtils.format("Widget %s could not be found inside card", widgetName));
+                    throw createPerformException(PaymentUtils.format("Widget %s could not be found inside card", widgetName), "FormWidget");
                 }
                 View formView = widget.getRootView().findViewById(viewResId);
                 if (formView == null) {
-                    throw createPerformException("Could not find the View inside the Widget: " + widgetName);
+                    throw createPerformException("Could not find the View inside the Widget: " + widgetName, "formView");
                 }
                 action.perform(uiController, formView);
             }
@@ -107,16 +112,67 @@ public final class PaymentActions {
                 checkNotNull(viewHolder);
 
                 if (!(viewHolder instanceof PaymentCardViewHolder)) {
-                    throw createPerformException("ViewHolder is not of type PaymentCardViewHolder");
+                    throw createPerformException("ViewHolder is not of type PaymentCardViewHolder", "PaymentCardViewHolder");
                 }
                 View cardView = viewHolder.itemView.findViewById(viewResId);
                 if (cardView == null) {
-                    throw createPerformException("Could not find the View inside the card at position: " + position);
+                    throw createPerformException("Could not find the View inside the card at position: " + position, "cardView");
                 }
                 action.perform(uiController, cardView);
             }
         };
     }
+
+    public static ViewAction clickClickableSpan(final CharSequence textToClick) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return Matchers.instanceOf(TextView.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "clicking on a ClickableSpan";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                TextView textView = (TextView) view;
+                SpannableString spannableString = (SpannableString) textView.getText();
+
+                if (spannableString.length() == 0) {
+                    // TextView is empty, nothing to do
+                    throw new NoMatchingViewException.Builder()
+                        .includeViewHierarchy(true)
+                        .withRootView(textView)
+                        .build();
+                }
+
+                // Get the links inside the TextView and check if we find textToClick
+                ClickableSpan[] spans = spannableString.getSpans(0, spannableString.length(), ClickableSpan.class);
+                if (spans.length > 0) {
+                    ClickableSpan spanCandidate;
+                    for (ClickableSpan span : spans) {
+                        spanCandidate = span;
+                        int start = spannableString.getSpanStart(spanCandidate);
+                        int end = spannableString.getSpanEnd(spanCandidate);
+                        CharSequence sequence = spannableString.subSequence(start, end);
+                        if (textToClick.toString().equals(sequence.toString())) {
+                            span.onClick(textView);
+                            return;
+                        }
+                    }
+                }
+
+                // textToClick not found in TextView
+                throw new NoMatchingViewException.Builder()
+                    .includeViewHierarchy(true)
+                    .withRootView(textView)
+                    .build();
+            }
+        };
+    }
+
 
     /**
      * Scroll to the view action
@@ -170,10 +226,10 @@ public final class PaymentActions {
         };
     }
 
-    private static PerformException createPerformException(String description) {
+    private static PerformException createPerformException(String actionDescription, String viewDescription) {
         return new PerformException.Builder()
-            .withActionDescription(description)
+            .withActionDescription(actionDescription)
+            .withViewDescription(viewDescription)
             .build();
     }
 }
-

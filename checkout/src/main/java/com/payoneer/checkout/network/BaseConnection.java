@@ -37,8 +37,6 @@ abstract class BaseConnection {
     final static String HEADER_AUTHORIZATION = "Authorization";
     final static String HEADER_ACCEPT = "Accept";
     final static String HEADER_CONTENT_TYPE = "Content-Type";
-    final static String URI_PATH_API = "api";
-    final static String URI_PATH_LISTS = "lists";
     final static String VALUE_APP_JSON = "application/json;charset=UTF-8";
     private final static int TIMEOUT_CONNECT = 5000;
     private final static int TIMEOUT_READ = 30000;
@@ -54,7 +52,16 @@ abstract class BaseConnection {
      * This will be changed at a later stage as no external
      * libraries should be used
      */
-    final Gson gson;
+    final Gson gson = new GsonBuilder().create();
+
+    /**
+     * Just a default constructor for classes that do not need a context
+     */
+    BaseConnection() {
+        if (CookieHandler.getDefault() == null) {
+            CookieHandler.setDefault(new CookieManager());
+        }
+    }
 
     /**
      * Construct a new BaseConnection
@@ -62,13 +69,10 @@ abstract class BaseConnection {
      * @param context used to initialize the custom UserAgent
      */
     BaseConnection(Context context) {
+        this();
         if (context == null) {
             throw new IllegalArgumentException("Context cannot be null");
         }
-        if (CookieHandler.getDefault() == null) {
-            CookieHandler.setDefault(new CookieManager());
-        }
-        this.gson = new GsonBuilder().create();
         initUserAgent(context);
     }
 

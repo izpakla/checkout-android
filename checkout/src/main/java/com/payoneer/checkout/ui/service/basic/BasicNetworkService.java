@@ -13,7 +13,6 @@ import static com.payoneer.checkout.model.InteractionCode.PROCEED;
 import static com.payoneer.checkout.model.InteractionCode.VERIFY;
 import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
 import static com.payoneer.checkout.model.NetworkOperationType.PAYOUT;
-import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 import static com.payoneer.checkout.model.RedirectType.HANDLER3DS2;
 import static com.payoneer.checkout.model.RedirectType.PROVIDER;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
@@ -93,7 +92,7 @@ public final class BasicNetworkService extends NetworkService {
 
     @Override
     public void deleteAccount(DeleteAccount account) {
-        this.operationType = UPDATE;
+        this.operationType = account.getOperationType();
         listener.showProgress(true);
         operationService.deleteAccount(account);
     }

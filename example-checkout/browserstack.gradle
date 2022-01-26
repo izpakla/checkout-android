@@ -1,0 +1,30 @@
+/*
+ * Gradle file with tasks for uploading the ExampleCheckout app to Browserstack
+ */
+
+task uploadToAppLive {
+    if (rootProject.browserStackUser == null || rootProject.browserStackKey == null) {
+        logger.lifecycle('[BROWSERSTACK] Missing credentials')
+        return
+    }
+    dependsOn('uploadExampleCheckoutDebugToBrowserstackAppLive')
+}
+
+task testOnAppAutomate {
+    if ((rootProject.merchantCode == null) || (rootProject.merchantPaymentToken == null) ||
+            (rootProject.paymentApiListUrl == null)) {
+        logger.lifecycle('[BROWSERSTACK] Missing functional test settings')
+        return
+    }
+    if (rootProject.browserStackUser == null || rootProject.browserStackKey == null) {
+        logger.lifecycle('[BROWSERSTACK] Missing credentials')
+        return
+    }
+    dependsOn('executeExampleCheckoutDebugTestsOnBrowserstack')
+}
+
+browserStackConfig {
+    username = rootProject.browserStackUser
+    accessKey = rootProject.browserStackKey
+    configFilePath = 'example-checkout/browserstack.json'
+}

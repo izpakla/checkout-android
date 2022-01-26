@@ -17,7 +17,9 @@ import java.util.Map;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.AccountRegistration;
+import com.payoneer.checkout.model.ExtraElements;
 import com.payoneer.checkout.model.InputElement;
+import com.payoneer.checkout.util.AccountMaskUtils;
 import com.payoneer.checkout.util.PaymentUtils;
 
 /**
@@ -26,13 +28,13 @@ import com.payoneer.checkout.util.PaymentUtils;
 public final class AccountCard extends PaymentCard {
     private final AccountRegistration account;
     private final String buttonKey;
-    private final boolean deletable;
+    private boolean deletable;
+    private AccountIcon accountIcon;
 
-    public AccountCard(AccountRegistration account, String buttonKey, boolean deletable, boolean checkable) {
-        super(checkable);
+    public AccountCard(AccountRegistration account, String buttonKey, ExtraElements extraElements) {
+        super(extraElements);
         this.account = account;
         this.buttonKey = buttonKey;
-        this.deletable = deletable;
     }
 
     @Override
@@ -59,23 +61,19 @@ public final class AccountCard extends PaymentCard {
     }
 
     @Override
-    public boolean hasEmptyInputForm() {
-        return getInputElements().size() == 0;
-    }
-
-    @Override
     public String getTitle() {
+        String networkLabel = Localization.translateNetworkLabel(account.getCode());
         AccountMask accountMask = account.getMaskedAccount();
         if (accountMask != null) {
-            return PaymentUtils.getAccountMaskLabel(accountMask, getPaymentMethod());
+            return AccountMaskUtils.getAccountMaskLabel(accountMask, getPaymentMethod(), networkLabel);
         }
-        return Localization.translateNetworkLabel(account.getCode());
+        return networkLabel;
     }
 
     @Override
     public String getSubtitle() {
         AccountMask accountMask = account.getMaskedAccount();
-        return accountMask != null ? PaymentUtils.getExpiryDateString(accountMask) : null;
+        return accountMask != null ? AccountMaskUtils.getExpiryDateString(accountMask) : null;
     }
 
     @Override
@@ -94,7 +92,7 @@ public final class AccountCard extends PaymentCard {
     }
 
     @Override
-    public boolean isPreselected() {
+    public boolean hasSelectedNetwork() {
         return PaymentUtils.isTrue(account.getSelected());
     }
 
@@ -109,6 +107,18 @@ public final class AccountCard extends PaymentCard {
         return false;
     }
 
+    public void setAccountIcon(AccountIcon accountIcon) {
+        this.accountIcon = accountIcon;
+    }
+
+    public AccountIcon getAccountIcon() {
+        return accountIcon;
+    }
+
+    public void setDeletable(boolean deletable) {
+        this.deletable = deletable;
+    }
+
     public boolean isDeletable() {
         return deletable;
     }
@@ -120,4 +130,23 @@ public final class AccountCard extends PaymentCard {
     public AccountRegistration getAccountRegistration() {
         return account;
     }
+
+    public static class AccountIcon {
+        private final int collapsedResId;
+        private final int expandedResId;
+
+        public AccountIcon(final int collapsedResId, final int expandedResId) {
+            this.collapsedResId = collapsedResId;
+            this.expandedResId = expandedResId;
+        }
+
+        public int getCollapsedResId() {
+            return collapsedResId;
+        }
+
+        public int getExpandedResId() {
+            return expandedResId;
+        }
+    }
+
 }

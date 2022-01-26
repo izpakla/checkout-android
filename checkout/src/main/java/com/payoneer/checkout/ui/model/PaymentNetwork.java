@@ -26,16 +26,12 @@ public final class PaymentNetwork {
 
     private final ApplicableNetwork network;
     private final String buttonKey;
-    private final RegistrationOption autoRegistration;
-    private final RegistrationOption allowRecurrence;
+    private final RegistrationOptions registrationOptions;
 
-
-    public PaymentNetwork(ApplicableNetwork network, String buttonKey, RegistrationOption autoRegistration,
-        RegistrationOption allowRecurrence) {
+    public PaymentNetwork(ApplicableNetwork network, String buttonKey, RegistrationOptions registrationOptions) {
         this.network = network;
         this.buttonKey = buttonKey;
-        this.autoRegistration = autoRegistration;
-        this.allowRecurrence = allowRecurrence;
+        this.registrationOptions = registrationOptions;
     }
 
     public void putLanguageLink(Map<String, URL> links) {
@@ -73,15 +69,11 @@ public final class PaymentNetwork {
         return Localization.translate(getNetworkCode(), buttonKey);
     }
 
-    public RegistrationOption getAllowRecurrence() {
-        return allowRecurrence;
+    public RegistrationOptions getRegistrationOptions() {
+        return registrationOptions;
     }
 
-    public RegistrationOption getAutoRegistration() {
-        return autoRegistration;
-    }
-
-    public boolean isPreselected() {
+    public boolean hasSelectedNetwork() {
         return PaymentUtils.isTrue(network.getSelected());
     }
 

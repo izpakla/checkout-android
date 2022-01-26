@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.localization.LocalizationKey;
+import com.payoneer.checkout.model.ExtraElements;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.util.PaymentUtils;
 
@@ -27,13 +28,20 @@ public final class NetworkCard extends PaymentCard {
     private final List<PaymentNetwork> networks;
     private final SmartSwitch smartSwitch;
 
-    /**
-     * Construct a new NetworkCard
-     */
-    public NetworkCard() {
-        super(false);
+    public NetworkCard(ExtraElements extraElements) {
+        super(extraElements);
         this.networks = new ArrayList<>();
         this.smartSwitch = new SmartSwitch(networks);
+    }
+
+    @Override
+    public boolean hasSelectedNetwork() {
+        for (PaymentNetwork network : networks) {
+            if (network.hasSelectedNetwork()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -84,16 +92,6 @@ public final class NetworkCard extends PaymentCard {
     @Override
     public List<InputElement> getInputElements() {
         return getVisibleNetwork().getInputElements();
-    }
-
-    @Override
-    public boolean isPreselected() {
-        for (PaymentNetwork network : networks) {
-            if (network.isPreselected()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

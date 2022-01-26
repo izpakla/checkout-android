@@ -35,6 +35,7 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
         subtitleView = parent.findViewById(R.id.text_subtitle);
         card = parent.findViewById(R.id.card_preset);
         card.setCheckable(true);
+        card.setChecked(true);
 
         addExtraElementWidgets(presetCard.getTopExtraElements());
         addExtraElementWidgets(presetCard.getTopExtraElements());
@@ -61,8 +62,8 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
         }
     }
 
-    void expand(boolean expand) {
-        super.expand(expand);
-        card.setChecked(expand);
+    @Override
+    void handleCardClicked(final View view) {
+        cardHandler.onActionClicked();
     }
 }

@@ -120,24 +120,24 @@ public final class PaymentUtils {
      */
     public static String getAccountMaskLabel(AccountMask accountMask, String paymentMethod, String networkLabel) {
         if (isCardPaymentMethod(paymentMethod)) {
-            return getFormattedMaskedDisplay(accountMask.getNumber(), networkLabel);
+            return formatAccountMaskLabel(accountMask.getNumber(), networkLabel);
         } else if (!TextUtils.isEmpty(accountMask.getIban())) {
-            return getFormattedMaskedDisplay(accountMask.getIban(), networkLabel);
+            return formatAccountMaskLabel(accountMask.getIban(), networkLabel);
         }
         return accountMask.getDisplayLabel();
     }
 
-    private static String getFormattedMaskedDisplay(String number, String networkLabel) {
-        if (number == null) {
+    private static String formatAccountMaskLabel(String accountMaskLabel, String networkLabel) {
+        if (accountMaskLabel == null) {
             return "";
         }
         String dottedSpace = " •••• ";
-        int lastStarIndex = number.lastIndexOf('*');
+        int lastStarIndex = accountMaskLabel.lastIndexOf('*');
         String maskedNumber;
         if (lastStarIndex == -1) {
-            maskedNumber = number;
+            maskedNumber = accountMaskLabel;
         } else {
-            maskedNumber = number.substring(lastStarIndex + 1).trim();
+            maskedNumber = accountMaskLabel.substring(lastStarIndex + 1).trim();
         }
         return networkLabel + dottedSpace + maskedNumber;
     }

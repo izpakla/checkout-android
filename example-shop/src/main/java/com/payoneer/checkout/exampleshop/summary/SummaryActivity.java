@@ -23,7 +23,6 @@ import com.payoneer.checkout.ui.PaymentUI;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
 import com.payoneer.checkout.util.AccountMaskUtils;
 import com.payoneer.checkout.util.NetworkLogoLoader;
-import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
 import android.content.Intent;

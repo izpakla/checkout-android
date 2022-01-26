@@ -22,12 +22,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.payoneer.checkout.core.PaymentInputType;
-import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.Parameter;
 
 import android.content.res.Resources;
-import android.text.TextUtils;
 import android.view.View;
 
 /**

@@ -28,7 +28,6 @@ import org.robolectric.RobolectricTestRunner;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentInputType;
-import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.InputElement;
 
 import android.content.res.Resources;

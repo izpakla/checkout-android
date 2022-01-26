@@ -8,28 +8,9 @@
 
 package com.payoneer.checkout.util;
 
-import static com.payoneer.checkout.model.PaymentMethod.CREDIT_CARD;
-import static com.payoneer.checkout.model.PaymentMethod.DEBIT_CARD;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import com.payoneer.checkout.core.PaymentInputType;
 import com.payoneer.checkout.model.AccountMask;
-import com.payoneer.checkout.model.InputElement;
-import com.payoneer.checkout.model.Parameter;
 
-import android.content.res.Resources;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 
 /**
  * The PaymentUtils class containing helper methods

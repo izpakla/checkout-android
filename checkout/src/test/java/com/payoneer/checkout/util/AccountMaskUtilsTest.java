@@ -13,27 +13,12 @@ import static com.payoneer.checkout.model.PaymentMethod.DEBIT_CARD;
 import static com.payoneer.checkout.model.PaymentMethod.ONLINE_BANK_TRANSFER;
 import static com.payoneer.checkout.model.PaymentMethod.WALLET;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import com.payoneer.checkout.R;
-import com.payoneer.checkout.core.PaymentInputType;
 import com.payoneer.checkout.model.AccountMask;
-import com.payoneer.checkout.model.InputElement;
-
-import android.content.res.Resources;
-import androidx.test.core.app.ApplicationProvider;
 
 /**
  * Class for testing the AccountMaskUtils class
@@ -68,7 +53,7 @@ public class AccountMaskUtilsTest {
         accountMask.setIban(ibanLabel);
         accountMask.setDisplayLabel(displayLabel);
 
-        assertEquals(formattedIbanLabel, AccountMaskUtils.getAccountMaskLabel(accountMask, ONLINE_BANK_TRANSFER,"Sepa"));
+        assertEquals(formattedIbanLabel, AccountMaskUtils.getAccountMaskLabel(accountMask, ONLINE_BANK_TRANSFER, "Sepa"));
     }
 
     @Test

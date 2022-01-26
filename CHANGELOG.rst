@@ -1,7 +1,10 @@
 Changelog - Payoneer Checkout SDK for Android-based devices
 -----------------------
 
-**Version checkout-android 0.73.0**
+**Version checkout-android 0.80.0**
+
+Version **0.80.0** is a major release.
+The PresetAccount attribute in the method "PaymentUI.chargePresetAccount()" has been removed.
 
 **Bug**
 

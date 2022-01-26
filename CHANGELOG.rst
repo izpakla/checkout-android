@@ -1,6 +1,39 @@
 Changelog - Payoneer Checkout SDK for Android-based devices
 -----------------------
 
+**Version checkout-android 0.73.0**
+
+**Bug**
+
+* [PCX-2567] - Clicking back button crashes the Kotlin Example Checkout app
+* [PCX-2289] - Section title/subtitle not in viewport when PRESET account pre-selected
+* [PCX-2275] - ExampleCheckout app is using the ExampleShop browserstack profile
+* [PCX-2243] - Use Junit4 for unit tests since Junit5 does not work yet with Android
+* [PCX-2110] - Markdown parsing not working for Android devices < 26
+
+**Feature**
+
+* [PCX-2484] - Add a Kotlin ExampleCheckout app to the Android Checkout SDK
+* [PCX-2483] - Support Android 31 for the Android Checkout SDK
+* [PCX-2408] - PRESET method UI card 1-click
+* [PCX-2403] - Highlight expired payment methods
+* [PCX-2335] - Support charge preset account in the Example Checkout app
+* [PCX-2334] - Programmatically detect SNAPSHOT version for Checkout Android SDK
+* [PCX-2331] - Manual Github workflows for uploading and testing example apps on Browserstack
+* [PCX-2263] - Remove required PresetAccount Object for charging a preset account
+* [PCX-2260] - Remove Android Checkout SDK from GoCD
+* [PCX-2228] - Display PRESET warning text
+* [PCX-2179] - Remove Glide image library from Android Checkout SDK
+* [PCX-2072] - Hide ExtraElement (label + checkbox) when it contains a Checkbox
+* [PCX-2042] - Upgrade Android Checkout SDK to junit5 jupiter
+* [PCX-2020] - Overhaul registration options for CHARGE/PRESET
+* [PCX-2004] - Write Android functional tests for top and bottom extra elements
+* [PCX-1992] - Respect allowDelete on UPDATE and CHARGE flow
+* [PCX-1914] - Update Android SDK to Gradle 7
+* [PCX-1806] - Allow custom text above/beneath method forms in PAYMENT flow
+* [PCX-1662] - Build Android Checkout SDK with Github Actions
+* [PCX-984] - Adjust credit/debit card masked account display
+
 **Version checkout-android 0.72.0**
 
 * [PCX-1902] - Fix Android registration functional test

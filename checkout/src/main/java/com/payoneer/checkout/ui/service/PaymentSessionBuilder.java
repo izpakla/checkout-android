@@ -45,6 +45,7 @@ import com.payoneer.checkout.ui.model.PaymentSection;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.ui.model.PresetCard;
 import com.payoneer.checkout.ui.model.RegistrationOptions;
+import com.payoneer.checkout.util.AccountMaskUtils;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.text.TextUtils;
@@ -333,6 +334,6 @@ public final class PaymentSessionBuilder {
         if (accountMask == null) {
             return false;
         }
-        return PaymentUtils.isExpired(accountMask);
+        return AccountMaskUtils.isExpired(accountMask);
     }
 }

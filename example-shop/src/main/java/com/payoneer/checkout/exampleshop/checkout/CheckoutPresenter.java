@@ -12,12 +12,8 @@ import static com.payoneer.checkout.model.RedirectType.SUMMARY;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
 
-import java.util.Objects;
-
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;
-import com.payoneer.checkout.model.OperationResult;
-import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.ui.PaymentActivityResult;
 import com.payoneer.checkout.ui.PaymentResult;
 import com.payoneer.checkout.util.PaymentUtils;

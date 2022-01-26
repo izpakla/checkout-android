@@ -44,7 +44,7 @@ public final class RegistrationTests extends BaseKotlinTest {
 
         // Check if a new card has been added with the title
         PaymentListHelper.waitForPaymentListLoaded(1);
-        PaymentListHelper.matchesPaymentCardTitle(cardIndex, "41 *** 1111");
+        PaymentListHelper.matchesPaymentCardTitle(cardIndex, "Visa •••• 1111");
     }
 
     @Test

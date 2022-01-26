@@ -59,13 +59,13 @@ public final class ListSettings {
         return this;
     }
 
+    public String getRegistrationId() {
+        return registrationId;
+    }
+
     public ListSettings setRegistrationId(final String registrationId) {
         this.registrationId = registrationId;
         return this;
-    }
-
-    public String getRegistrationId() {
-        return registrationId;
     }
 
     public ListSettings setCheckoutConfigurationName(final String checkoutConfigurationName) {

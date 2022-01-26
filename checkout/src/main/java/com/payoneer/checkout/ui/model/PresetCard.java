@@ -20,6 +20,7 @@ import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.ExtraElements;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.PresetAccount;
+import com.payoneer.checkout.util.AccountMaskUtils;
 import com.payoneer.checkout.util.PaymentUtils;
 
 /**
@@ -80,17 +81,18 @@ public final class PresetCard extends PaymentCard {
 
     @Override
     public String getTitle() {
+        String networkLabel = Localization.translateNetworkLabel(account.getCode());
         AccountMask accountMask = account.getMaskedAccount();
         if (accountMask != null) {
-            return PaymentUtils.getAccountMaskLabel(accountMask, getPaymentMethod());
+            return AccountMaskUtils.getAccountMaskLabel(accountMask, getPaymentMethod(), networkLabel);
         }
-        return Localization.translateNetworkLabel(getNetworkCode());
+        return networkLabel;
     }
 
     @Override
     public String getSubtitle() {
         AccountMask accountMask = account.getMaskedAccount();
-        return accountMask != null ? PaymentUtils.getExpiryDateString(accountMask) : null;
+        return accountMask != null ? AccountMaskUtils.getExpiryDateString(accountMask) : null;
     }
 
     @Override

@@ -57,8 +57,24 @@ public class Operation implements Parcelable {
         operationData.setAccount(new AccountInputData());
     }
 
-    public void setAccountInputData(AccountInputData inputData) {
-        operationData.setAccount(inputData);
+    public static Operation fromApplicableNetwork(ApplicableNetwork network) {
+        Map<String, URL> links = network.getLinks();
+        URL url = links != null ? links.get("operation") : null;
+
+        if (url == null) {
+            throw new IllegalArgumentException("PresetAccount does not contain an operation url");
+        }
+        return new Operation(network.getCode(), network.getMethod(), network.getOperationType(), url);
+    }
+
+    public static Operation fromPresetAccount(PresetAccount account) {
+        Map<String, URL> links = account.getLinks();
+        URL url = links != null ? links.get("operation") : null;
+
+        if (url == null) {
+            throw new IllegalArgumentException("PresetAccount does not contain an operation url");
+        }
+        return new Operation(account.getCode(), account.getMethod(), account.getOperationType(), url);
     }
 
     public void setBrowserData(BrowserData browserData) {
@@ -170,6 +186,20 @@ public class Operation implements Parcelable {
         }
     }
 
+    private void putRegistrationBooleanValue(String name, boolean value) throws PaymentException {
+        switch (name) {
+            case PaymentInputType.ALLOW_RECURRENCE:
+                operationData.setAllowRecurrence(value);
+                break;
+            case PaymentInputType.AUTO_REGISTRATION:
+                operationData.setAutoRegistration(value);
+                break;
+            default:
+                String msg = "Operation.Registration.setBooleanValue failed for name: " + name;
+                throw new PaymentException(msg);
+        }
+    }
+
     private void putInputElementStringValue(String name, String value) throws PaymentException {
         AccountInputData account = operationData.getAccount();
 
@@ -231,18 +261,8 @@ public class Operation implements Parcelable {
         }
     }
 
-    private void putRegistrationBooleanValue(String name, boolean value) throws PaymentException {
-        switch (name) {
-            case PaymentInputType.ALLOW_RECURRENCE:
-                operationData.setAllowRecurrence(value);
-                break;
-            case PaymentInputType.AUTO_REGISTRATION:
-                operationData.setAutoRegistration(value);
-                break;
-            default:
-                String msg = "Operation.Registration.setBooleanValue failed for name: " + name;
-                throw new PaymentException(msg);
-        }
+    public void setAccountInputData(AccountInputData inputData) {
+        operationData.setAccount(inputData);
     }
 
     /**
@@ -269,25 +289,5 @@ public class Operation implements Parcelable {
 
     public URL getURL() {
         return url;
-    }
-
-    public static Operation fromPresetAccount(PresetAccount account) {
-        Map<String, URL> links = account.getLinks();
-        URL url = links != null ? links.get("operation") : null;
-
-        if (url == null) {
-            throw new IllegalArgumentException("PresetAccount does not contain an operation url");
-        }
-        return new Operation(account.getCode(), account.getMethod(), account.getOperationType(), url);
-    }
-
-    public static Operation fromApplicableNetwork(ApplicableNetwork network) {
-        Map<String, URL> links = network.getLinks();
-        URL url = links != null ? links.get("operation") : null;
-
-        if (url == null) {
-            throw new IllegalArgumentException("PresetAccount does not contain an operation url");
-        }
-        return new Operation(network.getCode(), network.getMethod(), network.getOperationType(), url);
     }
 }

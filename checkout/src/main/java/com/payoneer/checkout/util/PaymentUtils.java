@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.payoneer.checkout.core.PaymentInputType;
-import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.ListResult;
@@ -60,6 +59,17 @@ public final class PaymentUtils {
      */
     public static boolean toBoolean(Boolean value, boolean defaultValue) {
         return (value == null) ? defaultValue : value.booleanValue();
+    }
+
+    /**
+     * Get the base integer value given the Integer object.
+     * If the object is null then return the 0 value.
+     *
+     * @param value to convert to an integer
+     * @return the value as an integer or 0 if the value is null
+     */
+    public static int toInt(Integer value) {
+        return value == null ? 0 : value;
     }
 
     /**
@@ -103,68 +113,6 @@ public final class PaymentUtils {
         String str1 = obj1 != null ? obj1.toString() : null;
         String str2 = obj2 != null ? obj2.toString() : null;
         return str1 != null && (str1.equals(str2));
-    }
-
-    /**
-     * Get the base integer value given the Integer object.
-     * If the object is null then return the 0 value.
-     *
-     * @param value to convert to an integer
-     * @return the value as an integer or 0 if the value is null
-     */
-    public static int toInt(Integer value) {
-        return value == null ? 0 : value;
-    }
-
-    /**
-     * Get the label for this AccountMask, if the paymentMethod is a card then return the
-     * number from the mask. Else return the DisplayLabel from this mask.
-     *
-     * @param accountMask containing the label information
-     * @param paymentMethod to which this accountMask belongs to
-     * @return the label for this AccountMask
-     */
-    public static String getAccountMaskLabel(AccountMask accountMask, String paymentMethod) {
-        return isCardPaymentMethod(paymentMethod) ? accountMask.getNumber() : accountMask.getDisplayLabel();
-    }
-
-    /**
-     * Create am expiry date string from the AccountMask.
-     * If the AccountMask does not contain the expiryMonth and expiryYear values then return null.
-     *
-     * @param mask AccountMask containing the expiryMonth and expiryYear fields
-     * @return the expiry date or null if it could not be created
-     */
-    public static String getExpiryDateString(AccountMask mask) {
-        int month = toInt(mask.getExpiryMonth());
-        int year = toInt(mask.getExpiryYear());
-        if (month == 0 || year == 0) {
-            return null;
-        }
-        return PaymentUtils.format("%1$02d / %2$d", month, (year % 100));
-    }
-
-    public static boolean isExpired(AccountMask mask) {
-        int expMonth = toInt(mask.getExpiryMonth());
-        int expYear = toInt(mask.getExpiryYear());
-        if (expMonth == 0 || expYear == 0) {
-            return false;
-        }
-        return isDateExpired(expMonth, expYear);
-    }
-
-    public static boolean isDateExpired(final int expMonth, final int expYear) {
-        Calendar cal = Calendar.getInstance();
-        int curMonth = cal.get(Calendar.MONTH) + 1;
-        int curYear = cal.get(Calendar.YEAR);
-
-        if (expYear < curYear) {
-            return true;
-        }
-        if (expYear == curYear) {
-            return expMonth < curMonth;
-        }
-        return false;
     }
 
     /**

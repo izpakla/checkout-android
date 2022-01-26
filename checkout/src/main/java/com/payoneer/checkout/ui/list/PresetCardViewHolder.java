@@ -17,6 +17,7 @@ import com.payoneer.checkout.util.PaymentUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,14 +29,20 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
     private final TextView titleView;
     private final TextView subtitleView;
     private final MaterialCardView card;
+    private final ImageView expiredIconView;
 
     private PresetCardViewHolder(ListAdapter adapter, View parent, PresetCard presetCard) {
         super(adapter, parent, presetCard);
         titleView = parent.findViewById(R.id.text_title);
         subtitleView = parent.findViewById(R.id.text_subtitle);
         card = parent.findViewById(R.id.card_preset);
+        this.expiredIconView = parent.findViewById(R.id.image_expired_icon);
         card.setCheckable(true);
         card.setChecked(true);
+
+        expiredIconView.setOnClickListener(icon -> {
+            cardHandler.onExpiredIconClicked();
+        });
 
         addExtraElementWidgets(presetCard.getTopExtraElements());
         addExtraElementWidgets(presetCard.getTopExtraElements());
@@ -54,11 +61,14 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
         PresetCard card = (PresetCard) paymentCard;
 
         bindLabel(titleView, card.getTitle(), false);
-        bindLabel(subtitleView, card.getSubtitle(), true);
+        bindLabel(subtitleView, card.getSubtitle(), true, card.isExpired());
         bindCardLogo(paymentCard.getNetworkCode(), card.getLogoLink());
 
         for (FormWidget widget : widgets.values()) {
             bindFormWidget(widget);
+        }
+        if (card.isExpired()) {
+            expiredIconView.setVisibility(View.VISIBLE);
         }
     }
 

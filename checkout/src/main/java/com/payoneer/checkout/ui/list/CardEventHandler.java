@@ -15,6 +15,7 @@ import com.payoneer.checkout.ui.widget.WidgetPresenter;
 import com.payoneer.checkout.validation.ValidationResult;
 import com.payoneer.checkout.validation.Validator;
 
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -62,6 +63,13 @@ class CardEventHandler implements WidgetPresenter {
         if (holder.hasValidPosition()) {
             PaymentCard card = holder.getPaymentCard();
             getCardListener().onHintClicked(card.getNetworkCode(), type);
+        }
+    }
+
+    public void onExpiredIconClicked() {
+        if (holder.hasValidPosition()) {
+            PaymentCard card = holder.getPaymentCard();
+            getCardListener().onExpiredIconClicked(card.getNetworkCode());
         }
     }
 

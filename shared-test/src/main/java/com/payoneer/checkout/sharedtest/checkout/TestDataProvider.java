@@ -11,6 +11,8 @@ package com.payoneer.checkout.sharedtest.checkout;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.payoneer.checkout.model.AccountInputData;
+
 /**
  * Class for providing test card data
  */
@@ -48,5 +50,15 @@ public final class TestDataProvider {
         values.put("inputelement.iban", "NL69INGB0123456789");
         values.put("inputelement.holderName", "John Doe");
         return values;
+    }
+
+    public static AccountInputData expiredAccountInputData() {
+        AccountInputData inputData = new AccountInputData();
+        inputData.setExpiryMonth("12");
+        inputData.setExpiryYear("2019");
+        inputData.setNumber("4111111111111111");
+        inputData.setVerificationCode("123");
+        inputData.setHolderName("Expired User");
+        return inputData;
     }
 }

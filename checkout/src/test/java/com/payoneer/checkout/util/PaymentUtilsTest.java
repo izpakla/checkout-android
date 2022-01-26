@@ -28,7 +28,6 @@ import org.robolectric.RobolectricTestRunner;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentInputType;
-import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.InputElement;
 
 import android.content.res.Resources;
@@ -95,22 +94,6 @@ public class PaymentUtilsTest {
         assertTrue(PaymentUtils.isCardPaymentMethod(CREDIT_CARD));
         assertTrue(PaymentUtils.isCardPaymentMethod(DEBIT_CARD));
         assertFalse(PaymentUtils.isCardPaymentMethod(WALLET));
-    }
-
-    @Test
-    public void getAccountMaskLabel() {
-        String numberLabel = "41 *** 1111";
-        String displayLabel = "displayLabel";
-        String visaLabel = "VISA •••• 1111";
-        String americanExpressLabel = "American Express •••• 1111";
-
-        AccountMask accountMask = new AccountMask();
-        accountMask.setNumber(numberLabel);
-        accountMask.setDisplayLabel(displayLabel);
-
-        assertEquals(visaLabel, PaymentUtils.getAccountMaskLabel(accountMask, CREDIT_CARD, "VISA"));
-        assertEquals(americanExpressLabel, PaymentUtils.getAccountMaskLabel(accountMask, DEBIT_CARD, "American Express"));
-        assertEquals(displayLabel, PaymentUtils.getAccountMaskLabel(accountMask, WALLET, ""));
     }
 
     @Test(expected = IOException.class)

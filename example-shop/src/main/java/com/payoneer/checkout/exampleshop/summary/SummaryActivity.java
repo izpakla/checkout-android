@@ -21,8 +21,8 @@ import com.payoneer.checkout.model.PaymentMethod;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.ui.PaymentUI;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
+import com.payoneer.checkout.util.AccountMaskUtils;
 import com.payoneer.checkout.util.NetworkLogoLoader;
-import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -176,7 +176,7 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
             case PaymentMethod.CREDIT_CARD:
             case PaymentMethod.DEBIT_CARD:
                 presetTitle.setText(mask.getNumber());
-                String date = PaymentUtils.getExpiryDateString(mask);
+                String date = AccountMaskUtils.getExpiryDateString(mask);
                 if (date != null) {
                     presetSubtitle.setVisibility(View.VISIBLE);
                     presetSubtitle.setText(date);

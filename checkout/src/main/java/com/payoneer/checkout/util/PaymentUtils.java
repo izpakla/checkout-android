@@ -22,12 +22,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.payoneer.checkout.core.PaymentInputType;
-import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.Parameter;
 
 import android.content.res.Resources;
-import android.text.TextUtils;
 import android.view.View;
 
 /**
@@ -54,6 +52,17 @@ public final class PaymentUtils {
      */
     public static boolean toBoolean(Boolean value, boolean defaultValue) {
         return (value == null) ? defaultValue : value.booleanValue();
+    }
+
+    /**
+     * Get the base integer value given the Integer object.
+     * If the object is null then return the 0 value.
+     *
+     * @param value to convert to an integer
+     * @return the value as an integer or 0 if the value is null
+     */
+    public static int toInt(Integer value) {
+        return value == null ? 0 : value;
     }
 
     /**
@@ -97,65 +106,6 @@ public final class PaymentUtils {
         String str1 = obj1 != null ? obj1.toString() : null;
         String str2 = obj2 != null ? obj2.toString() : null;
         return str1 != null && (str1.equals(str2));
-    }
-
-    /**
-     * Get the base integer value given the Integer object.
-     * If the object is null then return the 0 value.
-     *
-     * @param value to convert to an integer
-     * @return the value as an integer or 0 if the value is null
-     */
-    public static int toInt(Integer value) {
-        return value == null ? 0 : value;
-    }
-
-    /**
-     * Get the label for this AccountMask, if the paymentMethod is a card then return the
-     * number from the mask. Else return the DisplayLabel from this mask.
-     *
-     * @param accountMask containing the label information
-     * @param paymentMethod to which this accountMask belongs to
-     * @return the label for this AccountMask
-     */
-    public static String getAccountMaskLabel(AccountMask accountMask, String paymentMethod, String networkLabel) {
-        if (isCardPaymentMethod(paymentMethod)) {
-            return formatAccountMaskLabel(accountMask.getNumber(), networkLabel);
-        } else if (!TextUtils.isEmpty(accountMask.getIban())) {
-            return formatAccountMaskLabel(accountMask.getIban(), networkLabel);
-        }
-        return accountMask.getDisplayLabel();
-    }
-
-    private static String formatAccountMaskLabel(String accountMaskLabel, String networkLabel) {
-        if (accountMaskLabel == null) {
-            return "";
-        }
-        String dottedSpace = " •••• ";
-        int lastStarIndex = accountMaskLabel.lastIndexOf('*');
-        String maskedNumber;
-        if (lastStarIndex == -1) {
-            maskedNumber = accountMaskLabel;
-        } else {
-            maskedNumber = accountMaskLabel.substring(lastStarIndex + 1).trim();
-        }
-        return networkLabel + dottedSpace + maskedNumber;
-    }
-
-    /**
-     * Create am expiry date string from the AccountMask.
-     * If the AccountMask does not contain the expiryMonth and expiryYear values then return null.
-     *
-     * @param mask AccountMask containing the expiryMonth and expiryYear fields
-     * @return the expiry date or null if it could not be created
-     */
-    public static String getExpiryDateString(AccountMask mask) {
-        int month = toInt(mask.getExpiryMonth());
-        int year = toInt(mask.getExpiryYear());
-        if (month == 0 || year == 0) {
-            return null;
-        }
-        return PaymentUtils.format("%1$02d / %2$d", month, (year % 100));
     }
 
     /**

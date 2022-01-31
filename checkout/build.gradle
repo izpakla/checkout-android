@@ -26,11 +26,9 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionName = rootProject.versionName
-        versionCode = rootProject.versionCode
 
-        buildConfigField('int', 'VERSION_CODE', "${versionCode}")
-        buildConfigField('String', 'VERSION_NAME', "\"${versionName}\"")
+        buildConfigField('int', 'VERSION_CODE', "${rootProject.versionCode}")
+        buildConfigField('String', 'VERSION_NAME', "\"${rootProject.versionName}\"")
     }
 
     buildTypes {
@@ -54,8 +52,6 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${rootProject.androidxSwiperefreshlayoutVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
 
-    compileOnly "org.projectlombok:lombok:${rootProject.lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${rootProject.lombokVersion}"
     testImplementation "org.robolectric:robolectric:${rootProject.robolectricVersion}"
     testImplementation "androidx.test:core:${rootProject.androidxTestCoreVersion}"
     testImplementation "junit:junit:${rootProject.junitVersion}"

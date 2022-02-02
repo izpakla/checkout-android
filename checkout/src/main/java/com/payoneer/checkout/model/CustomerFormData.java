@@ -10,15 +10,29 @@ package com.payoneer.checkout.model;
 
 import java.util.Date;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Customer data what should be used to pre-fill payment form.
  */
-@Getter
-@Setter
 public class CustomerFormData {
     /** optional */
     private Date birthday;
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(final Date birthday) {
+        this.birthday = birthday;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("CustomerFormData [");
+        if (birthday != null) {
+            builder.append("birthday=").append(birthday);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

@@ -8,14 +8,9 @@
 
 package com.payoneer.checkout.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * This class is designed to hold advanced reference information about payment.
  */
-@Getter
-@Setter
 public class LongReference {
     /** mandatory (max 32) */
     private String essential;
@@ -23,4 +18,45 @@ public class LongReference {
     private String extended;
     /** optional (max 32) */
     private String verbose;
+
+    public String getEssential() {
+        return essential;
+    }
+
+    public void setEssential(final String essential) {
+        this.essential = essential;
+    }
+
+    public String getExtended() {
+        return extended;
+    }
+
+    public void setExtended(final String extended) {
+        this.extended = extended;
+    }
+
+    public String getVerbose() {
+        return verbose;
+    }
+
+    public void setVerbose(final String verbose) {
+        this.verbose = verbose;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("LongReference [");
+        if (essential != null) {
+            builder.append("essential=").append(essential).append(", ");
+        }
+        if (extended != null) {
+            builder.append("extended=").append(extended).append(", ");
+        }
+        if (verbose != null) {
+            builder.append("verbose=").append(verbose);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

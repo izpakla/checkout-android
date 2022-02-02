@@ -8,17 +8,10 @@
 
 package com.payoneer.checkout.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 /**
  * Represents a custom extra element that the merchant can define to be visualised on a payment page.
  * The element could be a label or a checkbox.
  */
-@Getter
-@Setter
-@ToString
 public class ExtraElement {
 
     /** The name of the extra element. Required */
@@ -29,4 +22,45 @@ public class ExtraElement {
 
     /** Determines if this extra element is a checkbox, and its additional properties. Optional */
     private Checkbox checkbox;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(final String label) {
+        this.label = label;
+    }
+
+    public Checkbox getCheckbox() {
+        return checkbox;
+    }
+
+    public void setCheckbox(final Checkbox checkbox) {
+        this.checkbox = checkbox;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("ExtraElement [");
+        if (name != null) {
+            builder.append("name=").append(name).append(", ");
+        }
+        if (label != null) {
+            builder.append("label=").append(label).append(", ");
+        }
+        if (checkbox != null) {
+            builder.append("checkbox=").append(checkbox);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

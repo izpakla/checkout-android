@@ -8,14 +8,9 @@
 
 package com.payoneer.checkout.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * This class is designed to hold information about error that happened during processing of either list or operation request.
  */
-@Getter
-@Setter
 public class ErrorInfo {
     /** Simple API, always present */
     private String resultInfo;
@@ -37,5 +32,35 @@ public class ErrorInfo {
     public ErrorInfo(String resultInfo, Interaction interaction) {
         this.resultInfo = resultInfo;
         this.interaction = interaction;
+    }
+
+    public String getResultInfo() {
+        return resultInfo;
+    }
+
+    public void setResultInfo(final String resultInfo) {
+        this.resultInfo = resultInfo;
+    }
+
+    public Interaction getInteraction() {
+        return interaction;
+    }
+
+    public void setInteraction(final Interaction interaction) {
+        this.interaction = interaction;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("ErrorInfo [");
+        if (resultInfo != null) {
+            builder.append("resultInfo=").append(resultInfo).append(", ");
+        }
+        if (interaction != null) {
+            builder.append("interaction=").append(interaction);
+        }
+        builder.append("]");
+        return builder.toString();
     }
 }

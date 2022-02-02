@@ -8,8 +8,6 @@
 
 package com.payoneer.checkout.ui.list;
 
-import com.payoneer.checkout.ui.model.PaymentCard;
-
 /**
  * Class representing an item in the PaymentList
  */

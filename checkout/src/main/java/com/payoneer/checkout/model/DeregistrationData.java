@@ -8,17 +8,42 @@
 
 package com.payoneer.checkout.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * An information about deregistration options.
  */
-@Getter
-@Setter
 public class DeregistrationData {
     /** Simple API, optional - deregister one-click registrations. */
     private Boolean deleteRegistration;
     /** Simple API, optional - deregister recurring registrations. */
     private Boolean deleteRecurrence;
+
+    public Boolean getDeleteRegistration() {
+        return deleteRegistration;
+    }
+
+    public void setDeleteRegistration(final Boolean deleteRegistration) {
+        this.deleteRegistration = deleteRegistration;
+    }
+
+    public Boolean getDeleteRecurrence() {
+        return deleteRecurrence;
+    }
+
+    public void setDeleteRecurrence(final Boolean deleteRecurrence) {
+        this.deleteRecurrence = deleteRecurrence;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("DeregistrationData [");
+        if (deleteRegistration != null) {
+            builder.append("deleteRegistration=").append(deleteRegistration).append(", ");
+        }
+        if (deleteRecurrence != null) {
+            builder.append("deleteRecurrence=").append(deleteRecurrence);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

@@ -8,20 +8,35 @@
 
 package com.payoneer.checkout.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 /**
  * This class is designed to hold information checkbox element that is displayed on payment page.
  */
-@Getter
-@Setter
-@ToString
 public class Checkbox {
     /** Defines the mode of this Checkbox, required */
     @CheckboxMode.Definition
     private String mode;
     /** Error message that should be displayed if required checkbox is not checked by customer. */
     private String requiredMessage;
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(final String mode) {
+        this.mode = mode;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Checkbox [");
+        if (mode != null) {
+            builder.append("mode=").append(mode).append(", ");
+        }
+        if (requiredMessage != null) {
+            builder.append("requiredMessage=").append(requiredMessage);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

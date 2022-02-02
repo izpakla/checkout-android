@@ -89,4 +89,30 @@ public final class BrowserDataBuilder {
         this.browserScreenHeight = browserScreenHeight;
         return this;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("BrowserDataBuilder [");
+        if (javaEnabled != null) {
+            builder.append("javaEnabled=").append(javaEnabled).append(", ");
+        }
+        if (language != null) {
+            builder.append("language=").append(language).append(", ");
+        }
+        if (colorDepth != null) {
+            builder.append("colorDepth=").append(colorDepth).append(", ");
+        }
+        if (timeZone != null) {
+            builder.append("timeZone=").append(timeZone).append(", ");
+        }
+        if (browserScreenHeight != null) {
+            builder.append("browserScreenHeight=").append(browserScreenHeight).append(", ");
+        }
+        if (browserScreenWidth != null) {
+            builder.append("browserScreenWidth=").append(browserScreenWidth);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

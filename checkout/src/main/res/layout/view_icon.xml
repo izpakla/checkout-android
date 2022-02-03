@@ -21,6 +21,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/pmpage_contentdescription"
-        app:tint="?attr/colorPrimary" />
-
+        app:tint="@color/pm_gray_dark" />
 </ViewSwitcher>

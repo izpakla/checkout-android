@@ -51,27 +51,27 @@
                     android:textColor="?attr/colorOnSurface" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/image_expired_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/expired_contentdescription"
-                android:src="@drawable/ic_error"
-                android:visibility="gone"
-                app:tint="?attr/colorError" />
-
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/pmborder_small">
+
+                <ImageButton
+                    android:id="@+id/image_expired_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/expired_contentdescription"
+                    android:src="@drawable/ic_error"
+                    android:visibility="gone"
+                    app:tint="?attr/colorError" />
 
                 <include
                     layout="@layout/view_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/pmborder_medium" />
-            </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

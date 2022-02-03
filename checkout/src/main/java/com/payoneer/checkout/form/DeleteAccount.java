@@ -82,4 +82,21 @@ public class DeleteAccount implements Parcelable {
     public URL getURL() {
         return url;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("DeleteAccount [");
+        if (url != null) {
+            builder.append("url=").append(url).append(", ");
+        }
+        if (operationType != null) {
+            builder.append("operationType=").append(operationType).append(", ");
+        }
+        if (deregistrationData != null) {
+            builder.append("deregistrationData=").append(deregistrationData);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

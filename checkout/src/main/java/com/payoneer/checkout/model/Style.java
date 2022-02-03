@@ -10,14 +10,9 @@ package com.payoneer.checkout.model;
 
 import java.net.URL;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * This class is designed to hold simplified information to style a redirect pages for express preset transaction.
  */
-@Getter
-@Setter
 public class Style {
     /** Optional */
     private String language;
@@ -33,4 +28,45 @@ public class Style {
      * 600x400
      */
     private String challengeWindowSize;
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(final String language) {
+        this.language = language;
+    }
+
+    public URL getCssOverride() {
+        return cssOverride;
+    }
+
+    public void setCssOverride(final URL cssOverride) {
+        this.cssOverride = cssOverride;
+    }
+
+    public String getChallengeWindowSize() {
+        return challengeWindowSize;
+    }
+
+    public void setChallengeWindowSize(final String challengeWindowSize) {
+        this.challengeWindowSize = challengeWindowSize;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Style [");
+        if (language != null) {
+            builder.append("language=").append(language).append(", ");
+        }
+        if (cssOverride != null) {
+            builder.append("cssOverride=").append(cssOverride).append(", ");
+        }
+        if (challengeWindowSize != null) {
+            builder.append("challengeWindowSize=").append(challengeWindowSize);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

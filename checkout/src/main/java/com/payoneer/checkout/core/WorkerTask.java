@@ -64,8 +64,8 @@ public final class WorkerTask<V> extends FutureTask<V> {
 
     /**
      * Helper method to unsubscribe the workerTask
-     * @param workerTask to unsubscribe, may be null
      *
+     * @param workerTask to unsubscribe, may be null
      * @return true when unsubscribed, false otherwise
      */
     public static boolean unsubscribe(WorkerTask workerTask) {
@@ -78,8 +78,8 @@ public final class WorkerTask<V> extends FutureTask<V> {
 
     /**
      * Helper method to check if the provider workerTask is subscribed
-     * @param workerTask to be checked
      *
+     * @param workerTask to be checked
      * @return true when subscribed, false otherwise
      */
     public static boolean isSubscribed(WorkerTask workerTask) {

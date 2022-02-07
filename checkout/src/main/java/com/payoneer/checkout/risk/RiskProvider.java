@@ -18,14 +18,15 @@ public interface RiskProvider {
 
     /**
      * Initialize this RiskProvider with the provider risk parameters
+     *
      * @param providerParameters used to initialize this risk provider
      */
-    public void initialize(ProviderParameters providerParameters);
+    void initialize(ProviderParameters providerParameters);
 
     /**
      * Get the risk data from this risk provider
      *
      * @return the risk data obtained by this risk provider
      */
-    public ProviderParameters getRiskData();
+    ProviderParameters getRiskData();
 }

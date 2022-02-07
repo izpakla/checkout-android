@@ -22,10 +22,6 @@ public final class FallbackRiskProvider implements RiskProvider {
     }
 
     @Override
-    public void refresh() {
-    }
-
-    @Override
     public ProviderParameters getRiskData() {
         ProviderParameters result = new ProviderParameters();
         result.setProviderCode(parameters.getProviderCode());

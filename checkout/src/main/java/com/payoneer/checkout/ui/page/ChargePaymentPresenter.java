@@ -13,6 +13,7 @@ import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
 import static com.payoneer.checkout.ui.page.ChargePaymentActivity.TYPE_CHARGE_PRESET_ACCOUNT;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.payoneer.checkout.core.PaymentException;
@@ -23,8 +24,11 @@ import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
+import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
+import com.payoneer.checkout.risk.RiskListener;
+import com.payoneer.checkout.risk.RiskService;
 import com.payoneer.checkout.ui.PaymentResult;
 import com.payoneer.checkout.ui.PaymentUI;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
@@ -42,12 +46,13 @@ import android.content.Context;
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
  * First this presenter will load the list, checks if the operation is present and then post the operation to the Payment API.
  */
-final class ChargePaymentPresenter extends BasePaymentPresenter implements PaymentSessionListener, NetworkServiceListener {
+final class ChargePaymentPresenter extends BasePaymentPresenter implements PaymentSessionListener, NetworkServiceListener, RiskListener {
 
     private final PaymentSessionService sessionService;
     private PaymentSession session;
     private Operation operation;
     private NetworkService networkService;
+    private RiskService riskService;
     private RedirectRequest redirectRequest;
     private int chargeType;
 
@@ -60,6 +65,9 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         super(PaymentUI.getInstance().getListUrl(), view);
         sessionService = new PaymentSessionService(view.getActivity());
         sessionService.setListener(this);
+
+        riskService = new RiskService();
+        riskService.setListener(this);
     }
 
     void onStart(Operation operation, int chargeType) {
@@ -135,6 +143,23 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         this.redirectRequest = redirectRequest;
         view.showProgress(false);
         RedirectService.redirect(context, redirectRequest);
+    }
+
+
+    @Override
+    public void onRiskInitializedSuccess() {
+    }
+
+    @Override
+    public void onRiskInitializedError(final Throwable cause) {
+    }
+
+    @Override
+    public void onRiskCollectionSuccess(final List<ProviderParameters> riskData) {
+    }
+
+    @Override
+    public void onRiskCollectionError(final Throwable cause) {
     }
 
     boolean onBackPressed() {

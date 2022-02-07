@@ -14,7 +14,6 @@ import java.util.ServiceLoader;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.content.Context;
-import android.util.Log;
 
 /**
  * Class for looking up a RiskProvider given the risk provider code and type.

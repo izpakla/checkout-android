@@ -8,6 +8,7 @@
 
 package com.payoneer.checkout.risk;
 
+import java.security.Provider;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -16,9 +17,8 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.WorkerSubscriber;
 import com.payoneer.checkout.core.WorkerTask;
 import com.payoneer.checkout.core.Workers;
-import com.payoneer.checkout.form.DeleteAccount;
 import com.payoneer.checkout.form.Operation;
-import com.payoneer.checkout.model.OperationResult;
+import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.ProviderParameters;
 
 import android.content.Context;
@@ -72,7 +72,7 @@ public final class RiskService {
      *
      * @param context for setting up initialized
      */
-    public void initializeRiskProviders(Context context) {
+    public void initializeRiskProviders(ListResult listResult, Context context) {
 
         if (isActive()) {
             throw new IllegalStateException("RiskService is already active, stop first");
@@ -80,7 +80,7 @@ public final class RiskService {
         initTask = WorkerTask.fromCallable(new Callable<Void>() {
             @Override
             public Void call() throws PaymentException {
-                return asyncInitializeRiskProviders(context);
+                return asyncInitializeRiskProviders(listResult, context);
             }
         });
         initTask.subscribe(new WorkerSubscriber<Void>() {
@@ -108,7 +108,7 @@ public final class RiskService {
      *
      * @param operation to be posted to the Payment API
      */
-    public List<ProviderParameters> getRiskProviderData(final Operation operation) {
+    public void getRiskProviderData(final Operation operation) {
 
         if (isActive()) {
             throw new IllegalStateException("RiskService is already active, stop first");
@@ -119,29 +119,30 @@ public final class RiskService {
                 return asyncGetRiskProviderData();
             }
         });
-        collectTask.subscribe(new WorkerSubscriber<OperationResult>() {
+        collectTask.subscribe(new WorkerSubscriber<List<ProviderParameters>>() {
             @Override
-            public void onSuccess(OperationResult result) {
+            public void onSuccess(List<ProviderParameters> riskData) {
                 collectTask = null;
 
                 if (listener != null) {
-                    listener.onGetRiskSuccess(result);
+                    listener.onRiskCollectionSuccess(riskData);
                 }
             }
 
             @Override
             public void onError(Throwable cause) {
-                task = null;
+                collectTask = null;
 
                 if (listener != null) {
-                    listener.onOperationError(cause);
+                    listener.onRiskCollectionError(cause);
                 }
             }
         });
-        Workers.getInstance().forNetworkTasks().execute(task);
+        Workers.getInstance().forNetworkTasks().execute(collectTask);
     }
 
-    private Void asyncInitializeRiskProviders(final Context context) throws PaymentException {
+    private Void asyncInitializeRiskProviders(final ListResult listResult, final Context context) throws PaymentException {
+        List<ProviderParameters> providers = listResult.getRiskProviders();
         return null;
     }
 

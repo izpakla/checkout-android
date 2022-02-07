@@ -36,9 +36,12 @@ import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Parameter;
+import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
+import com.payoneer.checkout.risk.RiskListener;
+import com.payoneer.checkout.risk.RiskService;
 import com.payoneer.checkout.ui.PaymentActivityResult;
 import com.payoneer.checkout.ui.PaymentResult;
 import com.payoneer.checkout.ui.PaymentUI;
@@ -58,12 +61,13 @@ import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * The PaymentListPresenter implementing the presenter part of the MVP
  */
 final class PaymentListPresenter extends BasePaymentPresenter
-    implements PaymentSessionListener, NetworkServiceListener, PaymentListListener {
+    implements PaymentSessionListener, NetworkServiceListener, PaymentListListener, RiskListener {
 
     private final static int CHARGEPAYMENT_REQUEST_CODE = 1;
     private final PaymentSessionService sessionService;
@@ -75,6 +79,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
     private PaymentSession session;
     private PaymentActivityResult activityResult;
     private NetworkService networkService;
+    private RiskService riskService;
     private RedirectRequest redirectRequest;
 
     /**
@@ -88,6 +93,9 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
         sessionService = new PaymentSessionService(view.getActivity());
         sessionService.setListener(this);
+
+        riskService = new RiskService();
+        riskService.setListener(this);
     }
 
     void onStart() {
@@ -265,6 +273,22 @@ final class PaymentListPresenter extends BasePaymentPresenter
         }
     }
 
+    @Override
+    public void onRiskInitializedSuccess() {
+    }
+
+    @Override
+    public void onRiskInitializedError(final Throwable cause) {
+    }
+
+    @Override
+    public void onRiskCollectionSuccess(final List<ProviderParameters> riskData) {
+    }
+
+    @Override
+    public void onRiskCollectionError(final Throwable cause) {
+    }
+
     private void handleUpdatePaymentResult(int resultCode, PaymentResult result) {
         switch (resultCode) {
             case RESULT_CODE_PROCEED:
@@ -280,6 +304,9 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private void handleUpdatePaymentProceed(PaymentResult result) {
         Interaction interaction = result.getInteraction();
+        Log.i("AAAAAAAAA", "handleUpdatePaymentProceed: " + interaction);
+        Log.i("AAAAAAAAA", "handleUpdatePaymentProceed: " + result.getOperationResult());
+
         switch (interaction.getReason()) {
             case PENDING:
                 showMessageAndResetPaymentSession(createInteractionMessage(interaction, session));
@@ -298,6 +325,8 @@ final class PaymentListPresenter extends BasePaymentPresenter
             return;
         }
         Interaction interaction = result.getInteraction();
+        Log.i("AAAAAAAAA", "handleUpdatePaymentError: " + interaction);
+        Log.i("AAAAAAAAA", "handleUpdatePaymentProceed: " + result.getOperationResult());
         switch (interaction.getCode()) {
             case RELOAD:
                 loadPaymentSession();
@@ -377,6 +406,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
             closeWithErrorCode("There are no payment methods available");
             return;
         }
+        riskService.initializeRiskProviders(session.getListResult(), view.getActivity());
         this.session = session;
         showPaymentSession();
     }

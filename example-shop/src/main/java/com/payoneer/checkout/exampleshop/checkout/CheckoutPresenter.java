@@ -9,13 +9,13 @@
 package com.payoneer.checkout.exampleshop.checkout;
 
 import static com.payoneer.checkout.model.RedirectType.SUMMARY;
-import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
-import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;
-import com.payoneer.checkout.ui.PaymentActivityResult;
-import com.payoneer.checkout.ui.PaymentResult;
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.util.PaymentUtils;
 
 /**
@@ -39,19 +39,19 @@ final class CheckoutPresenter {
      *
      * @param activityResult containing the payment result
      */
-    void handlePaymentActivityResult(PaymentActivityResult activityResult) {
-        PaymentResult paymentResult = activityResult.getPaymentResult();
+    void handlePaymentActivityResult(CheckoutActivityResult activityResult) {
+        CheckoutResult checkoutResult = activityResult.getPaymentResult();
         switch (activityResult.getResultCode()) {
             case RESULT_CODE_PROCEED:
-                handlePaymentResultProceed(paymentResult);
+                handlePaymentResultProceed(checkoutResult);
                 break;
             case RESULT_CODE_ERROR:
-                handlePaymentResultError(paymentResult);
+                handlePaymentResultError(checkoutResult);
                 break;
         }
     }
 
-    private void handlePaymentResultProceed(PaymentResult result) {
+    private void handlePaymentResultProceed(CheckoutResult result) {
         Interaction interaction = result.getInteraction();
         if (interaction == null) {
             return;
@@ -63,7 +63,7 @@ final class CheckoutPresenter {
         view.showPaymentConfirmation();
     }
 
-    private void handlePaymentResultError(PaymentResult result) {
+    private void handlePaymentResultError(CheckoutResult result) {
         Interaction interaction = result.getInteraction();
         switch (interaction.getCode()) {
             case InteractionCode.ABORT:

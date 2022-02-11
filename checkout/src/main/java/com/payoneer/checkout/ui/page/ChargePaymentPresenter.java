@@ -9,8 +9,8 @@
 package com.payoneer.checkout.ui.page;
 
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
-import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
-import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 import static com.payoneer.checkout.ui.page.ChargePaymentActivity.TYPE_CHARGE_PRESET_ACCOUNT;
 
 import java.util.Objects;
@@ -25,8 +25,8 @@ import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
-import com.payoneer.checkout.ui.PaymentResult;
-import com.payoneer.checkout.ui.PaymentUI;
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentSession;
@@ -34,7 +34,7 @@ import com.payoneer.checkout.ui.service.NetworkService;
 import com.payoneer.checkout.ui.service.NetworkServiceListener;
 import com.payoneer.checkout.ui.service.PaymentSessionListener;
 import com.payoneer.checkout.ui.service.PaymentSessionService;
-import com.payoneer.checkout.util.PaymentResultHelper;
+import com.payoneer.checkout.CheckoutResultHelper;
 
 import android.content.Context;
 
@@ -57,7 +57,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
      * @param view the BasePaymentView displaying payment information
      */
     ChargePaymentPresenter(BasePaymentView view) {
-        super(PaymentUI.getInstance().getListUrl(), view);
+        super(Checkout.getInstance().getListUrl(), view);
         sessionService = new PaymentSessionService(view.getActivity());
         sessionService.setListener(this);
     }
@@ -93,7 +93,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
             handleLoadSessionProceed(session);
         } else {
             ErrorInfo errorInfo = new ErrorInfo(listResult.getResultInfo(), interaction);
-            PaymentResult result = new PaymentResult(errorInfo, null);
+            CheckoutResult result = new CheckoutResult(errorInfo, null);
             closeWithErrorCode(result);
         }
     }
@@ -109,7 +109,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     @Override
-    public void onProcessPaymentResult(int resultCode, PaymentResult result) {
+    public void onProcessPaymentResult(int resultCode, CheckoutResult result) {
         setState(STARTED);
         switch (resultCode) {
             case RESULT_CODE_PROCEED:
@@ -122,7 +122,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     @Override
-    public void onDeleteAccountResult(int resultCode, PaymentResult result) {
+    public void onDeleteAccountResult(int resultCode, CheckoutResult result) {
     }
 
     @Override
@@ -167,12 +167,12 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
             networkService.setListener(this);
             processPayment(operation);
         } catch (PaymentException e) {
-            closeWithErrorCode(PaymentResultHelper.fromThrowable(e));
+            closeWithErrorCode(CheckoutResultHelper.fromThrowable(e));
         }
     }
 
     private void handleLoadingError(Throwable cause) {
-        PaymentResult result = PaymentResultHelper.fromThrowable(InteractionCode.ABORT, cause);
+        CheckoutResult result = CheckoutResultHelper.fromThrowable(InteractionCode.ABORT, cause);
 
         if (result.isNetworkFailure()) {
             handleLoadingNetworkFailure(result);
@@ -181,7 +181,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         }
     }
 
-    private void handleLoadingNetworkFailure(final PaymentResult result) {
+    private void handleLoadingNetworkFailure(final CheckoutResult result) {
         view.showConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
@@ -200,7 +200,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         });
     }
 
-    private void handleProcessPaymentError(PaymentResult result) {
+    private void handleProcessPaymentError(CheckoutResult result) {
         if (result.isNetworkFailure()) {
             handleProcessNetworkFailure(result);
             return;
@@ -217,7 +217,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         }
     }
 
-    private void handleProcessNetworkFailure(final PaymentResult result) {
+    private void handleProcessNetworkFailure(final CheckoutResult result) {
         view.showConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
@@ -241,7 +241,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         networkService.processPayment(operation);
     }
 
-    private void showMessageAndCloseWithErrorCode(PaymentResult result) {
+    private void showMessageAndCloseWithErrorCode(CheckoutResult result) {
         Interaction interaction = result.getInteraction();
         view.setPaymentResult(RESULT_CODE_ERROR, result);
         PaymentDialogFragment.PaymentDialogListener listener = new PaymentDialogFragment.PaymentDialogListener() {

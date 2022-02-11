@@ -19,7 +19,7 @@ import com.payoneer.checkout.exampleshop.shared.BaseActivity;
 import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.PaymentMethod;
 import com.payoneer.checkout.model.PresetAccount;
-import com.payoneer.checkout.ui.PaymentUI;
+import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
 import com.payoneer.checkout.util.AccountMaskUtils;
 import com.payoneer.checkout.util.NetworkLogoLoader;
@@ -243,8 +243,8 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
     @Override
     public void showPaymentList() {
         if (active) {
-            PaymentUI paymentUI = PaymentUI.getInstance();
-            paymentUI.showPaymentPage(this, EDIT_REQUEST_CODE);
+            Checkout checkout = Checkout.getInstance();
+            checkout.showPaymentPage(this, EDIT_REQUEST_CODE);
         }
     }
 
@@ -265,8 +265,8 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
 
     private void onPayClicked() {
         if (presetAccount != null) {
-            PaymentUI paymentUI = PaymentUI.getInstance();
-            paymentUI.chargePresetAccount(this, PAYMENT_REQUEST_CODE);
+            Checkout checkout = Checkout.getInstance();
+            checkout.chargePresetAccount(this, PAYMENT_REQUEST_CODE);
         }
     }
 

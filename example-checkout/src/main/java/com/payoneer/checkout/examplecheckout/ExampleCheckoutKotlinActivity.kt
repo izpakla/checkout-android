@@ -22,9 +22,9 @@ import androidx.core.view.isVisible
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding
-import com.payoneer.checkout.ui.PaymentActivityResult
-import com.payoneer.checkout.ui.PaymentTheme
-import com.payoneer.checkout.ui.PaymentUI
+import com.payoneer.checkout.CheckoutActivityResult
+import com.payoneer.checkout.CheckoutTheme
+import com.payoneer.checkout.Checkout
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
 
 /**
@@ -38,8 +38,8 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityExamplecheckoutBinding
-    private val paymentUI = PaymentUI.getInstance()
-    private var activityResult: PaymentActivityResult? = null
+    private val paymentUI = Checkout.getInstance()
+    private var activityResult: CheckoutActivityResult? = null
     private var resultHandledIdlingResource: SimpleIdlingResource? = null
     private var resultHandled = false
 
@@ -63,7 +63,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PAYMENT_REQUEST_CODE || requestCode == CHARGE_PRESET_ACCOUNT_REQUEST_CODE) {
-            activityResult = PaymentActivityResult.fromActivityResult(requestCode, resultCode, data)
+            activityResult = CheckoutActivityResult.fromActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -130,14 +130,14 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         resultHandledIdlingResource?.setIdleState(handledState)
     }
 
-    private fun createPaymentTheme(): PaymentTheme? = if (binding.switchTheme.isChecked) {
-        PaymentTheme.createBuilder().setPaymentListTheme(R.style.CustomTheme_Toolbar)
+    private fun createPaymentTheme(): CheckoutTheme? = if (binding.switchTheme.isChecked) {
+        CheckoutTheme.createBuilder().setPaymentListTheme(R.style.CustomTheme_Toolbar)
             .setChargePaymentTheme(R.style.CustomTheme_NoToolbar).build()
     } else {
-        PaymentTheme.createDefault()
+        CheckoutTheme.createDefault()
     }
 
-    private fun showPaymentActivityResult(sdkResult: PaymentActivityResult) {
+    private fun showPaymentActivityResult(sdkResult: CheckoutActivityResult) {
         val resultCode = sdkResult.resultCode
         val paymentResult = sdkResult.paymentResult
 
@@ -155,7 +155,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
             textInteractioncode.setLabel(code)
             textInteractionreason.setLabel(reason)
             textPaymenterror.setLabel(error)
-            textResultcode.setLabel(PaymentActivityResult.resultCodeToString(resultCode))
+            textResultcode.setLabel(CheckoutActivityResult.resultCodeToString(resultCode))
         }
     }
 

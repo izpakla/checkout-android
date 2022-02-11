@@ -15,8 +15,8 @@ import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
 import static com.payoneer.checkout.model.NetworkOperationType.PAYOUT;
 import static com.payoneer.checkout.model.RedirectType.HANDLER3DS2;
 import static com.payoneer.checkout.model.RedirectType.PROVIDER;
-import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
-import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.form.DeleteAccount;
@@ -25,11 +25,11 @@ import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.redirect.RedirectRequest;
-import com.payoneer.checkout.ui.PaymentResult;
+import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.ui.service.NetworkService;
 import com.payoneer.checkout.ui.service.OperationListener;
 import com.payoneer.checkout.ui.service.OperationService;
-import com.payoneer.checkout.util.PaymentResultHelper;
+import com.payoneer.checkout.CheckoutResultHelper;
 
 import android.content.Context;
 import android.util.Log;
@@ -100,34 +100,34 @@ public final class BasicNetworkService extends NetworkService {
     @Override
     public void onRedirectResult(RedirectRequest request, OperationResult operationResult) {
         int resultCode;
-        PaymentResult paymentResult;
+        CheckoutResult checkoutResult;
 
         if (operationResult != null) {
             Interaction interaction = operationResult.getInteraction();
             resultCode = PROCEED.equals(interaction.getCode()) ? RESULT_CODE_PROCEED : RESULT_CODE_ERROR;
-            paymentResult = new PaymentResult(operationResult);
+            checkoutResult = new CheckoutResult(operationResult);
         } else {
             String message = "Missing OperationResult after client-side redirect";
             String interactionCode = getErrorInteractionCode(operationType);
             resultCode = RESULT_CODE_ERROR;
-            paymentResult = PaymentResultHelper.fromErrorMessage(interactionCode, message);
+            checkoutResult = CheckoutResultHelper.fromErrorMessage(interactionCode, message);
         }
-        Log.i("checkout", "onRedirectResult: " + paymentResult);
+        Log.i("checkout", "onRedirectResult: " + checkoutResult);
 
         if (request.getRequestCode() == PROCESSPAYMENT_REQUEST_CODE) {
-            listener.onProcessPaymentResult(resultCode, paymentResult);
+            listener.onProcessPaymentResult(resultCode, checkoutResult);
         } else {
-            listener.onDeleteAccountResult(resultCode, paymentResult);
+            listener.onDeleteAccountResult(resultCode, checkoutResult);
         }
     }
 
     private void handleProcessPaymentSuccess(OperationResult operationResult) {
         Interaction interaction = operationResult.getInteraction();
-        PaymentResult paymentResult = new PaymentResult(operationResult);
-        Log.i("checkout", "handleProcessPaymentSuccess: " + paymentResult);
+        CheckoutResult checkoutResult = new CheckoutResult(operationResult);
+        Log.i("checkout", "handleProcessPaymentSuccess: " + checkoutResult);
 
         if (!PROCEED.equals(interaction.getCode())) {
-            listener.onProcessPaymentResult(RESULT_CODE_ERROR, paymentResult);
+            listener.onProcessPaymentResult(RESULT_CODE_ERROR, checkoutResult);
             return;
         }
         if (requiresRedirect(operationResult)) {
@@ -139,24 +139,24 @@ public final class BasicNetworkService extends NetworkService {
             }
             return;
         }
-        listener.onProcessPaymentResult(RESULT_CODE_PROCEED, paymentResult);
+        listener.onProcessPaymentResult(RESULT_CODE_PROCEED, checkoutResult);
     }
 
     private void handleProcessPaymentError(Throwable cause) {
         String code = getErrorInteractionCode(operationType);
-        PaymentResult paymentResult = PaymentResultHelper.fromThrowable(code, cause);
+        CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(code, cause);
 
-        Log.i("checkout", "handleProcessPaymentError: " + paymentResult);
-        listener.onProcessPaymentResult(RESULT_CODE_ERROR, paymentResult);
+        Log.i("checkout", "handleProcessPaymentError: " + checkoutResult);
+        listener.onProcessPaymentResult(RESULT_CODE_ERROR, checkoutResult);
     }
 
     private void handleDeleteAccountSuccess(OperationResult operationResult) {
         Interaction interaction = operationResult.getInteraction();
-        PaymentResult paymentResult = new PaymentResult(operationResult);
-        Log.i("checkout", "handleDeleteAccountSuccess: " + paymentResult);
+        CheckoutResult checkoutResult = new CheckoutResult(operationResult);
+        Log.i("checkout", "handleDeleteAccountSuccess: " + checkoutResult);
 
         if (!PROCEED.equals(interaction.getCode())) {
-            listener.onDeleteAccountResult(RESULT_CODE_ERROR, paymentResult);
+            listener.onDeleteAccountResult(RESULT_CODE_ERROR, checkoutResult);
             return;
         }
         if (requiresRedirect(operationResult)) {
@@ -168,13 +168,13 @@ public final class BasicNetworkService extends NetworkService {
             }
             return;
         }
-        listener.onDeleteAccountResult(RESULT_CODE_PROCEED, paymentResult);
+        listener.onDeleteAccountResult(RESULT_CODE_PROCEED, checkoutResult);
     }
 
     private void handleDeleteAccountError(Throwable cause) {
-        PaymentResult paymentResult = PaymentResultHelper.fromThrowable(ABORT, cause);
-        Log.i("checkout", "handleDeleteAccountError: " + paymentResult);
-        listener.onDeleteAccountResult(RESULT_CODE_ERROR, paymentResult);
+        CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(ABORT, cause);
+        Log.i("checkout", "handleDeleteAccountError: " + checkoutResult);
+        listener.onDeleteAccountResult(RESULT_CODE_ERROR, checkoutResult);
     }
 
     private boolean requiresRedirect(OperationResult operationResult) {

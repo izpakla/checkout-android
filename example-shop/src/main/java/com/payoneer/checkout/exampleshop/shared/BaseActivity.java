@@ -9,7 +9,7 @@
 package com.payoneer.checkout.exampleshop.shared;
 
 import com.payoneer.checkout.exampleshop.R;
-import com.payoneer.checkout.ui.PaymentActivityResult;
+import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
@@ -33,7 +33,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected boolean active;
     protected String listUrl;
-    protected PaymentActivityResult activityResult;
+    protected CheckoutActivityResult activityResult;
     protected SimpleIdlingResource resultHandledIdlingResource;
     private boolean resultHandled;
 
@@ -97,7 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PAYMENT_REQUEST_CODE || requestCode == EDIT_REQUEST_CODE) {
-            activityResult = PaymentActivityResult.fromActivityResult(requestCode, resultCode, data);
+            activityResult = CheckoutActivityResult.fromActivityResult(requestCode, resultCode, data);
         }
     }
 

@@ -13,7 +13,7 @@ import com.payoneer.checkout.exampleshop.R;
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity;
 import com.payoneer.checkout.exampleshop.shared.BaseActivity;
 import com.payoneer.checkout.exampleshop.summary.SummaryActivity;
-import com.payoneer.checkout.ui.PaymentUI;
+import com.payoneer.checkout.Checkout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -143,8 +143,8 @@ public final class CheckoutActivity extends BaseActivity implements CheckoutView
     }
 
     private void onButtonClicked() {
-        PaymentUI paymentUI = PaymentUI.getInstance();
-        paymentUI.setListUrl(listUrl);
-        paymentUI.showPaymentPage(this, PAYMENT_REQUEST_CODE);
+        Checkout checkout = Checkout.getInstance();
+        checkout.setListUrl(listUrl);
+        checkout.showPaymentPage(this, PAYMENT_REQUEST_CODE);
     }
 }

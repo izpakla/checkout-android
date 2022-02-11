@@ -6,9 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui;
-
-import com.payoneer.checkout.util.PaymentResultHelper;
+package com.payoneer.checkout;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,26 +14,26 @@ import android.content.Intent;
 /**
  * A container for a payment activity result as obtained from the Android SDK
  */
-public final class PaymentActivityResult {
+public final class CheckoutActivityResult {
 
     public final static int RESULT_CODE_PROCEED = Activity.RESULT_FIRST_USER;
     public final static int RESULT_CODE_ERROR = Activity.RESULT_FIRST_USER + 1;
 
     private final int requestCode;
     private final int resultCode;
-    private final PaymentResult paymentResult;
+    private final CheckoutResult checkoutResult;
 
     /**
      * Construct a new PaymentActivityResult Object
      *
      * @param requestCode activity requestCode
      * @param resultCode activity resultCode
-     * @param paymentResult containing the result of the payment request
+     * @param checkoutResult containing the result of the payment request
      */
-    public PaymentActivityResult(int requestCode, int resultCode, PaymentResult paymentResult) {
+    public CheckoutActivityResult(int requestCode, int resultCode, CheckoutResult checkoutResult) {
         this.requestCode = requestCode;
         this.resultCode = resultCode;
-        this.paymentResult = paymentResult;
+        this.checkoutResult = checkoutResult;
     }
 
     /**
@@ -45,9 +43,9 @@ public final class PaymentActivityResult {
      * @param resultCode activity resultCode
      * @param data containing the activity result data
      */
-    public static PaymentActivityResult fromActivityResult(int requestCode, int resultCode, Intent data) {
-        PaymentResult result = PaymentResultHelper.fromResultIntent(data);
-        return new PaymentActivityResult(requestCode, resultCode, result);
+    public static CheckoutActivityResult fromActivityResult(int requestCode, int resultCode, Intent data) {
+        CheckoutResult result = CheckoutResultHelper.fromResultIntent(data);
+        return new CheckoutActivityResult(requestCode, resultCode, result);
     }
 
     /**
@@ -76,7 +74,7 @@ public final class PaymentActivityResult {
         return resultCode;
     }
 
-    public PaymentResult getPaymentResult() {
-        return paymentResult;
+    public CheckoutResult getPaymentResult() {
+        return checkoutResult;
     }
 }

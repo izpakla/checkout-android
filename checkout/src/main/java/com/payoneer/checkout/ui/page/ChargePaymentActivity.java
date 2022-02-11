@@ -11,6 +11,7 @@ package com.payoneer.checkout.ui.page;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 
+import com.payoneer.checkout.CheckoutInfo;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.localization.Localization;
@@ -40,7 +41,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
      * @param context Context to create the intent
      * @return newly created start intent
      */
-    public static Intent createStartIntent(Context context, Operation operation) {
+    public static Intent createStartIntent(Context context, CheckoutInfo checkoutInfo, Operation operation) {
         if (context == null) {
             throw new IllegalArgumentException("context may not be null");
         }
@@ -59,7 +60,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
      * @param context Context to create the intent
      * @return newly created start intent
      */
-    public static Intent createStartIntent(Context context) {
+    public static Intent createStartIntent(Context context, CheckoutInfo checkoutInfo) {
         if (context == null) {
             throw new IllegalArgumentException("context may not be null");
         }

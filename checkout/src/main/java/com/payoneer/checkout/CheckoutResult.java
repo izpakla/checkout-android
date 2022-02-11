@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui;
+package com.payoneer.checkout;
 
 import static com.payoneer.checkout.model.InteractionReason.COMMUNICATION_FAILURE;
 
@@ -23,17 +23,17 @@ import android.util.Log;
 /**
  * A container for the payment result as obtained from the Payment API
  */
-public final class PaymentResult implements Parcelable {
+public final class CheckoutResult implements Parcelable {
 
     public final static String EXTRA_PAYMENT_RESULT = "paymentresult";
-    public final static Parcelable.Creator<PaymentResult> CREATOR = new Parcelable.Creator<PaymentResult>() {
+    public final static Parcelable.Creator<CheckoutResult> CREATOR = new Parcelable.Creator<CheckoutResult>() {
 
-        public PaymentResult createFromParcel(Parcel in) {
-            return new PaymentResult(in);
+        public CheckoutResult createFromParcel(Parcel in) {
+            return new CheckoutResult(in);
         }
 
-        public PaymentResult[] newArray(int size) {
-            return new PaymentResult[size];
+        public CheckoutResult[] newArray(int size) {
+            return new CheckoutResult[size];
         }
     };
 
@@ -46,7 +46,7 @@ public final class PaymentResult implements Parcelable {
      *
      * @param operationResult containing the result of the operation
      */
-    public PaymentResult(OperationResult operationResult) {
+    public CheckoutResult(OperationResult operationResult) {
         this.operationResult = operationResult;
     }
 
@@ -55,7 +55,7 @@ public final class PaymentResult implements Parcelable {
      *
      * @param errorInfo containing the Interaction and resultInfo
      */
-    public PaymentResult(ErrorInfo errorInfo) {
+    public CheckoutResult(ErrorInfo errorInfo) {
         this(errorInfo, null);
     }
 
@@ -65,12 +65,12 @@ public final class PaymentResult implements Parcelable {
      * @param errorInfo containing the Interaction and resultInfo
      * @param cause the optional Throwable that caused the error
      */
-    public PaymentResult(ErrorInfo errorInfo, Throwable cause) {
+    public CheckoutResult(ErrorInfo errorInfo, Throwable cause) {
         this.errorInfo = errorInfo;
         this.cause = cause;
     }
 
-    private PaymentResult(Parcel in) {
+    private CheckoutResult(Parcel in) {
         GsonHelper gson = GsonHelper.getInstance();
         try {
             operationResult = gson.fromJson(in.readString(), OperationResult.class);
@@ -148,7 +148,7 @@ public final class PaymentResult implements Parcelable {
     @Override
     public String toString() {
         Interaction interaction = getInteraction();
-        return "PaymentResult[resultInfo: " + getResultInfo() + ", code: " + interaction.getCode() + ", reason: " + interaction.getReason()
+        return "CheckoutResult[resultInfo: " + getResultInfo() + ", code: " + interaction.getCode() + ", reason: " + interaction.getReason()
             + "]";
     }
 }

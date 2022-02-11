@@ -13,7 +13,7 @@ import static com.payoneer.checkout.localization.LocalizationKey.LIST_TITLE;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.localization.Localization;
-import com.payoneer.checkout.ui.PaymentActivityResult;
+import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.ui.list.PaymentList;
 import com.payoneer.checkout.ui.model.PaymentSession;
 
@@ -72,7 +72,7 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        PaymentActivityResult result = PaymentActivityResult.fromActivityResult(requestCode, resultCode, data);
+        CheckoutActivityResult result = CheckoutActivityResult.fromActivityResult(requestCode, resultCode, data);
         presenter.setPaymentActivityResult(result);
     }
 

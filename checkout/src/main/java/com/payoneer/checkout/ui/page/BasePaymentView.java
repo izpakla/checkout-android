@@ -9,8 +9,8 @@
 package com.payoneer.checkout.ui.page;
 
 import com.payoneer.checkout.localization.InteractionMessage;
-import com.payoneer.checkout.ui.PaymentActivityResult;
-import com.payoneer.checkout.ui.PaymentResult;
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 
 import android.app.Activity;
@@ -86,14 +86,14 @@ interface BasePaymentView {
      * @param resultCode the current resultCode
      * @param result containing the Payment result state
      */
-    void setPaymentResult(int resultCode, PaymentResult result);
+    void setPaymentResult(int resultCode, CheckoutResult result);
 
     /**
      * Pass on the ActivityResult to the activity that started this View.
      *
-     * @param paymentActivityResult to be pass on
+     * @param checkoutActivityResult to be pass on
      */
-    void passOnActivityResult(PaymentActivityResult paymentActivityResult);
+    void passOnActivityResult(CheckoutActivityResult checkoutActivityResult);
 
     /**
      * Get the Android Context of this view.

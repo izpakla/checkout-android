@@ -14,19 +14,19 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import com.payoneer.checkout.R;
-import com.payoneer.checkout.ui.PaymentTheme;
+import com.payoneer.checkout.CheckoutTheme;
 
-public class PaymentThemeTest {
+public class CheckoutThemeTest {
 
     @Test
     public void createBuilder() {
-        PaymentTheme.Builder builder = PaymentTheme.createBuilder();
+        CheckoutTheme.Builder builder = CheckoutTheme.createBuilder();
         assertNotNull(builder);
     }
 
     @Test
     public void createDefault() {
-        PaymentTheme theme = PaymentTheme.createDefault();
+        CheckoutTheme theme = CheckoutTheme.createDefault();
         assertNotNull(theme);
 
         assertEquals(theme.getPaymentListTheme(), R.style.PaymentTheme_Toolbar);
@@ -36,7 +36,7 @@ public class PaymentThemeTest {
     @Test
     public void getPaymentListTheme() {
         int value = R.style.PaymentTheme;
-        PaymentTheme theme = PaymentTheme.createBuilder().
+        CheckoutTheme theme = CheckoutTheme.createBuilder().
             setPaymentListTheme(value).build();
         assertEquals(theme.getPaymentListTheme(), value);
     }
@@ -44,7 +44,7 @@ public class PaymentThemeTest {
     @Test
     public void getChargePaymentTheme() {
         int value = R.style.PaymentTheme;
-        PaymentTheme theme = PaymentTheme.createBuilder().
+        CheckoutTheme theme = CheckoutTheme.createBuilder().
             setChargePaymentTheme(value).build();
         assertEquals(theme.getChargePaymentTheme(), value);
     }

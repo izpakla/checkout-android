@@ -10,10 +10,10 @@ package com.payoneer.checkout.examplecheckout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding;
 import com.payoneer.checkout.model.Interaction;
-import com.payoneer.checkout.ui.PaymentActivityResult;
-import com.payoneer.checkout.ui.PaymentResult;
-import com.payoneer.checkout.ui.PaymentTheme;
-import com.payoneer.checkout.ui.PaymentUI;
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutTheme;
+import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
 
 import android.content.Context;
@@ -37,10 +37,10 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     private final static int PAYMENT_REQUEST_CODE = 1;
     private final static int CHARGE_PRESET_ACCOUNT_REQUEST_CODE = 2;
     private ActivityExamplecheckoutBinding binding;
-    private PaymentActivityResult activityResult;
+    private CheckoutActivityResult activityResult;
     private SimpleIdlingResource resultHandledIdlingResource;
     private boolean resultHandled;
-    private final PaymentUI paymentUI = PaymentUI.getInstance();
+    private final Checkout checkout = Checkout.getInstance();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PAYMENT_REQUEST_CODE || requestCode == CHARGE_PRESET_ACCOUNT_REQUEST_CODE) {
-            activityResult = PaymentActivityResult.fromActivityResult(requestCode, resultCode, data);
+            activityResult = CheckoutActivityResult.fromActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -77,24 +77,24 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         this.activityResult = null;
     }
 
-    private void showPaymentActivityResult(PaymentActivityResult sdkResult) {
+    private void showPaymentActivityResult(CheckoutActivityResult sdkResult) {
         int resultCode = sdkResult.getResultCode();
         binding.labelResultheader.setVisibility(View.VISIBLE);
         binding.layoutResult.setVisibility(View.VISIBLE);
-        setText(binding.textResultcode, PaymentActivityResult.resultCodeToString(resultCode));
+        setText(binding.textResultcode, CheckoutActivityResult.resultCodeToString(resultCode));
 
         String info = null;
         String code = null;
         String reason = null;
         String error = null;
-        PaymentResult paymentResult = sdkResult.getPaymentResult();
+        CheckoutResult checkoutResult = sdkResult.getPaymentResult();
 
-        if (paymentResult != null) {
-            info = paymentResult.getResultInfo();
-            Interaction interaction = paymentResult.getInteraction();
+        if (checkoutResult != null) {
+            info = checkoutResult.getResultInfo();
+            Interaction interaction = checkoutResult.getInteraction();
             code = interaction.getCode();
             reason = interaction.getReason();
-            Throwable cause = paymentResult.getCause();
+            Throwable cause = checkoutResult.getCause();
             error = cause != null ? cause.getMessage() : null;
         }
         setText(binding.textResultinfo, info);
@@ -124,12 +124,12 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         }
         closeKeyboard();
         clearPaymentResult();
-        paymentUI.setPaymentTheme(createPaymentTheme());
+        checkout.setPaymentTheme(createPaymentTheme());
 
         // Uncomment if you like to fix e.g. the orientation to landscape mode
         // paymentUI.setOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        paymentUI.showPaymentPage(this, PAYMENT_REQUEST_CODE);
+        checkout.showPaymentPage(this, PAYMENT_REQUEST_CODE);
     }
 
     private void chargePresetAccount() {
@@ -138,7 +138,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         }
         closeKeyboard();
         clearPaymentResult();
-        paymentUI.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE);
+        checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE);
     }
 
     private boolean setListUrl() {
@@ -147,18 +147,18 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid));
             return false;
         }
-        paymentUI.setListUrl(listUrl);
+        checkout.setListUrl(listUrl);
         return true;
     }
 
-    private PaymentTheme createPaymentTheme() {
+    private CheckoutTheme createPaymentTheme() {
         if (binding.switchTheme.isChecked()) {
-            return PaymentTheme.createBuilder().
+            return CheckoutTheme.createBuilder().
                 setPaymentListTheme(R.style.CustomTheme_Toolbar).
                 setChargePaymentTheme(R.style.CustomTheme_NoToolbar).
                 build();
         } else {
-            return PaymentTheme.createDefault();
+            return CheckoutTheme.createDefault();
         }
     }
 

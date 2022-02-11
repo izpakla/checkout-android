@@ -9,8 +9,8 @@
 package com.payoneer.checkout.exampleshop.summary;
 
 import static android.app.Activity.RESULT_CANCELED;
-import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
-import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 
 import java.util.concurrent.Callable;
 
@@ -21,8 +21,8 @@ import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.network.ListConnection;
-import com.payoneer.checkout.ui.PaymentActivityResult;
-import com.payoneer.checkout.ui.PaymentResult;
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutResult;
 
 import android.content.Context;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -65,7 +65,7 @@ final class SummaryPresenter {
      *
      * @param activityResult the result received from the Checkout SDK
      */
-    void handlePaymentActivityResult(PaymentActivityResult activityResult) {
+    void handlePaymentActivityResult(CheckoutActivityResult activityResult) {
         switch (activityResult.getRequestCode()) {
             case SummaryActivity.PAYMENT_REQUEST_CODE:
                 handlePaymentResult(activityResult);
@@ -108,7 +108,7 @@ final class SummaryPresenter {
             });
     }
 
-    private void handleEditResult(PaymentActivityResult result) {
+    private void handleEditResult(CheckoutActivityResult result) {
         switch (result.getResultCode()) {
             case RESULT_CODE_ERROR:
                 handlePaymentResultError(result.getPaymentResult());
@@ -121,26 +121,26 @@ final class SummaryPresenter {
         }
     }
 
-    private void handlePaymentResult(PaymentActivityResult activityResult) {
-        PaymentResult paymentResult = activityResult.getPaymentResult();
+    private void handlePaymentResult(CheckoutActivityResult activityResult) {
+        CheckoutResult checkoutResult = activityResult.getPaymentResult();
         switch (activityResult.getResultCode()) {
             case RESULT_CODE_PROCEED:
-                handlePaymentResultProceed(paymentResult);
+                handlePaymentResultProceed(checkoutResult);
                 break;
             case RESULT_CODE_ERROR:
-                handlePaymentResultError(paymentResult);
+                handlePaymentResultError(checkoutResult);
                 break;
         }
     }
 
-    private void handlePaymentResultProceed(PaymentResult result) {
+    private void handlePaymentResultProceed(CheckoutResult result) {
         Interaction interaction = result.getInteraction();
         if (interaction != null) {
             view.showPaymentConfirmation();
         }
     }
 
-    private void handlePaymentResultError(PaymentResult result) {
+    private void handlePaymentResultError(CheckoutResult result) {
         Interaction interaction = result.getInteraction();
         switch (interaction.getCode()) {
             case InteractionCode.ABORT:

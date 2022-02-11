@@ -27,7 +27,7 @@ import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListService;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 import com.payoneer.checkout.sharedtest.view.UiDeviceHelper;
-import com.payoneer.checkout.ui.PaymentActivityResult;
+import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.ui.page.ChargePaymentActivity;
 import com.payoneer.checkout.ui.page.PaymentListActivity;
 
@@ -64,7 +64,7 @@ public abstract class BaseTest {
     }
 
     protected void matchResultCodeCanceled() {
-        String resultCode = PaymentActivityResult.resultCodeToString(Activity.RESULT_CANCELED);
+        String resultCode = CheckoutActivityResult.resultCodeToString(Activity.RESULT_CANCELED);
         this.matchResultCode(resultCode);
     }
 

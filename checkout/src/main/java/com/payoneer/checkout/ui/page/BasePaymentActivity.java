@@ -11,15 +11,15 @@ package com.payoneer.checkout.ui.page;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.localization.Localization;
-import com.payoneer.checkout.ui.PaymentActivityResult;
-import com.payoneer.checkout.ui.PaymentResult;
-import com.payoneer.checkout.ui.PaymentTheme;
-import com.payoneer.checkout.ui.PaymentUI;
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutTheme;
+import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
-import com.payoneer.checkout.util.PaymentResultHelper;
+import com.payoneer.checkout.CheckoutResultHelper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -44,7 +44,7 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(PaymentUI.getInstance().getOrientation());
+        setRequestedOrientation(Checkout.getInstance().getOrientation());
         idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
     }
 
@@ -118,13 +118,13 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     }
 
     @Override
-    public void setPaymentResult(int resultCode, PaymentResult result) {
+    public void setPaymentResult(int resultCode, CheckoutResult result) {
         setResultIntent(resultCode, result);
     }
 
     @Override
-    public void passOnActivityResult(PaymentActivityResult paymentActivityResult) {
-        setResultIntent(paymentActivityResult.getResultCode(), paymentActivityResult.getPaymentResult());
+    public void passOnActivityResult(CheckoutActivityResult checkoutActivityResult) {
+        setResultIntent(checkoutActivityResult.getResultCode(), checkoutActivityResult.getPaymentResult());
         supportFinishAfterTransition();
         idlingResources.setCloseIdlingState(true);
     }
@@ -151,8 +151,8 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
      *
      * @return the current PaymentTheme
      */
-    PaymentTheme getPaymentTheme() {
-        return PaymentUI.getInstance().getPaymentTheme();
+    CheckoutTheme getPaymentTheme() {
+        return Checkout.getInstance().getPaymentTheme();
     }
 
     /**
@@ -170,9 +170,9 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
      * @param resultCode of the ActivityResult
      * @param result to be added as extra to the intent
      */
-    void setResultIntent(int resultCode, PaymentResult result) {
+    void setResultIntent(int resultCode, CheckoutResult result) {
         Intent intent = new Intent();
-        PaymentResultHelper.putIntoResultIntent(result, intent);
+        CheckoutResultHelper.putIntoResultIntent(result, intent);
         setResult(resultCode, intent);
     }
 

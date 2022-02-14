@@ -9,17 +9,19 @@
 package com.payoneer.checkout;
 
 import android.content.pm.ActivityInfo;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * The CheckoutInfo is the class containing information about the payment session.
  */
-public final class CheckoutInfo {
+public final class CheckoutInfo implements Parcelable {
 
     /** The self url pointing to the payment session list */
     private String listUrl;
 
     /** The theming to be applied to the screens and dialogs */
-    private CheckoutTheme theme;
+    private CheckoutTheme checkoutTheme;
 
     /** The orientation of the screens, by default it is in locked mode */
     private int orientation;
@@ -29,11 +31,44 @@ public final class CheckoutInfo {
 
     private CheckoutInfo(Builder builder) {
         this.listUrl = builder.listUrl;
-        this.theme = builder.theme;
+        this.checkoutTheme = builder.checkoutTheme;
         this.orientation = builder.orientation;
     }
 
+    protected CheckoutInfo(Parcel in) {
+        listUrl = in.readString();
+        checkoutTheme = in.readParcelable(CheckoutTheme.class.getClassLoader());
+        orientation = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(listUrl);
+        dest.writeParcelable(checkoutTheme, flags);
+        dest.writeInt(orientation);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<CheckoutInfo> CREATOR = new Creator<CheckoutInfo>() {
+        @Override
+        public CheckoutInfo createFromParcel(Parcel in) {
+            return new CheckoutInfo(in);
+        }
+
+        @Override
+        public CheckoutInfo[] newArray(int size) {
+            return new CheckoutInfo[size];
+        }
+    };
+
     public static Builder createBuilder(final String listUrl) {
+        if (listUrl == null) {
+            throw new IllegalStateException("CheckoutTheme cannot be null");
+        }
         return new Builder(listUrl);
     }
 
@@ -41,18 +76,33 @@ public final class CheckoutInfo {
         return listUrl;
     }
 
-    public CheckoutTheme getTheme() {
-        return theme;
+    public CheckoutTheme getCheckoutTheme() {
+        return checkoutTheme;
     }
 
     public int getOrientation() {
         return orientation;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("CheckoutInfo [");
+        if (listUrl != null) {
+            builder.append("listUrl=").append(listUrl).append(", ");
+        }
+        if (checkoutTheme != null) {
+            builder.append("theme=").append(checkoutTheme).append(", ");
+        }
+        builder.append("orientation=").append(orientation);
+        builder.append("]");
+        return builder.toString();
+    }
+
     public static class Builder {
         String listUrl;
         int orientation;
-        CheckoutTheme theme;
+        CheckoutTheme checkoutTheme;
 
         /**
          * Create a new default Builder for creating CheckoutInfo instances
@@ -62,7 +112,18 @@ public final class CheckoutInfo {
         Builder(final String listUrl) {
             this.listUrl = listUrl;
             this.orientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED;
-            this.theme = CheckoutTheme.createDefault();
+            this.checkoutTheme = CheckoutTheme.createDefault();
+        }
+
+        /**
+         * Create a new default Builder for creating CheckoutInfo instances
+         *
+         * @param info mandatory parameter containing CheckoutInfo to use in this builder
+         */
+        Builder(final CheckoutInfo info) {
+            this.listUrl = info.listUrl;
+            this.orientation = info.orientation;
+            this.checkoutTheme = info.checkoutTheme;
         }
 
         /**
@@ -92,11 +153,11 @@ public final class CheckoutInfo {
             }
         }
 
-        public Builder setTheme(final CheckoutTheme theme) {
-            if (theme == null) {
+        public Builder setTheme(final CheckoutTheme checkoutTheme) {
+            if (checkoutTheme == null) {
                 throw new IllegalStateException("CheckoutTheme cannot be null");
             }
-            this.theme = theme;
+            this.checkoutTheme = checkoutTheme;
             return this;
         }
 

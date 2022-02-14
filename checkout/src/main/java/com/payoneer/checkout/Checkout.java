@@ -27,23 +27,55 @@ public final class Checkout {
 
     private CheckoutInfo.Builder builder;
 
-    private Checkout(final String listUrl) {
-        builder = CheckoutInfo.createBuilder(listUrl);
+    /**
+     * Create a new Checkout class with the mandatory listUrl
+     *
+     * @param builder contains the CheckoutInfo builder
+     */
+    private Checkout(final CheckoutInfo.Builder builder) {
+        this.builder = builder;
     }
 
+    /**
+     * Create a new Checkout class with the listUrl
+     *
+     * @param listUrl contains the Url string of the payment list
+     * @return newly created new Checkout Object
+     */
     public static Checkout with(final String listUrl) {
-        return new Checkout(listUrl);
+        CheckoutInfo.Builder builder = new CheckoutInfo.Builder(listUrl);
+        return new Checkout(builder);
     }
 
+    /**
+     * Create a new Checkout class with the CheckoutInfo object containing
+     * the information about the Checkout
+     *
+     * @param info contains the listUrl and optional theming and orientation
+     * @return newly created new Checkout Object
+     */
     public static Checkout with(final CheckoutInfo info) {
-        return new Checkout(info.getListUrl()).orientation(info.getOrientation()).theme(info.getTheme()));
+        CheckoutInfo.Builder builder = new CheckoutInfo.Builder(info);
+        return new Checkout(builder);
     }
 
+    /**
+     * Set the orientation in this Checkout Object
+     *
+     * @param orientation
+     * @return this Checkout Object
+     */
     public Checkout orientation(final int orientation) {
         builder.setOrientation(orientation);
         return this;
     }
 
+    /**
+     * SEt the theme in this Checkout Object
+     *
+     * @param theme to be set
+     * @return this Checkout Object
+     */
     public Checkout theme(final CheckoutTheme theme) {
         builder.setTheme(theme);
         return this;
@@ -56,8 +88,9 @@ public final class Checkout {
      * @param activity the activity that will be notified when this PaymentPage is finished
      * @param requestCode the requestCode to be used for identifying results in the parent activity
      */
-    public static void chargePresetAccount(final Activity activity, final int requestCode) {
-        Intent intent = ChargePaymentActivity.createStartIntent(activity, builder.build());
+    public CheckoutInfo chargePresetAccount(final Activity activity, final int requestCode) {
+        CheckoutInfo info = builder.build();
+        Intent intent = ChargePaymentActivity.createStartIntent(activity, info);
         launchActivity(activity, intent, requestCode);
         activity.overridePendingTransition(ChargePaymentActivity.getStartTransition(), R.anim.no_animation);
     }
@@ -68,10 +101,12 @@ public final class Checkout {
      * @param activity the activity that will be notified when this PaymentPage is finished
      * @param requestCode the requestCode to be used for identifying results in the parent activity
      */
-    public void showPaymentList(final Activity activity, final int requestCode) {
-        Intent intent = PaymentListActivity.createStartIntent(activity, builder.build());
+    public CheckoutInfo showPaymentList(final Activity activity, final int requestCode) {
+        CheckoutInfo info = builder.build();
+        Intent intent = PaymentListActivity.createStartIntent(activity, info);
         launchActivity(activity, intent, requestCode);
         activity.overridePendingTransition(PaymentListActivity.getStartTransition(), R.anim.no_animation);
+        return info;
     }
 
     /**

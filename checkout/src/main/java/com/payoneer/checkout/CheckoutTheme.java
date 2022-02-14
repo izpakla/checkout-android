@@ -72,6 +72,16 @@ public final class CheckoutTheme implements Parcelable {
         return chargePaymentTheme;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("CheckoutTheme [");
+        builder.append("paymentListTheme=").append(paymentListTheme).append(", ");
+        builder.append("chargePaymentTheme=").append(chargePaymentTheme);
+        builder.append("]");
+        return builder.toString();
+    }
+
     public static final class Builder {
         int paymentListTheme;
         int chargePaymentTheme;

@@ -2,18 +2,22 @@
 apply from: 'version.gradle'
 
 buildscript {
+    ext {
+        kotlin_version = '1.6.10'
+    }
     repositories {
         google()
         // Required for Browserstack gradle plugin
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
+        mavenCentral()
     }
 
     dependencies {
         classpath 'gradle.plugin.com.browserstack.gradle:browserstack-gradle-plugin:3.0.3'
         classpath 'com.android.tools.build:gradle:7.1.0'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -51,9 +55,11 @@ ext {
     browserStackUser = System.getenv('BROWSERSTACK_USER')
     browserStackKey = System.getenv('BROWSERSTACK_KEY')
 
-    merchantCode = System.getenv('MOBILE_MERCHANT_CODE')
-    merchantPaymentToken = System.getenv('MOBILE_MERCHANT_PAYMENT_TOKEN')
-    paymentApiListUrl = System.getenv('PAYMENTAPI_LISTURL')
+    merchantCode = 'FERDINAND'                   //System.getenv('MOBILE_MERCHANT_CODE')
+    merchantPaymentToken = '3voq9k4nonfnoa1nrp75q1ct2tnild5icad4vaq9'
+    // System.getenv('MOBILE_MERCHANT_PAYMENT_TOKEN')
+    paymentApiListUrl = 'https://api.pi-nightly.integration.oscato.com/api/lists'
+    //System.getenv('PAYMENTAPI_LISTURL')
 
     playstoreStoreFile = System.getenv('PLAYSTORE_UPLOAD_STOREFILE')
     playstoreStorePassword = System.getenv('PLAYSTORE_UPLOAD_STOREPASSWORD')

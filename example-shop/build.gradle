@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.browserstack.gradle'
 
 assemble.dependsOn('lint')
@@ -86,6 +87,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.androidxTestEspressoVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-intents:${rootProject.androidxTestEspressoVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:${rootProject.androidxTestEspressoVersion}"
+    implementation "androidx.core:core-ktx:${rootProject.coreKtx}"
 }
 
 apply from: 'browserstack.gradle'

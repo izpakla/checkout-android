@@ -1,6 +1,10 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'com.browserstack.gradle'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.browserstack.gradle'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
 
 assemble.dependsOn('lint')
 
@@ -78,6 +82,9 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxjava:${rootProject.rxjavaVersion}"
     implementation "io.reactivex.rxjava3:rxandroid:${rootProject.rxandroidVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
+    implementation "com.google.dagger:hilt-android:${rootProject.hilt_version}"
+    kapt "com.google.dagger:hilt-compiler:${rootProject.hilt_version}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.lifecycle_version}"
 
     androidTestImplementation project(":shared-test")
     androidTestImplementation "androidx.test:runner:${rootProject.androidxTestRunnerVersion}"

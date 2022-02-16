@@ -21,6 +21,7 @@ import com.payoneer.checkout.exampleshop.checkout.CheckoutActivity
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
 import com.payoneer.checkout.exampleshop.shared.BaseActivity
 import com.payoneer.checkout.exampleshop.summary.SummaryActivity
+import com.payoneer.checkout.exampleshop.util.EventObserver
 import com.payoneer.checkout.ui.PaymentUI
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,7 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class CheckoutActivity : BaseActivity() {
 
     private val shopCheckoutViewModel by viewModels<ShopCheckoutViewModel>()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_checkout)
@@ -54,34 +55,28 @@ class CheckoutActivity : BaseActivity() {
     }
 
     private fun observeViewModel() {
-        shopCheckoutViewModel.showPaymentSummary.observe(this) {
-            it.getIfNotHandled()?.let {
-                if (!active) {
-                    return@let
-                }
-                val intent = SummaryActivity.createStartIntent(this, listUrl)
-                startActivity(intent)
-                setResultHandledIdleState()
+        shopCheckoutViewModel.showPaymentSummary.observe(this, EventObserver {
+            if (!active) {
+                return@EventObserver
             }
-        }
-        shopCheckoutViewModel.showPaymentConfirmation.observe(this) {
-            it.getIfNotHandled()?.let {
-                if (!active) {
-                    return@let
-                }
-                val intent = ConfirmActivity.createStartIntent(this)
-                startActivity(intent)
-                setResultHandledIdleState()
+            val intent = SummaryActivity.createStartIntent(this, listUrl)
+            startActivity(intent)
+            setResultHandledIdleState()
+        })
+        shopCheckoutViewModel.showPaymentConfirmation.observe(this, EventObserver {
+            if (!active) {
+                return@EventObserver
             }
-        }
-        shopCheckoutViewModel.stopPaymentWithErrorMessage.observe(this) {
-            it.getIfNotHandled()?.let {
-                if (!active) {
-                    return@let
-                }
-                showErrorDialog(R.string.dialog_error_message)
+            val intent = ConfirmActivity.createStartIntent(this)
+            startActivity(intent)
+            setResultHandledIdleState()
+        })
+        shopCheckoutViewModel.stopPaymentWithErrorMessage.observe(this, EventObserver {
+            if (!active) {
+                return@EventObserver
             }
-        }
+            showErrorDialog(R.string.dialog_error_message)
+        })
     }
 
     private fun onButtonClicked() {

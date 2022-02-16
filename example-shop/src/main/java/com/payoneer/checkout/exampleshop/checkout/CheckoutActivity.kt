@@ -14,7 +14,6 @@ import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.core.content.res.ResourcesCompat
 import com.payoneer.checkout.exampleshop.R
-import com.payoneer.checkout.exampleshop.checkout.CheckoutActivity
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
 import com.payoneer.checkout.exampleshop.databinding.ActivityCheckoutBinding
 import com.payoneer.checkout.exampleshop.shared.BaseActivity
@@ -43,10 +42,11 @@ class CheckoutActivity : BaseActivity() {
 
     private fun initToolbar() {
         setSupportActionBar(binding.layoutHeader.toolbar)
-        val actionBar = supportActionBar
-        actionBar!!.setTitle(R.string.checkout_collapsed_title)
-        actionBar.setDisplayHomeAsUpEnabled(true)
-        actionBar.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.apply {
+            setTitle(R.string.checkout_collapsed_title)
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         val typeface = ResourcesCompat.getFont(this, R.font.roboto_medium)
         binding.layoutHeader.collapsingToolbar.setCollapsedTitleTypeface(typeface)
         binding.layoutHeader.collapsingToolbar.setExpandedTitleTypeface(typeface)

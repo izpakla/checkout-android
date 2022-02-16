@@ -8,8 +8,7 @@
 
 package com.payoneer.checkout.risk;
 
-import java.security.Provider;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -17,7 +16,6 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.WorkerSubscriber;
 import com.payoneer.checkout.core.WorkerTask;
 import com.payoneer.checkout.core.Workers;
-import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.ProviderParameters;
 
@@ -28,14 +26,13 @@ import android.content.Context;
  * This service makes callbacks in the risk listener to notify of request completions.
  */
 public final class RiskService {
+    private final List<RiskProviderController> controllers;
     private WorkerTask<Void> initTask;
     private WorkerTask<List<ProviderParameters>> collectTask;
     private RiskListener listener;
 
-    /**
-     * Create a new RiskService
-     */
     public RiskService() {
+        controllers = new ArrayList<>();
     }
 
     /**
@@ -71,8 +68,9 @@ public final class RiskService {
      * Initialize risk providers
      *
      * @param context for setting up initialized
+     * @param listResult
      */
-    public void initializeRiskProviders(ListResult listResult, Context context) {
+    public void initializeRisk(Context context, ListResult listResult) {
 
         if (isActive()) {
             throw new IllegalStateException("RiskService is already active, stop first");
@@ -80,7 +78,7 @@ public final class RiskService {
         initTask = WorkerTask.fromCallable(new Callable<Void>() {
             @Override
             public Void call() throws PaymentException {
-                return asyncInitializeRiskProviders(listResult, context);
+                return asyncInitializeRisk(context, listResult);
             }
         });
         initTask.subscribe(new WorkerSubscriber<Void>() {
@@ -104,11 +102,9 @@ public final class RiskService {
     }
 
     /**
-     * Post an operation to the Payment API
-     *
-     * @param operation to be posted to the Payment API
+     * Collect the result from all risk providers
      */
-    public void getRiskProviderData(final Operation operation) {
+    public void collectRiskData() {
 
         if (isActive()) {
             throw new IllegalStateException("RiskService is already active, stop first");
@@ -116,16 +112,16 @@ public final class RiskService {
         collectTask = WorkerTask.fromCallable(new Callable<List<ProviderParameters>>() {
             @Override
             public List<ProviderParameters> call() throws PaymentException {
-                return asyncGetRiskProviderData();
+                return asyncCollectRiskData();
             }
         });
         collectTask.subscribe(new WorkerSubscriber<List<ProviderParameters>>() {
             @Override
-            public void onSuccess(List<ProviderParameters> riskData) {
+            public void onSuccess(List<ProviderParameters> riskResult) {
                 collectTask = null;
 
                 if (listener != null) {
-                    listener.onRiskCollectionSuccess(riskData);
+                    listener.onRiskCollectionSuccess(riskResult);
                 }
             }
 
@@ -141,12 +137,41 @@ public final class RiskService {
         Workers.getInstance().forNetworkTasks().execute(collectTask);
     }
 
-    private Void asyncInitializeRiskProviders(final ListResult listResult, final Context context) throws PaymentException {
+    private Void asyncInitializeRisk(final Context context, final ListResult listResult) {
         List<ProviderParameters> providers = listResult.getRiskProviders();
+        if (providers == null) {
+            return null;
+        }
+        for (ProviderParameters provider : providers) {
+            if (containsRiskController(provider.getProviderCode(), provider.getProviderType())) {
+                continue;
+            }
+            RiskProviderController controller = createRiskController(context, provider);
+            controller.initialize(context);
+        }
         return null;
     }
 
-    private List<ProviderParameters> asyncGetRiskProviderData() throws PaymentException {
-        return Collections.emptyList();
+    private List<ProviderParameters> asyncCollectRiskData() {
+        List<ProviderParameters> riskData = new ArrayList<>();
+        for (RiskProviderController controller : controllers) {
+            riskData.add(controller.getRiskData());
+        }
+        return riskData;
+    }
+
+    private RiskProviderController createRiskController(final Context context, ProviderParameters parameters) {
+        RiskProviderController controller = RiskProviderController.createFrom(parameters);
+        controller.initialize(context);
+        return controller;
+    }
+
+    private boolean containsRiskController(String code, String type) {
+        for (RiskProviderController controller : controllers) {
+            if (controller.matches(code, type)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -21,17 +21,16 @@ import android.content.Context;
 public class RiskProviderLookup {
 
     private static final List<RiskProviderFactory> factories = new CopyOnWriteArrayList<>();
-    private static final FallbackRiskProviderFactory fallbackFactory = new FallbackRiskProviderFactory();
 
     /**
      * Helper class to get anew Risk provider for the given providerCode and providerType
      *
-     * @param providerCode to be used to lookup a RiskProvider
-     * @param providerType to be used to lookup a RiskProvider
+     * @param riskProviderCode to be used to lookup a RiskProvider
+     * @param riskProviderType to be used to lookup a RiskProvider
      * @return the RiskProvider or null if none found
      */
-    public static RiskProvider getRiskProvider(Context context, String providerCode, String providerType) {
-        RiskProviderFactory factory = getRiskProviderFactory(providerCode, providerType);
+    public static RiskProvider getRiskProvider(Context context, String riskProviderCode, String riskProviderType) {
+        RiskProviderFactory factory = getRiskProviderFactory(riskProviderCode, riskProviderType);
         return factory != null ? factory.createRiskProvider(context) : null;
     }
 
@@ -47,7 +46,7 @@ public class RiskProviderLookup {
                 return factory;
             }
         }
-        return fallbackFactory;
+        return null;
     }
 
     private static void initRiskProviderFactories() {

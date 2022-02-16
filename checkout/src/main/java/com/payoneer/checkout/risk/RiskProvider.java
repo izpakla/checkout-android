@@ -8,7 +8,7 @@
 
 package com.payoneer.checkout.risk;
 
-import com.payoneer.checkout.model.ProviderParameters;
+import android.content.Context;
 
 /**
  * Interface for a risk provider, a RiskService is responsible for activating and
@@ -17,16 +17,17 @@ import com.payoneer.checkout.model.ProviderParameters;
 public interface RiskProvider {
 
     /**
-     * Initialize this RiskProvider with the provider risk parameters
+     * Initialize this RiskProvider with the provider risk information
      *
-     * @param providerParameters used to initialize this risk provider
+     * @param context into which this risk provider will be loaded
+     * @param info contains information about how the risk provider
      */
-    void initialize(ProviderParameters providerParameters);
+    void initialize(Context context, RiskProviderInfo info) throws RiskException;
 
     /**
-     * Get the risk data from this risk provider
+     * Get the risk result from this risk provider
      *
-     * @return the risk data obtained by this risk provider
+     * @return the risk result obtained by this risk provider
      */
-    ProviderParameters getRiskData();
+    RiskProviderResult getRiskProviderResult() throws RiskException;
 }

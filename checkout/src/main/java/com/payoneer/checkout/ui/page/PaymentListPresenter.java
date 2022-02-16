@@ -204,7 +204,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         Interaction interaction = listResult.getInteraction();
 
         if (Objects.equals(interaction.getCode(), PROCEED)) {
-            handleLoadPaymentSessionProceed(session);
+            riskService.initializeRisk(view.getActivity(), session.getListResult());
         } else {
             ErrorInfo errorInfo = new ErrorInfo(listResult.getResultInfo(), interaction);
             closeWithErrorCode(new PaymentResult(errorInfo));
@@ -275,10 +275,12 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     @Override
     public void onRiskInitializedSuccess() {
+        handleLoadPaymentSessionProceed(session);
     }
 
     @Override
     public void onRiskInitializedError(final Throwable cause) {
+        handleLoadPaymentSessionProceed(session);
     }
 
     @Override
@@ -304,9 +306,6 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private void handleUpdatePaymentProceed(PaymentResult result) {
         Interaction interaction = result.getInteraction();
-        Log.i("AAAAAAAAA", "handleUpdatePaymentProceed: " + interaction);
-        Log.i("AAAAAAAAA", "handleUpdatePaymentProceed: " + result.getOperationResult());
-
         switch (interaction.getReason()) {
             case PENDING:
                 showMessageAndResetPaymentSession(createInteractionMessage(interaction, session));
@@ -325,8 +324,6 @@ final class PaymentListPresenter extends BasePaymentPresenter
             return;
         }
         Interaction interaction = result.getInteraction();
-        Log.i("AAAAAAAAA", "handleUpdatePaymentError: " + interaction);
-        Log.i("AAAAAAAAA", "handleUpdatePaymentProceed: " + result.getOperationResult());
         switch (interaction.getCode()) {
             case RELOAD:
                 loadPaymentSession();
@@ -406,7 +403,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
             closeWithErrorCode("There are no payment methods available");
             return;
         }
-        riskService.initializeRiskProviders(session.getListResult(), view.getActivity());
+        riskService.initializeRisk(view.getActivity(), session.getListResult());
         this.session = session;
         showPaymentSession();
     }

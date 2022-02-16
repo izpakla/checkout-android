@@ -18,11 +18,11 @@ public interface RiskProviderFactory {
     /**
      * Check if this provider supports the provided providerCode and type
      *
-     * @param providerCode code of the risk provider
-     * @param providerType type of the risk provider
+     * @param riskProviderCode code of the risk provider
+     * @param riskProviderType type of the risk provider
      * @return true when supported, false otherwise
      */
-    boolean supports(String providerCode, String providerType);
+    boolean supports(String riskProviderCode, String riskProviderType);
 
     /**
      * Create a risk provider for this specific risk service

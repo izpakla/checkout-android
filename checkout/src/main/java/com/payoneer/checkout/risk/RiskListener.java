@@ -37,7 +37,7 @@ public interface RiskListener {
     void onRiskCollectionSuccess(List<ProviderParameters> riskData);
 
     /**
-     * Called when an error occurred while obtaining risk data.
+     * Called when an error occurred while obtaining risk result.
      *
      * @param cause describing the reason of failure
      */

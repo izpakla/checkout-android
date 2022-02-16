@@ -204,7 +204,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         Interaction interaction = listResult.getInteraction();
 
         if (Objects.equals(interaction.getCode(), PROCEED)) {
-            riskService.initializeRisk(view.getActivity(), session.getListResult());
+            handleLoadPaymentSessionProceed(session);
         } else {
             ErrorInfo errorInfo = new ErrorInfo(listResult.getResultInfo(), interaction);
             closeWithErrorCode(new PaymentResult(errorInfo));
@@ -275,12 +275,12 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     @Override
     public void onRiskInitializedSuccess() {
-        handleLoadPaymentSessionProceed(session);
+        showPaymentSession();
     }
 
     @Override
     public void onRiskInitializedError(final Throwable cause) {
-        handleLoadPaymentSessionProceed(session);
+        showPaymentSession();
     }
 
     @Override
@@ -403,9 +403,8 @@ final class PaymentListPresenter extends BasePaymentPresenter
             closeWithErrorCode("There are no payment methods available");
             return;
         }
-        riskService.initializeRisk(view.getActivity(), session.getListResult());
         this.session = session;
-        showPaymentSession();
+        riskService.initializeRisk(view.getActivity(), session.getListResult());
     }
 
     private void handleLoadingNetworkFailure(final PaymentResult result) {

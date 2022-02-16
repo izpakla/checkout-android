@@ -54,7 +54,7 @@ class ShopCheckoutViewModel @Inject constructor() : ViewModel() {
             _showPaymentSummary.updateValue()
             return
         }
-        _showPaymentSummary.updateValue()
+        _showPaymentConfirmation.updateValue()
     }
 
     private fun handlePaymentResultError(result: PaymentResult) {

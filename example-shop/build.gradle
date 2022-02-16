@@ -85,6 +85,8 @@ dependencies {
     implementation "com.google.dagger:hilt-android:${rootProject.hilt_version}"
     kapt "com.google.dagger:hilt-compiler:${rootProject.hilt_version}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.lifecycle_version}"
+    implementation "androidx.activity:activity-ktx:${rootProject.activity_version}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.lifecycle_version}"
 
     androidTestImplementation project(":shared-test")
     androidTestImplementation "androidx.test:runner:${rootProject.androidxTestRunnerVersion}"
@@ -96,5 +98,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-contrib:${rootProject.androidxTestEspressoVersion}"
     implementation "androidx.core:core-ktx:${rootProject.coreKtx}"
 }
-
+kapt {
+    correctErrorTypes = true
+}
 apply from: 'browserstack.gradle'

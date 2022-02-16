@@ -68,6 +68,7 @@ ext {
     compileSdkVersion = 31
     targetSdkVersion = 31
 
+    activity_version = "1.4.0"
     lifecycle_version = "2.4.1"
     kotlin_version = '1.6.10'
     hilt_version = '2.38.1'

@@ -11,14 +11,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.widget.Button
 import androidx.activity.viewModels
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.checkout.CheckoutActivity
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
+import com.payoneer.checkout.exampleshop.databinding.ActivityCheckoutBinding
 import com.payoneer.checkout.exampleshop.shared.BaseActivity
 import com.payoneer.checkout.exampleshop.summary.SummaryActivity
 import com.payoneer.checkout.exampleshop.util.EventObserver
@@ -32,26 +30,26 @@ import dagger.hilt.android.AndroidEntryPoint
 class CheckoutActivity : BaseActivity() {
 
     private val shopCheckoutViewModel by viewModels<ShopCheckoutViewModel>()
+    private lateinit var binding: ActivityCheckoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_checkout)
+        binding = ActivityCheckoutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initToolbar()
         observeViewModel()
-        findViewById<Button>(R.id.button_checkout).setOnClickListener { onButtonClicked() }
+        binding.buttonCheckout.setOnClickListener { onButtonClicked() }
     }
 
     private fun initToolbar() {
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.layoutHeader.toolbar)
         val actionBar = supportActionBar
         actionBar!!.setTitle(R.string.checkout_collapsed_title)
         actionBar.setDisplayHomeAsUpEnabled(true)
         actionBar.setDisplayShowHomeEnabled(true)
-        val layout = findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
         val typeface = ResourcesCompat.getFont(this, R.font.roboto_medium)
-        layout.setCollapsedTitleTypeface(typeface)
-        layout.setExpandedTitleTypeface(typeface)
+        binding.layoutHeader.collapsingToolbar.setCollapsedTitleTypeface(typeface)
+        binding.layoutHeader.collapsingToolbar.setExpandedTitleTypeface(typeface)
     }
 
     private fun observeViewModel() {
@@ -85,9 +83,6 @@ class CheckoutActivity : BaseActivity() {
         paymentUI.showPaymentPage(this, PAYMENT_REQUEST_CODE)
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun onResume() {
         super.onResume()
         if (activityResult != null) {
@@ -96,9 +91,7 @@ class CheckoutActivity : BaseActivity() {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     override fun onErrorDialogClosed() {
         supportFinishAfterTransition()
     }

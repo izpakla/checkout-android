@@ -8,15 +8,7 @@
 
 package com.payoneer.checkout.risk;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-
-import com.payoneer.checkout.model.Parameter;
-import com.payoneer.checkout.model.ProviderParameters;
-import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
 import android.util.Log;
@@ -66,14 +58,14 @@ public final class RiskProviderController {
     public void initialize(Context context) {
         String code = info.getRiskProviderCode();
         String type = info.getRiskProviderType();
-        RiskProvider provider = RiskProviderLookup.getRiskProvider(context, code, type);
-        if (provider == null) {
+        riskProvider = RiskProviderLookup.getRiskProvider(context, code, type);
+        if (riskProvider == null) {
             String message = "RiskProvider(" + code + ", " + type + ") was not found";
             Log.w("checkout", message);
             return;
         }
         try {
-            provider.initialize(context.getApplicationContext(), info);
+            riskProvider.initialize(context.getApplicationContext(), info);
         } catch (RiskException e) {
             String message = "RiskProvider(" + code + ", " + type + ") failed to load";
             Log.w("checkout", message, e);

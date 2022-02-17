@@ -21,7 +21,6 @@ import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.ProviderParameters;
 
 import android.content.Context;
-import android.util.Log;
 
 /**
  * The RiskService providing asynchronous initialization of risk providers and collection of risk data from these external risk services.

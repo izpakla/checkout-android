@@ -33,9 +33,9 @@ public final class RiskProviderResult {
     }
 
     /**
-     * Copy the risk result into the list or parameters
+     * Copy the risk result data into the list or parameters
      *
-     * @param parameters list of parameters into which the riskResult should be copied
+     * @param parameters list of parameters into which the risk result data should be copied into
      */
     public void copyInto(List<Parameter> parameters) {
         for (Map.Entry<String, String> entry : riskData.entrySet()) {

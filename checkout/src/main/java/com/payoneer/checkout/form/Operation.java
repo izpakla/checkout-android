@@ -12,6 +12,8 @@ import static com.payoneer.checkout.core.PaymentInputCategory.INPUTELEMENT;
 import static com.payoneer.checkout.core.PaymentInputCategory.REGISTRATION;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.JsonSyntaxException;
@@ -22,11 +24,13 @@ import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.BrowserData;
 import com.payoneer.checkout.model.OperationData;
 import com.payoneer.checkout.model.PresetAccount;
+import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.util.GsonHelper;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * Class holding Operation form values
@@ -146,6 +150,20 @@ public class Operation implements Parcelable {
                 String msg = "Operation.putBooleanValue failed for category: " + category;
                 throw new PaymentException(msg);
         }
+    }
+
+    /**
+     * Add ProviderRequests to this operation
+     *
+     * @param providerRequests to be added to this operation
+     */
+    public void addProviderRequests(List<ProviderParameters> providerRequests) {
+        List<ProviderParameters> list = operationData.getProviderRequests();
+        if (list == null) {
+            list = new ArrayList<>();
+            operationData.setProviderRequests(list);
+        }
+        list.addAll(providerRequests);
     }
 
     /**

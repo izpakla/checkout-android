@@ -41,6 +41,7 @@ import com.payoneer.checkout.ui.service.PaymentSessionService;
 import com.payoneer.checkout.util.PaymentResultHelper;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
@@ -148,18 +149,33 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     @Override
     public void onRiskInitializedSuccess() {
+        riskService.collectRiskData();
     }
 
     @Override
     public void onRiskInitializedError(final Throwable cause) {
+        closeWithErrorCode(PaymentResultHelper.fromThrowable(cause));
     }
 
     @Override
     public void onRiskCollectionSuccess(final List<ProviderParameters> riskData) {
+        operation.addProviderRequests(riskData);
+        processPayment();
     }
 
     @Override
     public void onRiskCollectionError(final Throwable cause) {
+        closeWithErrorCode(PaymentResultHelper.fromThrowable(cause));
+    }
+
+    private void processPayment() {
+        try {
+            networkService = loadNetworkService(operation.getNetworkCode(), operation.getPaymentMethod());
+            networkService.setListener(this);
+            processPayment(operation);
+        } catch (PaymentException e) {
+            closeWithErrorCode(PaymentResultHelper.fromThrowable(e));
+        }
     }
 
     boolean onBackPressed() {
@@ -186,14 +202,8 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
             closeWithErrorCode("operation not found in ListResult");
             return;
         }
-        try {
-            this.session = session;
-            networkService = loadNetworkService(operation.getNetworkCode(), operation.getPaymentMethod());
-            networkService.setListener(this);
-            processPayment(operation);
-        } catch (PaymentException e) {
-            closeWithErrorCode(PaymentResultHelper.fromThrowable(e));
-        }
+        this.session = session;
+        riskService.initializeRisk(view.getActivity(), session.getListResult());
     }
 
     private void handleLoadingError(Throwable cause) {

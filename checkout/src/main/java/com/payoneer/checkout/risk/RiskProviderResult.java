@@ -9,7 +9,10 @@
 package com.payoneer.checkout.risk;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.payoneer.checkout.model.Parameter;
 
 /**
  * RiskProviderResult containing the collected risk result data provided by the external risk service
@@ -27,5 +30,19 @@ public final class RiskProviderResult {
 
     public Map<String, String> getRiskData() {
         return riskData;
+    }
+
+    /**
+     * Copy the risk result into the list or parameters
+     *
+     * @param parameters list of parameters into which the riskResult should be copied
+     */
+    public void copyInto(List<Parameter> parameters) {
+        for (Map.Entry<String, String> entry : riskData.entrySet()) {
+            Parameter param = new Parameter();
+            param.setName(entry.getKey());
+            param.setValue(entry.getValue());
+            parameters.add(param);
+        }
     }
 }

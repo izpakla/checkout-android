@@ -17,6 +17,7 @@ import com.payoneer.checkout.core.WorkerSubscriber;
 import com.payoneer.checkout.core.WorkerTask;
 import com.payoneer.checkout.core.Workers;
 import com.payoneer.checkout.model.ListResult;
+import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.ProviderParameters;
 
 import android.content.Context;
@@ -155,15 +156,17 @@ public final class RiskService {
     }
 
     private List<ProviderParameters> asyncCollectRiskData() {
-        List<ProviderParameters> riskData = new ArrayList<>();
+        List<ProviderParameters> collectedRiskData = new ArrayList<>();
+
         for (RiskProviderController controller : controllers) {
-            riskData.add(controller.getRiskData());
+            collectedRiskData.add(getProviderRiskData(controller));
         }
-        return riskData;
+        return collectedRiskData;
     }
 
     private RiskProviderController createRiskController(final Context context, ProviderParameters parameters) {
-        RiskProviderController controller = RiskProviderController.createFrom(parameters);
+        RiskProviderInfo info = RiskProviderInfo.createFrom(parameters);
+        RiskProviderController controller = new RiskProviderController(info);
         controller.initialize(context);
         return controller;
     }
@@ -175,5 +178,18 @@ public final class RiskService {
             }
         }
         return false;
+    }
+
+    private ProviderParameters getProviderRiskData(RiskProviderController controller) {
+        ProviderParameters providerParameters = new ProviderParameters();
+        providerParameters.setProviderCode(controller.getRiskProviderCode());
+        providerParameters.setProviderType(controller.getRiskProviderType());
+
+        List<Parameter> parameters = new ArrayList<>();
+        providerParameters.setParameters(parameters);
+
+        RiskProviderResult result = controller.getRiskProviderResult();
+        result.copyInto(parameters);
+        return providerParameters;
     }
 }

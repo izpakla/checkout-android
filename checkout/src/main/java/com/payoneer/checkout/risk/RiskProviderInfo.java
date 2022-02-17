@@ -8,7 +8,12 @@
 
 package com.payoneer.checkout.risk;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.payoneer.checkout.model.Parameter;
+import com.payoneer.checkout.model.ProviderParameters;
 
 /**
  * RiskProviderInfo containing the information about the risk provider
@@ -42,5 +47,25 @@ public final class RiskProviderInfo {
 
     public Map<String, String> getParameters() {
         return parameters;
+    }
+
+    /**
+     * Create a new RiskProviderInfo from the provided ProviderParameters
+     *
+     * @param providerParameters to be converted into a RiskProviderInfo
+     * @return newly created RiskProviderInfo
+     */
+    public static RiskProviderInfo createFrom(final ProviderParameters providerParameters) {
+        String providerCode = providerParameters.getProviderCode();
+        String providerType = providerParameters.getProviderType();
+        Map<String, String> map = new HashMap<>();
+
+        List<Parameter> parameters = providerParameters.getParameters();
+        if (parameters != null) {
+            for (Parameter parameter : parameters) {
+                map.put(parameter.getName(), parameter.getValue());
+            }
+        }
+        return new RiskProviderInfo(providerCode, providerType, map);
     }
 }

@@ -11,12 +11,13 @@ package com.payoneer.checkout.risk;
 import android.content.Context;
 
 /**
- * Interface for all risk provider factories. A risk provider factory is capable of creating a NetworkService instance for a specific PaymentNetwork type.
+ * Interface for all risk provider factories.
+ * A risk provider factory is capable of creating a Risk Provider instance for a specific risk provider with code and type.
  */
 public interface RiskProviderFactory {
 
     /**
-     * Check if this provider supports the provided providerCode and type
+     * Check if this factory supports the risk provider with code and type
      *
      * @param riskProviderCode code of the risk provider
      * @param riskProviderType type of the risk provider
@@ -25,7 +26,7 @@ public interface RiskProviderFactory {
     boolean supports(String riskProviderCode, String riskProviderType);
 
     /**
-     * Create a risk provider for this specific risk service
+     * Create a risk provider for this specific external risk service
      *
      * @param context context in which this service will run
      * @return the newly created risk provider

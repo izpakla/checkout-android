@@ -13,7 +13,7 @@ import java.util.List;
 import com.payoneer.checkout.model.ProviderParameters;
 
 /**
- * Listener to be called by the RiskService to inform about risk updates.
+ * Listener to be called by the RiskService to inform about risk operation updates.
  */
 public interface RiskListener {
 
@@ -37,7 +37,7 @@ public interface RiskListener {
     void onRiskCollectionSuccess(List<ProviderParameters> riskData);
 
     /**
-     * Called when an error occurred while obtaining risk result.
+     * Called when an error occurred while obtaining risk data from the risk providers.
      *
      * @param cause describing the reason of failure
      */

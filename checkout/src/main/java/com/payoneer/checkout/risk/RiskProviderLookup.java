@@ -23,7 +23,7 @@ public class RiskProviderLookup {
     private static final List<RiskProviderFactory> factories = new CopyOnWriteArrayList<>();
 
     /**
-     * Helper class to get anew Risk provider for the given providerCode and providerType
+     * Helper class to get anew Risk provider for the given provider code and type
      *
      * @param riskProviderCode to be used to lookup a RiskProvider
      * @param riskProviderType to be used to lookup a RiskProvider

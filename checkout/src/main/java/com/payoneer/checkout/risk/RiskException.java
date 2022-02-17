@@ -9,7 +9,7 @@
 package com.payoneer.checkout.risk;
 
 /**
- * The RiskException containing the details of the risk error that occurred
+ * RiskException containing the details of the risk error that occurred while processing risk providers
  */
 public class RiskException extends Exception {
 

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.ProviderParameters;
@@ -22,7 +23,7 @@ import android.util.Log;
 
 /**
  * RiskProviderController handles the loaded RiskProvider, it also makes sure to return
- * default risk data when the RiskProvider could not be loaded.
+ * default risk data when the RiskProvider could not be initialized.
  */
 public final class RiskProviderController {
 
@@ -46,18 +47,22 @@ public final class RiskProviderController {
     }
 
     /**
-     * @param riskProviderCode
-     * @param riskProviderType
-     * @return
+     * Match this risk provider provider code and type with the provided ones.
+     *
+     * @param riskProviderCode code of the risk provider to match
+     * @param riskProviderType type of the risk provider to match
+     * @return true when the code and type matches, false otherwise
      */
     public boolean matches(final String riskProviderCode, final String riskProviderType) {
-        return (PaymentUtils.equalsAsString(getRiskProviderCode(), riskProviderCode)) &&
-            (PaymentUtils.equalsAsString(getRiskProviderType(), riskProviderType));
+        return (Objects.equals(getRiskProviderCode(), riskProviderCode)) &&
+            (Objects.equals(getRiskProviderType(), riskProviderType));
     }
 
     /**
-     * @param providerParameters
-     * @return
+     * Create a new RiskProviderController from the provided ProviderParameters class
+     *
+     * @param providerParameters to be converted into a RiskProviderController
+     * @return newly created RiskProviderController
      */
     public static RiskProviderController createFrom(final ProviderParameters providerParameters) {
         String providerCode = providerParameters.getProviderCode();
@@ -75,9 +80,9 @@ public final class RiskProviderController {
     }
 
     /**
-     * Load and initialize the RiskProvider using the Risk provider info
+     * Initialize the risk provider controlled by this RiskProviderController
      *
-     * @param context into which this risk provider will be loaded
+     * @param context into which the risk provider will be initialized
      */
     public void initialize(Context context) {
         String code = info.getRiskProviderCode();

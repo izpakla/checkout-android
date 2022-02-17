@@ -23,7 +23,7 @@ import android.content.Context;
 import android.util.Log;
 
 /**
- * The RiskService providing asynchronous initialization of risk providers and collection of risk data from these providers.
+ * The RiskService providing asynchronous initialization of risk providers and collection of risk data from these external risk services.
  * This service makes callbacks in the risk listener to notify of request completions.
  */
 public final class RiskService {
@@ -66,10 +66,10 @@ public final class RiskService {
     }
 
     /**
-     * Initialize risk providers
+     * Initialize risk providers provided through in listResult
      *
-     * @param context for setting up initialized
-     * @param listResult
+     * @param context for setting up the risk providers
+     * @param listResult containing the risk provider parameters
      */
     public void initializeRisk(Context context, ListResult listResult) {
 
@@ -103,7 +103,7 @@ public final class RiskService {
     }
 
     /**
-     * Collect the result from all risk providers
+     * Collect the result from all risk providers initialized in this service
      */
     public void collectRiskData() {
 

@@ -22,9 +22,9 @@ public final class RiskProviderInfo {
     /**
      * Create a new instance of the RiskProviderInfo object
      *
-     * @param riskProviderCode
-     * @param riskProviderType
-     * @param parameters
+     * @param riskProviderCode code of the risk provider
+     * @param riskProviderType type of the risk provider
+     * @param parameters contains parameters used to initialize the risk provider
      */
     public RiskProviderInfo(final String riskProviderCode, final String riskProviderType, Map<String, String> parameters) {
         this.riskProviderCode = riskProviderCode;

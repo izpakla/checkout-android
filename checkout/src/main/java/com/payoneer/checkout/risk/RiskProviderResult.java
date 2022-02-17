@@ -12,14 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * RiskProviderResult containing the collected risk result provided by the individual risk provider
+ * RiskProviderResult containing the collected risk result data provided by the external risk service
  */
 public final class RiskProviderResult {
     private final Map<String, String> riskData;
 
-    /**
-     * Create a new RiskProviderData object
-     */
     public RiskProviderResult() {
         this.riskData = new HashMap<>();
     }

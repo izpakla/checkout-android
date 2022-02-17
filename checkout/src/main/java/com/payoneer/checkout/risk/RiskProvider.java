@@ -11,23 +11,24 @@ package com.payoneer.checkout.risk;
 import android.content.Context;
 
 /**
- * Interface for a risk provider, a RiskService is responsible for activating and
- * obtaining risk data from a third-party risk provider service
+ * Interface for a risk provider. A risk provider implementation provides risk data collected by a third-party risk provider.
  */
 public interface RiskProvider {
 
     /**
      * Initialize this RiskProvider with the provider risk information
      *
-     * @param context into which this risk provider will be loaded
-     * @param info contains information about how the risk provider
+     * @param context into which this risk provider will be initialized
+     * @param info contains information how to initialize this risk provider
+     * @throws RiskException when an error occurred while initializing this risk provider
      */
     void initialize(Context context, RiskProviderInfo info) throws RiskException;
 
     /**
-     * Get the risk result from this risk provider
+     * Get the risk data result from this risk provider
      *
      * @return the risk result obtained by this risk provider
+     * @throws RiskException when an error occurred while collecting risk data result
      */
     RiskProviderResult getRiskProviderResult() throws RiskException;
 }

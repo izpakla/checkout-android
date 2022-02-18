@@ -48,7 +48,7 @@ public final class BasicNetworkServiceFactory implements NetworkServiceFactory {
      * {@inheritDoc}
      */
     @Override
-    public NetworkService createService(Context context) {
-        return new BasicNetworkService(context);
+    public NetworkService createService() {
+        return new BasicNetworkService();
     }
 }

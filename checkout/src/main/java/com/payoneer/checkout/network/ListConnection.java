@@ -31,15 +31,6 @@ import android.text.TextUtils;
 public final class ListConnection extends BaseConnection {
 
     /**
-     * Construct a new ListConnection
-     *
-     * @param context used to construct the UserAgent header
-     */
-    public ListConnection(Context context) {
-        super(context);
-    }
-
-    /**
      * Create a new payment session through the Server Payment API. Remind this is not
      * a request mobile apps should be making as this call is normally executed
      * Merchant Server-side. This request will be removed later.

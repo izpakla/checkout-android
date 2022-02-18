@@ -39,12 +39,12 @@ public final class ListService {
     private final ListConnection listConnection;
     private final PaymentConnection paymentConnection;
 
-    private ListService(final Context context, final String listUrl, final String merchantCode, final String merchantPaymentToken) {
+    private ListService(final String listUrl, final String merchantCode, final String merchantPaymentToken) {
         this.listUrl = listUrl;
         this.merchantCode = merchantCode;
         this.merchantPaymentToken = merchantPaymentToken;
-        this.listConnection = new ListConnection(context);
-        this.paymentConnection = new PaymentConnection(context);
+        this.listConnection = new ListConnection();
+        this.paymentConnection = new PaymentConnection();
     }
 
     /**
@@ -56,8 +56,7 @@ public final class ListService {
      * @return new instance of the ListService
      */
     public static ListService createInstance(String listUrl, String merchantCode, String merchantPaymentToken) {
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        return new ListService(context, listUrl, merchantCode, merchantPaymentToken);
+        return new ListService(listUrl, merchantCode, merchantPaymentToken);
     }
 
     /**

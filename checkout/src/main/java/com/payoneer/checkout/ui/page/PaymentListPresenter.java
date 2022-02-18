@@ -86,7 +86,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         super(PaymentUI.getInstance().getListUrl(), view);
         this.listView = view;
 
-        sessionService = new PaymentSessionService(view.getActivity());
+        sessionService = new PaymentSessionService();
         sessionService.setListener(this);
     }
 
@@ -460,12 +460,12 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private void processPayment(Operation operation) {
         setState(PROCESS);
-        networkService.processPayment(operation);
+        networkService.processPayment(operation, view.getActivity());
     }
 
     private void deleteAccount(DeleteAccount account) {
         setState(PROCESS);
-        networkService.deleteAccount(account);
+        networkService.deleteAccount(account, view.getActivity());
     }
 
     private Operation createOperation(PaymentCard card, Map<String, FormWidget> widgets) throws PaymentException {

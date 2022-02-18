@@ -31,15 +31,6 @@ import android.content.Context;
 public final class PaymentConnection extends BaseConnection {
 
     /**
-     * Construct a new PaymentConnection
-     *
-     * @param context used to construct the custom UserAgent header
-     */
-    public PaymentConnection(Context context) {
-        super(context);
-    }
-
-    /**
      * Delete the account from the Payment API
      *
      * @param account data to be deleted
@@ -89,6 +80,7 @@ public final class PaymentConnection extends BaseConnection {
             conn.setRequestProperty(HEADER_CONTENT_TYPE, VALUE_APP_JSON);
             conn.setRequestProperty(HEADER_ACCEPT, VALUE_APP_JSON);
 
+            operation.setBrowserData(browserData);
             writeToOutputStream(conn, operation.toJson());
             conn.connect();
             final int rc = conn.getResponseCode();

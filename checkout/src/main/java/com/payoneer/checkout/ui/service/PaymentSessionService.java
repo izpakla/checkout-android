@@ -56,12 +56,10 @@ public final class PaymentSessionService {
 
     /**
      * Create a new PaymentSessionService, this service is used to load the PaymentSession.
-     *
-     * @param context context in which this service will run
      */
-    public PaymentSessionService(Context context) {
-        this.listConnection = new ListConnection(context);
-        this.locConnection = new LocalizationConnection(context);
+    public PaymentSessionService() {
+        this.listConnection = new ListConnection();
+        this.locConnection = new LocalizationConnection();
     }
 
     /**
@@ -152,6 +150,9 @@ public final class PaymentSessionService {
     }
 
     private PaymentSession asyncLoadPaymentSession(String listUrl, Context context) throws PaymentException {
+        listConnection.initialize(context);
+        locConnection.initialize(context);
+
         ListResult listResult = listConnection.getListResult(listUrl);
 
         String integrationType = listResult.getIntegrationType();
@@ -220,7 +221,7 @@ public final class PaymentSessionService {
             return;
         }
         riskProviders = new RiskProviders(listUrl);
-        riskProviders.initializeRiskProviders(context, session.getRiskProviders());
+        riskProviders.initializeRiskProviders(session.getRiskProviders(), context);
         RiskProviders.setInstance(riskProviders);
     }
 }

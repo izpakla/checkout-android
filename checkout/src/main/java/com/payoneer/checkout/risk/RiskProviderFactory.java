@@ -28,8 +28,7 @@ public interface RiskProviderFactory {
     /**
      * Create a risk provider for this specific external risk service
      *
-     * @param context context in which this service will run
      * @return the newly created risk provider
      */
-    RiskProvider createRiskProvider(Context context);
+    RiskProvider createRiskProvider();
 }

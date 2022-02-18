@@ -11,6 +11,7 @@ package com.payoneer.checkout.risk;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.payoneer.checkout.model.Parameter;
 
@@ -24,7 +25,7 @@ public final class RiskProviderResult {
         this.riskData = new HashMap<>();
     }
 
-    public void put(String key, String value) {
+    public void put(final String key, final String value) {
         riskData.put(key, value);
     }
 
@@ -37,7 +38,9 @@ public final class RiskProviderResult {
      *
      * @param parameters list of parameters into which the risk result data should be copied into
      */
-    public void copyInto(List<Parameter> parameters) {
+    public void copyInto(final List<Parameter> parameters) {
+        Objects.requireNonNull(parameters);
+
         for (Map.Entry<String, String> entry : riskData.entrySet()) {
             Parameter param = new Parameter();
             param.setName(entry.getKey());

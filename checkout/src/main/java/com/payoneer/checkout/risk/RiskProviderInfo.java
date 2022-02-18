@@ -11,6 +11,7 @@ package com.payoneer.checkout.risk;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.ProviderParameters;
@@ -56,6 +57,8 @@ public final class RiskProviderInfo {
      * @return newly created RiskProviderInfo
      */
     public static RiskProviderInfo fromProviderParameters(final ProviderParameters providerParameters) {
+        Objects.requireNonNull(providerParameters);
+
         String providerCode = providerParameters.getProviderCode();
         String providerType = providerParameters.getProviderType();
         Map<String, String> map = new HashMap<>();

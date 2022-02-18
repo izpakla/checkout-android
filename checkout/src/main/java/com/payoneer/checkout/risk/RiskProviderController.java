@@ -79,9 +79,10 @@ public final class RiskProviderController {
      * @return risk result data obtained from the risk provider
      */
     public RiskProviderResult getRiskProviderResult() {
+        RiskProviderResult result = null;
         if (riskProvider != null) {
             try {
-                return riskProvider.getRiskProviderResult();
+                result = riskProvider.getRiskProviderResult();
             } catch (RiskException e) {
                 String code = info.getRiskProviderCode();
                 String type = info.getRiskProviderType();
@@ -89,6 +90,6 @@ public final class RiskProviderController {
                 Log.w("checkout", message, e);
             }
         }
-        return new RiskProviderResult();
+        return (result != null) ? result : new RiskProviderResult();
     }
 }

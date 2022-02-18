@@ -162,7 +162,7 @@ public final class OperationService {
     private void addRiskProviderRequests(final Operation operation) {
         RiskProviders riskProviders = RiskProviders.getInstance();
         if (riskProviders != null) {
-            operation.addProviderRequests(riskProviders.getRiskProviderRequests());
+            operation.putProviderRequests(riskProviders.getRiskProviderRequests());
         }
     }
 }

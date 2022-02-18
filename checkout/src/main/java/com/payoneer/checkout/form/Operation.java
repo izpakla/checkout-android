@@ -172,12 +172,12 @@ public class Operation implements Parcelable {
     }
 
     /**
-     * Add ProviderParameters to this operation, if a ProviderParameters with the code and type is already stored in
-     * this operations class then it will be replaced with the new ProviderParameters value
+     * Put ProviderParameters requests into this operation.
+     * If a request with the code and type is already stored, it will be replaced with the new request.
      *
-     * @param providerRequests list of ProviderParameters to be added to this operation
+     * @param providerRequests list of requests to be put into this operation
      */
-    public void addProviderRequests(List<ProviderParameters> providerRequests) {
+    public void putProviderRequests(List<ProviderParameters> providerRequests) {
         List<ProviderParameters> list = operationData.getProviderRequests();
         if (list == null) {
             list = new ArrayList<>();
@@ -331,14 +331,13 @@ public class Operation implements Parcelable {
 
     private int getProviderRequestIndex(ProviderParameters request) {
         List<ProviderParameters> list = operationData.getProviderRequests();
-        if (list == null || list.size() == 0) {
-            return -1;
-        }
-        for (int i = 0; i < list.size(); i++) {
-            ProviderParameters parameters = list.get(i);
-            if ((Objects.equals(parameters.getProviderCode(), request.getProviderCode())) &&
-                (Objects.equals(parameters.getProviderType(), request.getProviderType()))) {
-                return i;
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                ProviderParameters parameters = list.get(i);
+                if ((Objects.equals(parameters.getProviderCode(), request.getProviderCode())) &&
+                    (Objects.equals(parameters.getProviderType(), request.getProviderType()))) {
+                    return i;
+                }
             }
         }
         return -1;

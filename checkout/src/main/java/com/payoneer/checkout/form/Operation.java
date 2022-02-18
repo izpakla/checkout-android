@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.gson.JsonSyntaxException;
 import com.payoneer.checkout.core.PaymentException;
@@ -30,7 +31,6 @@ import com.payoneer.checkout.util.GsonHelper;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
 
 /**
  * Class holding Operation form values
@@ -61,6 +61,38 @@ public class Operation implements Parcelable {
         operationData.setAccount(new AccountInputData());
     }
 
+    private Operation(Parcel in) {
+        this.networkCode = in.readString();
+        this.paymentMethod = in.readString();
+        this.operationType = in.readString();
+        this.url = (URL) in.readSerializable();
+
+        try {
+            GsonHelper gson = GsonHelper.getInstance();
+            operationData = gson.fromJson(in.readString(), OperationData.class);
+        } catch (JsonSyntaxException e) {
+            // this should never happen since we use the same GsonHelper
+            // to produce these Json strings
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(networkCode);
+        out.writeString(paymentMethod);
+        out.writeString(operationType);
+        out.writeSerializable(url);
+
+        GsonHelper gson = GsonHelper.getInstance();
+        out.writeString(gson.toJson(operationData));
+    }
+
     public static Operation fromApplicableNetwork(ApplicableNetwork network) {
         Map<String, URL> links = network.getLinks();
         URL url = links != null ? links.get("operation") : null;
@@ -81,46 +113,33 @@ public class Operation implements Parcelable {
         return new Operation(account.getCode(), account.getMethod(), account.getOperationType(), url);
     }
 
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public String getNetworkCode() {
+        return networkCode;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public URL getURL() {
+        return url;
+    }
+
+    public void setAccountInputData(AccountInputData inputData) {
+        operationData.setAccount(inputData);
+    }
+
     public void setBrowserData(BrowserData browserData) {
         operationData.setBrowserData(browserData);
     }
 
-    private Operation(Parcel in) {
-        this.networkCode = in.readString();
-        this.paymentMethod = in.readString();
-        this.operationType = in.readString();
-        this.url = (URL) in.readSerializable();
-
-        try {
-            GsonHelper gson = GsonHelper.getInstance();
-            operationData = gson.fromJson(in.readString(), OperationData.class);
-        } catch (JsonSyntaxException e) {
-            // this should never happen since we use the same GsonHelper
-            // to produce these Json strings
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void writeToParcel(Parcel out, int flags) {
-        out.writeString(networkCode);
-        out.writeString(paymentMethod);
-        out.writeString(operationType);
-        out.writeSerializable(url);
-
+    public String toJson() {
         GsonHelper gson = GsonHelper.getInstance();
-        out.writeString(gson.toJson(operationData));
+        return gson.toJson(operationData);
     }
 
     /**
@@ -153,9 +172,10 @@ public class Operation implements Parcelable {
     }
 
     /**
-     * Add ProviderRequests to this operation
+     * Add ProviderParameters to this operation, if a ProviderParameters with the code and type is already stored in
+     * this operations class then it will be replaced with the new ProviderParameters value
      *
-     * @param providerRequests to be added to this operation
+     * @param providerRequests list of ProviderParameters to be added to this operation
      */
     public void addProviderRequests(List<ProviderParameters> providerRequests) {
         List<ProviderParameters> list = operationData.getProviderRequests();
@@ -163,7 +183,14 @@ public class Operation implements Parcelable {
             list = new ArrayList<>();
             operationData.setProviderRequests(list);
         }
-        list.addAll(providerRequests);
+        for (ProviderParameters request : providerRequests) {
+            int index = getProviderRequestIndex(request);
+            if (index == -1) {
+                list.add(request);
+            } else {
+                list.set(index, request);
+            }
+        }
     }
 
     /**
@@ -279,36 +306,6 @@ public class Operation implements Parcelable {
         }
     }
 
-    public void setAccountInputData(AccountInputData inputData) {
-        operationData.setAccount(inputData);
-    }
-
-    /**
-     * Get the type of this operation, this will either be PRESET, CHARGE, UPDATE, ACTIVATION or PAYOUT.
-     *
-     * @return the type of the operation.
-     */
-    public String getOperationType() {
-        return operationType;
-    }
-
-    public String getNetworkCode() {
-        return networkCode;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public String toJson() {
-        GsonHelper gson = GsonHelper.getInstance();
-        return gson.toJson(operationData);
-    }
-
-    public URL getURL() {
-        return url;
-    }
-
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
@@ -330,5 +327,20 @@ public class Operation implements Parcelable {
         }
         builder.append("]");
         return builder.toString();
+    }
+
+    private int getProviderRequestIndex(ProviderParameters request) {
+        List<ProviderParameters> list = operationData.getProviderRequests();
+        if (list == null || list.size() == 0) {
+            return -1;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            ProviderParameters parameters = list.get(i);
+            if ((Objects.equals(parameters.getProviderCode(), request.getProviderCode())) &&
+                (Objects.equals(parameters.getProviderType(), request.getProviderType()))) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

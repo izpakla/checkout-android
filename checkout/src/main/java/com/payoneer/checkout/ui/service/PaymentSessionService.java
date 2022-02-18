@@ -33,6 +33,7 @@ import com.payoneer.checkout.network.ListConnection;
 import com.payoneer.checkout.network.LocalizationConnection;
 import com.payoneer.checkout.resource.PaymentGroup;
 import com.payoneer.checkout.resource.ResourceLoader;
+import com.payoneer.checkout.risk.RiskProviders;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.validation.Validator;
 
@@ -168,6 +169,7 @@ public final class PaymentSessionService {
 
         loadValidator(context);
         loadLocalizations(context, session);
+        loadRiskProviders(context, session);
         return session;
     }
 
@@ -208,5 +210,17 @@ public final class PaymentSessionService {
             cache.put(langUrl, holder);
         }
         return holder;
+    }
+
+    private void loadRiskProviders(final Context context, final PaymentSession session) {
+        String listUrl = session.getListSelfUrl();
+        RiskProviders riskProviders = RiskProviders.getInstance();
+
+        if (riskProviders != null && riskProviders.containsRiskProvidersId(listUrl)) {
+            return;
+        }
+        riskProviders = new RiskProviders(listUrl);
+        riskProviders.initializeRiskProviders(context, session.getRiskProviders());
+        RiskProviders.setInstance(riskProviders);
     }
 }

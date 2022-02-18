@@ -20,8 +20,10 @@ import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.model.BrowserData;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.network.PaymentConnection;
+import com.payoneer.checkout.risk.RiskProviders;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * The OperationService providing asynchronous posting of the Operation and communication with the Payment API.
@@ -149,10 +151,18 @@ public final class OperationService {
 
     private OperationResult asyncPostOperation(Operation operation) throws PaymentException {
         operation.setBrowserData(browserData);
+        addRiskProviderRequests(operation);
         return paymentConnection.postOperation(operation);
     }
 
     private OperationResult asyncDeleteAccount(DeleteAccount account) throws PaymentException {
         return paymentConnection.deleteAccount(account);
+    }
+
+    private void addRiskProviderRequests(final Operation operation) {
+        RiskProviders riskProviders = RiskProviders.getInstance();
+        if (riskProviders != null) {
+            operation.addProviderRequests(riskProviders.getRiskProviderRequests());
+        }
     }
 }

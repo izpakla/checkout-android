@@ -55,7 +55,7 @@ public final class RiskProviderInfo {
      * @param providerParameters to be converted into a RiskProviderInfo
      * @return newly created RiskProviderInfo
      */
-    public static RiskProviderInfo createFrom(final ProviderParameters providerParameters) {
+    public static RiskProviderInfo fromProviderParameters(final ProviderParameters providerParameters) {
         String providerCode = providerParameters.getProviderCode();
         String providerType = providerParameters.getProviderType();
         Map<String, String> map = new HashMap<>();

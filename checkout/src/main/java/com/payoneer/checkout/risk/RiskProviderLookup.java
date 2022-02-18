@@ -29,9 +29,9 @@ public class RiskProviderLookup {
      * @param riskProviderType to be used to lookup a RiskProvider
      * @return the RiskProvider or null if none found
      */
-    public static RiskProvider getRiskProvider(Context context, String riskProviderCode, String riskProviderType) {
+    public static RiskProvider getRiskProvider(String riskProviderCode, String riskProviderType) {
         RiskProviderFactory factory = getRiskProviderFactory(riskProviderCode, riskProviderType);
-        return factory != null ? factory.createRiskProvider(context) : null;
+        return factory != null ? factory.createRiskProvider() : null;
     }
 
     private static RiskProviderFactory getRiskProviderFactory(String providerCode, String providerType) {

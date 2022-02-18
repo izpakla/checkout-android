@@ -59,7 +59,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
      */
     ChargePaymentPresenter(BasePaymentView view) {
         super(PaymentUI.getInstance().getListUrl(), view);
-        sessionService = new PaymentSessionService(view.getActivity());
+        sessionService = new PaymentSessionService();
         sessionService.setListener(this);
     }
 
@@ -243,7 +243,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     private void processPayment(Operation operation) {
         setState(PROCESS);
-        networkService.processPayment(operation);
+        networkService.processPayment(operation, view.getActivity());
     }
 
     private void showMessageAndCloseWithErrorCode(PaymentResult result) {

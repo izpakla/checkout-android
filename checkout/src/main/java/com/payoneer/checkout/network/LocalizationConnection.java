@@ -33,15 +33,6 @@ import android.content.Context;
 public final class LocalizationConnection extends BaseConnection {
 
     /**
-     * Construct a new LocalizationConnection
-     *
-     * @param context used to create the custom UserAgent value
-     */
-    public LocalizationConnection(Context context) {
-        super(context);
-    }
-
-    /**
      * Load the localization file given the URL.
      *
      * @param url containing the address of the remote language file

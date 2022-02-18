@@ -27,8 +27,7 @@ public interface NetworkServiceFactory {
     /**
      * Create a service for this specific payment network
      *
-     * @param context context in which this service will run
      * @return the newly created service
      */
-    NetworkService createService(Context context);
+    NetworkService createService();
 }

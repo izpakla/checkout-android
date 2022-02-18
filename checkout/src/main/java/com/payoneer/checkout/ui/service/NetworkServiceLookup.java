@@ -42,9 +42,9 @@ public class NetworkServiceLookup {
      * @param method to be used to lookup a NetworkService
      * @return the NetworkService that can handle the network or null if none found
      */
-    public static NetworkService createService(Context context, String code, String method) {
+    public static NetworkService createService(String code, String method) {
         NetworkServiceFactory factory = getFactory(code, method);
-        return factory != null ? factory.createService(context) : null;
+        return factory != null ? factory.createService() : null;
     }
 
     private static NetworkServiceFactory getFactory(String code, String method) {

@@ -18,17 +18,18 @@ public interface RiskProvider {
     /**
      * Initialize this RiskProvider with the provider risk information
      *
-     * @param context into which this risk provider will be initialized
      * @param info contains information how to initialize this risk provider
+     * @param applicationContext may be used to initialize this risk provider
      * @throws RiskException when an error occurred while initializing this risk provider
      */
-    void initialize(Context context, RiskProviderInfo info) throws RiskException;
+    void initialize(RiskProviderInfo info, Context applicationContext) throws RiskException;
 
     /**
      * Get the risk data result from this risk provider
      *
+     * @param applicationContext may be used to create the provider result data
      * @return the risk result obtained by this risk provider
      * @throws RiskException when an error occurred while collecting risk data result
      */
-    RiskProviderResult getRiskProviderResult() throws RiskException;
+    RiskProviderResult getRiskProviderResult(Context applicationContext) throws RiskException;
 }

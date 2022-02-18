@@ -24,6 +24,7 @@ import com.iovation.mobile.android.FraudForceManager;
 public class IovationRiskProvider implements RiskProvider {
 
     private FraudForceManager fraudForceManager;
+    private final String RESULTKEY_BLACKBOX = "blackbox";
 
     /**
      * Get the singleton instance of this Iovation risk provider
@@ -35,8 +36,10 @@ public class IovationRiskProvider implements RiskProvider {
     }
 
     @Override
-    public void initialize(final Context context, final RiskProviderInfo info) throws RiskException {
-        if (fraudForceManager != null) {
+    public void initialize(final RiskProviderInfo info, final Context applicationContext) throws RiskException {
+        FraudForceManager manager = FraudForceManager.getInstance();
+        if (manager != null) {
+            manager.refresh(applicationContext);
             return;
         }
         FraudForceConfiguration configuration = new FraudForceConfiguration.Builder()
@@ -44,15 +47,19 @@ public class IovationRiskProvider implements RiskProvider {
             .build();
 
         fraudForceManager = FraudForceManager.getInstance();
-        fraudForceManager.initialize(configuration, context);
+        fraudForceManager.initialize(configuration, applicationContext);
     }
 
     @Override
-    public RiskProviderResult getRiskProviderResult(final Context context) throws RiskException {
-        if (fraudForceManager == null) {
+    public RiskProviderResult getRiskProviderResult(final Context applicationContext) throws RiskException {
+        FraudForceManager manager = FraudForceManager.getInstance();
+        if (manager == null) {
             throw new RiskException("FraudForceManager not initiallized, initialize first");
         }
-        return fraudForceManager.getBlackbox(context);
+        String blackBox = manager.getBlackbox(applicationContext);
+        RiskProviderResult result = new RiskProviderResult();
+        result.put(RESULTKEY_BLACKBOX, blackBox);
+        return result;
     }
 
     private static class InstanceHolder {

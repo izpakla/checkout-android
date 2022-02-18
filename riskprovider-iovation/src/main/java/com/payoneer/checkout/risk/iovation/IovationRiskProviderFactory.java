@@ -24,7 +24,7 @@ public class IovationRiskProviderFactory implements RiskProviderFactory {
     }
 
     @Override
-    public RiskProvider createRiskProvider(final Context context) {
+    public RiskProvider createRiskProvider() {
         return IovationRiskProvider.getInstance();
     }
 }

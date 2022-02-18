@@ -25,6 +25,6 @@ android {
 }
 
 dependencies {
-    implementation project(":checkout")
+    compileOnly project(":checkout")
     compileOnly files('fraudforce/fraudforce-lib-release-4.3.2.aar')
 }

@@ -8,6 +8,8 @@
 
 package com.payoneer.checkout.risk.iovation;
 
+import com.iovation.mobile.android.FraudForceConfiguration;
+import com.iovation.mobile.android.FraudForceManager;
 import com.payoneer.checkout.risk.RiskException;
 import com.payoneer.checkout.risk.RiskProvider;
 import com.payoneer.checkout.risk.RiskProviderInfo;
@@ -15,15 +17,12 @@ import com.payoneer.checkout.risk.RiskProviderResult;
 
 import android.content.Context;
 
-import com.iovation.mobile.android.FraudForceConfiguration;
-import com.iovation.mobile.android.FraudForceManager;
-
 /**
  * Iovation Risk provider
  */
 public class IovationRiskProvider implements RiskProvider {
 
-    private FraudForceManager fraudForceManager;
+    private boolean initialized;
     private final String RESULTKEY_BLACKBOX = "blackbox";
 
     /**
@@ -37,29 +36,35 @@ public class IovationRiskProvider implements RiskProvider {
 
     @Override
     public void initialize(final RiskProviderInfo info, final Context applicationContext) throws RiskException {
-        FraudForceManager manager = FraudForceManager.getInstance();
-        if (manager != null) {
-            manager.refresh(applicationContext);
-            return;
-        }
-        FraudForceConfiguration configuration = new FraudForceConfiguration.Builder()
-            .enableNetworkCalls(false)
-            .build();
+        try {
+            if (initialized) {
+                FraudForceManager.getInstance().refresh(applicationContext);
+            }
+            FraudForceConfiguration configuration = new FraudForceConfiguration.Builder()
+                .enableNetworkCalls(false)
+                .build();
 
-        fraudForceManager = FraudForceManager.getInstance();
-        fraudForceManager.initialize(configuration, applicationContext);
+            FraudForceManager.getInstance().initialize(configuration, applicationContext);
+            initialized = true;
+        } catch (Exception e) {
+            throw new RiskException("Unknown Exception caught during initializing", e);
+        }
     }
 
     @Override
     public RiskProviderResult getRiskProviderResult(final Context applicationContext) throws RiskException {
-        FraudForceManager manager = FraudForceManager.getInstance();
-        if (manager == null) {
-            throw new RiskException("FraudForceManager not initiallized, initialize first");
+        try {
+            FraudForceManager manager = FraudForceManager.getInstance();
+            if (manager == null) {
+                throw new RiskException("FraudForceManager not initialized, initialize first");
+            }
+            String blackBox = manager.getBlackbox(applicationContext);
+            RiskProviderResult result = new RiskProviderResult();
+            result.put(RESULTKEY_BLACKBOX, blackBox);
+            return result;
+        } catch (Exception e) {
+            throw new RiskException("Unknown Exception caught while getting results", e);
         }
-        String blackBox = manager.getBlackbox(applicationContext);
-        RiskProviderResult result = new RiskProviderResult();
-        result.put(RESULTKEY_BLACKBOX, blackBox);
-        return result;
     }
 
     private static class InstanceHolder {

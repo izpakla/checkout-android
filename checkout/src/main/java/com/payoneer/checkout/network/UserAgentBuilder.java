@@ -97,7 +97,7 @@ final class UserAgentBuilder {
                 setAppName(packageManager.getApplicationLabel(appInfo).toString());
 
         } catch (final PackageManager.NameNotFoundException e) {
-            Log.w("Checkout", e);
+            Log.w("checkout-sdk", e);
         }
         return builder.build();
     }

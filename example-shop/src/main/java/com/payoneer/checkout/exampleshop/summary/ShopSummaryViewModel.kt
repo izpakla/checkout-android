@@ -55,11 +55,7 @@ class ShopSummaryViewModel @Inject constructor(@ApplicationContext val context: 
     private val _loadPaymentDetails = MutableLiveData<ContentEvent<Boolean>>()
     val loadPaymentDetails: LiveData<ContentEvent<Boolean>> get() = _loadPaymentDetails
 
-    /**
-     * Handle the received payment activity result.
-     *
-     * @param activityResult the result received from the Checkout SDK
-     */
+
     fun handlePaymentActivityResult(activityResult: PaymentActivityResult) {
         when (activityResult.requestCode) {
             SummaryActivity.PAYMENT_REQUEST_CODE -> handlePaymentResult(activityResult)

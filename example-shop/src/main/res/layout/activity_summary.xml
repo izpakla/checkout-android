@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <include layout="@layout/layout_header" />
+    <include
+        android:id="@+id/layout_header"
+        layout="@layout/layout_header" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -22,20 +24,22 @@
                 android:id="@+id/progressbar_load"
                 android:layout_width="@dimen/pmprogressbar_size"
                 android:layout_height="@dimen/pmprogressbar_size"
-                android:layout_marginTop="@dimen/pmborder_xlarge"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/pmborder_xlarge" />
 
             <LinearLayout
                 android:id="@+id/layout_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:paddingTop="@dimen/pmborder_medium"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:visibility="gone">
 
                 <include layout="@layout/layout_product" />
 
-                <include layout="@layout/layout_summarydetails" />
+                <include
+                    android:id="@+id/layout_summary_details"
+                    layout="@layout/layout_summarydetails" />
 
             </LinearLayout>
 

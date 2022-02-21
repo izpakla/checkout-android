@@ -4,69 +4,71 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/pmborder_medium"
         android:clipToPadding="false"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/pmborder_medium">
 
         <TextView
-            android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textColor="?attr/colorOnBackground"
-            android:layout_marginBottom="@dimen/pmborder_xsmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/summary_personal_details" />
+            android:layout_marginBottom="@dimen/pmborder_xsmall"
+            android:text="@string/summary_personal_details"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textColor="?attr/colorOnBackground" />
 
         <com.google.android.material.card.MaterialCardView
-            android:layout_marginBottom="@dimen/pmborder_medium"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pmborder_medium">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/pmborder_medium"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/pmborder_medium">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/personal_name_value"
                     android:textAppearance="?attr/textAppearanceSubtitle2"
-                    android:textColor="?attr/colorOnBackground"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/personal_name_value" />
+                    android:textColor="?attr/colorOnBackground" />
 
                 <TextView
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?attr/colorOnBackground"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/personal_details" />
+                    android:text="@string/personal_details"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?attr/colorOnBackground" />
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textColor="?attr/colorOnBackground"
-            android:layout_marginBottom="@dimen/pmborder_xsmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/summary_payment_details" />
+            android:layout_marginBottom="@dimen/pmborder_xsmall"
+            android:text="@string/summary_payment_details"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textColor="?attr/colorOnBackground" />
 
         <com.google.android.material.card.MaterialCardView
-            android:layout_marginBottom="@dimen/pmborder_medium"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pmborder_medium">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/pmborder_medium"
-                android:paddingBottom="@dimen/pmborder_medium"
-                android:paddingStart="@dimen/pmborder_medium"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/pmborder_medium"
+                android:paddingTop="@dimen/pmborder_medium"
+                android:paddingBottom="@dimen/pmborder_medium">
 
-                <include layout="@layout/view_logo" />
+                <include
+                    android:id="@+id/layout_view_logo"
+                    layout="@layout/view_logo" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -77,17 +79,17 @@
 
                     <TextView
                         android:id="@+id/label_title"
-                        android:textAppearance="?attr/textAppearanceSubtitle1"
-                        android:textColor="?attr/colorOnSurface"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        android:textColor="?attr/colorOnSurface" />
 
                     <TextView
                         android:id="@+id/label_subtitle"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="?attr/colorOnSurface"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/colorOnSurface" />
                 </LinearLayout>
 
                 <Button
@@ -101,12 +103,12 @@
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textColor="?attr/colorOnBackground"
-            android:layout_marginBottom="@dimen/pmborder_xsmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/summary_payment_amount" />
+            android:layout_marginBottom="@dimen/pmborder_xsmall"
+            android:text="@string/summary_payment_amount"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textColor="?attr/colorOnBackground" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -115,8 +117,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/pmborder_medium"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/pmborder_medium">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -125,26 +127,26 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:textAppearance="?attr/textAppearanceSubtitle2"
-                        android:textColor="?attr/colorOnBackground"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/product_total" />
+                        android:text="@string/product_total"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
+                        android:textColor="?attr/colorOnBackground" />
 
                     <TextView
-                        android:textAppearance="?attr/textAppearanceHeadline6"
-                        android:textColor="?attr/colorOnBackground"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/product_price" />
+                        android:text="@string/product_price"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        android:textColor="?attr/colorOnBackground" />
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_pay"
-                    android:layout_marginTop="@dimen/pmborder_medium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pmborder_medium"
                     android:text="@string/button_pay" />
 
             </LinearLayout>

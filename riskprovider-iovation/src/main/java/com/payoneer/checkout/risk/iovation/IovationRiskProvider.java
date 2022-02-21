@@ -18,12 +18,11 @@ import com.payoneer.checkout.risk.RiskProviderResult;
 import android.content.Context;
 
 /**
- * Iovation Risk provider
+ * Iovation Risk provider implementation
  */
-public class IovationRiskProvider implements RiskProvider {
+public final class IovationRiskProvider implements RiskProvider {
 
-    private boolean initialized;
-    private final String RESULTKEY_BLACKBOX = "blackbox";
+    public final static String RESULTKEY_BLACKBOX = "blackbox";
 
     /**
      * Get the singleton instance of this Iovation risk provider
@@ -37,17 +36,12 @@ public class IovationRiskProvider implements RiskProvider {
     @Override
     public void initialize(final RiskProviderInfo info, final Context applicationContext) throws RiskException {
         try {
-            if (initialized) {
-                FraudForceManager.getInstance().refresh(applicationContext);
-            }
             FraudForceConfiguration configuration = new FraudForceConfiguration.Builder()
                 .enableNetworkCalls(false)
                 .build();
-
             FraudForceManager.getInstance().initialize(configuration, applicationContext);
-            initialized = true;
-        } catch (Exception e) {
-            throw new RiskException("Unknown Exception caught during initializing", e);
+        } catch (Throwable t) {
+            throw new RiskException("IovationRiskProvider - unexpected Throwable caught during initializing", t);
         }
     }
 
@@ -55,15 +49,12 @@ public class IovationRiskProvider implements RiskProvider {
     public RiskProviderResult getRiskProviderResult(final Context applicationContext) throws RiskException {
         try {
             FraudForceManager manager = FraudForceManager.getInstance();
-            if (manager == null) {
-                throw new RiskException("FraudForceManager not initialized, initialize first");
-            }
             String blackBox = manager.getBlackbox(applicationContext);
             RiskProviderResult result = new RiskProviderResult();
             result.put(RESULTKEY_BLACKBOX, blackBox);
             return result;
-        } catch (Exception e) {
-            throw new RiskException("Unknown Exception caught while getting results", e);
+        } catch (Throwable t) {
+            throw new RiskException("Unexpected Throwable caught while getting risk result", t);
         }
     }
 

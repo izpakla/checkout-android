@@ -18,6 +18,9 @@ public class IovationRiskProviderFactory implements RiskProviderFactory {
     public final static String IOVATION_CODE = "IOVATION";
     public final static String IOVATION_TYPE = "RISK_DATA_PROVIDER";
 
+    public IovationRiskProviderFactory() {
+    }
+
     @Override
     public boolean supports(final String riskProviderCode, final String riskProviderType) {
         return IOVATION_CODE.equals(riskProviderCode) && IOVATION_TYPE.equals(riskProviderType);

@@ -3,6 +3,23 @@ plugins {
 }
 
 android {
+    lintOptions {
+        abortOnError true
+        checkDependencies true
+        ignoreWarnings true
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.javaCompatVersion
+        targetCompatibility rootProject.javaCompatVersion
+    }
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
@@ -18,13 +35,15 @@ android {
         applicationVariants {
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
     compileOnly project(":checkout")
     compileOnly files('fraudforce/fraudforce-lib-release-4.3.2.aar')
+
+    testImplementation "org.robolectric:robolectric:${rootProject.robolectricVersion}"
+    testImplementation "androidx.test:core:${rootProject.androidxTestCoreVersion}"
+    testImplementation "junit:junit:${rootProject.junitVersion}"
+    testImplementation project(":checkout")
+    testImplementation files('fraudforce/fraudforce-lib-release-4.3.2.aar')
 }

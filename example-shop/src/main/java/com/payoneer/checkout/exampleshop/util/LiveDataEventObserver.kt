@@ -11,7 +11,6 @@
 package com.payoneer.checkout.exampleshop.util
 
 import androidx.lifecycle.Observer
-import com.payoneer.checkout.exampleshop.Event
 
 /**
  * Just to simplify checking whether content has been handled

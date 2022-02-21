@@ -18,7 +18,6 @@ import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
 import com.payoneer.checkout.exampleshop.databinding.ActivityCheckoutBinding
 import com.payoneer.checkout.exampleshop.shared.BaseActivity
 import com.payoneer.checkout.exampleshop.summary.SummaryActivity
-import com.payoneer.checkout.exampleshop.util.EventObserver
 import com.payoneer.checkout.ui.PaymentUI
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -53,28 +52,28 @@ class CheckoutActivity : BaseActivity() {
     }
 
     private fun observeViewModel() {
-        shopCheckoutViewModel.showPaymentSummary.observe(this, EventObserver {
+        shopCheckoutViewModel.showPaymentSummary.observe(this) {
             if (!active) {
-                return@EventObserver
+                return@observe
             }
             val intent = SummaryActivity.createStartIntent(this, listUrl)
             startActivity(intent)
             setResultHandledIdleState()
-        })
-        shopCheckoutViewModel.showPaymentConfirmation.observe(this, EventObserver {
+        }
+        shopCheckoutViewModel.showPaymentConfirmation.observe(this) {
             if (!active) {
-                return@EventObserver
+                return@observe
             }
             val intent = ConfirmActivity.createStartIntent(this)
             startActivity(intent)
             setResultHandledIdleState()
-        })
-        shopCheckoutViewModel.stopPaymentWithErrorMessage.observe(this, EventObserver {
+        }
+        shopCheckoutViewModel.stopPaymentWithErrorMessage.observe(this) {
             if (!active) {
-                return@EventObserver
+                return@observe
             }
             showErrorDialog(R.string.dialog_error_message)
-        })
+        }
     }
 
     private fun onButtonClicked() {

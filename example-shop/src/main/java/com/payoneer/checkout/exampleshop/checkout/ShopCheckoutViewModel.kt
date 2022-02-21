@@ -13,8 +13,8 @@ package com.payoneer.checkout.exampleshop.checkout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.payoneer.checkout.exampleshop.Event
-import com.payoneer.checkout.exampleshop.updateValue
+import com.payoneer.checkout.exampleshop.util.Event
+import com.payoneer.checkout.exampleshop.util.updateValue
 import com.payoneer.checkout.model.InteractionCode
 import com.payoneer.checkout.model.RedirectType
 import com.payoneer.checkout.ui.PaymentActivityResult

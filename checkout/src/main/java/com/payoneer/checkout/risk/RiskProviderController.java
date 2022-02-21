@@ -62,7 +62,7 @@ public final class RiskProviderController {
 
         if (riskProvider == null) {
             String message = "RiskProviderController(" + code + ", " + type + ") could not find RiskProvider";
-            Log.w("checkout", message);
+            Log.w("checkout-sdk", message);
             return;
         }
         try {
@@ -70,10 +70,10 @@ public final class RiskProviderController {
             riskProvider.initialize(info, applicationContext);
         } catch (RiskException e) {
             String message = "RiskProviderController(" + code + ", " + type + ") failed to initialize RiskProvider";
-            Log.w("checkout", message, e);
+            Log.w("checkout-sdk", message, e);
         } catch (Throwable t) {
-            String message = "RiskProviderController(\" + code + \", \" + type + \") caught unexpected Throwable";
-            Log.e("checkout", message, t);
+            String message = "RiskProviderController(" + code + ", " + type + ") caught unexpected Throwable";
+            Log.e("checkout-sdk", message, t);
         }
     }
 
@@ -87,17 +87,18 @@ public final class RiskProviderController {
     public RiskProviderResult getRiskProviderResult(final Context context) {
         RiskProviderResult result = null;
         if (riskProvider != null) {
+            String code = info.getRiskProviderCode();
+            String type = info.getRiskProviderType();
+
             try {
                 Context applicationContext = context.getApplicationContext();
                 result = riskProvider.getRiskProviderResult(applicationContext);
             } catch (RiskException e) {
-                String code = info.getRiskProviderCode();
-                String type = info.getRiskProviderType();
                 String message = "RiskProviderController(" + code + ", " + type + ") could not obtain result";
-                Log.w("checkout", message, e);
+                Log.w("checkout-sdk", message, e);
             } catch (Throwable t) {
-                String message = "RiskProviderController(\" + code + \", \" + type + \") caught unexpected Throwable";
-                Log.e("checkout", message, t);
+                String message = "RiskProviderController(" + code + ", " + type + ") caught unexpected Throwable";
+                Log.e("checkout-sdk", message, t);
             }
         }
         return (result != null) ? result : new RiskProviderResult();

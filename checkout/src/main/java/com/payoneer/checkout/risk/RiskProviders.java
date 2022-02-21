@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
@@ -18,7 +18,7 @@ import com.payoneer.checkout.model.ProviderParameters;
 import android.content.Context;
 
 /**
- * The RiskProviders class contains the list of risk providers that are initialized
+ * The RiskProviders class contains the list of RiskProviderControllers each handling a third-party risk provider service.
  */
 public final class RiskProviders {
     private final List<RiskProviderController> controllers;
@@ -49,10 +49,10 @@ public final class RiskProviders {
     }
 
     /**
-     * Check if the unique ID of this RiskProviders matches with the provided ID.
-     * For example, the listUrl or longID of a list may be used as the unique ID to which all loaded risk providers are attached to.
+     * Check if the riskProvidersId stored in this RiskProviders matches with the provided providersId.
+     * The listUrl or longID of a list could be used as the unique ID to which all RiskProviderControllers in this RiskProviders belong to.
      *
-     * @param providersId to be matched with the ID of this RiskProviders
+     * @param providersId to be matched with the riskProvidersId stored in this RiskProviders
      * @return true when contains, false otherwise
      */
     public boolean containsRiskProvidersId(final String providersId) {
@@ -60,18 +60,18 @@ public final class RiskProviders {
     }
 
     /**
-     * Initialize all risk providers provided in the list of ProviderParameters.
+     * Initialize all RiskProviderControllers described in the the list of risk ProviderParameters.
      *
-     * @param providers list of risk providers that should be initialized
-     * @param context used to intialize each individual risk provider
+     * @param riskProviders list of risk providers that should be initialized
+     * @param context contains information about the application environment
      */
-    public void initializeRiskProviders(final List<ProviderParameters> providers, final Context context) {
+    public void initializeRiskProviders(final List<ProviderParameters> riskProviders, final Context context) {
         Objects.requireNonNull(context);
-        if (providers == null || providers.size() == 0) {
+        if (riskProviders == null || riskProviders.size() == 0) {
             return;
         }
         Context applicationContext = context.getApplicationContext();
-        for (ProviderParameters provider : providers) {
+        for (ProviderParameters provider : riskProviders) {
             if (containsRiskController(provider.getProviderCode(), provider.getProviderType())) {
                 continue;
             }
@@ -82,10 +82,10 @@ public final class RiskProviders {
     }
 
     /**
-     * Get all risk provider request risk data from all loaded risk providers
+     * Get all risk request ProviderParameters obtained from the individual RiskProviderControllers.
      *
-     * @param context may be used to obtain the risk request data
-     * @return list of all risk request data
+     * @param context contains information about the application environment
+     * @return list of all risk provider requests
      */
     public List<ProviderParameters> getRiskProviderRequests(final Context context) {
         Objects.requireNonNull(context);

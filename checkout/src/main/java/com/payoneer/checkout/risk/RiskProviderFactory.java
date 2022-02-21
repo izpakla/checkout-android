@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
@@ -9,13 +9,13 @@
 package com.payoneer.checkout.risk;
 
 /**
- * Interface for all risk provider factories.
- * A risk provider factory is capable of creating a Risk Provider instance for a specific risk provider with code and type.
+ * Interface for all RiskProviderFactories.
+ * A RiskProviderFactory is capable of creating a RiskProvider instance for a third-party risk provider service with code and type.
  */
 public interface RiskProviderFactory {
 
     /**
-     * Check if this factory supports the risk provider with code and type
+     * Check if this factory supports the third-party risk provider service with code and type
      *
      * @param riskProviderCode code of the risk provider
      * @param riskProviderType type of the risk provider
@@ -24,9 +24,9 @@ public interface RiskProviderFactory {
     boolean supports(String riskProviderCode, String riskProviderType);
 
     /**
-     * Create a risk provider for this specific external risk service
+     * Create a risk provider for the third-party risk provider service
      *
-     * @return the newly created risk provider
+     * @return the newly created RiskProvider
      */
     RiskProvider createRiskProvider();
 }

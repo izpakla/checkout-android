@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
@@ -17,7 +17,7 @@ import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.ProviderParameters;
 
 /**
- * RiskProviderInfo containing the information about the risk provider
+ * RiskProviderInfo containing information about the third-party risk provider service.
  */
 public final class RiskProviderInfo {
 
@@ -26,7 +26,7 @@ public final class RiskProviderInfo {
     private final Map<String, String> parameters;
 
     /**
-     * Create a new instance of the RiskProviderInfo object
+     * Create a new instance of the RiskProviderInfo
      *
      * @param riskProviderCode code of the risk provider
      * @param riskProviderType type of the risk provider

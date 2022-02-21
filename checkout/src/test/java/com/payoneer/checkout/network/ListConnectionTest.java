@@ -53,7 +53,6 @@ public class ListConnectionTest {
     @Test(expected = IllegalArgumentException.class)
     public void createPaymentSession_invalidListData_IllegalArgumentException() throws PaymentException {
         ListConnection conn = createListConnection();
-        Context context = ApplicationProvider.getApplicationContext();
         conn.createPaymentSession("http://localhost", "auth123", "");
     }
 
@@ -69,8 +68,8 @@ public class ListConnectionTest {
     }
 
     private ListConnection createListConnection() {
-        ListConnection listConnection = new ListConnection();
-        listConnection.initialize(ApplicationProvider.getApplicationContext());
-        return listConnection;
+        ListConnection conn = new ListConnection();
+        conn.initialize(ApplicationProvider.getApplicationContext());
+        return conn;
     }
 }

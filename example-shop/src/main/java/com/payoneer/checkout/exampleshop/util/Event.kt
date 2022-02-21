@@ -10,8 +10,6 @@
 
 package com.payoneer.checkout.exampleshop.util
 
-import androidx.lifecycle.MutableLiveData
-
 /**
  * Used as a wrapper an event that has no data
  */
@@ -29,8 +27,4 @@ open class Event {
         }
     }
 
-}
-
-fun MutableLiveData<Event>.updateValue() {
-    this.value = Event()
 }

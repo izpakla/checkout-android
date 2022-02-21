@@ -10,8 +10,6 @@
 
 package com.payoneer.checkout.exampleshop.util
 
-import androidx.lifecycle.MutableLiveData
-
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
@@ -32,8 +30,4 @@ open class ContentEvent<out T>(private val content: T) {
             content
         }
     }
-}
-
-fun <T> MutableLiveData<ContentEvent<T>>.updateValue(content: T) {
-    this.value = ContentEvent(content)
 }

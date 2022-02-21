@@ -14,7 +14,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.payoneer.checkout.exampleshop.util.Event
-import com.payoneer.checkout.exampleshop.util.updateValue
 import com.payoneer.checkout.model.InteractionCode
 import com.payoneer.checkout.model.RedirectType
 import com.payoneer.checkout.ui.PaymentActivityResult
@@ -51,10 +50,10 @@ class ShopCheckoutViewModel @Inject constructor() : ViewModel() {
     private fun handlePaymentResultProceed(result: PaymentResult) {
         if (result.interaction == null) return
         if (PaymentUtils.containsRedirectType(result.operationResult, RedirectType.SUMMARY)) {
-            _showPaymentSummary.updateValue()
+            _showPaymentSummary.value = Event()
             return
         }
-        _showPaymentConfirmation.updateValue()
+        _showPaymentConfirmation.value = Event()
     }
 
     private fun handlePaymentResultError(result: PaymentResult) {
@@ -62,13 +61,13 @@ class ShopCheckoutViewModel @Inject constructor() : ViewModel() {
         when (interaction.code) {
             InteractionCode.ABORT -> {
                 if (!result.isNetworkFailure) {
-                    _stopPaymentWithErrorMessage.updateValue()
+                    _stopPaymentWithErrorMessage.value = Event()
                 }
             }
             // VERIFY means that a charge request has been made but the status of the payment could
             // not be verified by the Checkout SDK, i.e. because of a network error
             InteractionCode.VERIFY -> {
-                _stopPaymentWithErrorMessage.updateValue()
+                _stopPaymentWithErrorMessage.value = Event()
             }
         }
     }

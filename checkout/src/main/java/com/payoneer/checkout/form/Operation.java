@@ -306,26 +306,6 @@ public class Operation implements Parcelable {
         }
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("Operation [");
-        if (networkCode != null) {
-            builder.append("networkCode=").append(networkCode).append(", ");
-        }
-        if (paymentMethod != null) {
-            builder.append("paymentMethod=").append(paymentMethod).append(", ");
-        }
-        if (operationType != null) {
-            builder.append("operationType=").append(operationType).append(", ");
-        }
-        if (url != null) {
-            builder.append("url=").append(url).append(", ");
-        }
-        builder.append("]");
-        return builder.toString();
-    }
-
     private int getProviderRequestIndex(ProviderParameters request) {
         List<ProviderParameters> list = operationData.getProviderRequests();
         if (list != null) {

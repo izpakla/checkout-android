@@ -13,7 +13,6 @@ import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
 import static com.payoneer.checkout.ui.page.ChargePaymentActivity.TYPE_CHARGE_PRESET_ACCOUNT;
 
-import java.util.List;
 import java.util.Objects;
 
 import com.payoneer.checkout.core.PaymentException;

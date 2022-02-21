@@ -68,7 +68,8 @@ public class ListConnectionTest {
     }
 
     private ListConnection createListConnection() {
-        Context context = ApplicationProvider.getApplicationContext();
-        return new ListConnection(context);
+        ListConnection conn = new ListConnection();
+        conn.initialize(ApplicationProvider.getApplicationContext());
+        return conn;
     }
 }

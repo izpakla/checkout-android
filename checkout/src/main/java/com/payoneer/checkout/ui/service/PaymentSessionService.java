@@ -169,8 +169,8 @@ public final class PaymentSessionService {
             .build();
 
         loadValidator(context);
-        loadLocalizations(context, session);
-        loadRiskProviders(context, session);
+        loadLocalizations(session, context);
+        loadRiskProviders(session, context);
         return session;
     }
 
@@ -185,7 +185,7 @@ public final class PaymentSessionService {
         }
     }
 
-    private void loadLocalizations(Context context, PaymentSession session) throws PaymentException {
+    private void loadLocalizations(final PaymentSession session, final Context context) throws PaymentException {
         String listUrl = session.getListSelfUrl();
         if (!listUrl.equals(cache.getCacheId())) {
             cache.clear();
@@ -213,7 +213,7 @@ public final class PaymentSessionService {
         return holder;
     }
 
-    private void loadRiskProviders(final Context context, final PaymentSession session) {
+    private void loadRiskProviders(final PaymentSession session, final Context context) {
         String listUrl = session.getListSelfUrl();
         RiskProviders riskProviders = RiskProviders.getInstance();
 

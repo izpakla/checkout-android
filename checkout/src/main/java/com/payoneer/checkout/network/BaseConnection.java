@@ -60,13 +60,13 @@ abstract class BaseConnection {
     }
 
     /**
-     * Initialize the user agent so it will be send for each request initialized through this connection.
+     * Create the UserAgent and BrowserData objects using the provided Context.
      * This method should not be called from the Main UI Thread as it may take time to construct the UserAgent
-     * and BrowserData objects.
+     * and BrowserData.
      *
-     * param context used to initialize this connection
+     * param context contains information about the application environment
      */
-    public final void initialize(Context context) {
+    public final void initialize(final Context context) {
         if (context == null) {
             throw new IllegalArgumentException("Context cannot be null for setting up user agent");
         }

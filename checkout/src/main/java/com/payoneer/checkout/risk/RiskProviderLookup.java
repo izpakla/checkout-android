@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
@@ -13,17 +13,15 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import android.content.Context;
-
 /**
- * Class for looking up a RiskProvider given the risk provider code and type.
+ * Class for looking up a RiskProvider given the third-party risk provider service code and type.
  */
 public class RiskProviderLookup {
 
     private static final List<RiskProviderFactory> factories = new CopyOnWriteArrayList<>();
 
     /**
-     * Helper class to get anew Risk provider for the given provider code and type
+     * Helper method to get a new RiskProvider for the third-party risk provider service with code and type
      *
      * @param riskProviderCode to be used to lookup a RiskProvider
      * @param riskProviderType to be used to lookup a RiskProvider

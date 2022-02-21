@@ -18,8 +18,6 @@ import com.payoneer.checkout.form.DeleteAccount;
 import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.model.OperationResult;
 
-import android.content.Context;
-
 /**
  * Class containing methods to send Payment Operation requests to the Payment API.
  * <p>

@@ -13,8 +13,6 @@ import com.payoneer.checkout.model.PaymentMethod;
 import com.payoneer.checkout.ui.service.NetworkService;
 import com.payoneer.checkout.ui.service.NetworkServiceFactory;
 
-import android.content.Context;
-
 /**
  * Specific implementation for basic networks like i.e. Visa, mastercard and sepa.
  */

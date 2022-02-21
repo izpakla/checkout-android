@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
@@ -16,7 +16,7 @@ import java.util.Objects;
 import com.payoneer.checkout.model.Parameter;
 
 /**
- * RiskProviderResult containing the collected risk result data provided by the external risk service
+ * RiskProviderResult contains the risk result data provided by the third-party risk provider service.
  */
 public final class RiskProviderResult {
     private final Map<String, String> riskData;
@@ -36,7 +36,7 @@ public final class RiskProviderResult {
     /**
      * Copy the risk result data into the list or parameters
      *
-     * @param parameters list of parameters into which the risk result data should be copied into
+     * @param parameters list of parameters into which the risk result data should be copied to
      */
     public void copyInto(final List<Parameter> parameters) {
         Objects.requireNonNull(parameters);

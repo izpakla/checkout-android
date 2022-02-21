@@ -27,13 +27,13 @@ import javax.inject.Inject
 class ShopCheckoutViewModel @Inject constructor() : ViewModel() {
 
     private val _showPaymentSummary = MutableLiveData<Event>()
-    val showPaymentSummary: LiveData<Event> = _showPaymentSummary
+    val showPaymentSummary: LiveData<Event> get() = _showPaymentSummary
 
     private val _showPaymentConfirmation = MutableLiveData<Event>()
-    val showPaymentConfirmation: LiveData<Event> = _showPaymentConfirmation
+    val showPaymentConfirmation: LiveData<Event> get() = _showPaymentConfirmation
 
     private val _stopPaymentWithErrorMessage = MutableLiveData<Event>()
-    val stopPaymentWithErrorMessage: LiveData<Event> = _stopPaymentWithErrorMessage
+    val stopPaymentWithErrorMessage: LiveData<Event> get() = _stopPaymentWithErrorMessage
 
     /**
      * Handle the PaymentActivityResult received from the Checkout SDK.

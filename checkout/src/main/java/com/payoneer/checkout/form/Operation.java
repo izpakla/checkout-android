@@ -290,27 +290,4 @@ public class Operation implements Parcelable {
     public URL getURL() {
         return url;
     }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("Operation [");
-        if (networkCode != null) {
-            builder.append("networkCode=").append(networkCode).append(", ");
-        }
-        if (paymentMethod != null) {
-            builder.append("paymentMethod=").append(paymentMethod).append(", ");
-        }
-        if (operationType != null) {
-            builder.append("operationType=").append(operationType).append(", ");
-        }
-        if (url != null) {
-            builder.append("url=").append(url).append(", ");
-        }
-        if (operationData != null) {
-            builder.append("operationData=").append(operationData);
-        }
-        builder.append("]");
-        return builder.toString();
-    }
 }

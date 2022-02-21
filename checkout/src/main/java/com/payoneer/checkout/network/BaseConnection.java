@@ -60,7 +60,7 @@ abstract class BaseConnection {
     }
 
     /**
-     * Initialize the user agent so it will be send for each request initialized through this connection.
+     * Initialize this connection and set the UserAgent and BrowserData objects created with the provided Context.
      * This method should not be called from the Main UI Thread as it may take time to construct the UserAgent
      * and BrowserData objects.
      *

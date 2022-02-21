@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.payoneer.checkout.risk.RiskProvider;
+import com.payoneer.checkout.risk.RiskProviderLookup;
 
 public class IovationRiskProviderFactoryTest {
 
@@ -32,6 +33,13 @@ public class IovationRiskProviderFactoryTest {
     public void createRiskProvider() {
         IovationRiskProviderFactory factory = new IovationRiskProviderFactory();
         RiskProvider riskProvider = factory.createRiskProvider();
+        assertNotNull(riskProvider);
+        assertTrue(riskProvider instanceof IovationRiskProvider);
+    }
+
+    @Test
+    public void lookupIovationRiskProvider() {
+        RiskProvider riskProvider = RiskProviderLookup.getRiskProvider(IovationRiskProviderFactory.IOVATION_CODE, IovationRiskProviderFactory.IOVATION_TYPE);
         assertNotNull(riskProvider);
         assertTrue(riskProvider instanceof IovationRiskProvider);
     }

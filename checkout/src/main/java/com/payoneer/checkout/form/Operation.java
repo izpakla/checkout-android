@@ -322,9 +322,6 @@ public class Operation implements Parcelable {
         if (url != null) {
             builder.append("url=").append(url).append(", ");
         }
-        if (operationData != null) {
-            builder.append("operationData=").append(operationData);
-        }
         builder.append("]");
         return builder.toString();
     }

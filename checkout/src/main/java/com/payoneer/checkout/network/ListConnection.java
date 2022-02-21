@@ -16,7 +16,6 @@ import com.google.gson.JsonParseException;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.ListResult;
 
-import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 

@@ -8,15 +8,14 @@
 
 package com.payoneer.checkout.risk;
 
-import static com.payoneer.checkout.localization.LocalizationTest.createMapLocalizationHolder;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.ProviderParameters;
 

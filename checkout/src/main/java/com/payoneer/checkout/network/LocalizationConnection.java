@@ -20,8 +20,6 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.localization.LocalizationHolder;
 import com.payoneer.checkout.localization.MapLocalizationHolder;
 
-import android.content.Context;
-
 /**
  * Class implementing the communication with the payment API to load localization files
  * <p>

@@ -10,6 +10,7 @@ package com.payoneer.checkout.risk;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.ProviderParameters;
@@ -17,7 +18,7 @@ import com.payoneer.checkout.model.ProviderParameters;
 import android.content.Context;
 
 /**
- * The RiskProviders class contains the list of risk providers initialized.
+ * The RiskProviders class contains the list of risk providers that are initialized
  */
 public final class RiskProviders {
     private final List<RiskProviderController> controllers;
@@ -47,11 +48,25 @@ public final class RiskProviders {
         instance = newInstance;
     }
 
+    /**
+     * Check if the unique ID of this RiskProviders matches with the provided ID.
+     * For example, the listUrl or longID of a list may be used as the unique ID to which all loaded risk providers are attached to.
+     *
+     * @param providersId to be matched with the ID of this RiskProviders
+     * @return true when contains, false otherwise
+     */
     public boolean containsRiskProvidersId(final String providersId) {
         return this.riskProvidersId.equals(providersId);
     }
 
+    /**
+     * Initialize all risk providers provided in the list of ProviderParameters.
+     *
+     * @param providers list of risk providers that should be initialized
+     * @param context used to intialize each individual risk provider
+     */
     public void initializeRiskProviders(final List<ProviderParameters> providers, final Context context) {
+        Objects.requireNonNull(context);
         if (providers == null || providers.size() == 0) {
             return;
         }
@@ -66,9 +81,16 @@ public final class RiskProviders {
         }
     }
 
+    /**
+     * Get all risk provider request risk data from all loaded risk providers
+     *
+     * @param context may be used to obtain the risk request data
+     * @return list of all risk request data
+     */
     public List<ProviderParameters> getRiskProviderRequests(final Context context) {
-        List<ProviderParameters> requests = new ArrayList<>();
+        Objects.requireNonNull(context);
 
+        List<ProviderParameters> requests = new ArrayList<>();
         Context applicationContext = context.getApplicationContext();
         for (RiskProviderController controller : controllers) {
             requests.add(getRiskProviderRequest(controller, applicationContext));

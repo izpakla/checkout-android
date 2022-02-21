@@ -1,316 +1,316 @@
 {
-  "links": {
-    "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie",
-    "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/checkout.json",
-    "customer": "https://api.pi-nightly.integration.oscato.com/api/customers/61e70c28aaac2d189203fc8eu"
-  },
-  "riskProviders": [
-    {
-      "providerCode": "IOVATION",
-      "providerType": "RISK_DATA_PROVIDER",
-      "parameters": []
-    }
-  ],
-  "timestamp": "2022-02-15T14:08:12.831+0000",
-  "operation": "LIST",
-  "resultCode": "00000.11.000",
-  "resultInfo": "5 applicable and 3 registered networks are found",
-  "returnCode": {
-    "name": "OK",
-    "source": "GATEWAY"
-  },
-  "status": {
-    "code": "listed",
-    "reason": "listed"
-  },
-  "interaction": {
-    "code": "PROCEED",
-    "reason": "OK"
-  },
-  "identification": {
-    "longId": "620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie",
-    "shortId": "11818-32584",
-    "transactionId": "tr1"
-  },
-  "accounts": [
-    {
-      "links": {
-        "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/PAYPAL/logo3x.png",
-        "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/62011dbc550f7321cc7f7de2a",
-        "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/PAYPAL.json",
-        "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/62011dbc550f7321cc7f7de2a/charge",
-        "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/PAYPAL/standard/validate"
-      },
-      "id": "62011dbc550f7321cc7f7de2a",
-      "code": "PAYPAL",
-      "label": "PayPal",
-      "method": "WALLET",
-      "maskedAccount": {
-        "displayLabel": "john.doe@example.com",
-        "number": "-1116351980",
-        "login": "john.doe@example.com"
-      },
-      "selected": false,
-      "createdAt": "2022-02-07T13:25:16.604+0000",
-      "contractData": {
-        "PAGE_ENVIRONMENT": "sandbox",
-        "JAVASCRIPT_INTEGRATION": "false",
-        "PAGE_BUTTON_LOCALE": "en_US"
-      },
-      "operationType": "CHARGE",
-      "deferral": "NON_DEFERRED"
+    "links": {
+        "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie",
+        "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/checkout.json",
+        "customer": "https://api.pi-nightly.integration.oscato.com/api/customers/61e70c28aaac2d189203fc8eu"
     },
-    {
-      "links": {
-        "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/PAYPAL/logo3x.png",
-        "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/62011d0b550f7321cc7f7ddba",
-        "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/PAYPAL.json",
-        "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/62011d0b550f7321cc7f7ddba/charge",
-        "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/PAYPAL/standard/validate"
-      },
-      "id": "62011d0b550f7321cc7f7ddba",
-      "code": "PAYPAL",
-      "label": "PayPal",
-      "method": "WALLET",
-      "maskedAccount": {
-        "displayLabel": "john.doe@example.com",
-        "number": "-1116351980",
-        "login": "john.doe@example.com"
-      },
-      "selected": false,
-      "createdAt": "2022-02-07T13:22:19.038+0000",
-      "contractData": {
-        "PAGE_ENVIRONMENT": "sandbox",
-        "JAVASCRIPT_INTEGRATION": "false",
-        "PAGE_BUTTON_LOCALE": "en_US"
-      },
-      "operationType": "CHARGE",
-      "deferral": "NON_DEFERRED"
-    },
-    {
-      "links": {
-        "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/VISA/logo3x.png",
-        "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/61e70c28aaac2d189203fc8fa",
-        "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/VISA.json",
-        "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/61e70c28aaac2d189203fc8fa/charge",
-        "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/VISA/standard/validate"
-      },
-      "id": "61e70c28aaac2d189203fc8fa",
-      "code": "VISA",
-      "label": "Visa",
-      "method": "CREDIT_CARD",
-      "maskedAccount": {
-        "displayLabel": "41 *** 1111    02 | 2022",
-        "holderName": "Wee",
-        "number": "41 *** 1111",
-        "expiryMonth": 2,
-        "expiryYear": 2022
-      },
-      "selected": false,
-      "createdAt": "2022-01-18T18:51:20.233+0000",
-      "inputElements": [
+    "riskProviders": [
         {
-          "name": "verificationCode",
-          "type": "integer"
+            "providerCode": "IOVATION",
+            "providerType": "RISK_DATA_PROVIDER",
+            "parameters": []
         }
-      ],
-      "operationType": "CHARGE",
-      "deferral": "NON_DEFERRED"
-    }
-  ],
-  "networks": {
-    "applicable": [
-      {
-        "code": "VISA",
-        "label": "Visa",
-        "method": "CREDIT_CARD",
-        "grouping": "CREDIT_CARD",
-        "registration": "FORCED_DISPLAYED",
-        "recurrence": "FORCED_DISPLAYED",
-        "redirect": false,
-        "links": {
-          "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/VISA/logo3x.png",
-          "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/VISA",
-          "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/VISA.json",
-          "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/VISA/charge",
-          "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/VISA/standard/validate"
+    ],
+    "timestamp": "2022-02-15T14:08:12.831+0000",
+    "operation": "LIST",
+    "resultCode": "00000.11.000",
+    "resultInfo": "5 applicable and 3 registered networks are found",
+    "returnCode": {
+        "name": "OK",
+        "source": "GATEWAY"
+    },
+    "status": {
+        "code": "listed",
+        "reason": "listed"
+    },
+    "interaction": {
+        "code": "PROCEED",
+        "reason": "OK"
+    },
+    "identification": {
+        "longId": "620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie",
+        "shortId": "11818-32584",
+        "transactionId": "tr1"
+    },
+    "accounts": [
+        {
+            "links": {
+                "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/PAYPAL/logo3x.png",
+                "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/62011dbc550f7321cc7f7de2a",
+                "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/PAYPAL.json",
+                "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/62011dbc550f7321cc7f7de2a/charge",
+                "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/PAYPAL/standard/validate"
+            },
+            "id": "62011dbc550f7321cc7f7de2a",
+            "code": "PAYPAL",
+            "label": "PayPal",
+            "method": "WALLET",
+            "maskedAccount": {
+                "displayLabel": "john.doe@example.com",
+                "number": "-1116351980",
+                "login": "john.doe@example.com"
+            },
+            "selected": false,
+            "createdAt": "2022-02-07T13:25:16.604+0000",
+            "contractData": {
+                "PAGE_ENVIRONMENT": "sandbox",
+                "JAVASCRIPT_INTEGRATION": "false",
+                "PAGE_BUTTON_LOCALE": "en_US"
+            },
+            "operationType": "CHARGE",
+            "deferral": "NON_DEFERRED"
         },
-        "selected": false,
-        "inputElements": [
-          {
-            "name": "number",
-            "type": "numeric"
-          },
-          {
-            "name": "expiryMonth",
-            "type": "integer"
-          },
-          {
-            "name": "expiryYear",
-            "type": "integer"
-          },
-          {
-            "name": "verificationCode",
-            "type": "integer"
-          },
-          {
-            "name": "holderName",
-            "type": "string"
-          }
-        ],
-        "operationType": "CHARGE",
-        "deferral": "NON_DEFERRED"
-      },
-      {
-        "code": "AMEX",
-        "label": "American Express",
-        "method": "CREDIT_CARD",
-        "grouping": "CREDIT_CARD",
-        "registration": "NONE",
-        "recurrence": "NONE",
-        "redirect": false,
-        "links": {
-          "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/AMEX/logo3x.png",
-          "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/AMEX",
-          "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/AMEX.json",
-          "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/AMEX/charge",
-          "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/AMEX/standard/validate"
+        {
+            "links": {
+                "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/PAYPAL/logo3x.png",
+                "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/62011d0b550f7321cc7f7ddba",
+                "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/PAYPAL.json",
+                "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/62011d0b550f7321cc7f7ddba/charge",
+                "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/PAYPAL/standard/validate"
+            },
+            "id": "62011d0b550f7321cc7f7ddba",
+            "code": "PAYPAL",
+            "label": "PayPal",
+            "method": "WALLET",
+            "maskedAccount": {
+                "displayLabel": "john.doe@example.com",
+                "number": "-1116351980",
+                "login": "john.doe@example.com"
+            },
+            "selected": false,
+            "createdAt": "2022-02-07T13:22:19.038+0000",
+            "contractData": {
+                "PAGE_ENVIRONMENT": "sandbox",
+                "JAVASCRIPT_INTEGRATION": "false",
+                "PAGE_BUTTON_LOCALE": "en_US"
+            },
+            "operationType": "CHARGE",
+            "deferral": "NON_DEFERRED"
         },
-        "selected": false,
-        "inputElements": [
-          {
-            "name": "number",
-            "type": "numeric"
-          },
-          {
-            "name": "expiryMonth",
-            "type": "integer"
-          },
-          {
-            "name": "expiryYear",
-            "type": "integer"
-          },
-          {
-            "name": "verificationCode",
-            "type": "integer"
-          },
-          {
-            "name": "holderName",
-            "type": "string"
-          }
-        ],
-        "operationType": "CHARGE",
-        "deferral": "NON_DEFERRED"
-      },
-      {
-        "code": "MASTERCARD",
-        "label": "Mastercard",
-        "method": "CREDIT_CARD",
-        "grouping": "CREDIT_CARD",
-        "registration": "OPTIONAL",
-        "recurrence": "NONE",
-        "redirect": false,
-        "links": {
-          "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/MASTERCARD/logo3x.png",
-          "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MASTERCARD",
-          "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/MASTERCARD.json",
-          "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MASTERCARD/charge",
-          "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/MASTERCARD/standard/validate"
-        },
-        "selected": false,
-        "inputElements": [
-          {
-            "name": "number",
-            "type": "numeric"
-          },
-          {
-            "name": "expiryMonth",
-            "type": "integer"
-          },
-          {
-            "name": "expiryYear",
-            "type": "integer"
-          },
-          {
-            "name": "verificationCode",
-            "type": "integer"
-          },
-          {
-            "name": "holderName",
-            "type": "string"
-          }
-        ],
-        "operationType": "CHARGE",
-        "deferral": "NON_DEFERRED"
-      },
-      {
-        "code": "SEPADD",
-        "label": "SEPA",
-        "method": "DIRECT_DEBIT",
-        "grouping": "DIRECT_DEBIT",
-        "registration": "OPTIONAL",
-        "recurrence": "NONE",
-        "redirect": false,
-        "links": {
-          "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/SEPADD/logo3x.png",
-          "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/SEPADD",
-          "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/SEPADD.json",
-          "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/SEPADD/charge",
-          "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/SEPADD/standard/validate"
-        },
-        "selected": false,
-        "inputElements": [
-          {
-            "name": "holderName",
-            "type": "string"
-          },
-          {
-            "name": "iban",
-            "type": "string"
-          },
-          {
-            "name": "bic",
-            "type": "string"
-          }
-        ],
-        "operationType": "CHARGE",
-        "deferral": "NON_DEFERRED"
-      },
-      {
-        "code": "PAYPAL",
-        "label": "PayPal",
-        "method": "WALLET",
-        "grouping": "WALLET",
-        "registration": "OPTIONAL",
-        "recurrence": "NONE",
-        "redirect": true,
-        "links": {
-          "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/PAYPAL/logo3x.png",
-          "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/PAYPAL",
-          "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/PAYPAL.json",
-          "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/PAYPAL/charge",
-          "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/PAYPAL/standard/validate"
-        },
-        "selected": false,
-        "contractData": {
-          "PAGE_ENVIRONMENT": "sandbox",
-          "JAVASCRIPT_INTEGRATION": "false",
-          "PAGE_BUTTON_LOCALE": "en_US"
-        },
-        "operationType": "CHARGE",
-        "deferral": "NON_DEFERRED"
-      }
-    ]
-  },
-  "operationType": "CHARGE",
-  "allowDelete": true,
-  "style": {
-    "language": "en_US"
-  },
-  "payment": {
-    "reference": "Example iOS SDK",
-    "amount": 15,
-    "currency": "EUR"
-  },
-  "integrationType": "MOBILE_NATIVE"
+        {
+            "links": {
+                "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/VISA/logo3x.png",
+                "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/61e70c28aaac2d189203fc8fa",
+                "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/VISA.json",
+                "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/accounts/61e70c28aaac2d189203fc8fa/charge",
+                "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/VISA/standard/validate"
+            },
+            "id": "61e70c28aaac2d189203fc8fa",
+            "code": "VISA",
+            "label": "Visa",
+            "method": "CREDIT_CARD",
+            "maskedAccount": {
+                "displayLabel": "41 *** 1111    02 | 2022",
+                "holderName": "Wee",
+                "number": "41 *** 1111",
+                "expiryMonth": 2,
+                "expiryYear": 2022
+            },
+            "selected": false,
+            "createdAt": "2022-01-18T18:51:20.233+0000",
+            "inputElements": [
+                {
+                    "name": "verificationCode",
+                    "type": "integer"
+                }
+            ],
+            "operationType": "CHARGE",
+            "deferral": "NON_DEFERRED"
+        }
+    ],
+    "networks": {
+        "applicable": [
+            {
+                "code": "VISA",
+                "label": "Visa",
+                "method": "CREDIT_CARD",
+                "grouping": "CREDIT_CARD",
+                "registration": "FORCED_DISPLAYED",
+                "recurrence": "FORCED_DISPLAYED",
+                "redirect": false,
+                "links": {
+                    "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/VISA/logo3x.png",
+                    "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/VISA",
+                    "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/VISA.json",
+                    "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/VISA/charge",
+                    "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/VISA/standard/validate"
+                },
+                "selected": false,
+                "inputElements": [
+                    {
+                        "name": "number",
+                        "type": "numeric"
+                    },
+                    {
+                        "name": "expiryMonth",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "expiryYear",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "verificationCode",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "holderName",
+                        "type": "string"
+                    }
+                ],
+                "operationType": "CHARGE",
+                "deferral": "NON_DEFERRED"
+            },
+            {
+                "code": "AMEX",
+                "label": "American Express",
+                "method": "CREDIT_CARD",
+                "grouping": "CREDIT_CARD",
+                "registration": "NONE",
+                "recurrence": "NONE",
+                "redirect": false,
+                "links": {
+                    "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/AMEX/logo3x.png",
+                    "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/AMEX",
+                    "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/AMEX.json",
+                    "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/AMEX/charge",
+                    "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/AMEX/standard/validate"
+                },
+                "selected": false,
+                "inputElements": [
+                    {
+                        "name": "number",
+                        "type": "numeric"
+                    },
+                    {
+                        "name": "expiryMonth",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "expiryYear",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "verificationCode",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "holderName",
+                        "type": "string"
+                    }
+                ],
+                "operationType": "CHARGE",
+                "deferral": "NON_DEFERRED"
+            },
+            {
+                "code": "MASTERCARD",
+                "label": "Mastercard",
+                "method": "CREDIT_CARD",
+                "grouping": "CREDIT_CARD",
+                "registration": "OPTIONAL",
+                "recurrence": "NONE",
+                "redirect": false,
+                "links": {
+                    "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/MASTERCARD/logo3x.png",
+                    "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MASTERCARD",
+                    "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/MASTERCARD.json",
+                    "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MASTERCARD/charge",
+                    "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/MASTERCARD/standard/validate"
+                },
+                "selected": false,
+                "inputElements": [
+                    {
+                        "name": "number",
+                        "type": "numeric"
+                    },
+                    {
+                        "name": "expiryMonth",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "expiryYear",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "verificationCode",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "holderName",
+                        "type": "string"
+                    }
+                ],
+                "operationType": "CHARGE",
+                "deferral": "NON_DEFERRED"
+            },
+            {
+                "code": "SEPADD",
+                "label": "SEPA",
+                "method": "DIRECT_DEBIT",
+                "grouping": "DIRECT_DEBIT",
+                "registration": "OPTIONAL",
+                "recurrence": "NONE",
+                "redirect": false,
+                "links": {
+                    "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/SEPADD/logo3x.png",
+                    "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/SEPADD",
+                    "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/SEPADD.json",
+                    "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/SEPADD/charge",
+                    "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/SEPADD/standard/validate"
+                },
+                "selected": false,
+                "inputElements": [
+                    {
+                        "name": "holderName",
+                        "type": "string"
+                    },
+                    {
+                        "name": "iban",
+                        "type": "string"
+                    },
+                    {
+                        "name": "bic",
+                        "type": "string"
+                    }
+                ],
+                "operationType": "CHARGE",
+                "deferral": "NON_DEFERRED"
+            },
+            {
+                "code": "PAYPAL",
+                "label": "PayPal",
+                "method": "WALLET",
+                "grouping": "WALLET",
+                "registration": "OPTIONAL",
+                "recurrence": "NONE",
+                "redirect": true,
+                "links": {
+                    "logo": "https://resources.pi-nightly.integration.oscato.com/resource/network/MOBILE_TESTING/en_US/PAYPAL/logo3x.png",
+                    "self": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/PAYPAL",
+                    "lang": "https://resources.pi-nightly.integration.oscato.com/resource/lang/MOBILE_TESTING/en_US/PAYPAL.json",
+                    "operation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/PAYPAL/charge",
+                    "validation": "https://api.pi-nightly.integration.oscato.com/pci/v1/620bb3cc550f733fb89b30c7lnd26ntqthgm7q3b1avveq1eie/MOBILE_TESTING/en_US/PAYPAL/standard/validate"
+                },
+                "selected": false,
+                "contractData": {
+                    "PAGE_ENVIRONMENT": "sandbox",
+                    "JAVASCRIPT_INTEGRATION": "false",
+                    "PAGE_BUTTON_LOCALE": "en_US"
+                },
+                "operationType": "CHARGE",
+                "deferral": "NON_DEFERRED"
+            }
+        ]
+    },
+    "operationType": "CHARGE",
+    "allowDelete": true,
+    "style": {
+        "language": "en_US"
+    },
+    "payment": {
+        "reference": "Example iOS SDK",
+        "amount": 15,
+        "currency": "EUR"
+    },
+    "integrationType": "MOBILE_NATIVE"
 }

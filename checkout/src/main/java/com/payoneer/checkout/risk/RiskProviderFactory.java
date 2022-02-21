@@ -8,8 +8,6 @@
 
 package com.payoneer.checkout.risk;
 
-import android.content.Context;
-
 /**
  * Interface for all risk provider factories.
  * A risk provider factory is capable of creating a Risk Provider instance for a specific risk provider with code and type.

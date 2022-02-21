@@ -17,16 +17,12 @@ import org.robolectric.RobolectricTestRunner;
 
 import com.payoneer.checkout.model.NetworkOperationType;
 
-import android.content.Context;
-import androidx.test.core.app.ApplicationProvider;
-
 @RunWith(RobolectricTestRunner.class)
 public class PaymentSessionServiceTest {
 
     @Test
     public void isSupportedOperationType() {
-        Context context = ApplicationProvider.getApplicationContext();
-        PaymentSessionService service = new PaymentSessionService(context);
+        PaymentSessionService service = new PaymentSessionService();
         assertTrue(service.isSupportedNetworkOperationType(NetworkOperationType.CHARGE));
         assertTrue(service.isSupportedNetworkOperationType(NetworkOperationType.PRESET));
         assertTrue(service.isSupportedNetworkOperationType(NetworkOperationType.UPDATE));

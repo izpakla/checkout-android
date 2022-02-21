@@ -23,10 +23,8 @@ import com.payoneer.checkout.network.ListConnection;
 import com.payoneer.checkout.network.PaymentConnection;
 import com.payoneer.checkout.util.PaymentUtils;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 /**
  * Class for creating a new ListUrl

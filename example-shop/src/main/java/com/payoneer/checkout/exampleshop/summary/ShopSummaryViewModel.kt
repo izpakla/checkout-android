@@ -49,12 +49,11 @@ class ShopSummaryViewModel @Inject constructor(@ApplicationContext val context: 
     private val _stopPaymentWithErrorMessage = MutableLiveData<Event>()
     val stopPaymentWithErrorMessage: LiveData<Event> get() = _stopPaymentWithErrorMessage
 
-    private val _presetAccount = MutableLiveData<Resource<PresetAccount>>()
-    val presetAccount: LiveData<Resource<PresetAccount>> get() = _presetAccount
+    private val _showPaymentDetails = MutableLiveData<Resource<PresetAccount>>()
+    val showPaymentDetails: LiveData<Resource<PresetAccount>> get() = _showPaymentDetails
 
     private val _loadPaymentDetails = MutableLiveData<ContentEvent<Boolean>>()
     val loadPaymentDetails: LiveData<ContentEvent<Boolean>> get() = _loadPaymentDetails
-
 
     fun handlePaymentActivityResult(activityResult: PaymentActivityResult) {
         when (activityResult.requestCode) {
@@ -67,7 +66,7 @@ class ShopSummaryViewModel @Inject constructor(@ApplicationContext val context: 
     fun loadPaymentDetails(listUrl: String) {
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
-                _presetAccount.postValue(Resource.loading())
+                _showPaymentDetails.postValue(Resource.loading())
                 val result: CoroutineResult<ListResult>? =
                     suspendCoroutine { continuation ->
                         try {
@@ -79,12 +78,12 @@ class ShopSummaryViewModel @Inject constructor(@ApplicationContext val context: 
                     }
                 if (result != null) {
                     if (result.data != null) {
-                        _presetAccount.postValue(Resource.success(data = result.data.presetAccount))
+                        _showPaymentDetails.postValue(Resource.success(data = result.data.presetAccount))
                     } else {
-                        _presetAccount.postValue(Resource.error("Something went wrong. Please try again"))
+                        _showPaymentDetails.postValue(Resource.error("Something went wrong. Please try again"))
                     }
                 } else {
-                    _presetAccount.postValue(
+                    _showPaymentDetails.postValue(
                         Resource.error(
                             message = result?.error?.localizedMessage
                                 ?: "Something went wrong. Please try again"

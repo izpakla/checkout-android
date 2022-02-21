@@ -5,287 +5,207 @@
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
+package com.payoneer.checkout.exampleshop.summary
 
-package com.payoneer.checkout.exampleshop.summary;
-
-import java.net.URL;
-import java.util.Map;
-
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.payoneer.checkout.exampleshop.R;
-import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity;
-import com.payoneer.checkout.exampleshop.settings.SettingsActivity;
-import com.payoneer.checkout.exampleshop.shared.BaseActivity;
-import com.payoneer.checkout.model.AccountMask;
-import com.payoneer.checkout.model.PaymentMethod;
-import com.payoneer.checkout.model.PresetAccount;
-import com.payoneer.checkout.ui.PaymentUI;
-import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
-import com.payoneer.checkout.util.AccountMaskUtils;
-import com.payoneer.checkout.util.NetworkLogoLoader;
-
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import androidx.annotation.VisibleForTesting;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.test.espresso.IdlingResource;
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.text.TextUtils
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.activity.viewModels
+import androidx.annotation.VisibleForTesting
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
+import androidx.test.espresso.IdlingResource
+import com.payoneer.checkout.exampleshop.R
+import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
+import com.payoneer.checkout.exampleshop.databinding.ActivitySummaryBinding
+import com.payoneer.checkout.exampleshop.settings.SettingsActivity
+import com.payoneer.checkout.exampleshop.shared.BaseActivity
+import com.payoneer.checkout.exampleshop.util.Resource
+import com.payoneer.checkout.model.AccountMask
+import com.payoneer.checkout.model.PaymentMethod
+import com.payoneer.checkout.model.PresetAccount
+import com.payoneer.checkout.ui.PaymentUI
+import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
+import com.payoneer.checkout.util.AccountMaskUtils
+import com.payoneer.checkout.util.NetworkLogoLoader
 
 /**
  * Activity displaying the summary page with the Pay and Edit button.
  */
-public final class SummaryActivity extends BaseActivity implements SummaryView {
-
-    private SummaryPresenter presenter;
-    private PresetAccount presetAccount;
-    private TextView presetTitle;
-    private TextView presetSubtitle;
+class SummaryActivity : BaseActivity() {
+    private var presetAccount: PresetAccount? = null
+    private val viewModel by viewModels<ShopSummaryViewModel>()
+    private lateinit var binding: ActivitySummaryBinding
+    private lateinit var presetTitle: TextView
+    private lateinit var presetSubtitle: TextView
 
     // For automated UI Testing
-    private boolean loadCompleted;
-    private SimpleIdlingResource loadIdlingResource;
+    private var loadCompleted = false
+    private var loadIdlingResource: SimpleIdlingResource? = null
 
-    /**
-     * Create an Intent to launch this checkout activity
-     *
-     * @param context the context
-     * @param listUrl the URL pointing to the list
-     * @return the newly created intent
-     */
-    public static Intent createStartIntent(Context context, String listUrl) {
-        if (context == null) {
-            throw new IllegalArgumentException("context may not be null");
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivitySummaryBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        initToolbar()
+        initListenersAndViews()
+        initObservers()
+    }
+
+    private fun initObservers() {
+        viewModel.showPaymentConfirmation.observe(this) {
+            it.getIfNotHandled()?.let {
+                startActivity(ConfirmActivity.createStartIntent(this))
+                supportFinishAfterTransition()
+                setResultHandledIdleState()
+            }
         }
-        if (TextUtils.isEmpty(listUrl)) {
-            throw new IllegalArgumentException("listUrl may not be null or empty");
+        viewModel.stopPaymentWithErrorMessage.observe(this) {
+            it.getIfNotHandled()?.let { showErrorDialog(R.string.dialog_error_message) }
         }
-        Intent intent = new Intent(context, SummaryActivity.class);
-        intent.putExtra(EXTRA_LISTURL, listUrl);
-        return intent;
+        viewModel.showPaymentList.observe(this) {
+            it.getIfNotHandled()?.let { showPaymentList() }
+        }
+        viewModel.showPaymentDetails.observe(this) { resource ->
+            when (resource.status) {
+                Resource.Status.SUCCESS -> showPaymentDetails(resource.data)
+                Resource.Status.ERROR -> showErrorDialog(R.string.dialog_error_message)
+                Resource.Status.LOADING -> showLoading()
+            }
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_summary);
-        initToolbar();
-        presetTitle = findViewById(R.id.label_title);
-        presetSubtitle = findViewById(R.id.label_subtitle);
-
-        Button edit = findViewById(R.id.button_edit);
-        edit.setOnClickListener(v -> showPaymentList());
-        Button button = findViewById(R.id.button_pay);
-        button.setOnClickListener(v -> onPayClicked());
-        this.presenter = new SummaryPresenter(this);
+    private fun initListenersAndViews() {
+        presetTitle = binding.layoutSummaryDetails.labelTitle
+        presetSubtitle = binding.layoutSummaryDetails.labelSubtitle
+        binding.layoutSummaryDetails.buttonEdit.setOnClickListener { showPaymentList() }
+        binding.layoutSummaryDetails.buttonPay.setOnClickListener { onPayClicked() }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        presenter.onStop();
+    private fun initToolbar() {
+        setSupportActionBar(binding.layoutHeader.toolbar)
+        val actionBar = supportActionBar
+        actionBar!!.apply {
+            setTitle(R.string.summary_collapsed_title)
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
+        val typeface = ResourcesCompat.getFont(this, R.font.roboto_medium)
+        binding.layoutHeader.collapsingToolbar.apply {
+            setCollapsedTitleTypeface(typeface)
+            setExpandedTitleTypeface(typeface)
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
+    override fun onResume() {
+        super.onResume()
         if (activityResult != null) {
-            presenter.handlePaymentActivityResult(activityResult);
-            this.activityResult = null;
+            viewModel.handlePaymentActivityResult(activityResult)
+            activityResult = null
         } else {
-            presenter.loadPaymentDetails(listUrl);
+            viewModel.loadPaymentDetails(listUrl)
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Context getContext() {
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getListUrl() {
-        return listUrl;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void showPaymentConfirmation() {
-        if (active) {
-            startActivity(ConfirmActivity.createStartIntent(this));
-            supportFinishAfterTransition();
-            setResultHandledIdleState();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void showPaymentDetails(PresetAccount presetAccount) {
-        if (!active) {
-            return;
-        }
-        showLoading(false);
-        this.presetAccount = presetAccount;
-        AccountMask mask = presetAccount.getMaskedAccount();
-        ImageView view = findViewById(R.id.image_logo);
-        URL logoUrl = getLink(presetAccount, "logo");
-        String networkCode = presetAccount.getCode();
-        NetworkLogoLoader.loadNetworkLogo(view, networkCode, logoUrl);
-
-        presetSubtitle.setVisibility(View.GONE);
+    private fun showPaymentDetails(presetAccount: PresetAccount?) {
+        binding.progressbarLoad.isVisible = false
+        binding.layoutContent.isVisible = true
+        this.presetAccount = presetAccount
+        val mask = presetAccount?.maskedAccount
+        val view = binding.layoutSummaryDetails.layoutViewLogo.rootView as ImageView
+        val logoUrl = presetAccount?.links?.get("logo")
+        val networkCode = presetAccount?.code
+        NetworkLogoLoader.loadNetworkLogo(view, networkCode, logoUrl)
+        presetSubtitle.visibility = View.GONE
         if (mask != null) {
-            setAccountMask(mask, presetAccount.getMethod());
+            setAccountMask(mask, presetAccount.method)
         } else {
-            presetTitle.setText(presetAccount.getCode());
+            presetTitle.text = presetAccount?.code
         }
         // For automated UI testing
-        this.loadCompleted = true;
+        loadCompleted = true
         if (loadIdlingResource != null) {
-            loadIdlingResource.setIdleState(loadCompleted);
+            loadIdlingResource!!.setIdleState(loadCompleted)
         }
     }
 
-    private void setAccountMask(AccountMask mask, String method) {
-        switch (method) {
-            case PaymentMethod.CREDIT_CARD:
-            case PaymentMethod.DEBIT_CARD:
-                presetTitle.setText(mask.getNumber());
-                String date = AccountMaskUtils.getExpiryDateString(mask);
+    private fun setAccountMask(mask: AccountMask, method: String) {
+        when (method) {
+            PaymentMethod.CREDIT_CARD, PaymentMethod.DEBIT_CARD -> {
+                presetTitle.text = mask.number
+                val date = AccountMaskUtils.getExpiryDateString(mask)
                 if (date != null) {
-                    presetSubtitle.setVisibility(View.VISIBLE);
-                    presetSubtitle.setText(date);
+                    presetSubtitle.visibility = View.VISIBLE
+                    presetSubtitle.text = date
                 }
-                break;
-            default:
-                presetTitle.setText(mask.getDisplayLabel());
+            }
+            else -> presetTitle.text = mask.displayLabel
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void stopPaymentWithErrorMessage() {
-        if (!active) {
-            return;
-        }
-        showErrorDialog(R.string.dialog_error_message);
+    private fun showLoading() {
+        binding.progressbarLoad.isVisible = true
+        binding.layoutContent.isVisible = false
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void showLoading(boolean val) {
-        if (!active) {
-            return;
-        }
-        ProgressBar bar = findViewById(R.id.progressbar_load);
-        View content = findViewById(R.id.layout_content);
-
-        if (val) {
-            bar.setVisibility(View.VISIBLE);
-            content.setVisibility(View.GONE);
-        } else {
-            bar.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
-        }
+    override fun showErrorDialog(errorResId: Int) {
+        super.showErrorDialog(errorResId)
+        binding.progressbarLoad.isVisible = false
+        binding.layoutContent.isVisible = true
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onErrorDialogClosed() {
-        startActivity(SettingsActivity.createStartIntent(this));
-        supportFinishAfterTransition();
+    override fun onErrorDialogClosed() {
+        startActivity(SettingsActivity.createStartIntent(this))
+        supportFinishAfterTransition()
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void close() {
-        if (active) {
-            supportFinishAfterTransition();
-        }
+    private fun showPaymentList() {
+        val paymentUI = PaymentUI.getInstance()
+        paymentUI.showPaymentPage(this, EDIT_REQUEST_CODE)
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void showPaymentList() {
-        if (active) {
-            PaymentUI paymentUI = PaymentUI.getInstance();
-            paymentUI.showPaymentPage(this, EDIT_REQUEST_CODE);
-        }
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.summary_collapsed_title);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-
-        CollapsingToolbarLayout layout = findViewById(R.id.collapsing_toolbar);
-        Typeface typeface = ResourcesCompat.getFont(this, R.font.roboto_medium);
-        layout.setCollapsedTitleTypeface(typeface);
-        layout.setExpandedTitleTypeface(typeface);
-    }
-
-    private void onPayClicked() {
+    private fun onPayClicked() {
         if (presetAccount != null) {
-            PaymentUI paymentUI = PaymentUI.getInstance();
-            paymentUI.chargePresetAccount(this, PAYMENT_REQUEST_CODE);
+            val paymentUI = PaymentUI.getInstance()
+            paymentUI.chargePresetAccount(this, PAYMENT_REQUEST_CODE)
         }
-    }
-
-    private URL getLink(PresetAccount account, String name) {
-        Map<String, URL> links = account.getLinks();
-        return links != null ? links.get(name) : null;
     }
 
     /**
      * Only called from test, creates and returns a new IdlingResource
      */
     @VisibleForTesting
-    public IdlingResource getLoadIdlingResource() {
+    fun getLoadIdlingResource(): IdlingResource {
         if (loadIdlingResource == null) {
-            loadIdlingResource = new SimpleIdlingResource("summaryLoadIdlingResource");
+            loadIdlingResource = SimpleIdlingResource("summaryLoadIdlingResource")
         }
         if (loadCompleted) {
-            loadIdlingResource.setIdleState(loadCompleted);
+            loadIdlingResource!!.setIdleState(loadCompleted)
         }
-        return loadIdlingResource;
+        return loadIdlingResource!!
+    }
+
+    companion object {
+        const val PAYMENT_REQUEST_CODE = 1
+        const val EDIT_REQUEST_CODE = 2
+
+        /**
+         * Create an Intent to launch this checkout activity
+         *
+         * @param context the context
+         * @param listUrl the URL pointing to the list
+         * @return the newly created intent
+         */
+        fun createStartIntent(context: Context?, listUrl: String?): Intent {
+            requireNotNull(context) { "context may not be null" }
+            require(!TextUtils.isEmpty(listUrl)) { "listUrl may not be null or empty" }
+            val intent = Intent(context, SummaryActivity::class.java)
+            intent.putExtra(EXTRA_LISTURL, listUrl)
+            return intent
+        }
     }
 }

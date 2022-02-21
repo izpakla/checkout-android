@@ -11,7 +11,8 @@ package com.payoneer.checkout.risk;
 import android.content.Context;
 
 /**
- * Interface for a risk provider. A risk provider implementation provides risk data collected by a third-party risk provider.
+ * Interface for a risk provider.
+ * A RiskProvider provides risk data collected by a third-party risk provider service.
  */
 public interface RiskProvider {
 

@@ -67,9 +67,6 @@ public class ProviderParameters {
         if (providerType != null) {
             builder.append("providerType=").append(providerType).append(", ");
         }
-        if (parameters != null) {
-            builder.append("parameters=").append(parameters).append(", ");
-        }
         if (links != null) {
             builder.append("links=").append(links);
         }

@@ -70,6 +70,11 @@ class SummaryActivity : BaseActivity() {
         viewModel.showPaymentList.observe(this) {
             it.getIfNotHandled()?.let { showPaymentList() }
         }
+        viewModel.loadPaymentDetails.observe(this) {
+            it.getContentIfNotHandled()?.let { load ->
+                if (load) viewModel.loadPaymentDetails(listUrl)
+            }
+        }
         viewModel.showPaymentDetails.observe(this) { resource ->
             when (resource.status) {
                 Resource.Status.SUCCESS -> showPaymentDetails(resource.data)

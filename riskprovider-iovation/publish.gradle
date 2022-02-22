@@ -1,10 +1,10 @@
 task publishSnapshotVersion {
     if (rootProject.nexusUser == null || rootProject.nexusPassword == null) {
-        logger.lifecycle('[PUBLISH-CHECKOUT-SNAPSHOT] Missing nexusUser and/or nexusPassword environment variables')
+        logger.lifecycle('[PUBLISH-RISKPROVIDER-IOVATION-SNAPSHOT] Missing nexusUser and/or nexusPassword environment variables')
         return
     }
     if (rootProject.isReleaseVersion()) {
-        logger.lifecycle('[PUBLISH-CHECKOUT-SNAPSHOT] Only Snapshot artifacts can be published')
+        logger.lifecycle('[PUBLISH-RISKPROVIDER-IOVATION-SNAPSHOT] Only Snapshot artifacts can be published')
         return
     }
     dependsOn 'publish'
@@ -12,15 +12,15 @@ task publishSnapshotVersion {
 
 task publishReleaseVersion {
     if (rootProject.nexusUser == null || rootProject.nexusPassword == null) {
-        logger.lifecycle('[PUBLISH-CHECKOUT-RELEASE] Missing nexusUser and/or nexusPassword environment variables')
+        logger.lifecycle('[PUBLISH-RISKPROVIDER-IOVATION-RELEASE] Missing nexusUser and/or nexusPassword environment variables')
         return
     }
     if (rootProject.packageCloudToken == null) {
-        logger.lifecycle('[PUBLISH-CHECKOUT-RELEASE] Missing packageCloudToken environment variable')
+        logger.lifecycle('[PUBLISH-RISKPROVIDER-IOVATION-RELEASE] Missing packageCloudToken environment variable')
         return
     }
     if (!(rootProject.isReleaseVersion())) {
-        logger.lifecycle('[SNAPSHOT-CHECKOUT-RELEASE] Only Release artifacts may be published')
+        logger.lifecycle('[SNAPSHOT-RISKPROVIDER-IOVATION-RELEASE] Only Release artifacts may be published')
         return
     }
     dependsOn 'publish'
@@ -47,19 +47,19 @@ afterEvaluate {
             nexusSnapshots(MavenPublication) {
                 from components.release
                 groupId = 'com.payoneer'
-                artifactId = 'checkout-android'
+                artifactId = 'riskprovider-iovation'
                 version = versionName
             }
             nexusReleases(MavenPublication) {
                 from components.release
                 groupId = 'com.payoneer'
-                artifactId = 'checkout-android'
+                artifactId = 'riskprovider-iovation'
                 version = versionName
             }
             packagecloud(MavenPublication) {
                 from components.release
                 groupId = 'com.payoneer'
-                artifactId = 'checkout-android'
+                artifactId = 'riskprovider-iovation'
                 version = versionName
             }
         }

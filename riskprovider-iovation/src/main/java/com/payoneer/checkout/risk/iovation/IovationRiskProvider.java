@@ -16,6 +16,7 @@ import com.payoneer.checkout.risk.RiskProviderInfo;
 import com.payoneer.checkout.risk.RiskProviderResult;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * Iovation Risk provider implementation
@@ -40,8 +41,8 @@ public final class IovationRiskProvider implements RiskProvider {
                 .enableNetworkCalls(false)
                 .build();
             FraudForceManager.getInstance().initialize(configuration, applicationContext);
-        } catch (Throwable t) {
-            throw new RiskException("IovationRiskProvider - unexpected Throwable caught during initializing", t);
+        } catch (Exception e) {
+            throw new RiskException("IovationRiskProvider - unexpected Throwable caught during initializing", e);
         }
     }
 
@@ -53,8 +54,8 @@ public final class IovationRiskProvider implements RiskProvider {
             RiskProviderResult result = new RiskProviderResult();
             result.put(RESULTKEY_BLACKBOX, blackBox);
             return result;
-        } catch (Throwable t) {
-            throw new RiskException("Unexpected Throwable caught while getting risk result", t);
+        } catch (Exception e) {
+            throw new RiskException("Unexpected Throwable caught while getting risk result", e);
         }
     }
 

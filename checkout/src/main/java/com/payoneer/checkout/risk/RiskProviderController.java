@@ -71,9 +71,6 @@ public final class RiskProviderController {
         } catch (RiskException e) {
             String message = "RiskProviderController(" + code + ", " + type + ") failed to initialize RiskProvider";
             Log.w("checkout-sdk", message, e);
-        } catch (Throwable t) {
-            String message = "RiskProviderController(" + code + ", " + type + ") caught unexpected Throwable";
-            Log.e("checkout-sdk", message, t);
         }
     }
 
@@ -96,9 +93,6 @@ public final class RiskProviderController {
             } catch (RiskException e) {
                 String message = "RiskProviderController(" + code + ", " + type + ") could not obtain result";
                 Log.w("checkout-sdk", message, e);
-            } catch (Throwable t) {
-                String message = "RiskProviderController(" + code + ", " + type + ") caught unexpected Throwable";
-                Log.e("checkout-sdk", message, t);
             }
         }
         return (result != null) ? result : new RiskProviderResult();

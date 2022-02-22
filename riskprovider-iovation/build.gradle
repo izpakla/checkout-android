@@ -1,6 +1,5 @@
-plugins {
-    id 'com.android.library'
-}
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     lintOptions {
@@ -47,3 +46,6 @@ dependencies {
     testImplementation project(":checkout")
     testImplementation files('fraudforce/fraudforce-lib-release-4.3.2.aar')
 }
+
+// import the script for publishing release builds to Nexus and Packagecloud
+apply from: 'publish.gradle'

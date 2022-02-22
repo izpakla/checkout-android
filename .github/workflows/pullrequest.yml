@@ -27,7 +27,7 @@ jobs:
         run: ./gradlew testCheckout
 
   test-riskproviders:
-    name: Test Risk Providers
+    name: Test risk providers
     needs: test-checkout
     runs-on: ubuntu-latest
     steps:

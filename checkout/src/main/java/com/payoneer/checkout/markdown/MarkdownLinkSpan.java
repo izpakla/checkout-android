@@ -53,7 +53,7 @@ public final class MarkdownLinkSpan extends ClickableSpan {
         try {
             ChromeCustomTabs.open(context, RedirectUriBuilder.fromString(url));
         } catch (PaymentException e) {
-            Log.w("checkout", e);
+            Log.w("checkout-sdk", e);
         }
     }
 }

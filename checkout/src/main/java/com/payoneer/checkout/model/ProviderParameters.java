@@ -40,10 +40,7 @@ public class ProviderParameters {
         final StringBuilder builder = new StringBuilder();
         builder.append("ProviderParameters [");
         if (providerCode != null) {
-            builder.append("providerCode=").append(providerCode).append(", ");
-        }
-        if (parameters != null) {
-            builder.append("parameters=").append(parameters);
+            builder.append("providerCode=").append(providerCode);
         }
         builder.append("]");
         return builder.toString();

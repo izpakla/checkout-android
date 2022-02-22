@@ -81,7 +81,7 @@ public final class NetworkLogoLoader {
 
             @Override
             public void onError(Throwable cause) {
-                Log.w("sdk_ImageHelper", cause);
+                Log.w("checkout-sdk", cause);
                 // we ignore image loading failures
             }
         });

@@ -74,30 +74,4 @@ public class OperationData {
     public void setBrowserData(final BrowserData browserData) {
         this.browserData = browserData;
     }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("OperationData [");
-        if (account != null) {
-            builder.append("account=").append(account).append(", ");
-        }
-        if (autoRegistration != null) {
-            builder.append("autoRegistration=").append(autoRegistration).append(", ");
-        }
-        if (allowRecurrence != null) {
-            builder.append("allowRecurrence=").append(allowRecurrence).append(", ");
-        }
-        if (checkboxes != null) {
-            builder.append("checkboxes=").append(checkboxes).append(", ");
-        }
-        if (providerRequest != null) {
-            builder.append("providerRequest=").append(providerRequest).append(", ");
-        }
-        if (browserData != null) {
-            builder.append("browserData=").append(browserData);
-        }
-        builder.append("]");
-        return builder.toString();
-    }
 }

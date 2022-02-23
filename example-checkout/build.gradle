@@ -78,6 +78,7 @@ android {
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.google.android.material:material:${rootProject.androidMaterialVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
     implementation "androidx.core:core-ktx:${rootProject.coreKtx}"

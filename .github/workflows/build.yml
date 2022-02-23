@@ -92,7 +92,7 @@ jobs:
 
   publish-riskproviders:
     needs: publish-checkout
-    name: Publish risk providers snapshot artifact
+    name: Publish risk provider snapshot artifacts
     runs-on: ubuntu-latest
     steps:
       - name: Checkout with submodules
@@ -106,7 +106,7 @@ jobs:
           distribution: 'adopt'
       - name: Clean checkout project
         run: ./gradlew clean
-      - name: Publish Risk Provider artifacts
+      - name: Publish risk provider artifacts
         env:
           NEXUS_USER: ${{ secrets.NEXUS_USER }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}

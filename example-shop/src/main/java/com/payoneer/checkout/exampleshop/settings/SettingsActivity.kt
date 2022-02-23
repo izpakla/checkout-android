@@ -32,7 +32,7 @@ class SettingsActivity : BaseActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         editTextListInput = binding.inputListurl
-        listUrl?.let { url -> editTextListInput.setText(url) }
+        listUrl.let { url -> editTextListInput.setText(url) }
         binding.buttonSettings.setOnClickListener { onButtonClicked() }
     }
 

@@ -15,8 +15,7 @@ package com.payoneer.checkout.exampleshop.util
  */
 open class Event {
 
-    var hasBeenHandled = false
-        private set // Allow external read but not write
+    private var hasBeenHandled = false
 
     fun getIfNotHandled(): Event? {
         return if (hasBeenHandled)

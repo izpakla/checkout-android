@@ -16,8 +16,7 @@ package com.payoneer.checkout.exampleshop.util
  */
 open class ContentEvent<out T>(private val content: T) {
 
-    var hasBeenHandled = false
-        private set // Allow external read but not write
+    private var hasBeenHandled = false
 
     /**
      * Returns the content and prevents its use again.

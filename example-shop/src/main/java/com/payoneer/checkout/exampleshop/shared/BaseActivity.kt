@@ -5,85 +5,61 @@
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
+package com.payoneer.checkout.exampleshop.shared
 
-package com.payoneer.checkout.exampleshop.shared;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.test.espresso.IdlingResource;
-
-import com.payoneer.checkout.exampleshop.R;
-import com.payoneer.checkout.ui.PaymentActivityResult;
-import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
-import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
-import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
+import android.content.Intent
+import android.os.Bundle
+import android.view.MenuItem
+import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AppCompatActivity
+import androidx.test.espresso.IdlingResource
+import com.payoneer.checkout.exampleshop.R
+import com.payoneer.checkout.ui.PaymentActivityResult
+import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener
+import com.payoneer.checkout.ui.dialog.PaymentDialogHelper
+import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
 
 /**
  * Base Activity for Activities used in this shop, it stores and retrieves the listUrl value.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+abstract class BaseActivity : AppCompatActivity() {
 
-    public final static String EXTRA_LISTURL = "listurl";
-    public final static int PAYMENT_REQUEST_CODE = 1;
-    public final static int EDIT_REQUEST_CODE = 2;
+    protected lateinit var listUrl: String
+    protected var activityResult: PaymentActivityResult? = null
+    private var resultHandledIdlingResource: SimpleIdlingResource? = null
+    private var resultHandled = false
 
-    protected String listUrl;
-    protected PaymentActivityResult activityResult;
-    protected SimpleIdlingResource resultHandledIdlingResource;
-    private boolean resultHandled;
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            supportFinishAfterTransition();
-            return true;
-        }
-        return false;
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
-
-        if (bundle != null) {
-            this.listUrl = bundle.getString(EXTRA_LISTURL);
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            supportFinishAfterTransition()
+            true
+        } else {
+            false
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString(EXTRA_LISTURL, listUrl);
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val bundle = savedInstanceState ?: intent.extras
+        bundle?.let {
+            listUrl = it.getString(EXTRA_LISTURL)!!
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        resultHandled = false;
+    public override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        savedInstanceState.putString(EXTRA_LISTURL, listUrl)
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public override fun onResume() {
+        super.onResume()
+        resultHandled = false
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PAYMENT_REQUEST_CODE || requestCode == EDIT_REQUEST_CODE) {
-            activityResult = PaymentActivityResult.fromActivityResult(requestCode, resultCode, data);
+            activityResult = PaymentActivityResult.fromActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -93,60 +69,64 @@ public abstract class BaseActivity extends AppCompatActivity {
      *
      * @param errorResId error resource string id
      */
-    public void showErrorDialog(int errorResId) {
-        PaymentDialogFragment.PaymentDialogListener listener = new PaymentDialogFragment.PaymentDialogListener() {
-            @Override
-            public void onPositiveButtonClicked() {
-                onErrorDialogClosed();
+    open fun showErrorDialog(errorResId: Int) {
+        val listener: PaymentDialogListener = object : PaymentDialogListener {
+            override fun onPositiveButtonClicked() {
+                onErrorDialogClosed()
             }
 
-            @Override
-            public void onNegativeButtonClicked() {
-                onErrorDialogClosed();
+            override fun onNegativeButtonClicked() {
+                onErrorDialogClosed()
             }
 
-            @Override
-            public void onDismissed() {
-                onErrorDialogClosed();
+            override fun onDismissed() {
+                onErrorDialogClosed()
             }
-        };
-        String title = getString(R.string.dialog_error_title);
-        String error = getString(errorResId);
-        String tag = "dialog_exampleshop";
-        PaymentDialogFragment dialog = PaymentDialogHelper.createMessageDialog(title, error, tag, listener);
-        dialog.showDialog(getSupportFragmentManager(), null);
+        }
+
+        val title = getString(R.string.dialog_error_title)
+        val error = getString(errorResId)
+        val tag = "dialog_exampleshop"
+        val dialog = PaymentDialogHelper.createMessageDialog(title, error, tag, listener)
+        dialog.showDialog(supportFragmentManager, null)
     }
 
     /**
      * Called when the error dialog has been closed by clicking a button or has been dismissed.
      * Activities extending from this BaseActivity should implement this method in order to receive this event.
      */
-    public void onErrorDialogClosed() {
-    }
+    open fun onErrorDialogClosed() {}
 
     /**
      * Only called from test, creates and returns a new paymentResult handled IdlingResource
      */
     @VisibleForTesting
-    public IdlingResource getResultHandledIdlingResource() {
+    fun getResultHandledIdlingResource(): IdlingResource {
         if (resultHandledIdlingResource == null) {
-            resultHandledIdlingResource = new SimpleIdlingResource(getClass().getSimpleName() + "-resultHandledIdlingResource");
+            resultHandledIdlingResource =
+                SimpleIdlingResource(javaClass.simpleName + "-resultHandledIdlingResource")
         }
         if (resultHandled) {
-            resultHandledIdlingResource.setIdleState(true);
+            resultHandledIdlingResource!!.setIdleState(true)
         } else {
-            resultHandledIdlingResource.reset();
+            resultHandledIdlingResource!!.reset()
         }
-        return resultHandledIdlingResource;
+        return resultHandledIdlingResource as SimpleIdlingResource
     }
 
     /**
      * Set the result handled idle state for the IdlingResource
      */
-    protected void setResultHandledIdleState() {
-        resultHandled = true;
+    protected fun setResultHandledIdleState() {
+        resultHandled = true
         if (resultHandledIdlingResource != null) {
-            resultHandledIdlingResource.setIdleState(true);
+            resultHandledIdlingResource!!.setIdleState(true)
         }
+    }
+
+    companion object {
+        const val EXTRA_LISTURL = "listurl"
+        const val PAYMENT_REQUEST_CODE = 1
+        const val EDIT_REQUEST_CODE = 2
     }
 }

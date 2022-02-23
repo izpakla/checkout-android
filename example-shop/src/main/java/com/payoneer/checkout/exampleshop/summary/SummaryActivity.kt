@@ -109,7 +109,7 @@ class SummaryActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         if (activityResult != null) {
-            viewModel.handlePaymentActivityResult(activityResult)
+            viewModel.handlePaymentActivityResult(activityResult!!)
             activityResult = null
         } else {
             viewModel.loadPaymentDetails(listUrl)
@@ -195,8 +195,6 @@ class SummaryActivity : BaseActivity() {
     }
 
     companion object {
-        const val PAYMENT_REQUEST_CODE = 1
-        const val EDIT_REQUEST_CODE = 2
 
         /**
          * Create an Intent to launch this checkout activity

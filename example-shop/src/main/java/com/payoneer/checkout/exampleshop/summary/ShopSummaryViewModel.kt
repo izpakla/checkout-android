@@ -17,6 +17,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.payoneer.checkout.core.PaymentException
+import com.payoneer.checkout.exampleshop.shared.BaseActivity.Companion.EDIT_REQUEST_CODE
+import com.payoneer.checkout.exampleshop.shared.BaseActivity.Companion.PAYMENT_REQUEST_CODE
 import com.payoneer.checkout.exampleshop.util.ContentEvent
 import com.payoneer.checkout.exampleshop.util.CoroutineResult
 import com.payoneer.checkout.exampleshop.util.Event
@@ -57,8 +59,8 @@ class ShopSummaryViewModel @Inject constructor(@ApplicationContext val context: 
 
     fun handlePaymentActivityResult(activityResult: PaymentActivityResult) {
         when (activityResult.requestCode) {
-            SummaryActivity.PAYMENT_REQUEST_CODE -> handlePaymentResult(activityResult)
-            SummaryActivity.EDIT_REQUEST_CODE -> handleEditResult(activityResult)
+            PAYMENT_REQUEST_CODE -> handlePaymentResult(activityResult)
+            EDIT_REQUEST_CODE -> handleEditResult(activityResult)
         }
     }
 
@@ -67,15 +69,14 @@ class ShopSummaryViewModel @Inject constructor(@ApplicationContext val context: 
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 _showPaymentDetails.postValue(Resource.loading())
-                val result: CoroutineResult<ListResult>? =
-                    suspendCoroutine { continuation ->
-                        try {
-                            val listResult = ListConnection(context).getListResult(listUrl)
-                            continuation.resume(CoroutineResult(data = listResult))
-                        } catch (e: PaymentException) {
-                            continuation.resume(CoroutineResult(error = e))
-                        }
+                val result: CoroutineResult<ListResult>? = suspendCoroutine { continuation ->
+                    try {
+                        val listResult = ListConnection(context).getListResult(listUrl)
+                        continuation.resume(CoroutineResult(data = listResult))
+                    } catch (e: PaymentException) {
+                        continuation.resume(CoroutineResult(error = e))
                     }
+                }
                 if (result != null) {
                     if (result.data != null) {
                         _showPaymentDetails.postValue(Resource.success(data = result.data.presetAccount))
@@ -125,8 +126,7 @@ class ShopSummaryViewModel @Inject constructor(@ApplicationContext val context: 
             }
             // VERIFY means that a charge request has been made but the status of the payment could
             // not be verified by the Checkout SDK, i.e. because of a network error
-            InteractionCode.VERIFY ->
-                _stopPaymentWithErrorMessage.value = Event()
+            InteractionCode.VERIFY -> _stopPaymentWithErrorMessage.value = Event()
             InteractionCode.TRY_OTHER_ACCOUNT, InteractionCode.TRY_OTHER_NETWORK, InteractionCode.RELOAD, InteractionCode.RETRY -> _showPaymentList.value =
                 Event()
         }

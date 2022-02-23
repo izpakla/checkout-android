@@ -82,11 +82,10 @@ class CheckoutActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         if (activityResult != null) {
-            shopCheckoutViewModel.handlePaymentActivityResult(activityResult)
+            shopCheckoutViewModel.handlePaymentActivityResult(activityResult!!)
             activityResult = null
         }
     }
-
 
     override fun onErrorDialogClosed() {
         supportFinishAfterTransition()

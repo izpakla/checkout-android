@@ -54,9 +54,6 @@ class CheckoutActivity : BaseActivity() {
     private fun observeViewModel() {
         shopCheckoutViewModel.showPaymentSummary.observe(this) {
             it.getIfNotHandled()?.let {
-                if (!active) {
-                    return@observe
-                }
                 val intent = SummaryActivity.createStartIntent(this, listUrl)
                 startActivity(intent)
                 setResultHandledIdleState()
@@ -64,9 +61,6 @@ class CheckoutActivity : BaseActivity() {
         }
         shopCheckoutViewModel.showPaymentConfirmation.observe(this) {
             it.getIfNotHandled()?.let {
-                if (!active) {
-                    return@observe
-                }
                 val intent = ConfirmActivity.createStartIntent(this)
                 startActivity(intent)
                 setResultHandledIdleState()
@@ -74,9 +68,6 @@ class CheckoutActivity : BaseActivity() {
         }
         shopCheckoutViewModel.stopPaymentWithErrorMessage.observe(this) {
             it.getIfNotHandled()?.let {
-                if (!active) {
-                    return@observe
-                }
                 showErrorDialog(R.string.dialog_error_message)
             }
         }

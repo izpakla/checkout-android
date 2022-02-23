@@ -8,19 +8,20 @@
 
 package com.payoneer.checkout.exampleshop.shared;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.IdlingResource;
+
 import com.payoneer.checkout.exampleshop.R;
 import com.payoneer.checkout.ui.PaymentActivityResult;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.test.espresso.IdlingResource;
 
 /**
  * Base Activity for Activities used in this shop, it stores and retrieves the listUrl value.
@@ -31,15 +32,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     public final static int PAYMENT_REQUEST_CODE = 1;
     public final static int EDIT_REQUEST_CODE = 2;
 
-    protected boolean active;
     protected String listUrl;
     protected PaymentActivityResult activityResult;
     protected SimpleIdlingResource resultHandledIdlingResource;
     private boolean resultHandled;
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -49,9 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,19 +71,9 @@ public abstract class BaseActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
-    public void onPause() {
-        super.onPause();
-        active = false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void onResume() {
         super.onResume();
         resultHandled = false;
-        active = true;
     }
 
     /**

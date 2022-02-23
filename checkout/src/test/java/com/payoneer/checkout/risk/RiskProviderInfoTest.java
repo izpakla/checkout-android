@@ -22,7 +22,7 @@ import com.payoneer.checkout.model.ProviderParameters;
 public class RiskProviderInfoTest {
 
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void fromProviderParameters_nullValue() {
         RiskProviderInfo.fromProviderParameters(null);
     }

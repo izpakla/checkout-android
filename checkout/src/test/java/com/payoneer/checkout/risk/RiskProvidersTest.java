@@ -58,7 +58,7 @@ public class RiskProvidersTest {
         assertEquals(0, riskProviders.getRiskProviderRequests(context).size());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void initializeRiskProvidersWithNullContext() {
         RiskProviders riskProviders = new RiskProviders("riskProvidersId");
         riskProviders.initializeRiskProviders(new ArrayList<>(), null);

@@ -57,8 +57,9 @@ public final class RiskProviderInfo {
      * @return newly created RiskProviderInfo
      */
     public static RiskProviderInfo fromProviderParameters(final ProviderParameters providerParameters) {
-        Objects.requireNonNull(providerParameters);
-
+        if (providerParameters == null) {
+            throw new IllegalArgumentException("ProviderParameters cannot be null");
+        }
         String providerCode = providerParameters.getProviderCode();
         String providerType = providerParameters.getProviderType();
         Map<String, String> map = new HashMap<>();

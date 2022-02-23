@@ -34,9 +34,9 @@ data class Resource<out T>(val status: Status, val data: T? = null, val message:
     /**
      * Status of a resource that is provided to the UI.
      */
-    enum class Status {
-        SUCCESS,
-        ERROR,
-        LOADING
+    sealed class Status {
+        object SUCCESS : Status()
+        object ERROR : Status()
+        object LOADING : Status()
     }
 }

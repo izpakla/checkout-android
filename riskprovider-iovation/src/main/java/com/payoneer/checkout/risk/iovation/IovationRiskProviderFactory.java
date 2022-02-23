@@ -11,8 +11,6 @@ package com.payoneer.checkout.risk.iovation;
 import com.payoneer.checkout.risk.RiskProvider;
 import com.payoneer.checkout.risk.RiskProviderFactory;
 
-import android.content.Context;
-
 public class IovationRiskProviderFactory implements RiskProviderFactory {
 
     public final static String IOVATION_CODE = "IOVATION";

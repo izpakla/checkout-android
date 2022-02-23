@@ -8,7 +8,8 @@
 
 package com.payoneer.checkout.risk.iovation;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;

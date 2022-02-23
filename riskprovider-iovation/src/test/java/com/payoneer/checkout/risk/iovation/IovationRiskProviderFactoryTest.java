@@ -15,7 +15,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.payoneer.checkout.risk.RiskProvider;
-import com.payoneer.checkout.risk.RiskProviderLookup;
 
 public class IovationRiskProviderFactoryTest {
 

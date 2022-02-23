@@ -70,7 +70,7 @@ jobs:
         run: ./gradlew testRiskProviders
 
   publish-checkout:
-    needs: [test-examples, test-riskproviders]
+    needs: [ test-examples, test-riskproviders ]
     name: Publish checkout snapshot artifact
     runs-on: ubuntu-latest
     steps:

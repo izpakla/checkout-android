@@ -42,7 +42,7 @@ public final class IovationRiskProvider implements RiskProvider {
                 .build();
             FraudForceManager.getInstance().initialize(configuration, applicationContext);
         } catch (Exception e) {
-            throw new RiskException("IovationRiskProvider - unexpected Throwable caught during initializing", e);
+            throw new RiskException("IovationRiskProvider - unexpected Exception caught during initializing", e);
         }
     }
 
@@ -55,7 +55,7 @@ public final class IovationRiskProvider implements RiskProvider {
             result.put(RESULTKEY_BLACKBOX, blackBox);
             return result;
         } catch (Exception e) {
-            throw new RiskException("Unexpected Throwable caught while getting risk result", e);
+            throw new RiskException("Unexpected Exception caught while getting risk result", e);
         }
     }
 

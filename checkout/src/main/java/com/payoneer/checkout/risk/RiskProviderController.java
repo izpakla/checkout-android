@@ -40,7 +40,7 @@ public final class RiskProviderController {
 
     /**
      * Match the code and type of this RiskProviderController with the provided riskProviderCode and riskProviderType.
-     * *
+     *
      * @param riskProviderCode code of the risk provider to match
      * @param riskProviderType type of the risk provider to match
      * @return true when the code and type matches, false otherwise
@@ -51,7 +51,7 @@ public final class RiskProviderController {
     }
 
     /**
-     * Initialize the RiskProvider.
+     * Initialize the RiskProvider given the Context
      *
      * @param context contains information about the application environment
      */

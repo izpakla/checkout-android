@@ -37,7 +37,7 @@ final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (HeaderItem.isHeaderItem(item)) {
             return HeaderViewHolder.createInstance(parent);
         }
-        PaymentCard card = ((PaymentCardItem)item).getPaymentCard();
+        PaymentCard card = ((PaymentCardItem) item).getPaymentCard();
         if (card instanceof NetworkCard) {
             return NetworkCardViewHolder.createInstance(this, (NetworkCard) card, parent);
         } else if (card instanceof AccountCard) {

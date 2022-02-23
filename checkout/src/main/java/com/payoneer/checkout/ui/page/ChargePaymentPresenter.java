@@ -58,7 +58,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
      */
     ChargePaymentPresenter(BasePaymentView view) {
         super(PaymentUI.getInstance().getListUrl(), view);
-        sessionService = new PaymentSessionService(view.getActivity());
+        sessionService = new PaymentSessionService();
         sessionService.setListener(this);
     }
 
@@ -137,6 +137,16 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         RedirectService.redirect(context, redirectRequest);
     }
 
+    private void processPayment() {
+        try {
+            networkService = loadNetworkService(operation.getNetworkCode(), operation.getPaymentMethod());
+            networkService.setListener(this);
+            processPayment(operation);
+        } catch (PaymentException e) {
+            closeWithErrorCode(PaymentResultHelper.fromThrowable(e));
+        }
+    }
+
     boolean onBackPressed() {
         view.showWarningMessage(Localization.translate(CHARGE_INTERRUPTED));
         return true;
@@ -161,14 +171,8 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
             closeWithErrorCode("operation not found in ListResult");
             return;
         }
-        try {
-            this.session = session;
-            networkService = loadNetworkService(operation.getNetworkCode(), operation.getPaymentMethod());
-            networkService.setListener(this);
-            processPayment(operation);
-        } catch (PaymentException e) {
-            closeWithErrorCode(PaymentResultHelper.fromThrowable(e));
-        }
+        this.session = session;
+        processPayment();
     }
 
     private void handleLoadingError(Throwable cause) {
@@ -238,7 +242,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     private void processPayment(Operation operation) {
         setState(PROCESS);
-        networkService.processPayment(operation);
+        networkService.processPayment(operation, view.getActivity());
     }
 
     private void showMessageAndCloseWithErrorCode(PaymentResult result) {

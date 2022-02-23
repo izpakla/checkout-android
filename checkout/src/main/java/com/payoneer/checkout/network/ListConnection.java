@@ -16,7 +16,6 @@ import com.google.gson.JsonParseException;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.ListResult;
 
-import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -29,15 +28,6 @@ import android.text.TextUtils;
  * at the same time.
  */
 public final class ListConnection extends BaseConnection {
-
-    /**
-     * Construct a new ListConnection
-     *
-     * @param context used to construct the UserAgent header
-     */
-    public ListConnection(Context context) {
-        super(context);
-    }
 
     /**
      * Create a new payment session through the Server Payment API. Remind this is not

@@ -29,7 +29,8 @@ public class LocalizationConnectionTest {
     @Test(expected = IllegalArgumentException.class)
     public void loadLocalizationHolder_invalidURL_IllegalArgumentException() throws PaymentException {
         Context context = ApplicationProvider.getApplicationContext();
-        LocalizationConnection conn = new LocalizationConnection(context);
+        LocalizationConnection conn = new LocalizationConnection();
+        conn.initialize((context));
         conn.loadLocalization(null);
     }
 }

@@ -24,15 +24,4 @@ public class CustomerFormData {
     public void setBirthday(final Date birthday) {
         this.birthday = birthday;
     }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("CustomerFormData [");
-        if (birthday != null) {
-            builder.append("birthday=").append(birthday);
-        }
-        builder.append("]");
-        return builder.toString();
-    }
 }

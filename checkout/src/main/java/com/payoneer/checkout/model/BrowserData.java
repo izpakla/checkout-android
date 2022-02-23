@@ -8,14 +8,9 @@
 
 package com.payoneer.checkout.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Customer web browser data.
  */
-@Getter
-@Setter
 public class BrowserData {
 
     /**
@@ -39,4 +34,52 @@ public class BrowserData {
     private Integer browserScreenHeight;
     /** Browser screen width. Total width of the cardholder's screen in pixels. */
     private Integer browserScreenWidth;
+
+    public Boolean getJavaEnabled() {
+        return javaEnabled;
+    }
+
+    public void setJavaEnabled(final Boolean javaEnabled) {
+        this.javaEnabled = javaEnabled;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(final String language) {
+        this.language = language;
+    }
+
+    public Integer getColorDepth() {
+        return colorDepth;
+    }
+
+    public void setColorDepth(final Integer colorDepth) {
+        this.colorDepth = colorDepth;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(final String timezone) {
+        this.timezone = timezone;
+    }
+
+    public Integer getBrowserScreenHeight() {
+        return browserScreenHeight;
+    }
+
+    public void setBrowserScreenHeight(final Integer browserScreenHeight) {
+        this.browserScreenHeight = browserScreenHeight;
+    }
+
+    public Integer getBrowserScreenWidth() {
+        return browserScreenWidth;
+    }
+
+    public void setBrowserScreenWidth(final Integer browserScreenWidth) {
+        this.browserScreenWidth = browserScreenWidth;
+    }
 }

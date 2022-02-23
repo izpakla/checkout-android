@@ -10,16 +10,9 @@ package com.payoneer.checkout.model;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 /**
  * Represents a collection of custom extra elements that the merchant can define to be visualised on payment pages.
  */
-@Getter
-@Setter
-@ToString
 public class ExtraElements {
 
     /**
@@ -33,4 +26,34 @@ public class ExtraElements {
      * The display order of the elements is defined by the order in which they appear in the collection.
      */
     private List<ExtraElement> bottom;
+
+    public List<ExtraElement> getTop() {
+        return top;
+    }
+
+    public void setTop(final List<ExtraElement> top) {
+        this.top = top;
+    }
+
+    public List<ExtraElement> getBottom() {
+        return bottom;
+    }
+
+    public void setBottom(final List<ExtraElement> bottom) {
+        this.bottom = bottom;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("ExtraElements [");
+        if (top != null) {
+            builder.append("top=").append(top).append(", ");
+        }
+        if (bottom != null) {
+            builder.append("bottom=").append(bottom);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

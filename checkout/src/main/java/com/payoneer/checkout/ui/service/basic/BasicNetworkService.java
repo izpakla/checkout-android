@@ -112,7 +112,7 @@ public final class BasicNetworkService extends NetworkService {
             resultCode = RESULT_CODE_ERROR;
             paymentResult = PaymentResultHelper.fromErrorMessage(interactionCode, message);
         }
-        Log.i("checkout", "onRedirectResult: " + paymentResult);
+        Log.i("checkout-sdk", "onRedirectResult: " + paymentResult);
 
         if (request.getRequestCode() == PROCESSPAYMENT_REQUEST_CODE) {
             listener.onProcessPaymentResult(resultCode, paymentResult);
@@ -124,7 +124,7 @@ public final class BasicNetworkService extends NetworkService {
     private void handleProcessPaymentSuccess(OperationResult operationResult) {
         Interaction interaction = operationResult.getInteraction();
         PaymentResult paymentResult = new PaymentResult(operationResult);
-        Log.i("checkout", "handleProcessPaymentSuccess: " + paymentResult);
+        Log.i("checkout-sdk", "handleProcessPaymentSuccess: " + paymentResult);
 
         if (!PROCEED.equals(interaction.getCode())) {
             listener.onProcessPaymentResult(RESULT_CODE_ERROR, paymentResult);
@@ -146,14 +146,14 @@ public final class BasicNetworkService extends NetworkService {
         String code = getErrorInteractionCode(operationType);
         PaymentResult paymentResult = PaymentResultHelper.fromThrowable(code, cause);
 
-        Log.i("checkout", "handleProcessPaymentError: " + paymentResult);
+        Log.i("checkout-sdk", "handleProcessPaymentError: " + paymentResult);
         listener.onProcessPaymentResult(RESULT_CODE_ERROR, paymentResult);
     }
 
     private void handleDeleteAccountSuccess(OperationResult operationResult) {
         Interaction interaction = operationResult.getInteraction();
         PaymentResult paymentResult = new PaymentResult(operationResult);
-        Log.i("checkout", "handleDeleteAccountSuccess: " + paymentResult);
+        Log.i("checkout-sdk", "handleDeleteAccountSuccess: " + paymentResult);
 
         if (!PROCEED.equals(interaction.getCode())) {
             listener.onDeleteAccountResult(RESULT_CODE_ERROR, paymentResult);
@@ -173,7 +173,7 @@ public final class BasicNetworkService extends NetworkService {
 
     private void handleDeleteAccountError(Throwable cause) {
         PaymentResult paymentResult = PaymentResultHelper.fromThrowable(ABORT, cause);
-        Log.i("checkout", "handleDeleteAccountError: " + paymentResult);
+        Log.i("checkout-sdk", "handleDeleteAccountError: " + paymentResult);
         listener.onDeleteAccountResult(RESULT_CODE_ERROR, paymentResult);
     }
 

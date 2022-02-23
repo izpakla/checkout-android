@@ -11,17 +11,42 @@ package com.payoneer.checkout.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * An information about particular payment what is involved into installment payment process.
  */
-@Getter
-@Setter
 public class InstallmentItem {
     /** The amount of installment (mandatory) */
     private BigDecimal amount;
     /** Installment/payment date */
     private Date date;
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(final BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(final Date date) {
+        this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("InstallmentItem [");
+        if (amount != null) {
+            builder.append("amount=").append(amount).append(", ");
+        }
+        if (date != null) {
+            builder.append("date=").append(date);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

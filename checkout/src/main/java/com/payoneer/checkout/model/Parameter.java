@@ -8,17 +8,28 @@
 
 package com.payoneer.checkout.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * This class is designed to hold information about HTTP parameter.
  */
-@Getter
-@Setter
 public class Parameter {
     /** Simple API, always present */
     private String name;
     /** Simple API, optional */
     private String value;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(final String value) {
+        this.value = value;
+    }
 }

@@ -36,11 +36,4 @@ public class IovationRiskProviderFactoryTest {
         assertNotNull(riskProvider);
         assertTrue(riskProvider instanceof IovationRiskProvider);
     }
-
-    @Test
-    public void lookupIovationRiskProvider() {
-        RiskProvider riskProvider = RiskProviderLookup.getRiskProvider(IovationRiskProviderFactory.IOVATION_CODE, IovationRiskProviderFactory.IOVATION_TYPE);
-        assertNotNull(riskProvider);
-        assertTrue(riskProvider instanceof IovationRiskProvider);
-    }
 }

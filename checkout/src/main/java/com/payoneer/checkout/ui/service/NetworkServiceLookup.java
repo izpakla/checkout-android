@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 /**
@@ -47,9 +48,12 @@ public class NetworkServiceLookup {
     }
 
     private static NetworkServiceFactory getFactory(String code, String method) {
-        Objects.requireNonNull(code);
-        Objects.requireNonNull(method);
-
+        if (TextUtils.isEmpty(code)) {
+            throw new IllegalArgumentException("Code cannot be null or empty");
+        }
+        if (TextUtils.isEmpty(method)) {
+            throw new IllegalArgumentException("Method cannot be null or empty");
+        }
         if (factories.size() == 0) {
             initFactories();
         }

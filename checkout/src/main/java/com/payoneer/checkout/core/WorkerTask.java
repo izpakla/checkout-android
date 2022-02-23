@@ -63,7 +63,8 @@ public final class WorkerTask<V> extends FutureTask<V> {
     }
 
     /**
-     * Helper method to unsubscribe the workerTask
+     * Helper method to unsubscribe the workerTask. The worker task will only be unsubscribed if
+     * previously subscribed.
      *
      * @param workerTask to unsubscribe, may be null
      * @return true when unsubscribed, false otherwise

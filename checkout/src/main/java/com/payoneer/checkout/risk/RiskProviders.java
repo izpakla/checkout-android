@@ -66,7 +66,9 @@ public final class RiskProviders {
      * @param context contains information about the application environment
      */
     public void initializeRiskProviders(final List<ProviderParameters> riskProviders, final Context context) {
-        Objects.requireNonNull(context);
+        if (context == null) {
+            throw new IllegalArgumentException("Context cannot be null");
+        }
         if (riskProviders == null || riskProviders.size() == 0) {
             return;
         }
@@ -88,8 +90,9 @@ public final class RiskProviders {
      * @return list of all risk provider requests
      */
     public List<ProviderParameters> getRiskProviderRequests(final Context context) {
-        Objects.requireNonNull(context);
-
+        if (context == null) {
+            throw new IllegalArgumentException("Context cannot be null");
+        }
         List<ProviderParameters> requests = new ArrayList<>();
         Context applicationContext = context.getApplicationContext();
         for (RiskProviderController controller : controllers) {

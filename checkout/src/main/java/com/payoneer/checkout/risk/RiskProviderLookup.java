@@ -13,6 +13,8 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import android.text.TextUtils;
+
 /**
  * Class for looking up a RiskProvider given the third-party risk provider service code and type.
  */
@@ -32,15 +34,15 @@ public class RiskProviderLookup {
         return factory != null ? factory.createRiskProvider() : null;
     }
 
-    private static RiskProviderFactory getRiskProviderFactory(String providerCode, String providerType) {
-        Objects.requireNonNull(providerCode);
-        Objects.requireNonNull(providerType);
-
+    private static RiskProviderFactory getRiskProviderFactory(String riskProviderCode, String riskProviderType) {
+        if (TextUtils.isEmpty(riskProviderCode)) {
+            throw new IllegalArgumentException("riskProviderCode cannot be null or empty");
+        }
         if (factories.size() == 0) {
             initRiskProviderFactories();
         }
         for (RiskProviderFactory factory : factories) {
-            if (factory.supports(providerCode, providerType)) {
+            if (factory.supports(riskProviderCode, riskProviderType)) {
                 return factory;
             }
         }

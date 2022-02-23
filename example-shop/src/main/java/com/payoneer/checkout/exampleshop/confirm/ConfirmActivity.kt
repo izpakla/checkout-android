@@ -5,62 +5,47 @@
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
+package com.payoneer.checkout.exampleshop.confirm
 
-package com.payoneer.checkout.exampleshop.confirm;
-
-import com.payoneer.checkout.exampleshop.R;
-import com.payoneer.checkout.exampleshop.settings.SettingsActivity;
-import com.payoneer.checkout.exampleshop.shared.BaseActivity;
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import com.payoneer.checkout.exampleshop.databinding.ActivityConfirmBinding
+import com.payoneer.checkout.exampleshop.settings.SettingsActivity
+import com.payoneer.checkout.exampleshop.shared.BaseActivity
 
 /**
  * This is the confirm screen shown after a charge operation has been completed.
  */
-public final class ConfirmActivity extends BaseActivity {
+class ConfirmActivity : BaseActivity() {
 
-    /**
-     * Create an Intent to launch this confirm activity
-     *
-     * @return the newly created intent
-     */
-    public static Intent createStartIntent(final Context context) {
-        if (context == null) {
-            throw new IllegalArgumentException("context may not be null");
+    private lateinit var binding: ActivityConfirmBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityConfirmBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.buttonNeworder.setOnClickListener { openSettingsScreen() }
+    }
+
+    override fun onBackPressed() {
+        openSettingsScreen()
+    }
+
+    private fun openSettingsScreen() {
+        val intent = SettingsActivity.createStartIntent(this)
+        startActivity(intent)
+    }
+
+    companion object {
+        /**
+         * Create an Intent to launch this confirm activity
+         *
+         * @return the newly created intent
+         */
+        fun createStartIntent(context: Context?): Intent {
+            requireNotNull(context) { "context may not be null" }
+            return Intent(context, ConfirmActivity::class.java)
         }
-        return new Intent(context, ConfirmActivity.class);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_confirm);
-
-        Button button = findViewById(R.id.button_neworder);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                openSettingsScreen();
-            }
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onBackPressed() {
-        openSettingsScreen();
-    }
-
-    private void openSettingsScreen() {
-        Intent intent = SettingsActivity.createStartIntent(this);
-        startActivity(intent);
     }
 }

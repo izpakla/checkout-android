@@ -14,7 +14,7 @@ package com.payoneer.checkout.exampleshop.util
  * A generic class that holds a value with its loading status.
  * @param T is the data from the API call
  * @param status is the current status of the call
- * @param error is the error
+ * @param message is the error message
  */
 data class Resource<out T>(val status: Status, val data: T? = null, val message: String? = null) {
     companion object {

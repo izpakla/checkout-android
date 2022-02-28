@@ -12,7 +12,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.VisibleForTesting
@@ -22,6 +21,7 @@ import androidx.test.espresso.IdlingResource
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
 import com.payoneer.checkout.exampleshop.databinding.ActivitySummaryBinding
+import com.payoneer.checkout.exampleshop.databinding.LayoutSummarydetailsBinding
 import com.payoneer.checkout.exampleshop.settings.SettingsActivity
 import com.payoneer.checkout.exampleshop.shared.BaseActivity
 import com.payoneer.checkout.exampleshop.util.Resource
@@ -32,14 +32,17 @@ import com.payoneer.checkout.ui.PaymentUI
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
 import com.payoneer.checkout.util.AccountMaskUtils
 import com.payoneer.checkout.util.NetworkLogoLoader
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Activity displaying the summary page with the Pay and Edit button.
  */
+@AndroidEntryPoint
 class SummaryActivity : BaseActivity() {
     private var presetAccount: PresetAccount? = null
     private val viewModel by viewModels<ShopSummaryViewModel>()
     private lateinit var binding: ActivitySummaryBinding
+    private lateinit var layoutSummarydetailsBinding: LayoutSummarydetailsBinding
     private lateinit var presetTitle: TextView
     private lateinit var presetSubtitle: TextView
 
@@ -50,6 +53,7 @@ class SummaryActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySummaryBinding.inflate(layoutInflater)
+        layoutSummarydetailsBinding = LayoutSummarydetailsBinding.bind(binding.root)
         setContentView(binding.root)
         initToolbar()
         initListenersAndViews()
@@ -72,7 +76,7 @@ class SummaryActivity : BaseActivity() {
         }
         viewModel.loadPaymentDetails.observe(this) {
             it.getContentIfNotHandled()?.let { load ->
-                if (load) viewModel.loadPaymentDetails(listUrl)
+                if (load) viewModel.loadPaymentDetails(listUrl!!)
             }
         }
         viewModel.showPaymentDetails.observe(this) { resource ->
@@ -85,10 +89,10 @@ class SummaryActivity : BaseActivity() {
     }
 
     private fun initListenersAndViews() {
-        presetTitle = binding.layoutSummaryDetails.labelTitle
-        presetSubtitle = binding.layoutSummaryDetails.labelSubtitle
-        binding.layoutSummaryDetails.buttonEdit.setOnClickListener { showPaymentList() }
-        binding.layoutSummaryDetails.buttonPay.setOnClickListener { onPayClicked() }
+        presetTitle = layoutSummarydetailsBinding.labelTitle
+        presetSubtitle = layoutSummarydetailsBinding.labelSubtitle
+        layoutSummarydetailsBinding.buttonEdit.setOnClickListener { showPaymentList() }
+        layoutSummarydetailsBinding.buttonPay.setOnClickListener { onPayClicked() }
     }
 
     private fun initToolbar() {
@@ -112,7 +116,7 @@ class SummaryActivity : BaseActivity() {
             viewModel.handlePaymentActivityResult(activityResult!!)
             activityResult = null
         } else {
-            viewModel.loadPaymentDetails(listUrl)
+            viewModel.loadPaymentDetails(listUrl!!)
         }
     }
 
@@ -121,7 +125,7 @@ class SummaryActivity : BaseActivity() {
         binding.layoutContent.isVisible = true
         this.presetAccount = presetAccount
         val mask = presetAccount?.maskedAccount
-        val view = binding.layoutSummaryDetails.layoutViewLogo.rootView as ImageView
+        val view = layoutSummarydetailsBinding.imageLogo
         val logoUrl = presetAccount?.links?.get("logo")
         val networkCode = presetAccount?.code
         NetworkLogoLoader.loadNetworkLogo(view, networkCode, logoUrl)

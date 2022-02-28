@@ -38,7 +38,6 @@
                 <include layout="@layout/layout_product" />
 
                 <include
-                    android:id="@+id/layout_summary_details"
                     layout="@layout/layout_summarydetails" />
 
             </LinearLayout>

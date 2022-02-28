@@ -24,7 +24,7 @@ import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
  */
 abstract class BaseActivity : AppCompatActivity() {
 
-    protected lateinit var listUrl: String
+    protected var listUrl: String? = null
     protected var activityResult: PaymentActivityResult? = null
     private var resultHandledIdlingResource: SimpleIdlingResource? = null
     private var resultHandled = false
@@ -42,7 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val bundle = savedInstanceState ?: intent.extras
         bundle?.let {
-            listUrl = it.getString(EXTRA_LISTURL)!!
+            listUrl = it.getString(EXTRA_LISTURL)
         }
     }
 

@@ -8,6 +8,7 @@
 
 package com.payoneer.checkout.model;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +25,8 @@ public class OperationData {
     private Map<String, Boolean> checkboxes;
     /** Provider request parameters. */
     private ProviderParameters providerRequest;
+    /** List of Provider request parameters. */
+    private List<ProviderParameters> providerRequests;
     /** Customer web browser data */
     private BrowserData browserData;
 
@@ -65,6 +68,14 @@ public class OperationData {
 
     public void setProviderRequest(final ProviderParameters providerRequest) {
         this.providerRequest = providerRequest;
+    }
+
+    public List<ProviderParameters> getProviderRequests() {
+        return providerRequests;
+    }
+
+    public void setProviderRequests(final List<ProviderParameters> providerRequests) {
+        this.providerRequests = providerRequests;
     }
 
     public BrowserData getBrowserData() {

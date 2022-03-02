@@ -1,0 +1,3 @@
+[submodule "riskprovider-iovation/fraudforce"]
+	path = riskprovider-iovation/fraudforce
+	url = https://github.com/iovation/deviceprint-SDK-Android

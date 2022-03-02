@@ -46,6 +46,8 @@ public class ListResult {
     private List<Product> products;
     /** Integration type used when creating the LIST session, always present */
     private String integrationType;
+    /** List of risk providers, optional */
+    private List<ProviderParameters> riskProviders;
 
     public Map<String, URL> getLinks() {
         return links;
@@ -149,6 +151,14 @@ public class ListResult {
 
     public void setIntegrationType(final String integrationType) {
         this.integrationType = integrationType;
+    }
+
+    public List<ProviderParameters> getRiskProviders() {
+        return riskProviders;
+    }
+
+    public void setRiskProviders(final List<ProviderParameters> riskProviders) {
+        this.riskProviders = riskProviders;
     }
 
     @Override

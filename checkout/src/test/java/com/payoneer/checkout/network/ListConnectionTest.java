@@ -14,7 +14,6 @@ import org.robolectric.RobolectricTestRunner;
 
 import com.payoneer.checkout.core.PaymentException;
 
-import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 
 /**
@@ -68,7 +67,8 @@ public class ListConnectionTest {
     }
 
     private ListConnection createListConnection() {
-        Context context = ApplicationProvider.getApplicationContext();
-        return new ListConnection(context);
+        ListConnection conn = new ListConnection();
+        conn.initialize(ApplicationProvider.getApplicationContext());
+        return conn;
     }
 }

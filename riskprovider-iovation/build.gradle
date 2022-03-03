@@ -38,13 +38,13 @@ android {
 
 dependencies {
     compileOnly project(":checkout")
-    compileOnly files('fraudforce/fraudforce-lib-release-4.3.2.aar')
+    compileOnly files('FraudForce/fraudforce-lib-release-4.3.2.aar')
 
     testImplementation "org.robolectric:robolectric:${rootProject.robolectricVersion}"
     testImplementation "androidx.test:core:${rootProject.androidxTestCoreVersion}"
     testImplementation "junit:junit:${rootProject.junitVersion}"
     testImplementation project(":checkout")
-    testImplementation files('fraudforce/fraudforce-lib-release-4.3.2.aar')
+    testImplementation files('FraudForce/fraudforce-lib-release-4.3.2.aar')
 }
 
 // import the script for publishing release builds to Nexus and Packagecloud

@@ -85,11 +85,11 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxjava:${rootProject.rxjavaVersion}"
     implementation "io.reactivex.rxjava3:rxandroid:${rootProject.rxandroidVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
-    implementation "com.google.dagger:hilt-android:${rootProject.hilt_version}"
-    kapt "com.google.dagger:hilt-compiler:${rootProject.hilt_version}"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.lifecycle_version}"
-    implementation "androidx.activity:activity-ktx:${rootProject.activity_version}"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.lifecycle_version}"
+    implementation "com.google.dagger:hilt-android:${rootProject.hiltVersion}"
+    kapt "com.google.dagger:hilt-compiler:${rootProject.hiltVersion}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.lifecycleVersion}"
+    implementation "androidx.activity:activity-ktx:${rootProject.activityVersion}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.lifecycleVersion}"
 
     androidTestImplementation project(":shared-test")
     androidTestImplementation "androidx.test:runner:${rootProject.androidxTestRunnerVersion}"

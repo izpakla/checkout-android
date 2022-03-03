@@ -38,7 +38,7 @@ android {
 
 dependencies {
     compileOnly project(":checkout")
-    compileOnly files('FraudForce/FraudForce-lib-release-4.3.2.aar')
+    compileOnly files('FraudForce/fraudforce-lib-release-4.3.2.aar')
 
     testImplementation "org.robolectric:robolectric:${rootProject.robolectricVersion}"
     testImplementation "androidx.test:core:${rootProject.androidxTestCoreVersion}"

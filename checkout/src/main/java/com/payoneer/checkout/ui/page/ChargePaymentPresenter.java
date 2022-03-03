@@ -16,7 +16,7 @@ import static com.payoneer.checkout.ui.page.ChargePaymentActivity.TYPE_CHARGE_PR
 import java.util.Objects;
 
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
@@ -30,8 +30,8 @@ import com.payoneer.checkout.ui.PaymentUI;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.ui.service.NetworkService;
-import com.payoneer.checkout.ui.service.NetworkServiceListener;
+import com.payoneer.checkout.payment.PaymentService;
+import com.payoneer.checkout.payment.PaymentServiceListener;
 import com.payoneer.checkout.ui.service.PaymentSessionListener;
 import com.payoneer.checkout.ui.service.PaymentSessionService;
 import com.payoneer.checkout.util.PaymentResultHelper;
@@ -42,12 +42,12 @@ import android.content.Context;
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
  * First this presenter will load the list, checks if the operation is present and then post the operation to the Payment API.
  */
-final class ChargePaymentPresenter extends BasePaymentPresenter implements PaymentSessionListener, NetworkServiceListener {
+final class ChargePaymentPresenter extends BasePaymentPresenter implements PaymentSessionListener, PaymentServiceListener {
 
     private final PaymentSessionService sessionService;
     private PaymentSession session;
     private Operation operation;
-    private NetworkService networkService;
+    private PaymentService paymentService;
     private RedirectRequest redirectRequest;
     private int chargeType;
 
@@ -80,8 +80,8 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     void onStop() {
         setState(STOPPED);
         sessionService.stop();
-        if (networkService != null) {
-            networkService.stop();
+        if (paymentService != null) {
+            paymentService.stop();
         }
     }
 
@@ -139,8 +139,8 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     private void processPayment() {
         try {
-            networkService = loadNetworkService(operation.getNetworkCode(), operation.getPaymentMethod());
-            networkService.setListener(this);
+            paymentService = loadNetworkService(operation.getNetworkCode(), operation.getPaymentMethod());
+            paymentService.setListener(this);
             processPayment(operation);
         } catch (PaymentException e) {
             closeWithErrorCode(PaymentResultHelper.fromThrowable(e));
@@ -153,7 +153,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     private void handleRedirectRequest(RedirectRequest redirectRequest) {
-        networkService.onRedirectResult(redirectRequest, RedirectService.getRedirectResult());
+        paymentService.onRedirectResult(redirectRequest, RedirectService.getRedirectResult());
     }
 
     private void handleLoadSessionProceed(PaymentSession session) {
@@ -242,7 +242,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     private void processPayment(Operation operation) {
         setState(PROCESS);
-        networkService.processPayment(operation, view.getActivity());
+        paymentService.processPayment(operation, view.getActivity());
     }
 
     private void showMessageAndCloseWithErrorCode(PaymentResult result) {

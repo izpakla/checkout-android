@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service;
+package com.payoneer.checkout.payment;
 
 /**
  * Interface for all payment network factories. A payment network factory is capable of creating a NetworkService instance for a specific PaymentNetwork type.
  */
-public interface NetworkServiceFactory {
+public interface PaymentServiceFactory {
 
     /**
      * Check if the network code and payment method are supported by this factory.
@@ -27,5 +27,5 @@ public interface NetworkServiceFactory {
      *
      * @return the newly created service
      */
-    NetworkService createService();
+    PaymentService createService();
 }

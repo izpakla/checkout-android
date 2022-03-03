@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service;
+package com.payoneer.checkout.payment;
 
-import com.payoneer.checkout.form.DeleteAccount;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.DeleteAccount;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.redirect.RedirectRequest;
 
@@ -19,9 +19,9 @@ import android.content.Context;
  * Interface for network services, a NetworkService is responsible for activating and
  * processing a payment through the supported payment network.
  */
-public abstract class NetworkService {
+public abstract class PaymentService {
 
-    protected NetworkServiceListener listener;
+    protected PaymentServiceListener listener;
 
     /**
      * Stop this NetworkService
@@ -34,7 +34,7 @@ public abstract class NetworkService {
      *
      * @param listener the listener to be set
      */
-    public void setListener(NetworkServiceListener listener) {
+    public void setListener(PaymentServiceListener listener) {
         this.listener = listener;
     }
 

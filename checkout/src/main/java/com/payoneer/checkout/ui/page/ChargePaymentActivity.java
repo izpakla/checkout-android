@@ -12,7 +12,7 @@ import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 
 import com.payoneer.checkout.R;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.Localization;
 
 import android.content.Context;

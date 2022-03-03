@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service.basic;
+package com.payoneer.checkout.payment.basic;
 
 import static com.payoneer.checkout.model.InteractionCode.ABORT;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
@@ -19,14 +19,15 @@ import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
 
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.DeleteAccount;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.DeleteAccount;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Redirect;
+import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.ui.PaymentResult;
-import com.payoneer.checkout.ui.service.NetworkService;
+import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.ui.service.OperationListener;
 import com.payoneer.checkout.ui.service.OperationService;
 import com.payoneer.checkout.util.PaymentResultHelper;
@@ -38,7 +39,7 @@ import android.util.Log;
  * BasicNetworkService implementing the handling of basic payment methods like Visa, Mastercard and Sepa.
  * This network service also supports redirect networks like Paypal.
  */
-public final class BasicNetworkService extends NetworkService {
+public final class BasicPaymentService extends PaymentService {
 
     private final static int PROCESSPAYMENT_REQUEST_CODE = 0;
     private final static int DELETEACCOUNT_REQUEST_CODE = 1;
@@ -50,7 +51,7 @@ public final class BasicNetworkService extends NetworkService {
      * Create a new BasicNetworkService, this service is a basic implementation
      * that sends an operation to the Payment API.
      */
-    public BasicNetworkService() {
+    public BasicPaymentService() {
         operationService = new OperationService();
         operationService.setListener(new OperationListener() {
 
@@ -82,10 +83,10 @@ public final class BasicNetworkService extends NetworkService {
     }
 
     @Override
-    public void processPayment(Operation operation, Context context) {
-        this.operationType = operation.getOperationType();
+    public void processPayment(PaymentRequest request, Context context) {
+        this.operationType = request.getOperationType();
         listener.showProgress(true);
-        operationService.postOperation(operation, context);
+        operationService.postOperation(request, context);
     }
 
     @Override

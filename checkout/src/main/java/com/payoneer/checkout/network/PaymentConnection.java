@@ -14,8 +14,6 @@ import java.net.MalformedURLException;
 
 import com.google.gson.JsonParseException;
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.DeleteAccount;
-import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.model.OperationResult;
 
 /**

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.form;
+package com.payoneer.checkout.payment;
 
 import static com.payoneer.checkout.core.PaymentInputCategory.INPUTELEMENT;
 import static com.payoneer.checkout.core.PaymentInputCategory.REGISTRATION;
@@ -27,45 +27,49 @@ import com.payoneer.checkout.model.OperationData;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.util.GsonHelper;
+import com.payoneer.checkout.util.PaymentUtils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
 /**
- * Class holding Operation form values
+ * Class holding data for the PaymentRequest
  */
-public class Operation implements Parcelable {
+public class PaymentRequest implements Parcelable {
 
-    public final static Parcelable.Creator<Operation> CREATOR = new Parcelable.Creator<Operation>() {
-        public Operation createFromParcel(Parcel in) {
-            return new Operation(in);
+    public final static Creator<PaymentRequest> CREATOR = new Creator<PaymentRequest>() {
+        public PaymentRequest createFromParcel(Parcel in) {
+            return new PaymentRequest(in);
         }
 
-        public Operation[] newArray(int size) {
-            return new Operation[size];
+        public PaymentRequest[] newArray(int size) {
+            return new PaymentRequest[size];
         }
     };
     private final String networkCode;
     private final String paymentMethod;
     private final String operationType;
-    private final URL url;
+    private final Map<String, URL> links;
     private final OperationData operationData;
 
-    public Operation(String networkCode, String paymentMethod, String operationType, URL url) {
+    public PaymentRequest(String networkCode, String paymentMethod, String operationType, Map<String, URL> links) {
         this.networkCode = networkCode;
         this.paymentMethod = paymentMethod;
         this.operationType = operationType;
-        this.url = url;
+        this.links = links;
+
         operationData = new OperationData();
         operationData.setAccount(new AccountInputData());
     }
 
-    private Operation(Parcel in) {
+    private PaymentRequest(Parcel in) {
         this.networkCode = in.readString();
         this.paymentMethod = in.readString();
         this.operationType = in.readString();
-        this.url = (URL) in.readSerializable();
+
+        this.links = new ArrayList<>();
+        in.readList(links, URL.class.getClassLoader());
 
         try {
             GsonHelper gson = GsonHelper.getInstance();
@@ -87,30 +91,29 @@ public class Operation implements Parcelable {
         out.writeString(networkCode);
         out.writeString(paymentMethod);
         out.writeString(operationType);
-        out.writeSerializable(url);
+        out.writeList(links);
 
         GsonHelper gson = GsonHelper.getInstance();
         out.writeString(gson.toJson(operationData));
     }
 
-    public static Operation fromApplicableNetwork(ApplicableNetwork network) {
-        Map<String, URL> links = network.getLinks();
-        URL url = links != null ? links.get("operation") : null;
-
-        if (url == null) {
-            throw new IllegalArgumentException("PresetAccount does not contain an operation url");
-        }
-        return new Operation(network.getCode(), network.getMethod(), network.getOperationType(), url);
+    public static PaymentRequest fromApplicableNetwork(ApplicableNetwork network) {
+        Map<String, URL> links = PaymentUtils.emptyMapIfNull(network.getLinks());
+        return new PaymentRequest(network.getCode(), network.getMethod(), network.getOperationType(), links);
     }
 
-    public static Operation fromPresetAccount(PresetAccount account) {
+    public static PaymentRequest fromPresetAccount(PresetAccount account) {
         Map<String, URL> links = account.getLinks();
         URL url = links != null ? links.get("operation") : null;
 
         if (url == null) {
             throw new IllegalArgumentException("PresetAccount does not contain an operation url");
         }
-        return new Operation(account.getCode(), account.getMethod(), account.getOperationType(), url);
+        return new PaymentRequest(account.getCode(), account.getMethod(), account.getOperationType(), url);
+    }
+
+    public URL getOperationLink() {
+
     }
 
     public String getOperationType() {
@@ -125,21 +128,8 @@ public class Operation implements Parcelable {
         return paymentMethod;
     }
 
-    public URL getURL() {
-        return url;
-    }
-
     public void setAccountInputData(AccountInputData inputData) {
         operationData.setAccount(inputData);
-    }
-
-    public void setBrowserData(BrowserData browserData) {
-        operationData.setBrowserData(browserData);
-    }
-
-    public String toJson() {
-        GsonHelper gson = GsonHelper.getInstance();
-        return gson.toJson(operationData);
     }
 
     /**

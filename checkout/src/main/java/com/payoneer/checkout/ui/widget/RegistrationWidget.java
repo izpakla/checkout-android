@@ -14,7 +14,7 @@ import static com.payoneer.checkout.model.RegistrationType.OPTIONAL;
 import static com.payoneer.checkout.model.RegistrationType.OPTIONAL_PRESELECTED;
 
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.ui.model.RegistrationOptions;
 import com.payoneer.checkout.ui.model.RegistrationOptions.RegistrationOption;

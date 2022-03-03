@@ -23,6 +23,7 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.PaymentInputCategory;
 import com.payoneer.checkout.core.PaymentInputType;
 import com.payoneer.checkout.model.BrowserData;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.test.util.TestUtils;
 
 public class OperationTest {

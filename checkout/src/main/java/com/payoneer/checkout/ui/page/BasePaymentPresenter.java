@@ -16,8 +16,8 @@ import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.ui.PaymentResult;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.ui.service.NetworkService;
-import com.payoneer.checkout.ui.service.NetworkServiceLookup;
+import com.payoneer.checkout.payment.PaymentService;
+import com.payoneer.checkout.payment.PaymentServiceLookup;
 import com.payoneer.checkout.util.PaymentResultHelper;
 
 /**
@@ -66,8 +66,8 @@ abstract class BasePaymentPresenter {
         view.close();
     }
 
-    NetworkService loadNetworkService(String code, String paymentMethod) throws PaymentException {
-        NetworkService service = NetworkServiceLookup.createService(code, paymentMethod);
+    PaymentService loadNetworkService(String code, String paymentMethod) throws PaymentException {
+        PaymentService service = PaymentServiceLookup.createService(code, paymentMethod);
         if (service == null) {
             throw new PaymentException("Missing NetworkService for: " + code + ", " + paymentMethod);
         }

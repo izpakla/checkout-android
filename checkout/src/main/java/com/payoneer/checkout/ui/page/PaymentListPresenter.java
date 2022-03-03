@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.DeleteAccount;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.DeleteAccount;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
@@ -48,8 +48,8 @@ import com.payoneer.checkout.ui.model.AccountCard;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.ui.model.PresetCard;
-import com.payoneer.checkout.ui.service.NetworkService;
-import com.payoneer.checkout.ui.service.NetworkServiceListener;
+import com.payoneer.checkout.payment.PaymentService;
+import com.payoneer.checkout.payment.PaymentServiceListener;
 import com.payoneer.checkout.ui.service.PaymentSessionListener;
 import com.payoneer.checkout.ui.service.PaymentSessionService;
 import com.payoneer.checkout.ui.widget.FormWidget;
@@ -63,7 +63,7 @@ import android.text.TextUtils;
  * The PaymentListPresenter implementing the presenter part of the MVP
  */
 final class PaymentListPresenter extends BasePaymentPresenter
-    implements PaymentSessionListener, NetworkServiceListener, PaymentListListener {
+    implements PaymentSessionListener, PaymentServiceListener, PaymentListListener {
 
     private final static int CHARGEPAYMENT_REQUEST_CODE = 1;
     private final PaymentSessionService sessionService;
@@ -74,7 +74,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private PaymentSession session;
     private PaymentActivityResult activityResult;
-    private NetworkService networkService;
+    private PaymentService paymentService;
     private RedirectRequest redirectRequest;
 
     /**
@@ -110,8 +110,8 @@ final class PaymentListPresenter extends BasePaymentPresenter
         setState(STOPPED);
         sessionService.stop();
 
-        if (networkService != null) {
-            networkService.stop();
+        if (paymentService != null) {
+            paymentService.stop();
         }
     }
 
@@ -369,7 +369,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
     private void handleRedirectRequest(RedirectRequest redirectRequest) {
         setState(PROCESS);
         OperationResult result = RedirectService.getRedirectResult();
-        networkService.onRedirectResult(redirectRequest, result);
+        paymentService.onRedirectResult(redirectRequest, result);
     }
 
     private void handleLoadPaymentSessionProceed(PaymentSession session) {
@@ -436,8 +436,8 @@ final class PaymentListPresenter extends BasePaymentPresenter
             if (CHARGE.equals(operation.getOperationType())) {
                 listView.showChargePaymentScreen(CHARGEPAYMENT_REQUEST_CODE, operation);
             } else {
-                networkService = loadNetworkService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
-                networkService.setListener(this);
+                paymentService = loadNetworkService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
+                paymentService.setListener(this);
                 processPayment(operation);
             }
         } catch (PaymentException e) {
@@ -447,8 +447,8 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private void deleteAccountCard(AccountCard card) {
         try {
-            networkService = loadNetworkService(card.getNetworkCode(), card.getPaymentMethod());
-            networkService.setListener(this);
+            paymentService = loadNetworkService(card.getNetworkCode(), card.getPaymentMethod());
+            paymentService.setListener(this);
 
             URL url = card.getLink("self");
             deleteAccount = new DeleteAccount(url, session.getListOperationType());
@@ -460,12 +460,12 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private void processPayment(Operation operation) {
         setState(PROCESS);
-        networkService.processPayment(operation, view.getActivity());
+        paymentService.processPayment(operation, view.getActivity());
     }
 
     private void deleteAccount(DeleteAccount account) {
         setState(PROCESS);
-        networkService.deleteAccount(account, view.getActivity());
+        paymentService.deleteAccount(account, view.getActivity());
     }
 
     private Operation createOperation(PaymentCard card, Map<String, FormWidget> widgets) throws PaymentException {

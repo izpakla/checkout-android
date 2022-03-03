@@ -35,6 +35,7 @@ import com.payoneer.checkout.model.ExtraElements;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.Networks;
 import com.payoneer.checkout.model.PresetAccount;
+import com.payoneer.checkout.payment.PaymentServiceLookup;
 import com.payoneer.checkout.resource.PaymentGroup;
 import com.payoneer.checkout.ui.model.AccountCard;
 import com.payoneer.checkout.ui.model.AccountCard.AccountIcon;
@@ -132,7 +133,7 @@ public final class PaymentSessionBuilder {
             return null;
         }
         for (AccountRegistration account : accounts) {
-            if (NetworkServiceLookup.supports(account.getCode(), account.getMethod())) {
+            if (PaymentServiceLookup.supports(account.getCode(), account.getMethod())) {
                 cards.add(buildAccountCard(account, listResult));
             }
         }
@@ -257,7 +258,7 @@ public final class PaymentSessionBuilder {
         if (UPDATE.equals(operationType) && NONE.equals(recurrence) && NONE.equals(registration)) {
             return false;
         }
-        return NetworkServiceLookup.supports(network.getCode(), network.getMethod());
+        return PaymentServiceLookup.supports(network.getCode(), network.getMethod());
     }
 
     private PaymentNetwork buildPaymentNetwork(ApplicableNetwork network) throws PaymentException {

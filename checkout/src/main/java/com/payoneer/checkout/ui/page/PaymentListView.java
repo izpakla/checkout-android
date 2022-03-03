@@ -8,7 +8,7 @@
 
 package com.payoneer.checkout.ui.page;
 
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.ui.model.PaymentSession;
 
 /**

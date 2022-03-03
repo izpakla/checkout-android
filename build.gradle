@@ -53,11 +53,9 @@ ext {
     browserStackUser = System.getenv('BROWSERSTACK_USER')
     browserStackKey = System.getenv('BROWSERSTACK_KEY')
 
-    merchantCode = 'FERDINAND'                   //System.getenv('MOBILE_MERCHANT_CODE')
-    merchantPaymentToken = '3voq9k4nonfnoa1nrp75q1ct2tnild5icad4vaq9'
-    // System.getenv('MOBILE_MERCHANT_PAYMENT_TOKEN')
-    paymentApiListUrl = 'https://api.pi-nightly.integration.oscato.com/api/lists'
-    //System.getenv('PAYMENTAPI_LISTURL')
+    merchantCode = System.getenv('MOBILE_MERCHANT_CODE')
+    merchantPaymentToken = System.getenv('MOBILE_MERCHANT_PAYMENT_TOKEN')
+    paymentApiListUrl = System.getenv('PAYMENTAPI_LISTURL')
 
     playstoreStoreFile = System.getenv('PLAYSTORE_UPLOAD_STOREFILE')
     playstoreStorePassword = System.getenv('PLAYSTORE_UPLOAD_STOREPASSWORD')

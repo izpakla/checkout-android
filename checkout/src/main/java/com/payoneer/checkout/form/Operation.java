@@ -305,7 +305,6 @@ public class Operation implements Parcelable {
                 throw new PaymentException(msg);
         }
     }
-
     private int getProviderRequestIndex(ProviderParameters request) {
         List<ProviderParameters> list = operationData.getProviderRequests();
         if (list != null) {

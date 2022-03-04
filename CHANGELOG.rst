@@ -1,6 +1,18 @@
 Changelog - Payoneer Checkout SDK for Android-based devices
 -----------------------
 
+Version checkout-android **0.81.0**
+
+**Bug**
+
+* [PCX-2822] - Remove toString from model classes that contain sensitive data
+* [PCX-2715] - Lombok is not supported for latest Android Studio and does not see any updates recently.
+* [PCX-2676] - Fix padding when expired icon is shown without trashcan
+
+**Feature**
+
+* [PCX-2673] - Change trashcan icon color from optile green
+
 **Version checkout-android 0.80.0**
 
 Version **0.80.0** is a major release.

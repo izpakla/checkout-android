@@ -77,7 +77,7 @@ public class NetworkServiceLookup {
             NetworkServiceFactory factory = (NetworkServiceFactory) Class.forName(className).newInstance();
             factories.add(factory);
         } catch (Exception e) {
-            Log.w("sdk_NetworkService", e);
+            Log.w("checkout-sdk", e);
         }
     }
 }

@@ -40,7 +40,7 @@ public final class RiskProviderController {
 
     /**
      * Match the code and type of this RiskProviderController with the provided riskProviderCode and riskProviderType.
-     * *
+     *
      * @param riskProviderCode code of the risk provider to match
      * @param riskProviderType type of the risk provider to match
      * @return true when the code and type matches, false otherwise
@@ -51,7 +51,7 @@ public final class RiskProviderController {
     }
 
     /**
-     * Initialize the RiskProvider.
+     * Initialize the RiskProvider given the Context
      *
      * @param context contains information about the application environment
      */
@@ -82,18 +82,19 @@ public final class RiskProviderController {
      * @return RiskProviderResult obtained from the RiskProvider
      */
     public RiskProviderResult getRiskProviderResult(final Context context) {
+        RiskProviderResult result = null;
         if (riskProvider != null) {
             String code = info.getRiskProviderCode();
             String type = info.getRiskProviderType();
 
             try {
                 Context applicationContext = context.getApplicationContext();
-                return riskProvider.getRiskProviderResult(applicationContext);
+                result = riskProvider.getRiskProviderResult(applicationContext);
             } catch (RiskException e) {
                 String message = "RiskProviderController(" + code + ", " + type + ") could not obtain result";
                 Log.w("checkout-sdk", message, e);
             }
         }
-        return new RiskProviderResult();
+        return (result != null) ? result : new RiskProviderResult();
     }
 }

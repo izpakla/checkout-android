@@ -1,0 +1,51 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+android {
+    lintOptions {
+        abortOnError true
+        checkDependencies true
+        ignoreWarnings true
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.javaCompatVersion
+        targetCompatibility rootProject.javaCompatVersion
+    }
+
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+        applicationVariants {
+        }
+    }
+}
+
+dependencies {
+    compileOnly project(":checkout")
+    compileOnly files('FraudForce/fraudforce-lib-release-4.3.2.aar')
+
+    testImplementation "org.robolectric:robolectric:${rootProject.robolectricVersion}"
+    testImplementation "androidx.test:core:${rootProject.androidxTestCoreVersion}"
+    testImplementation "junit:junit:${rootProject.junitVersion}"
+    testImplementation project(":checkout")
+    testImplementation files('FraudForce/fraudforce-lib-release-4.3.2.aar')
+}
+
+// import the script for publishing release builds to Nexus and Packagecloud
+apply from: 'publish.gradle'

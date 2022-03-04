@@ -10,7 +10,6 @@ package com.payoneer.checkout.risk;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.ProviderParameters;

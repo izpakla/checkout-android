@@ -9,7 +9,10 @@
 package com.payoneer.checkout.payment;
 
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import com.payoneer.checkout.risk.RiskProviderFactory;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -66,9 +69,14 @@ public class PaymentServiceLookup {
 
     private static void initFactories() {
         synchronized (factories) {
-            if (factories.size() == 0) {
-                loadFactory("com.payoneer.checkout.payment.basic.BasicNetworkServiceFactory");
+            if (factories.size() > 0) {
+                return;
             }
+            ServiceLoader<PaymentServiceFactory> loader = ServiceLoader.load(PaymentServiceFactory.class);
+            for (PaymentServiceFactory factory : loader) {
+                factories.add(factory);
+            }
+            loadFactory("com.payoneer.checkout.payment.basic.BasicPaymentServiceFactory");
         }
     }
 

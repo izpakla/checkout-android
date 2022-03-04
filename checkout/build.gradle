@@ -51,6 +51,10 @@ dependencies {
     implementation "androidx.browser:browser:${rootProject.androidxBrowserVersion}"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${rootProject.androidxSwiperefreshlayoutVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
+    //implementation "com.google.android.gms:play-services-wallet:16.0.1"
+    implementation "com.braintreepayments.api:google-pay:4.+"
+    //implementation 'com.braintreepayments.api:braintree:4.+'
+    //implementation 'com.braintreepayments.api:google-payment:4.+'
 
     testImplementation "org.robolectric:robolectric:${rootProject.robolectricVersion}"
     testImplementation "androidx.test:core:${rootProject.androidxTestCoreVersion}"

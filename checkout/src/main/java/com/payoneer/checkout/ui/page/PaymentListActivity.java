@@ -13,6 +13,7 @@ import static com.payoneer.checkout.localization.LocalizationKey.LIST_TITLE;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.Localization;
+import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.ui.PaymentActivityResult;
 import com.payoneer.checkout.ui.list.PaymentList;
 import com.payoneer.checkout.ui.model.PaymentSession;
@@ -23,6 +24,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
@@ -42,6 +44,10 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
      */
     public static Intent createStartIntent(Context context) {
         return new Intent(context, PaymentListActivity.class);
+    }
+
+    public void showGooglePay(String auth) {
+
     }
 
     /**
@@ -122,8 +128,8 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
     }
 
     @Override
-    public void showChargePaymentScreen(int requestCode, Operation operation) {
-        Intent intent = ChargePaymentActivity.createStartIntent(this, operation);
+    public void showChargePaymentScreen(int requestCode, PaymentRequest paymentRequest) {
+        Intent intent = ChargePaymentActivity.createStartIntent(this, paymentRequest);
         startActivityForResult(intent, requestCode);
         overridePendingTransition(ChargePaymentActivity.getStartTransition(), R.anim.no_animation);
         idlingResources.setCloseIdlingState(true);

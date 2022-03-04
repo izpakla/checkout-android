@@ -10,6 +10,7 @@ package com.payoneer.checkout.ui.widget;
 
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.network.Operation;
+import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.text.TextUtils;
@@ -164,9 +165,9 @@ public abstract class FormWidget {
     /**
      * Request the widget to inject its input value into the operation Object.
      *
-     * @param operation in which the input value should be added
+     * @param paymentRequest in which the input value should be added
      */
-    public void putValue(Operation operation) throws PaymentException {
+    public void putValue(PaymentRequest paymentRequest) throws PaymentException {
     }
 
     /**

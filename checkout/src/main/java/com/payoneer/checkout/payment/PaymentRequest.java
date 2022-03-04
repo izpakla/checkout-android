@@ -13,6 +13,7 @@ import static com.payoneer.checkout.core.PaymentInputCategory.REGISTRATION;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -68,8 +69,8 @@ public class PaymentRequest implements Parcelable {
         this.paymentMethod = in.readString();
         this.operationType = in.readString();
 
-        this.links = new ArrayList<>();
-        in.readList(links, URL.class.getClassLoader());
+        this.links = new HashMap<>();
+        in.readMap(links, URL.class.getClassLoader());
 
         try {
             GsonHelper gson = GsonHelper.getInstance();
@@ -91,7 +92,7 @@ public class PaymentRequest implements Parcelable {
         out.writeString(networkCode);
         out.writeString(paymentMethod);
         out.writeString(operationType);
-        out.writeList(links);
+        out.writeMap(links);
 
         GsonHelper gson = GsonHelper.getInstance();
         out.writeString(gson.toJson(operationData));
@@ -103,21 +104,20 @@ public class PaymentRequest implements Parcelable {
     }
 
     public static PaymentRequest fromPresetAccount(PresetAccount account) {
-        Map<String, URL> links = account.getLinks();
-        URL url = links != null ? links.get("operation") : null;
-
-        if (url == null) {
-            throw new IllegalArgumentException("PresetAccount does not contain an operation url");
-        }
-        return new PaymentRequest(account.getCode(), account.getMethod(), account.getOperationType(), url);
+        Map<String, URL> links = PaymentUtils.emptyMapIfNull(account.getLinks());
+        return new PaymentRequest(account.getCode(), account.getMethod(), account.getOperationType(), links);
     }
 
-    public URL getOperationLink() {
-
+    public OperationData getOperationData() {
+        return operationData;
     }
 
     public String getOperationType() {
         return operationType;
+    }
+
+    public URL getLink(final String link) {
+        return links.get(link);
     }
 
     public String getNetworkCode() {
@@ -159,6 +159,10 @@ public class PaymentRequest implements Parcelable {
                 String msg = "Operation.putBooleanValue failed for category: " + category;
                 throw new PaymentException(msg);
         }
+    }
+
+    public void setProviderRequest(ProviderParameters params) {
+        operationData.setProviderRequest(params);
     }
 
     /**

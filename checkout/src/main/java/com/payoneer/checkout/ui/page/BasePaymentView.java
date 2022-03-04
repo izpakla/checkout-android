@@ -14,6 +14,7 @@ import com.payoneer.checkout.ui.PaymentResult;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 
 import android.app.Activity;
+import androidx.fragment.app.Fragment;
 
 /**
  * The view (MVP) interface for screens that handle payments
@@ -33,6 +34,8 @@ interface BasePaymentView {
      * @param listener to be notified of dialog events
      */
     void showConnectionErrorDialog(PaymentDialogListener listener);
+
+    void showGooglePay(final String auth);
 
     /**
      * Show the delete account dialog to the user, notify the listener of events in this dialog.

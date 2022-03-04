@@ -11,7 +11,7 @@ package com.payoneer.checkout.ui.page;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
-import static com.payoneer.checkout.ui.page.ChargePaymentActivity.TYPE_CHARGE_PRESET_ACCOUNT;
+import static com.payoneer.checkout.ui.page.ChargePaymentActivity.TYPE_PRESET_ACCOUNT;
 
 import java.util.Objects;
 
@@ -23,6 +23,7 @@ import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
+import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 import com.payoneer.checkout.ui.PaymentResult;
@@ -37,6 +38,8 @@ import com.payoneer.checkout.ui.service.PaymentSessionService;
 import com.payoneer.checkout.util.PaymentResultHelper;
 
 import android.content.Context;
+import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
@@ -46,7 +49,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     private final PaymentSessionService sessionService;
     private PaymentSession session;
-    private Operation operation;
+    private PaymentRequest paymentRequest;
     private PaymentService paymentService;
     private RedirectRequest redirectRequest;
     private int chargeType;
@@ -62,10 +65,14 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         sessionService.setListener(this);
     }
 
-    void onStart(Operation operation, int chargeType) {
+    void makeGoogleCharge(String nonce) {
+        paymentService.makeGoogleCharge(nonce, view.getActivity());
+    }
+
+    void onStart(PaymentRequest paymentRequest, int chargeType) {
         this.chargeType = chargeType;
-        if (chargeType == ChargePaymentActivity.TYPE_CHARGE_OPERATION) {
-            this.operation = operation;
+        if (chargeType == ChargePaymentActivity.TYPE_PAYMENT_REQUEST) {
+            this.paymentRequest = paymentRequest;
         }
         setState(STARTED);
 
@@ -97,6 +104,11 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
             closeWithErrorCode(result);
         }
     }
+
+    public void showGooglePay(String auth) {
+        view.showGooglePay(auth);
+    }
+
 
     @Override
     public void onPaymentSessionError(Throwable cause) {
@@ -139,9 +151,9 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     private void processPayment() {
         try {
-            paymentService = loadNetworkService(operation.getNetworkCode(), operation.getPaymentMethod());
+            paymentService = loadNetworkService(paymentRequest.getNetworkCode(), paymentRequest.getPaymentMethod());
             paymentService.setListener(this);
-            processPayment(operation);
+            processPayment(paymentRequest);
         } catch (PaymentException e) {
             closeWithErrorCode(PaymentResultHelper.fromThrowable(e));
         }
@@ -157,19 +169,14 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     private void handleLoadSessionProceed(PaymentSession session) {
-        // When charging PresetAccounts, the Operation object will be created after the ListResult has been loaded.
-        if (chargeType == TYPE_CHARGE_PRESET_ACCOUNT) {
+        // When charging PresetAccounts, the PaymentRequest will be created after the ListResult has been loaded.
+        if (chargeType == TYPE_PRESET_ACCOUNT) {
             PresetAccount account = session.getListResult().getPresetAccount();
             if (account == null) {
                 closeWithErrorCode("PresetAccount not found in ListResult");
                 return;
             }
-            this.operation = Operation.fromPresetAccount(account);
-        }
-
-        if (!session.containsOperationLink(operation.getURL())) {
-            closeWithErrorCode("operation not found in ListResult");
-            return;
+            this.paymentRequest = PaymentRequest.fromPresetAccount(account);
         }
         this.session = session;
         processPayment();
@@ -225,7 +232,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         view.showConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
-                processPayment(operation);
+                processPayment(paymentRequest);
             }
 
             @Override
@@ -240,9 +247,9 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         });
     }
 
-    private void processPayment(Operation operation) {
+    private void processPayment(PaymentRequest paymentRequest) {
         setState(PROCESS);
-        paymentService.processPayment(operation, view.getActivity());
+        paymentService.processPayment(paymentRequest, view.getActivity());
     }
 
     private void showMessageAndCloseWithErrorCode(PaymentResult result) {

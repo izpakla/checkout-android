@@ -24,6 +24,8 @@ public interface PaymentServiceListener {
      */
     void showProgress(boolean visible);
 
+    void showGooglePay(String auth);
+
     /**
      * Ask the network service to redirect the payment to an external address
      *

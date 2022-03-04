@@ -56,4 +56,24 @@ public class ProviderParameters {
     public void setLinks(final Map<String, URL> links) {
         this.links = links;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("ProviderParameters [");
+        if (providerCode != null) {
+            builder.append("providerCode=").append(providerCode).append(", ");
+        }
+        if (providerType != null) {
+            builder.append("providerType=").append(providerType).append(", ");
+        }
+        if (parameters != null) {
+            builder.append("parameters=").append(parameters).append(", ");
+        }
+        if (links != null) {
+            builder.append("links=").append(links);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

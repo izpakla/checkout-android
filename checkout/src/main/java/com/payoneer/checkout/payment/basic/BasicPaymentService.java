@@ -86,7 +86,9 @@ public final class BasicPaymentService extends PaymentService {
     public void processPayment(PaymentRequest request, Context context) {
         this.operationType = request.getOperationType();
         listener.showProgress(true);
-        operationService.postOperation(request, context);
+
+        Operation operation = new Operation(request.getLink("operation"), request.getOperationData());
+        operationService.postOperation(operation, context);
     }
 
     @Override

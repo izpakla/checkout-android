@@ -12,6 +12,7 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.InputElement;
+import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.ui.widget.input.ExpiryDateInputMode;
 import com.payoneer.checkout.util.PaymentUtils;
 import com.payoneer.checkout.validation.ValidationResult;
@@ -38,10 +39,10 @@ public final class ExpiryDateWidget extends InputLayoutWidget {
     }
 
     @Override
-    public void putValue(Operation operation) throws PaymentException {
+    public void putValue(PaymentRequest paymentRequest) throws PaymentException {
         ExpiryDate date = getExpiryDate();
-        operation.putStringValue(category, monthElement.getName(), date.month);
-        operation.putStringValue(category, yearElement.getName(), date.year);
+        paymentRequest.putStringValue(category, monthElement.getName(), date.month);
+        paymentRequest.putStringValue(category, yearElement.getName(), date.year);
     }
 
     /**

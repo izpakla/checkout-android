@@ -11,13 +11,20 @@ package com.payoneer.checkout.ui.page;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 
+import com.braintreepayments.api.BraintreeClient;
+import com.braintreepayments.api.GooglePayClient;
+import com.braintreepayments.api.GooglePayRequest;
+import com.braintreepayments.api.PaymentMethodNonce;
+import com.google.android.gms.wallet.TransactionInfo;
+import com.google.android.gms.wallet.WalletConstants;
 import com.payoneer.checkout.R;
-import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.Localization;
+import com.payoneer.checkout.payment.PaymentRequest;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import androidx.annotation.NonNull;
 
 /**
@@ -26,13 +33,18 @@ import androidx.annotation.NonNull;
  */
 public final class ChargePaymentActivity extends BasePaymentActivity implements BasePaymentView {
 
+    private final static int GOOGLE_REQUEST_CODE = 1000;
     private final static String EXTRA_OPERATION = "operation";
+    private final static String EXTRA_PAYMENT_REQUEST = "payment_request";
     private final static String EXTRA_CHARGE_TYPE = "charge_type";
-    public final static int TYPE_CHARGE_OPERATION = 1;
-    public final static int TYPE_CHARGE_PRESET_ACCOUNT = 2;
+    public final static int TYPE_PAYMENT_REQUEST = 1;
+    public final static int TYPE_PRESET_ACCOUNT = 2;
     private int chargeType;
     private ChargePaymentPresenter presenter;
-    private Operation operation;
+    private PaymentRequest paymentRequest;
+
+    private BraintreeClient braintreeClient;
+    private GooglePayClient googlePayClient;
 
     /**
      * Create the start intent for this ChargePaymentActivity
@@ -40,16 +52,16 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
      * @param context Context to create the intent
      * @return newly created start intent
      */
-    public static Intent createStartIntent(Context context, Operation operation) {
+    public static Intent createStartIntent(Context context, PaymentRequest paymentRequest) {
         if (context == null) {
             throw new IllegalArgumentException("context may not be null");
         }
-        if (operation == null) {
+        if (paymentRequest == null) {
             throw new IllegalArgumentException("operation may not be null");
         }
         Intent intent = new Intent(context, ChargePaymentActivity.class);
-        intent.putExtra(EXTRA_CHARGE_TYPE, TYPE_CHARGE_OPERATION);
-        intent.putExtra(EXTRA_OPERATION, operation);
+        intent.putExtra(EXTRA_CHARGE_TYPE, TYPE_PAYMENT_REQUEST);
+        intent.putExtra(EXTRA_PAYMENT_REQUEST, paymentRequest);
         return intent;
     }
 
@@ -64,17 +76,8 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
             throw new IllegalArgumentException("context may not be null");
         }
         Intent intent = new Intent(context, ChargePaymentActivity.class);
-        intent.putExtra(EXTRA_CHARGE_TYPE, TYPE_CHARGE_PRESET_ACCOUNT);
+        intent.putExtra(EXTRA_CHARGE_TYPE, TYPE_PRESET_ACCOUNT);
         return intent;
-    }
-
-    /**
-     * Get the transition used when this Activity is being started
-     *
-     * @return the start transition of this activity
-     */
-    public static int getStartTransition() {
-        return R.anim.fade_in;
     }
 
     /**
@@ -89,7 +92,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
         }
         Bundle bundle = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
         if (bundle != null) {
-            this.operation = bundle.getParcelable(EXTRA_OPERATION);
+            this.paymentRequest = bundle.getParcelable(EXTRA_PAYMENT_REQUEST);
             this.chargeType = bundle.getInt(EXTRA_CHARGE_TYPE);
         }
         setContentView(R.layout.activity_chargepayment);
@@ -104,9 +107,54 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        if (this.operation != null) {
-            savedInstanceState.putParcelable(EXTRA_OPERATION, this.operation);
+        if (this.paymentRequest != null) {
+            savedInstanceState.putParcelable(EXTRA_PAYMENT_REQUEST, this.paymentRequest);
         }
+    }
+
+
+    public void showGooglePay(final String auth) {
+        Log.i("AAA", "auth: " + auth);
+        braintreeClient = new BraintreeClient(this, auth);
+        googlePayClient = new GooglePayClient(braintreeClient);
+
+        GooglePayRequest googlePayRequest = new GooglePayRequest();
+        googlePayRequest.setTransactionInfo(TransactionInfo.newBuilder()
+            .setTotalPrice("1.00")
+            .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
+            .setCurrencyCode("EUR")
+            .build());
+        googlePayRequest.setBillingAddressRequired(true);
+
+        googlePayClient.requestPayment(this, googlePayRequest, error -> {
+            if (error != null) {
+                Log.i("AAA", "error: "+ error);
+                // handle error
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("AAA", "requestCode: " + requestCode + ", " + resultCode + ", " + data);
+        //if (requestCode == GOOGLE_REQUEST_CODE) {
+            googlePayClient.onActivityResult(resultCode, data, (paymentMethodNonce, error) -> {
+                sendGoogleNonceToBackend(paymentMethodNonce);
+            });
+        //}
+    }
+
+    private void sendGoogleNonceToBackend(PaymentMethodNonce nonce) {
+        Log.i("AAA", "nonce: " + nonce.getString());
+        presenter.makeGoogleCharge(nonce.getString());
+    }
+
+    /**
+     * Get the transition used when this Activity is being started
+     */
+    public static int getStartTransition() {
+        return R.anim.fade_in;
     }
 
     /**
@@ -124,7 +172,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
     @Override
     public void onResume() {
         super.onResume();
-        presenter.onStart(operation, chargeType);
+        presenter.onStart(paymentRequest, chargeType);
     }
 
     /**

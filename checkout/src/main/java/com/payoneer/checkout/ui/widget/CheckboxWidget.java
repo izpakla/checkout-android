@@ -11,9 +11,11 @@ package com.payoneer.checkout.ui.widget;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.model.Payment;
 import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.markdown.MarkdownSpannableStringBuilder;
 import com.payoneer.checkout.model.CheckboxMode;
+import com.payoneer.checkout.payment.PaymentRequest;
 
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -42,8 +44,8 @@ public class CheckboxWidget extends FormWidget {
     }
 
     @Override
-    public void putValue(Operation operation) throws PaymentException {
-        operation.putBooleanValue(category, name, switchView.isChecked());
+    public void putValue(PaymentRequest paymentRequest) throws PaymentException {
+        paymentRequest.putBooleanValue(category, name, switchView.isChecked());
     }
 
     /**

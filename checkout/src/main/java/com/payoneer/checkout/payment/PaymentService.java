@@ -38,13 +38,17 @@ public abstract class PaymentService {
         this.listener = listener;
     }
 
+    public void makeGoogleCharge(String nonce, Context context) {
+
+    }
+
     /**
      * Process the payment through this NetworkService.
      *
-     * @param operation that should be processed
+     * @param paymentRequest that should be processed
      * @param context in which this payment will be processed
      */
-    public void processPayment(Operation operation, Context context) {
+    public void processPayment(PaymentRequest paymentRequest, Context context) {
     }
 
     /**

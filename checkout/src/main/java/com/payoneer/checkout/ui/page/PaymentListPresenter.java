@@ -37,6 +37,7 @@ import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.Redirect;
+import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 import com.payoneer.checkout.ui.PaymentActivityResult;
@@ -58,6 +59,8 @@ import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * The PaymentListPresenter implementing the presenter part of the MVP
@@ -69,7 +72,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
     private final PaymentSessionService sessionService;
     private final PaymentListView listView;
 
-    private Operation operation;
+    private PaymentRequest paymentRequest;
     private DeleteAccount deleteAccount;
 
     private PaymentSession session;
@@ -218,6 +221,10 @@ final class PaymentListPresenter extends BasePaymentPresenter
         view.showProgress(visible);
     }
 
+    public void showGooglePay(String auth) {
+
+    }
+
     @Override
     public void onDeleteAccountResult(int resultCode, PaymentResult result) {
         if (result.isNetworkFailure()) {
@@ -351,7 +358,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         view.showConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
-                processPayment(operation);
+                processPayment(paymentRequest);
             }
 
             @Override
@@ -432,13 +439,13 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private void processPaymentCard(PaymentCard paymentCard, Map<String, FormWidget> widgets) {
         try {
-            operation = createOperation(paymentCard, widgets);
-            if (CHARGE.equals(operation.getOperationType())) {
-                listView.showChargePaymentScreen(CHARGEPAYMENT_REQUEST_CODE, operation);
+            paymentRequest = createPaymentRequest(paymentCard, widgets);
+            if (CHARGE.equals(paymentRequest.getOperationType())) {
+                listView.showChargePaymentScreen(CHARGEPAYMENT_REQUEST_CODE, paymentRequest);
             } else {
                 paymentService = loadNetworkService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
                 paymentService.setListener(this);
-                processPayment(operation);
+                processPayment(paymentRequest);
             }
         } catch (PaymentException e) {
             closeWithErrorCode(PaymentResultHelper.fromThrowable(e));
@@ -458,9 +465,9 @@ final class PaymentListPresenter extends BasePaymentPresenter
         }
     }
 
-    private void processPayment(Operation operation) {
+    private void processPayment(PaymentRequest paymentRequest) {
         setState(PROCESS);
-        paymentService.processPayment(operation, view.getActivity());
+        paymentService.processPayment(paymentRequest, view.getActivity());
     }
 
     private void deleteAccount(DeleteAccount account) {
@@ -468,14 +475,13 @@ final class PaymentListPresenter extends BasePaymentPresenter
         paymentService.deleteAccount(account, view.getActivity());
     }
 
-    private Operation createOperation(PaymentCard card, Map<String, FormWidget> widgets) throws PaymentException {
-        URL url = card.getOperationLink();
-        Operation operation = new Operation(card.getNetworkCode(), card.getPaymentMethod(), card.getOperationType(), url);
+    private PaymentRequest createPaymentRequest(PaymentCard card, Map<String, FormWidget> widgets) throws PaymentException {
+        PaymentRequest paymentRequest = new PaymentRequest(card.getNetworkCode(), card.getPaymentMethod(), card.getOperationType(), card.getLinks());
 
         for (FormWidget widget : widgets.values()) {
-            widget.putValue(operation);
+            widget.putValue(paymentRequest);
         }
-        return operation;
+        return paymentRequest;
     }
 
     /**

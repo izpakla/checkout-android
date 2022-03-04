@@ -1,1 +1,1 @@
-com.payoneer.checkout.risk.iovation.IovationRiskProviderFactory
+com.payoneer.checkout.payment.googlepay.GooglePayPaymentServiceFactory

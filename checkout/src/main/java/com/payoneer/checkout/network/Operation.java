@@ -90,4 +90,18 @@ public class Operation implements Parcelable {
         GsonHelper gson = GsonHelper.getInstance();
         return gson.toJson(operationData);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Operation [");
+        if (url != null) {
+            builder.append("url=").append(url).append(", ");
+        }
+        if (operationData != null) {
+            builder.append("operationData=").append(operationData);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

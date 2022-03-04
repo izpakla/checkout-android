@@ -20,19 +20,19 @@ task publishCheckoutReleaseVersion() {
 }
 
 task buildRiskProviders() {
-    dependsOn ':riskproviders:iovation:assembleRelease'
+    dependsOn ':riskprovider:iovation:assembleRelease'
 }
 
 task testRiskProviders() {
-    dependsOn ':riskproviders:iovation:test'
+    dependsOn ':riskprovider:iovation:test'
 }
 
 task publishRiskProvidersSnapshotVersion() {
-    dependsOn ':riskproviders:iovation:publishSnapshotVersion'
+    dependsOn ':riskprovider:iovation:publishSnapshotVersion'
 }
 
 task publishRiskProvidersReleaseVersion() {
-    dependsOn ':riskproviders:iovation:publishReleaseVersion'
+    dependsOn ':riskprovider:iovation:publishReleaseVersion'
 }
 
 task uploadExampleCheckoutToAppLive() {

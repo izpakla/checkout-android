@@ -79,8 +79,8 @@ dependencies {
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
 
     // Comment the following two lines for disabling the Iovation FraudForce risk provider
-    // implementation project(":riskproviders:iovation")
-    // implementation files('../riskproviders/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
+    // implementation project(":riskprovider:iovation")
+    // implementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
 
     androidTestImplementation project(":shared-test")
     androidTestImplementation "androidx.test:runner:${rootProject.androidxTestRunnerVersion}"

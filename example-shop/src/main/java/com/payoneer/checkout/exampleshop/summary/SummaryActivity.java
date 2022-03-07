@@ -49,6 +49,7 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
     private PresetAccount presetAccount;
     private TextView presetTitle;
     private TextView presetSubtitle;
+    private Checkout checkout;
 
     // For automated UI Testing
     private boolean loadCompleted;
@@ -81,6 +82,7 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
         initToolbar();
+        checkout = Checkout.with(listUrl);
         presetTitle = findViewById(R.id.label_title);
         presetSubtitle = findViewById(R.id.label_subtitle);
 
@@ -243,8 +245,7 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
     @Override
     public void showPaymentList() {
         if (active) {
-            Checkout checkout = Checkout.getInstance();
-            checkout.showPaymentPage(this, EDIT_REQUEST_CODE);
+            checkout.showPaymentList(this, EDIT_REQUEST_CODE);
         }
     }
 
@@ -265,7 +266,6 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
 
     private void onPayClicked() {
         if (presetAccount != null) {
-            Checkout checkout = Checkout.getInstance();
             checkout.chargePresetAccount(this, PAYMENT_REQUEST_CODE);
         }
     }

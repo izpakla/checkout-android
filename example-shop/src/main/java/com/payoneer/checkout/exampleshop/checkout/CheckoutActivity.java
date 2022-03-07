@@ -143,8 +143,7 @@ public final class CheckoutActivity extends BaseActivity implements CheckoutView
     }
 
     private void onButtonClicked() {
-        Checkout checkout = Checkout.getInstance();
-        checkout.setListUrl(listUrl);
-        checkout.showPaymentPage(this, PAYMENT_REQUEST_CODE);
+        Checkout checkout = Checkout.with(listUrl);
+        checkout.showPaymentList(this, PAYMENT_REQUEST_CODE);
     }
 }

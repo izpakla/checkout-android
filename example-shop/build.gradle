@@ -99,7 +99,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.androidxTestEspressoVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-intents:${rootProject.androidxTestEspressoVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:${rootProject.androidxTestEspressoVersion}"
-    implementation "androidx.core:core-ktx:${rootProject.coreKtx}"
+    implementation "androidx.core:core-ktx:${rootProject.coreKtxVersion}"
 }
 kapt {
     correctErrorTypes = true

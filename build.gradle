@@ -69,7 +69,7 @@ ext {
     activityVersion = "1.4.0"
     lifecycleVersion = "2.4.1"
     hiltVersion = '2.38.1'
-    coreKtx = "1.7.0"
+    coreKtxVersion = "1.7.0"
     gsonVersion = '2.8.9'
     androidMaterialVersion = '1.5.0'
     androidxBrowserVersion = '1.4.0'

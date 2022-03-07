@@ -69,6 +69,8 @@ jobs:
           distribution: 'adopt'
       - name: Clean checkout project
         run: ./gradlew clean
+      - name: Build risk providers
+        run: ./gradlew buildRiskProviders
       - name: Run Risk Providers unit-tests
         run: ./gradlew testRiskProviders
 

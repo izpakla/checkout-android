@@ -44,7 +44,6 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(Checkout.getInstance().getOrientation());
         idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
     }
 
@@ -144,15 +143,6 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
 
     void showPaymentDialog(PaymentDialogFragment dialog) {
         dialog.showDialog(getSupportFragmentManager(), idlingResources);
-    }
-
-    /**
-     * Get the current PaymentTheme from the PaymentUI.
-     *
-     * @return the current PaymentTheme
-     */
-    CheckoutTheme getPaymentTheme() {
-        return Checkout.getInstance().getPaymentTheme();
     }
 
     /**

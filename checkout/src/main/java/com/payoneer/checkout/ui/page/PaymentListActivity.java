@@ -10,20 +10,24 @@ package com.payoneer.checkout.ui.page;
 
 import static com.payoneer.checkout.localization.LocalizationKey.LIST_TITLE;
 
-import com.payoneer.checkout.R;
-import com.payoneer.checkout.form.Operation;
-import com.payoneer.checkout.localization.Localization;
-import com.payoneer.checkout.CheckoutActivityResult;
-import com.payoneer.checkout.ui.list.PaymentList;
-import com.payoneer.checkout.ui.model.PaymentSession;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutConfiguration;
+import com.payoneer.checkout.R;
+import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.localization.Localization;
+import com.payoneer.checkout.ui.list.PaymentList;
+import com.payoneer.checkout.ui.model.PaymentSession;
 
 /**
  * The PaymentListActivity showing available payment methods in a list.
@@ -33,6 +37,8 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
     private PaymentListPresenter presenter;
     private PaymentList paymentList;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
+    private CheckoutConfiguration configuration;
 
     /**
      * Create the start intent for this PaymentListActivity.
@@ -40,8 +46,10 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
      * @param context Context to create the intent
      * @return newly created start intent
      */
-    public static Intent createStartIntent(Context context) {
-        return new Intent(context, PaymentListActivity.class);
+    public static Intent createStartIntent(Context context, CheckoutConfiguration configuration) {
+        Intent intent = new Intent(context, PaymentListActivity.class);
+        intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, configuration);
+        return intent;
     }
 
     /**
@@ -53,20 +61,37 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
         return R.anim.no_animation;
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int theme = getPaymentTheme().getPaymentListTheme();
+        Bundle bundle = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
+        if (bundle != null) {
+            this.configuration = bundle.getParcelable(EXTRA_CHECKOUT_CONFIGURATION);
+        }
+        setRequestedOrientation(configuration.getOrientation());
+        int theme = configuration.getCheckoutTheme().getPaymentListTheme();
         if (theme != 0) {
             setTheme(theme);
         }
         setContentView(R.layout.activity_paymentlist);
         progressView = new ProgressView(findViewById(R.id.layout_progress));
-        presenter = new PaymentListPresenter(this);
+        presenter = new PaymentListPresenter(this, configuration);
         paymentList = new PaymentList(this, presenter, findViewById(R.id.recyclerview_paymentlist));
 
         initSwipeRefreshlayout();
         initToolbar();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        if (this.configuration != null) {
+            savedInstanceState.putParcelable(EXTRA_CHECKOUT_CONFIGURATION, this.configuration);
+        }
     }
 
     @Override
@@ -122,8 +147,8 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
     }
 
     @Override
-    public void showChargePaymentScreen(int requestCode, Operation operation) {
-        Intent intent = ChargePaymentActivity.createStartIntent(this, operation);
+    public void showChargePaymentScreen(int requestCode, Operation operation, CheckoutConfiguration configuration) {
+        Intent intent = ChargePaymentActivity.createStartIntent(this, configuration, operation);
         startActivityForResult(intent, requestCode);
         overridePendingTransition(ChargePaymentActivity.getStartTransition(), R.anim.no_animation);
         idlingResources.setCloseIdlingState(true);
@@ -131,11 +156,9 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
 
     private void initSwipeRefreshlayout() {
         swipeRefreshLayout = findViewById(R.id.layout_swiperefresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            public void onRefresh() {
-                presenter.onRefresh(paymentList.hasUserInputData());
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            presenter.onRefresh(paymentList.hasUserInputData());
+            swipeRefreshLayout.setRefreshing(false);
         });
     }
 

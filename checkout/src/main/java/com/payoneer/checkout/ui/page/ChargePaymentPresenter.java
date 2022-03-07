@@ -8,13 +8,16 @@
 
 package com.payoneer.checkout.ui.page;
 
-import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
 import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
+import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
 import static com.payoneer.checkout.ui.page.ChargePaymentActivity.TYPE_CHARGE_PRESET_ACCOUNT;
 
-import java.util.Objects;
+import android.content.Context;
 
+import com.payoneer.checkout.CheckoutConfiguration;
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.localization.Localization;
@@ -25,8 +28,6 @@ import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
-import com.payoneer.checkout.CheckoutResult;
-import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentSession;
@@ -34,9 +35,8 @@ import com.payoneer.checkout.ui.service.NetworkService;
 import com.payoneer.checkout.ui.service.NetworkServiceListener;
 import com.payoneer.checkout.ui.service.PaymentSessionListener;
 import com.payoneer.checkout.ui.service.PaymentSessionService;
-import com.payoneer.checkout.CheckoutResultHelper;
 
-import android.content.Context;
+import java.util.Objects;
 
 /**
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
@@ -56,8 +56,8 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
      *
      * @param view the BasePaymentView displaying payment information
      */
-    ChargePaymentPresenter(BasePaymentView view) {
-        super(Checkout.getInstance().getListUrl(), view);
+    ChargePaymentPresenter(CheckoutConfiguration configuration, BasePaymentView view) {
+        super(configuration, view);
         sessionService = new PaymentSessionService(view.getActivity());
         sessionService.setListener(this);
     }
@@ -266,6 +266,6 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     private void loadPaymentSession() {
         this.session = null;
         view.showProgress(true);
-        sessionService.loadPaymentSession(listUrl, view.getActivity());
+        sessionService.loadPaymentSession(configuration, view.getActivity());
     }
 }

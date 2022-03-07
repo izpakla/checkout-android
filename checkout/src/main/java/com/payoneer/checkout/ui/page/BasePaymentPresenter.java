@@ -11,6 +11,7 @@ package com.payoneer.checkout.ui.page;
 import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 
+import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.model.Interaction;
@@ -30,16 +31,16 @@ abstract class BasePaymentPresenter {
     final static int PROCESS = 2;
 
     final BasePaymentView view;
-    final String listUrl;
+    final CheckoutConfiguration configuration;
     int state;
 
     /**
      * Construct a new BasePaymentPresenter
      *
-     * @param listUrl self URL of the ListResult
+     * @param configuration self URL of the ListResult
      */
-    BasePaymentPresenter(String listUrl, BasePaymentView view) {
-        this.listUrl = listUrl;
+    BasePaymentPresenter(CheckoutConfiguration configuration, BasePaymentView view) {
+        this.configuration = configuration;
         this.view = view;
     }
 

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.form.DeleteAccount;
 import com.payoneer.checkout.form.Operation;
@@ -41,7 +42,6 @@ import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.CheckoutResult;
-import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.list.PaymentListListener;
 import com.payoneer.checkout.ui.model.AccountCard;
@@ -71,6 +71,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private Operation operation;
     private DeleteAccount deleteAccount;
+    private CheckoutConfiguration configuration;
 
     private PaymentSession session;
     private CheckoutActivityResult activityResult;
@@ -82,9 +83,10 @@ final class PaymentListPresenter extends BasePaymentPresenter
      *
      * @param view The PaymentListView displaying the payment list
      */
-    PaymentListPresenter(PaymentListView view) {
-        super(Checkout.getInstance().getListUrl(), view);
+    PaymentListPresenter(PaymentListView view, CheckoutConfiguration checkoutConfiguration) {
+        super(checkoutConfiguration, view);
         this.listView = view;
+        this.configuration = checkoutConfiguration;
 
         sessionService = new PaymentSessionService(view.getActivity());
         sessionService.setListener(this);
@@ -434,7 +436,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         try {
             operation = createOperation(paymentCard, widgets);
             if (CHARGE.equals(operation.getOperationType())) {
-                listView.showChargePaymentScreen(CHARGEPAYMENT_REQUEST_CODE, operation);
+                listView.showChargePaymentScreen(CHARGEPAYMENT_REQUEST_CODE, operation, configuration);
             } else {
                 networkService = loadNetworkService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
                 networkService.setListener(this);
@@ -535,7 +537,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         this.session = null;
         listView.clearPaymentList();
         view.showProgress(true);
-        sessionService.loadPaymentSession(listUrl, view.getActivity());
+        sessionService.loadPaymentSession(configuration, view.getActivity());
     }
 
     private void showMessageAndResetPaymentSession(InteractionMessage message) {

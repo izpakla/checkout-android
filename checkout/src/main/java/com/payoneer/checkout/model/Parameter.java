@@ -32,18 +32,4 @@ public class Parameter {
     public void setValue(final String value) {
         this.value = value;
     }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("Parameter [");
-        if (name != null) {
-            builder.append("name=").append(name).append(", ");
-        }
-        if (value != null) {
-            builder.append("value=").append(value);
-        }
-        builder.append("]");
-        return builder.toString();
-    }
 }

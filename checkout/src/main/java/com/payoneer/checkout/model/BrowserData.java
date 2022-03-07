@@ -82,30 +82,4 @@ public class BrowserData {
     public void setBrowserScreenWidth(final Integer browserScreenWidth) {
         this.browserScreenWidth = browserScreenWidth;
     }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("BrowserData [");
-        if (javaEnabled != null) {
-            builder.append("javaEnabled=").append(javaEnabled).append(", ");
-        }
-        if (language != null) {
-            builder.append("language=").append(language).append(", ");
-        }
-        if (colorDepth != null) {
-            builder.append("colorDepth=").append(colorDepth).append(", ");
-        }
-        if (timezone != null) {
-            builder.append("timezone=").append(timezone).append(", ");
-        }
-        if (browserScreenHeight != null) {
-            builder.append("browserScreenHeight=").append(browserScreenHeight).append(", ");
-        }
-        if (browserScreenWidth != null) {
-            builder.append("browserScreenWidth=").append(browserScreenWidth);
-        }
-        builder.append("]");
-        return builder.toString();
-    }
 }

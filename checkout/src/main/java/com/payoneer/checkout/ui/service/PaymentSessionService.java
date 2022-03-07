@@ -37,6 +37,7 @@ import com.payoneer.checkout.validation.Validator;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The PaymentSessionService providing asynchronous loading of the PaymentSession, validator and localizations.
@@ -181,7 +182,7 @@ public final class PaymentSessionService {
 
     private void loadLocalizations(Context context, PaymentSession session) throws PaymentException {
         String listUrl = session.getListSelfUrl();
-        if (!listUrl.equals(cache.getCacheId())) {
+        if (!Objects.equals(listUrl, cache.getCacheId())) {
             cache.clear();
             cache.setCacheId(listUrl);
         }

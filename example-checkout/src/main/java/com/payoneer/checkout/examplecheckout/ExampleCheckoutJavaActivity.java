@@ -7,15 +7,6 @@
  */
 package com.payoneer.checkout.examplecheckout;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding;
-import com.payoneer.checkout.model.Interaction;
-import com.payoneer.checkout.CheckoutActivityResult;
-import com.payoneer.checkout.CheckoutResult;
-import com.payoneer.checkout.CheckoutTheme;
-import com.payoneer.checkout.Checkout;
-import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,9 +16,20 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.test.espresso.IdlingResource;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.payoneer.checkout.Checkout;
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutConfiguration;
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutTheme;
+import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding;
+import com.payoneer.checkout.model.Interaction;
+import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
 
 /**
  * This is the main Activity of this example app demonstrating how to use the Checkout SDK
@@ -40,7 +42,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     private CheckoutActivityResult activityResult;
     private SimpleIdlingResource resultHandledIdlingResource;
     private boolean resultHandled;
-    private final Checkout checkout = Checkout.getInstance();
+    private Checkout checkout;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -124,12 +126,12 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         }
         closeKeyboard();
         clearPaymentResult();
-        checkout.setPaymentTheme(createPaymentTheme());
+        checkout.theme(createPaymentTheme());
 
         // Uncomment if you like to fix e.g. the orientation to landscape mode
-        // paymentUI.setOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        // checkout.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        checkout.showPaymentPage(this, PAYMENT_REQUEST_CODE);
+        checkout.showPaymentList(this, PAYMENT_REQUEST_CODE);
     }
 
     private void chargePresetAccount() {
@@ -147,16 +149,16 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid));
             return false;
         }
-        checkout.setListUrl(listUrl);
+        checkout = Checkout.with(listUrl);
         return true;
     }
 
     private CheckoutTheme createPaymentTheme() {
         if (binding.switchTheme.isChecked()) {
             return CheckoutTheme.createBuilder().
-                setPaymentListTheme(R.style.CustomTheme_Toolbar).
-                setChargePaymentTheme(R.style.CustomTheme_NoToolbar).
-                build();
+                    setPaymentListTheme(R.style.CustomTheme_Toolbar).
+                    setChargePaymentTheme(R.style.CustomTheme_NoToolbar).
+                    build();
         } else {
             return CheckoutTheme.createDefault();
         }

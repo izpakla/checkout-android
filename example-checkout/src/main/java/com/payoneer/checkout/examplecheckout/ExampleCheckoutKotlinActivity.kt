@@ -21,10 +21,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding
-import com.payoneer.checkout.CheckoutActivityResult
-import com.payoneer.checkout.CheckoutTheme
 import com.payoneer.checkout.Checkout
+import com.payoneer.checkout.CheckoutActivityResult
+import com.payoneer.checkout.CheckoutConfiguration
+import com.payoneer.checkout.CheckoutTheme
+import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
 
 /**
@@ -38,7 +39,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityExamplecheckoutBinding
-    private val paymentUI = Checkout.getInstance()
+    private lateinit var checkout: Checkout
     private var activityResult: CheckoutActivityResult? = null
     private var resultHandledIdlingResource: SimpleIdlingResource? = null
     private var resultHandled = false
@@ -63,7 +64,8 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PAYMENT_REQUEST_CODE || requestCode == CHARGE_PRESET_ACCOUNT_REQUEST_CODE) {
-            activityResult = CheckoutActivityResult.fromActivityResult(requestCode, resultCode, data)
+            activityResult =
+                CheckoutActivityResult.fromActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -73,11 +75,11 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         }
         closeKeyboard()
         clearPaymentResult()
-        paymentUI.paymentTheme = createPaymentTheme()
+        checkout.theme(createPaymentTheme())
 
         // Uncomment if you like to fix e.g. the orientation to landscape mode
         // paymentUI.setOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        paymentUI.showPaymentPage(this, PAYMENT_REQUEST_CODE)
+        checkout.showPaymentList(this, PAYMENT_REQUEST_CODE)
     }
 
     private fun chargePresetAccount() {
@@ -86,13 +88,13 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         }
         closeKeyboard()
         clearPaymentResult()
-        paymentUI.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE)
+        checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE)
     }
 
     private fun setListUrl(): Boolean {
         val listUrl: String = binding.inputListurl.text.toString().trim { it <= ' ' }
         return if (listUrl.isNotEmpty() || Patterns.WEB_URL.matcher(listUrl).matches()) {
-            paymentUI.listUrl = listUrl
+            checkout = Checkout.with(listUrl)
             true
         } else {
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid))
@@ -160,7 +162,8 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     }
 
     private fun TextView.setLabel(message: String?) {
-        val label = if (TextUtils.isEmpty(message)) this.context.getString(R.string.empty_label) else message
+        val label =
+            if (TextUtils.isEmpty(message)) this.context.getString(R.string.empty_label) else message
         this.text = label
     }
 
@@ -170,7 +173,8 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     @VisibleForTesting
     fun getResultHandledIdlingResource(): IdlingResource {
         if (resultHandledIdlingResource == null) {
-            resultHandledIdlingResource = SimpleIdlingResource(javaClass.simpleName + "-resultHandledIdlingResource")
+            resultHandledIdlingResource =
+                SimpleIdlingResource(javaClass.simpleName + "-resultHandledIdlingResource")
         }
         if (resultHandled) {
             resultHandledIdlingResource?.setIdleState(true)

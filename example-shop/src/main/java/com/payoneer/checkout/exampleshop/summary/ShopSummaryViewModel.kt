@@ -35,6 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -70,12 +71,7 @@ class ShopSummaryViewModel @Inject constructor(@ApplicationContext val context: 
             withContext(Dispatchers.Default) {
                 _showPaymentDetails.postValue(Resource.loading())
                 val result: CoroutineResult<ListResult>? = suspendCoroutine { continuation ->
-                    try {
-                        val listResult = ListConnection(context).getListResult(listUrl)
-                        continuation.resume(CoroutineResult(data = listResult))
-                    } catch (e: PaymentException) {
-                        continuation.resume(CoroutineResult(error = e))
-                    }
+                    loadListResult(listUrl, continuation)
                 }
                 if (result != null) {
                     if (result.data != null) {
@@ -92,6 +88,18 @@ class ShopSummaryViewModel @Inject constructor(@ApplicationContext val context: 
                     )
                 }
             }
+        }
+    }
+
+    private fun loadListResult(
+        listUrl: String,
+        continuation: Continuation<CoroutineResult<ListResult>?>
+    ) {
+        try {
+            val listResult = ListConnection(context).getListResult(listUrl)
+            continuation.resume(CoroutineResult(data = listResult))
+        } catch (e: PaymentException) {
+            continuation.resume(CoroutineResult(error = e))
         }
     }
 

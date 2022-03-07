@@ -12,30 +12,35 @@ import android.content.pm.ActivityInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 /**
- * The CheckoutInfo is the class containing information about the payment session.
+ * The CheckoutConfiguration is the class containing information about the payment session.
  */
-public final class CheckoutInfo implements Parcelable {
+public final class CheckoutConfiguration implements Parcelable {
 
-    /** The self url pointing to the payment session list */
-    private String listUrl;
+    /**
+     * The self url pointing to the payment session list
+     */
+    private final String listUrl;
 
-    /** The theming to be applied to the screens and dialogs */
-    private CheckoutTheme checkoutTheme;
+    /**
+     * The theming to be applied to the screens and dialogs
+     */
+    private final CheckoutTheme checkoutTheme;
 
-    /** The orientation of the screens, by default it is in locked mode */
-    private int orientation;
+    /**
+     * The orientation of the screens, by default it is in locked mode
+     */
+    private final int orientation;
 
-    private CheckoutInfo() {
-    }
-
-    private CheckoutInfo(Builder builder) {
+    private CheckoutConfiguration(Builder builder) {
         this.listUrl = builder.listUrl;
         this.checkoutTheme = builder.checkoutTheme;
         this.orientation = builder.orientation;
     }
 
-    protected CheckoutInfo(Parcel in) {
+    private CheckoutConfiguration(Parcel in) {
         listUrl = in.readString();
         checkoutTheme = in.readParcelable(CheckoutTheme.class.getClassLoader());
         orientation = in.readInt();
@@ -53,24 +58,17 @@ public final class CheckoutInfo implements Parcelable {
         return 0;
     }
 
-    public static final Creator<CheckoutInfo> CREATOR = new Creator<CheckoutInfo>() {
+    public static final Creator<CheckoutConfiguration> CREATOR = new Creator<CheckoutConfiguration>() {
         @Override
-        public CheckoutInfo createFromParcel(Parcel in) {
-            return new CheckoutInfo(in);
+        public CheckoutConfiguration createFromParcel(Parcel in) {
+            return new CheckoutConfiguration(in);
         }
 
         @Override
-        public CheckoutInfo[] newArray(int size) {
-            return new CheckoutInfo[size];
+        public CheckoutConfiguration[] newArray(int size) {
+            return new CheckoutConfiguration[size];
         }
     };
-
-    public static Builder createBuilder(final String listUrl) {
-        if (listUrl == null) {
-            throw new IllegalStateException("CheckoutTheme cannot be null");
-        }
-        return new Builder(listUrl);
-    }
 
     public String getListUrl() {
         return listUrl;
@@ -84,10 +82,11 @@ public final class CheckoutInfo implements Parcelable {
         return orientation;
     }
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("CheckoutInfo [");
+        builder.append("CheckoutConfiguration [");
         if (listUrl != null) {
             builder.append("listUrl=").append(listUrl).append(", ");
         }
@@ -105,7 +104,7 @@ public final class CheckoutInfo implements Parcelable {
         CheckoutTheme checkoutTheme;
 
         /**
-         * Create a new default Builder for creating CheckoutInfo instances
+         * Create a new default Builder for creating CheckoutConfiguration instances
          *
          * @param listUrl mandatory parameter for creating this builder
          */
@@ -116,11 +115,11 @@ public final class CheckoutInfo implements Parcelable {
         }
 
         /**
-         * Create a new default Builder for creating CheckoutInfo instances
+         * Create a new default Builder for creating CheckoutConfiguration instances
          *
-         * @param info mandatory parameter containing CheckoutInfo to use in this builder
+         * @param info mandatory parameter containing CheckoutConfiguration to use in this builder
          */
-        Builder(final CheckoutInfo info) {
+        Builder(final CheckoutConfiguration info) {
             this.listUrl = info.listUrl;
             this.orientation = info.orientation;
             this.checkoutTheme = info.checkoutTheme;
@@ -128,18 +127,18 @@ public final class CheckoutInfo implements Parcelable {
 
         /**
          * Set the orientation of the Payment Page, the following orientation modes are supported:
-         *
+         * <p>
          * ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
          * ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
          * ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
          * ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
          * ActivityInfo.SCREEN_ORIENTATION_LOCKED
-         *
+         * <p>
          * The SCREEN_ORIENTATION_LOCKED is by default used.
          *
          * @param orientation mode for the Payment Page
          */
-        public Builder setOrientation(final int orientation) {
+        protected void setOrientation(final int orientation) {
             switch (orientation) {
                 case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
                 case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
@@ -147,22 +146,21 @@ public final class CheckoutInfo implements Parcelable {
                 case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
                 case ActivityInfo.SCREEN_ORIENTATION_LOCKED:
                     this.orientation = orientation;
-                    return this;
+                    return;
                 default:
                     throw new IllegalArgumentException("Orientation mode is not supported: " + orientation);
             }
         }
 
-        public Builder setTheme(final CheckoutTheme checkoutTheme) {
+        protected void setTheme(final CheckoutTheme checkoutTheme) {
             if (checkoutTheme == null) {
                 throw new IllegalStateException("CheckoutTheme cannot be null");
             }
             this.checkoutTheme = checkoutTheme;
-            return this;
         }
 
-        public CheckoutInfo build() {
-            return new CheckoutInfo(this);
+        protected CheckoutConfiguration build() {
+            return new CheckoutConfiguration(this);
         }
     }
 }

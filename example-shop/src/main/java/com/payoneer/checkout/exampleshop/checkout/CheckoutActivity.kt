@@ -27,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CheckoutActivity : BaseActivity() {
 
-    private val shopCheckoutViewModel by viewModels<ShopCheckoutViewModel>()
+    private val checkoutViewModel by viewModels<CheckoutViewModel>()
     private lateinit var binding: ActivityCheckoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,21 +52,21 @@ class CheckoutActivity : BaseActivity() {
     }
 
     private fun observeViewModel() {
-        shopCheckoutViewModel.showPaymentSummary.observe(this) {
+        checkoutViewModel.showPaymentSummary.observe(this) {
             it.getIfNotHandled()?.let {
                 val intent = SummaryActivity.createStartIntent(this, listUrl)
                 startActivity(intent)
                 setResultHandledIdleState()
             }
         }
-        shopCheckoutViewModel.showPaymentConfirmation.observe(this) {
+        checkoutViewModel.showPaymentConfirmation.observe(this) {
             it.getIfNotHandled()?.let {
                 val intent = ConfirmActivity.createStartIntent(this)
                 startActivity(intent)
                 setResultHandledIdleState()
             }
         }
-        shopCheckoutViewModel.stopPaymentWithErrorMessage.observe(this) {
+        checkoutViewModel.stopPaymentWithErrorMessage.observe(this) {
             it.getIfNotHandled()?.let {
                 showErrorDialog(R.string.dialog_error_message)
             }
@@ -82,7 +82,7 @@ class CheckoutActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         if (activityResult != null) {
-            shopCheckoutViewModel.handlePaymentActivityResult(activityResult!!)
+            checkoutViewModel.handlePaymentActivityResult(activityResult!!)
             activityResult = null
         }
     }

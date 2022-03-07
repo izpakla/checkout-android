@@ -40,7 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SummaryActivity : BaseActivity() {
     private var presetAccount: PresetAccount? = null
-    private val viewModel by viewModels<ShopSummaryViewModel>()
+    private val viewModel by viewModels<SummaryViewModel>()
     private lateinit var binding: ActivitySummaryBinding
     private lateinit var layoutSummarydetailsBinding: LayoutSummarydetailsBinding
     private lateinit var presetTitle: TextView

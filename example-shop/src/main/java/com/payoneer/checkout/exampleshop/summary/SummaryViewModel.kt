@@ -40,7 +40,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
-class ShopSummaryViewModel @Inject constructor(@ApplicationContext val context: Context) :
+class SummaryViewModel @Inject constructor(@ApplicationContext val context: Context) :
     ViewModel() {
 
     private val _showPaymentConfirmation = MutableLiveData<Event>()

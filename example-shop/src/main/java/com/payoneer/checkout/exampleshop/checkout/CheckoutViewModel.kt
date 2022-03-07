@@ -23,7 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ShopCheckoutViewModel @Inject constructor() : ViewModel() {
+class CheckoutViewModel @Inject constructor() : ViewModel() {
 
     private val _showPaymentSummary = MutableLiveData<Event>()
     val showPaymentSummary: LiveData<Event> get() = _showPaymentSummary

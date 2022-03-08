@@ -98,7 +98,7 @@ public final class CheckoutConfiguration implements Parcelable {
         return builder.toString();
     }
 
-    public static class Builder {
+    static final class Builder {
         String listUrl;
         int orientation;
         CheckoutTheme checkoutTheme;
@@ -138,7 +138,7 @@ public final class CheckoutConfiguration implements Parcelable {
          *
          * @param orientation mode for the Payment Page
          */
-        protected void setOrientation(final int orientation) {
+        void setOrientation(final int orientation) {
             switch (orientation) {
                 case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
                 case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
@@ -152,14 +152,14 @@ public final class CheckoutConfiguration implements Parcelable {
             }
         }
 
-        protected void setTheme(final CheckoutTheme checkoutTheme) {
+        void setTheme(final CheckoutTheme checkoutTheme) {
             if (checkoutTheme == null) {
                 throw new IllegalStateException("CheckoutTheme cannot be null");
             }
             this.checkoutTheme = checkoutTheme;
         }
 
-        protected CheckoutConfiguration build() {
+        CheckoutConfiguration build() {
             return new CheckoutConfiguration(this);
         }
     }

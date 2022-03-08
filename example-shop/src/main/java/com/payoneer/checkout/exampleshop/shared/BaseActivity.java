@@ -8,8 +8,8 @@
 
 package com.payoneer.checkout.exampleshop.shared;
 
-import com.payoneer.checkout.exampleshop.R;
 import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.exampleshop.R;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
@@ -139,7 +139,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Only called from test, creates and returns a new paymentResult handled IdlingResource
+     * Only called from test, creates and returns a new result handled IdlingResource
      */
     @VisibleForTesting
     public IdlingResource getResultHandledIdlingResource() {

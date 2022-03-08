@@ -11,7 +11,6 @@ package com.payoneer.checkout;
 import android.content.pm.ActivityInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 
 /**

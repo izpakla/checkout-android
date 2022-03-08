@@ -65,6 +65,7 @@ public final class Checkout {
      *
      * @param activity the activity that will be notified with a CheckoutResult
      * @param requestCode the requestCode to be used for identifying results in the parent activity
+     * @return CheckoutConfiguration contains the listUrl and theming settings
      */
     public CheckoutConfiguration chargePresetAccount(final Activity activity, final int requestCode) {
         CheckoutConfiguration configuration = builder.build();
@@ -79,6 +80,7 @@ public final class Checkout {
      *
      * @param activity the activity that will be notified when the PaymentList is closed
      * @param requestCode the requestCode to be used for identifying results in the parent activity
+     * @return CheckoutConfiguration contains the listUrl and theming settings
      */
     public CheckoutConfiguration showPaymentList(final Activity activity, final int requestCode) {
         CheckoutConfiguration configuration = builder.build();
@@ -91,7 +93,7 @@ public final class Checkout {
     /**
      * Validate Android SDK Settings and Localization before launching the Activity.
      *
-     * @param activity the activity that will be notified when this PaymentPage is finished
+     * @param activity the activity that will be notified when the Activity is finished
      * @param intent containing the session information
      * @param requestCode the requestCode to be used for identifying results in the parent activity
      */

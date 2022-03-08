@@ -8,9 +8,9 @@
 
 package com.payoneer.checkout.ui.service;
 
+import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.redirect.RedirectRequest;
-import com.payoneer.checkout.CheckoutResult;
 
 /**
  * Presenter to be called by the NetworkService to inform about payment updates and to show i.e. a progress view or progress dialog.
@@ -34,7 +34,7 @@ public interface NetworkServiceListener {
     /**
      * Called when NetworkService is done processing the request.
      *
-     * @param resultCode code describing the state of the chechkoutResult
+     * @param resultCode code describing the state of the ChechkoutResult
      * @param checkoutResult containing the information describing the result
      */
     void onProcessCheckoutResult(int resultCode, CheckoutResult checkoutResult);
@@ -42,7 +42,7 @@ public interface NetworkServiceListener {
     /**
      * Called when NetworkService is done deleting the account.
      *
-     * @param resultCode code describing the state of the paymentResult
+     * @param resultCode code describing the state of the CheckoutResult
      * @param checkoutResult containing the information describing the result
      */
     void onDeleteAccountResult(int resultCode, CheckoutResult checkoutResult);

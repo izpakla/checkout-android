@@ -50,24 +50,24 @@ public final class PayPalRedirectTests extends AbstractTest {
     public void testPayPalRedirect_presetFlow_customerAccept() {
         int networkCardIndex = 3;
         CheckoutActivity checkoutActivity = openCheckoutActivity(NetworkOperationType.PRESET);
-        IdlingResource checkoutPaymentResultIdlingResource = checkoutActivity.getResultHandledIdlingResource();
+        IdlingResource resultHandledIdlingResource = checkoutActivity.getResultHandledIdlingResource();
         clickCheckoutButton();
 
         PaymentListHelper.waitForPaymentListLoaded(1);
         PaymentListHelper.openPaymentListCard(networkCardIndex, "card.network");
         PaymentListHelper.clickPaymentListCardButton(networkCardIndex);
 
-        register(checkoutPaymentResultIdlingResource);
+        register(resultHandledIdlingResource);
         waitForSummaryActivityLoaded();
-        unregister(checkoutPaymentResultIdlingResource);
+        unregister(resultHandledIdlingResource);
 
         SummaryActivity summaryActivity = waitForSummaryActivityLoaded();
-        IdlingResource summaryPaymentResultIdlingResource = summaryActivity.getResultHandledIdlingResource();
+        IdlingResource summaryResultHandledIdlingResource = summaryActivity.getResultHandledIdlingResource();
         clickSummaryPayButton();
         clickDecisionPageButton("customer-accept");
 
-        waitForConfirmActivityLoaded(summaryPaymentResultIdlingResource);
-        unregister(summaryPaymentResultIdlingResource);
+        waitForConfirmActivityLoaded(summaryResultHandledIdlingResource);
+        unregister(summaryResultHandledIdlingResource);
     }
 
     private void clickDecisionPageButton(String buttonId) {

@@ -10,17 +10,6 @@ package com.payoneer.checkout.ui.page;
 
 import static com.payoneer.checkout.localization.LocalizationKey.LIST_TITLE;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.R;
@@ -28,6 +17,16 @@ import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.ui.list.PaymentList;
 import com.payoneer.checkout.ui.model.PaymentSession;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
  * The PaymentListActivity showing available payment methods in a list.
@@ -37,7 +36,6 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
     private PaymentListPresenter presenter;
     private PaymentList paymentList;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
     private CheckoutConfiguration configuration;
 
     /**

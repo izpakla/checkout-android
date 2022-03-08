@@ -7,6 +7,15 @@
  */
 package com.payoneer.checkout.examplecheckout;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.payoneer.checkout.Checkout;
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutTheme;
+import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding;
+import com.payoneer.checkout.model.Interaction;
+import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,19 +25,9 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.test.espresso.IdlingResource;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.payoneer.checkout.Checkout;
-import com.payoneer.checkout.CheckoutActivityResult;
-import com.payoneer.checkout.CheckoutResult;
-import com.payoneer.checkout.CheckoutTheme;
-import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding;
-import com.payoneer.checkout.model.Interaction;
-import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
 
 /**
  * This is the main Activity of this example app demonstrating how to use the Checkout SDK
@@ -49,7 +48,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         binding = ActivityExamplecheckoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.buttonShowPaymentList.setOnClickListener(v -> openPaymentPage());
+        binding.buttonShowPaymentList.setOnClickListener(v -> showPaymentList());
         binding.buttonChargePresetAcount.setOnClickListener(v -> chargePresetAccount());
     }
 
@@ -119,7 +118,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    private void openPaymentPage() {
+    private void showPaymentList() {
         if (!setListUrl()) {
             return;
         }
@@ -155,16 +154,16 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     private CheckoutTheme createPaymentTheme() {
         if (binding.switchTheme.isChecked()) {
             return CheckoutTheme.createBuilder().
-                    setPaymentListTheme(R.style.CustomTheme_Toolbar).
-                    setChargePaymentTheme(R.style.CustomTheme_NoToolbar).
-                    build();
+                setPaymentListTheme(R.style.CustomTheme_Toolbar).
+                setChargePaymentTheme(R.style.CustomTheme_NoToolbar).
+                build();
         } else {
             return CheckoutTheme.createDefault();
         }
     }
 
     /**
-     * Only called from test, creates and returns a new paymentResult handled IdlingResource
+     * Only called from test, creates and returns a new result handled IdlingResource
      */
     @VisibleForTesting
     public IdlingResource getResultHandledIdlingResource() {

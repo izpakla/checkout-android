@@ -50,7 +50,7 @@ public final class GroupedCardsTests extends AbstractTest {
     public void testVisa_presetFlow_success() {
         int groupCardIndex = 1;
         CheckoutActivity checkoutActivity = openCheckoutActivity(NetworkOperationType.PRESET);
-        IdlingResource checkoutPaymentResultIdlingResource = checkoutActivity.getResultHandledIdlingResource();
+        IdlingResource checkoutResultHandledIdlingResource = checkoutActivity.getResultHandledIdlingResource();
         clickCheckoutButton();
 
         PaymentListHelper.waitForPaymentListLoaded(1);
@@ -58,15 +58,15 @@ public final class GroupedCardsTests extends AbstractTest {
         PaymentListHelper.fillPaymentListCard(groupCardIndex, TestDataProvider.visaCardTestData());
         PaymentListHelper.clickPaymentListCardButton(groupCardIndex);
 
-        register(checkoutPaymentResultIdlingResource);
+        register(checkoutResultHandledIdlingResource);
         waitForSummaryActivityLoaded();
-        unregister(checkoutPaymentResultIdlingResource);
+        unregister(checkoutResultHandledIdlingResource);
 
         SummaryActivity summaryActivity = waitForSummaryActivityLoaded();
-        IdlingResource summaryPaymentResultIdlingResource = summaryActivity.getResultHandledIdlingResource();
+        IdlingResource summaryResultHandledIdlingResource = summaryActivity.getResultHandledIdlingResource();
         clickSummaryPayButton();
 
-        waitForConfirmActivityLoaded(summaryPaymentResultIdlingResource);
-        unregister(summaryPaymentResultIdlingResource);
+        waitForConfirmActivityLoaded(summaryResultHandledIdlingResource);
+        unregister(summaryResultHandledIdlingResource);
     }
 }

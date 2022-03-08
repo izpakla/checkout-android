@@ -8,9 +8,9 @@
 
 package com.payoneer.checkout;
 
+import static com.payoneer.checkout.CheckoutResult.EXTRA_CHECKOUT_RESULT;
 import static com.payoneer.checkout.model.InteractionReason.CLIENTSIDE_ERROR;
 import static com.payoneer.checkout.model.InteractionReason.COMMUNICATION_FAILURE;
-import static com.payoneer.checkout.CheckoutResult.EXTRA_CHECKOUT_RESULT;
 
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.ErrorInfo;
@@ -28,7 +28,7 @@ public final class CheckoutResultHelper {
      * Helper method to construct a default CheckoutResult from the error message
      *
      * @param errorMessage describing the error that occurred
-     * @return the newly created PaymentResult
+     * @return the newly created CheckoutResult
      */
     public static CheckoutResult fromErrorMessage(String errorMessage) {
         return fromErrorMessage(InteractionCode.ABORT, errorMessage);
@@ -39,7 +39,7 @@ public final class CheckoutResultHelper {
      *
      * @param interactionCode code used for creating the CheckoutResult
      * @param errorMessage describing the error that occurred
-     * @return the newly created PaymentResult
+     * @return the newly created CheckoutResult
      */
     public static CheckoutResult fromErrorMessage(String interactionCode, String errorMessage) {
         Interaction interaction = new Interaction(interactionCode, CLIENTSIDE_ERROR);
@@ -51,7 +51,7 @@ public final class CheckoutResultHelper {
      * Helper method to construct a default CheckoutResult from the Throwable
      *
      * @param error the throwable that caused the error
-     * @return the newly created PaymentResult
+     * @return the newly created CheckoutResult
      */
     public static CheckoutResult fromThrowable(Throwable error) {
         return fromThrowable(InteractionCode.ABORT, error);

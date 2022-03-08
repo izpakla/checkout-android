@@ -11,17 +11,16 @@ package com.payoneer.checkout.ui.page;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.localization.Localization;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import androidx.annotation.NonNull;
 
 /**
  * The ChargePaymentActivity is the view displaying the loading animation while posting the operation.
@@ -29,11 +28,6 @@ import com.payoneer.checkout.localization.Localization;
  */
 public final class ChargePaymentActivity extends BasePaymentActivity implements BasePaymentView {
 
-    private final static String EXTRA_OPERATION = "operation";
-    private final static String EXTRA_CHARGE_TYPE = "charge_type";
-    private final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
-    public final static int TYPE_CHARGE_OPERATION = 1;
-    public final static int TYPE_CHARGE_PRESET_ACCOUNT = 2;
     private int chargeType;
     private ChargePaymentPresenter presenter;
     private Operation operation;
@@ -117,7 +111,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
         if (this.operation != null) {
             savedInstanceState.putParcelable(EXTRA_OPERATION, this.operation);
         }
-        if (this.configuration != null){
+        if (this.configuration != null) {
             savedInstanceState.putParcelable(EXTRA_CHECKOUT_CONFIGURATION, this.configuration);
         }
     }

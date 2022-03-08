@@ -47,7 +47,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityExamplecheckoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.buttonShowPaymentList.setOnClickListener { openPaymentPage() }
+        binding.buttonShowPaymentList.setOnClickListener { openPaymentList() }
         binding.buttonChargePresetAcount.setOnClickListener { chargePresetAccount() }
     }
 
@@ -68,7 +68,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         }
     }
 
-    private fun openPaymentPage() {
+    private fun openPaymentList() {
         if (!setListUrl()) {
             return
         }
@@ -140,13 +140,13 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
 
     private fun showCheckoutActivityResult(sdkResult: CheckoutActivityResult) {
         val resultCode = sdkResult.resultCode
-        val paymentResult = sdkResult.checkoutResult
+        val checkoutResult = sdkResult.checkoutResult
 
-        val info = paymentResult?.resultInfo
-        val interaction = paymentResult?.interaction
+        val info = checkoutResult?.resultInfo
+        val interaction = checkoutResult?.interaction
         val code = interaction?.code
         val reason = interaction?.reason
-        val cause = paymentResult?.cause
+        val cause = checkoutResult?.cause
         val error = cause?.message
 
         binding.apply {
@@ -167,7 +167,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     }
 
     /**
-     * Only called from test, creates and returns a new paymentResult handled IdlingResource
+     * Only called from test, creates and returns a new result handled IdlingResource
      */
     @VisibleForTesting
     fun getResultHandledIdlingResource(): IdlingResource {

@@ -8,16 +8,16 @@
 
 package com.payoneer.checkout.ui.page;
 
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.localization.Localization;
-import com.payoneer.checkout.CheckoutActivityResult;
-import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
-import com.payoneer.checkout.CheckoutResultHelper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -32,6 +32,12 @@ import androidx.appcompat.app.AppCompatActivity;
  * The base activity for payment activities.
  */
 abstract class BasePaymentActivity extends AppCompatActivity implements BasePaymentView {
+
+    final static int TYPE_CHARGE_OPERATION = 1;
+    final static int TYPE_CHARGE_PRESET_ACCOUNT = 2;
+    final static String EXTRA_OPERATION = "operation";
+    final static String EXTRA_CHARGE_TYPE = "charge_type";
+    final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
 
     ProgressView progressView;
 
@@ -153,7 +159,7 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     }
 
     /**
-     * Set the ActivityResult with the given resultCode and PaymentResult.
+     * Set the ActivityResult with the given resultCode and CheckoutResult.
      *
      * @param resultCode of the ActivityResult
      * @param result to be added as extra to the intent

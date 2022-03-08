@@ -28,11 +28,11 @@ public final class CheckoutResult implements Parcelable {
     public final static String EXTRA_CHECKOUT_RESULT = "checkoutResult";
     public final static Parcelable.Creator<CheckoutResult> CREATOR = new Parcelable.Creator<CheckoutResult>() {
 
-        public CheckoutResult createFromParcel(Parcel in) {
+        public CheckoutResult createFromParcel(final Parcel in) {
             return new CheckoutResult(in);
         }
 
-        public CheckoutResult[] newArray(int size) {
+        public CheckoutResult[] newArray(final int size) {
             return new CheckoutResult[size];
         }
     };
@@ -46,7 +46,7 @@ public final class CheckoutResult implements Parcelable {
      *
      * @param operationResult containing the result of the operation
      */
-    public CheckoutResult(OperationResult operationResult) {
+    public CheckoutResult(final OperationResult operationResult) {
         this.operationResult = operationResult;
     }
 
@@ -55,7 +55,7 @@ public final class CheckoutResult implements Parcelable {
      *
      * @param errorInfo containing the Interaction and resultInfo
      */
-    public CheckoutResult(ErrorInfo errorInfo) {
+    public CheckoutResult(final ErrorInfo errorInfo) {
         this(errorInfo, null);
     }
 
@@ -65,12 +65,12 @@ public final class CheckoutResult implements Parcelable {
      * @param errorInfo containing the Interaction and resultInfo
      * @param cause the optional Throwable that caused the error
      */
-    public CheckoutResult(ErrorInfo errorInfo, Throwable cause) {
+    public CheckoutResult(final ErrorInfo errorInfo, final Throwable cause) {
         this.errorInfo = errorInfo;
         this.cause = cause;
     }
 
-    private CheckoutResult(Parcel in) {
+    private CheckoutResult(final Parcel in) {
         GsonHelper gson = GsonHelper.getInstance();
         try {
             operationResult = gson.fromJson(in.readString(), OperationResult.class);
@@ -135,7 +135,7 @@ public final class CheckoutResult implements Parcelable {
      * {@inheritDoc}
      */
     @Override
-    public void writeToParcel(Parcel out, int flags) {
+    public void writeToParcel(final Parcel out, final int flags) {
         GsonHelper gson = GsonHelper.getInstance();
         out.writeString(gson.toJson(operationResult));
         out.writeString(gson.toJson(errorInfo));

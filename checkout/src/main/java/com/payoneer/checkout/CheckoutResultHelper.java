@@ -30,7 +30,7 @@ public final class CheckoutResultHelper {
      * @param errorMessage describing the error that occurred
      * @return the newly created CheckoutResult
      */
-    public static CheckoutResult fromErrorMessage(String errorMessage) {
+    public static CheckoutResult fromErrorMessage(final String errorMessage) {
         return fromErrorMessage(InteractionCode.ABORT, errorMessage);
     }
 
@@ -41,7 +41,7 @@ public final class CheckoutResultHelper {
      * @param errorMessage describing the error that occurred
      * @return the newly created CheckoutResult
      */
-    public static CheckoutResult fromErrorMessage(String interactionCode, String errorMessage) {
+    public static CheckoutResult fromErrorMessage(final String interactionCode, final String errorMessage) {
         Interaction interaction = new Interaction(interactionCode, CLIENTSIDE_ERROR);
         ErrorInfo errorInfo = new ErrorInfo(errorMessage, interaction);
         return new CheckoutResult(errorInfo);
@@ -53,7 +53,7 @@ public final class CheckoutResultHelper {
      * @param error the throwable that caused the error
      * @return the newly created CheckoutResult
      */
-    public static CheckoutResult fromThrowable(Throwable error) {
+    public static CheckoutResult fromThrowable(final Throwable error) {
         return fromThrowable(InteractionCode.ABORT, error);
     }
 
@@ -64,7 +64,7 @@ public final class CheckoutResultHelper {
      * @param error the throwable that caused the error
      * @return the newly created CheckoutResult
      */
-    public static CheckoutResult fromThrowable(String interactionCode, Throwable error) {
+    public static CheckoutResult fromThrowable(final String interactionCode, final Throwable error) {
         ErrorInfo errorInfo = null;
         boolean networkFailure = false;
         Throwable cause = error;
@@ -89,7 +89,7 @@ public final class CheckoutResultHelper {
      * @param checkoutResult to be put inside the intent
      * @param intent into which this CheckoutResult should be stored
      */
-    public static void putIntoResultIntent(CheckoutResult checkoutResult, Intent intent) {
+    public static void putIntoResultIntent(final CheckoutResult checkoutResult, final Intent intent) {
         if (intent != null) {
             intent.putExtra(EXTRA_CHECKOUT_RESULT, checkoutResult);
         }
@@ -101,7 +101,7 @@ public final class CheckoutResultHelper {
      * @param intent containing the CheckoutResult
      * @return CheckoutResult or null if not stored in the intent
      */
-    public static CheckoutResult fromResultIntent(Intent intent) {
+    public static CheckoutResult fromResultIntent(final Intent intent) {
         if (intent != null) {
             return intent.getParcelableExtra(EXTRA_CHECKOUT_RESULT);
         }

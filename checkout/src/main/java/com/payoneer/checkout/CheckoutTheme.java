@@ -19,18 +19,18 @@ public final class CheckoutTheme implements Parcelable {
     private final int paymentListTheme;
     private final int chargePaymentTheme;
 
-    private CheckoutTheme(Builder builder) {
+    private CheckoutTheme(final Builder builder) {
         this.paymentListTheme = builder.paymentListTheme;
         this.chargePaymentTheme = builder.chargePaymentTheme;
     }
 
-    protected CheckoutTheme(Parcel in) {
+    protected CheckoutTheme(final Parcel in) {
         paymentListTheme = in.readInt();
         chargePaymentTheme = in.readInt();
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeInt(paymentListTheme);
         dest.writeInt(chargePaymentTheme);
     }
@@ -47,7 +47,7 @@ public final class CheckoutTheme implements Parcelable {
         }
 
         @Override
-        public CheckoutTheme[] newArray(int size) {
+        public CheckoutTheme[] newArray(final int size) {
             return new CheckoutTheme[size];
         }
     };
@@ -88,12 +88,12 @@ public final class CheckoutTheme implements Parcelable {
         Builder() {
         }
 
-        public Builder setPaymentListTheme(@StyleRes int paymentListTheme) {
+        public Builder setPaymentListTheme(@StyleRes final int paymentListTheme) {
             this.paymentListTheme = paymentListTheme;
             return this;
         }
 
-        public Builder setChargePaymentTheme(@StyleRes int chargePaymentTheme) {
+        public Builder setChargePaymentTheme(@StyleRes final int chargePaymentTheme) {
             this.chargePaymentTheme = chargePaymentTheme;
             return this;
         }

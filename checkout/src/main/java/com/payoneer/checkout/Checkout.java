@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
@@ -97,7 +97,7 @@ public final class Checkout {
      * @param intent containing the session information
      * @param requestCode the requestCode to be used for identifying results in the parent activity
      */
-    private void launchActivity(Activity activity, Intent intent, int requestCode) {
+    private void launchActivity(final Activity activity, final Intent intent, final int requestCode) {
         if (activity == null) {
             throw new IllegalArgumentException("activity may not be null");
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
@@ -30,7 +30,7 @@ public final class CheckoutActivityResult {
      * @param resultCode activity resultCode
      * @param checkoutResult containing the result of the checkout request
      */
-    public CheckoutActivityResult(int requestCode, int resultCode, CheckoutResult checkoutResult) {
+    public CheckoutActivityResult(final int requestCode, final int resultCode, final CheckoutResult checkoutResult) {
         this.requestCode = requestCode;
         this.resultCode = resultCode;
         this.checkoutResult = checkoutResult;
@@ -43,7 +43,7 @@ public final class CheckoutActivityResult {
      * @param resultCode activity resultCode
      * @param data containing the activity result data
      */
-    public static CheckoutActivityResult fromActivityResult(int requestCode, int resultCode, Intent data) {
+    public static CheckoutActivityResult fromActivityResult(final int requestCode, final int resultCode, final Intent data) {
         CheckoutResult result = CheckoutResultHelper.fromResultIntent(data);
         return new CheckoutActivityResult(requestCode, resultCode, result);
     }
@@ -53,7 +53,7 @@ public final class CheckoutActivityResult {
      *
      * @return the String representation of the resultCode
      */
-    public static String resultCodeToString(int resultCode) {
+    public static String resultCodeToString(final int resultCode) {
         switch (resultCode) {
             case RESULT_CODE_PROCEED:
                 return "RESULT_CODE_PROCEED";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
@@ -33,20 +33,20 @@ public final class CheckoutConfiguration implements Parcelable {
      */
     private final int orientation;
 
-    private CheckoutConfiguration(Builder builder) {
+    private CheckoutConfiguration(final Builder builder) {
         this.listUrl = builder.listUrl;
         this.checkoutTheme = builder.checkoutTheme;
         this.orientation = builder.orientation;
     }
 
-    private CheckoutConfiguration(Parcel in) {
+    private CheckoutConfiguration(final Parcel in) {
         listUrl = in.readString();
         checkoutTheme = in.readParcelable(CheckoutTheme.class.getClassLoader());
         orientation = in.readInt();
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(listUrl);
         dest.writeParcelable(checkoutTheme, flags);
         dest.writeInt(orientation);
@@ -64,7 +64,7 @@ public final class CheckoutConfiguration implements Parcelable {
         }
 
         @Override
-        public CheckoutConfiguration[] newArray(int size) {
+        public CheckoutConfiguration[] newArray(final int size) {
             return new CheckoutConfiguration[size];
         }
     };

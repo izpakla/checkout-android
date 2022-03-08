@@ -77,7 +77,7 @@ public final class CheckoutActivity extends BaseActivity implements CheckoutView
         super.onResume();
 
         if (activityResult != null) {
-            presenter.handlePaymentActivityResult(activityResult);
+            presenter.handleCheckoutActivityResult(activityResult);
             activityResult = null;
         }
     }

@@ -99,7 +99,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
             handleRedirectRequest(redirectRequest);
             redirectRequest = null;
         } else if (activityResult != null) {
-            handlePaymentActivityResult(activityResult);
+            handleCheckoutActivityResult(activityResult);
             activityResult = null;
         } else if (session == null) {
             loadPaymentSession();
@@ -258,16 +258,16 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public void onProcessPaymentResult(int resultCode, CheckoutResult result) {
+    public void onProcessCheckoutResult(int resultCode, CheckoutResult result) {
         setState(STARTED);
         if (UPDATE.equals(session.getListOperationType())) {
-            handleUpdatePaymentResult(resultCode, result);
+            handleUpdateCheckoutResult(resultCode, result);
         } else {
             handleProcessCheckoutResult(resultCode, result);
         }
     }
 
-    private void handleUpdatePaymentResult(int resultCode, CheckoutResult result) {
+    private void handleUpdateCheckoutResult(int resultCode, CheckoutResult result) {
         switch (resultCode) {
             case RESULT_CODE_PROCEED:
                 handleUpdatePaymentProceed(result);
@@ -402,7 +402,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         });
     }
 
-    private void handlePaymentActivityResult(CheckoutActivityResult activityResult) {
+    private void handleCheckoutActivityResult(CheckoutActivityResult activityResult) {
         if (this.session == null) {
             closeWithErrorCode("Missing cached PaymentSession in PaymentListPresenter");
             return;

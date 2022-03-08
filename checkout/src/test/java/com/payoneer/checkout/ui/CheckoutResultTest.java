@@ -24,7 +24,7 @@ import com.payoneer.checkout.model.OperationResult;
 import android.os.Parcel;
 
 @RunWith(RobolectricTestRunner.class)
-public class PaymentResultTest {
+public class CheckoutResultTest {
 
     @Test
     public void construct_withOperationResult() {

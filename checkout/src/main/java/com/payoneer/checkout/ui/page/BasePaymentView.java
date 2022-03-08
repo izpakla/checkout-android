@@ -86,7 +86,7 @@ interface BasePaymentView {
      * @param resultCode the current resultCode
      * @param result containing the checkout result state
      */
-    void setPaymentResult(int resultCode, CheckoutResult result);
+    void setCheckoutResult(int resultCode, CheckoutResult result);
 
     /**
      * Pass on the ActivityResult to the activity that started this View.

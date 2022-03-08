@@ -115,7 +115,7 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     }
 
     @Override
-    public void setPaymentResult(int resultCode, CheckoutResult result) {
+    public void setCheckoutResult(int resultCode, CheckoutResult result) {
         setResultIntent(resultCode, result);
     }
 

@@ -65,7 +65,7 @@ final class SummaryPresenter {
      *
      * @param activityResult the result received from the Checkout SDK
      */
-    void handlePaymentActivityResult(CheckoutActivityResult activityResult) {
+    void handleCheckoutActivityResult(CheckoutActivityResult activityResult) {
         switch (activityResult.getRequestCode()) {
             case SummaryActivity.PAYMENT_REQUEST_CODE:
                 handleCheckoutResult(activityResult);

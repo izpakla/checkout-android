@@ -35,23 +35,23 @@ final class CheckoutPresenter {
     }
 
     /**
-     * Handle the PaymentActivityResult received from the Checkout SDK.
+     * Handle the CheckoutActivityResult received from the Checkout SDK.
      *
-     * @param activityResult containing the payment result
+     * @param activityResult containing the checkout activity result
      */
-    void handlePaymentActivityResult(CheckoutActivityResult activityResult) {
+    void handleCheckoutActivityResult(CheckoutActivityResult activityResult) {
         CheckoutResult checkoutResult = activityResult.getCheckoutResult();
         switch (activityResult.getResultCode()) {
             case RESULT_CODE_PROCEED:
-                handlePaymentResultProceed(checkoutResult);
+                handleCheckoutResultProceed(checkoutResult);
                 break;
             case RESULT_CODE_ERROR:
-                handlePaymentResultError(checkoutResult);
+                handleCheckoutResultError(checkoutResult);
                 break;
         }
     }
 
-    private void handlePaymentResultProceed(CheckoutResult result) {
+    private void handleCheckoutResultProceed(CheckoutResult result) {
         Interaction interaction = result.getInteraction();
         if (interaction == null) {
             return;
@@ -63,7 +63,7 @@ final class CheckoutPresenter {
         view.showPaymentConfirmation();
     }
 
-    private void handlePaymentResultError(CheckoutResult result) {
+    private void handleCheckoutResultError(CheckoutResult result) {
         Interaction interaction = result.getInteraction();
         switch (interaction.getCode()) {
             case InteractionCode.ABORT:

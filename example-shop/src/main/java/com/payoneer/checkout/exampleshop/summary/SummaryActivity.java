@@ -109,7 +109,7 @@ public final class SummaryActivity extends BaseActivity implements SummaryView {
     public void onResume() {
         super.onResume();
         if (activityResult != null) {
-            presenter.handlePaymentActivityResult(activityResult);
+            presenter.handleCheckoutActivityResult(activityResult);
             this.activityResult = null;
         } else {
             presenter.loadPaymentDetails(listUrl);

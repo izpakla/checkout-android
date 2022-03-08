@@ -115,7 +115,7 @@ public final class BasicNetworkService extends NetworkService {
         Log.i("checkout-sdk", "onRedirectResult: " + checkoutResult);
 
         if (request.getRequestCode() == PROCESSPAYMENT_REQUEST_CODE) {
-            listener.onProcessPaymentResult(resultCode, checkoutResult);
+            listener.onProcessCheckoutResult(resultCode, checkoutResult);
         } else {
             listener.onDeleteAccountResult(resultCode, checkoutResult);
         }
@@ -127,7 +127,7 @@ public final class BasicNetworkService extends NetworkService {
         Log.i("checkout-sdk", "handleProcessPaymentSuccess: " + checkoutResult);
 
         if (!PROCEED.equals(interaction.getCode())) {
-            listener.onProcessPaymentResult(RESULT_CODE_ERROR, checkoutResult);
+            listener.onProcessCheckoutResult(RESULT_CODE_ERROR, checkoutResult);
             return;
         }
         if (requiresRedirect(operationResult)) {
@@ -139,7 +139,7 @@ public final class BasicNetworkService extends NetworkService {
             }
             return;
         }
-        listener.onProcessPaymentResult(RESULT_CODE_PROCEED, checkoutResult);
+        listener.onProcessCheckoutResult(RESULT_CODE_PROCEED, checkoutResult);
     }
 
     private void handleProcessPaymentError(Throwable cause) {
@@ -147,7 +147,7 @@ public final class BasicNetworkService extends NetworkService {
         CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(code, cause);
 
         Log.i("checkout-sdk", "handleProcessPaymentError: " + checkoutResult);
-        listener.onProcessPaymentResult(RESULT_CODE_ERROR, checkoutResult);
+        listener.onProcessCheckoutResult(RESULT_CODE_ERROR, checkoutResult);
     }
 
     private void handleDeleteAccountSuccess(OperationResult operationResult) {

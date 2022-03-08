@@ -109,7 +109,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     @Override
-    public void onProcessPaymentResult(int resultCode, CheckoutResult result) {
+    public void onProcessCheckoutResult(int resultCode, CheckoutResult result) {
         setState(STARTED);
         switch (resultCode) {
             case RESULT_CODE_PROCEED:
@@ -243,7 +243,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     private void showMessageAndCloseWithErrorCode(CheckoutResult result) {
         Interaction interaction = result.getInteraction();
-        view.setPaymentResult(RESULT_CODE_ERROR, result);
+        view.setCheckoutResult(RESULT_CODE_ERROR, result);
         PaymentDialogFragment.PaymentDialogListener listener = new PaymentDialogFragment.PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {

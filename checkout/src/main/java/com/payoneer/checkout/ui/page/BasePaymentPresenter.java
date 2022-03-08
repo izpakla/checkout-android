@@ -53,7 +53,7 @@ abstract class BasePaymentPresenter {
     }
 
     void closeWithProceedCode(CheckoutResult result) {
-        view.setPaymentResult(RESULT_CODE_PROCEED, result);
+        view.setCheckoutResult(RESULT_CODE_PROCEED, result);
         view.close();
     }
 
@@ -63,7 +63,7 @@ abstract class BasePaymentPresenter {
     }
 
     void closeWithErrorCode(CheckoutResult result) {
-        view.setPaymentResult(RESULT_CODE_ERROR, result);
+        view.setCheckoutResult(RESULT_CODE_ERROR, result);
         view.close();
     }
 

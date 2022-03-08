@@ -34,10 +34,10 @@ public interface NetworkServiceListener {
     /**
      * Called when NetworkService is done processing the request.
      *
-     * @param resultCode code describing the state of the paymentResult
+     * @param resultCode code describing the state of the chechkoutResult
      * @param checkoutResult containing the information describing the result
      */
-    void onProcessPaymentResult(int resultCode, CheckoutResult checkoutResult);
+    void onProcessCheckoutResult(int resultCode, CheckoutResult checkoutResult);
 
     /**
      * Called when NetworkService is done deleting the account.

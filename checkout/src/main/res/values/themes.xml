@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="PaymentTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="CheckoutTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/pm_green700</item>
         <item name="colorPrimaryDark">@color/pm_green700</item>
         <item name="colorControlNormal">@color/pm_green700</item>
@@ -12,36 +12,36 @@
         <item name="colorOnSurface">@color/pm_gray800</item>
         <item name="colorError">@color/pm_red</item>
 
-        <item name="textAppearanceSubtitle1">@style/TextAppearance.Payment.Subtitle1</item>
-        <item name="textAppearanceSubtitle2">@style/TextAppearance.Payment.Subtitle2</item>
-        <item name="textAppearanceBody1">@style/TextAppearance.Payment.Body1</item>
-        <item name="textAppearanceBody2">@style/TextAppearance.Payment.Body2</item>
-        <item name="textAppearanceHeadline6">@style/TextAppearance.Payment.Headline6</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Payment.Button</item>
-        <item name="textAppearanceCaption">@style/TextAppearance.Payment.Caption</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Checkout.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.Checkout.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.Checkout.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Checkout.Body2</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.Checkout.Headline6</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Checkout.Button</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.Checkout.Caption</item>
 
-        <item name="materialButtonStyle">@style/Widget.Payment.Button.UnelevatedButton</item>
-        <item name="textInputStyle">@style/Widget.Payment.TextInputLayout</item>
-        <item name="switchStyle">@style/Widget.Payment.Switch</item>
-        <item name="snackbarStyle">@style/Widget.Payment.Snackbar</item>
-        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Payment.MaterialAlertDialog</item>
-        <item name="materialCardViewStyle">@style/Widget.Payment.CardView</item>
+        <item name="materialButtonStyle">@style/Widget.Checkout.Button.UnelevatedButton</item>
+        <item name="textInputStyle">@style/Widget.Checkout.TextInputLayout</item>
+        <item name="switchStyle">@style/Widget.Checkout.Switch</item>
+        <item name="snackbarStyle">@style/Widget.Checkout.Snackbar</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Checkout.MaterialAlertDialog</item>
+        <item name="materialCardViewStyle">@style/Widget.Checkout.CardView</item>
     </style>
 
-    <style name="ThemeOverlay.Payment.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-        <item name="alertDialogStyle">@style/MaterialAlertDialog.Payment</item>
-        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.Payment.Title.Text</item>
-        <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.Payment.Body.Text</item>
-        <item name="buttonBarPositiveButtonStyle">@style/Widget.Payment.Button.TextButton.Dialog</item>
-        <item name="buttonBarNegativeButtonStyle">@style/Widget.Payment.Button.TextButton.Dialog</item>
+    <style name="ThemeOverlay.Checkout.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.Checkout</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.Checkout.Title.Text</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.Checkout.Body.Text</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.Checkout.Button.TextButton.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.Checkout.Button.TextButton.Dialog</item>
     </style>
 
-    <style name="PaymentTheme.Toolbar">
-        <item name="toolbarStyle">@style/Widget.Payment.Toolbar</item>
+    <style name="CheckoutTheme.Toolbar">
+        <item name="toolbarStyle">@style/Widget.Checkout.Toolbar</item>
         <item name="android:statusBarColor">@color/pm_gray300</item>
     </style>
 
-    <style name="PaymentTheme.NoToolbar">
+    <style name="CheckoutTheme.NoToolbar">
         <item name="android:statusBarColor">@color/pm_gray300</item>
     </style>
 </resources>

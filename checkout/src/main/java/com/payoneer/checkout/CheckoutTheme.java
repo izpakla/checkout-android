@@ -58,8 +58,8 @@ public final class CheckoutTheme implements Parcelable {
 
     public static CheckoutTheme createDefault() {
         return createBuilder().
-            setPaymentListTheme(R.style.PaymentTheme_Toolbar).
-            setChargePaymentTheme(R.style.PaymentTheme_NoToolbar).
+            setPaymentListTheme(R.style.CheckoutTheme_Toolbar).
+            setChargePaymentTheme(R.style.CheckoutTheme_NoToolbar).
             build();
     }
 

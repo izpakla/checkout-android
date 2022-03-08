@@ -142,13 +142,21 @@ public final class CheckoutResult implements Parcelable {
         out.writeSerializable(cause);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public String toString() {
-        Interaction interaction = getInteraction();
-        return "CheckoutResult[resultInfo: " + getResultInfo() + ", code: " + interaction.getCode() + ", reason: " + interaction.getReason()
-            + "]";
+        final StringBuilder builder = new StringBuilder();
+        builder.append("CheckoutResult [");
+        if (operationResult != null) {
+            builder.append("operationResult=").append(operationResult).append(", ");
+        }
+        if (errorInfo != null) {
+            builder.append("errorInfo=").append(errorInfo).append(", ");
+        }
+        if (cause != null) {
+            builder.append("cause=").append(cause);
+        }
+        builder.append("]");
+        return builder.toString();
     }
 }

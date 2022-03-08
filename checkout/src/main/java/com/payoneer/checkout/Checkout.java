@@ -45,18 +45,6 @@ public final class Checkout {
     }
 
     /**
-     * Create a new Checkout class with the CheckoutConfiguration object containing
-     * the information about the Checkout
-     *
-     * @param info contains the listUrl and optional theming and orientation
-     * @return newly created new Checkout Object
-     */
-    public static Checkout with(final CheckoutConfiguration info) {
-        CheckoutConfiguration.Builder builder = new CheckoutConfiguration.Builder(info);
-        return new Checkout(builder);
-    }
-
-    /**
      * Set the orientation in this Checkout Object
      *
      * @return this Checkout Object

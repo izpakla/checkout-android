@@ -115,17 +115,6 @@ public final class CheckoutConfiguration implements Parcelable {
         }
 
         /**
-         * Create a new default Builder for creating CheckoutConfiguration instances
-         *
-         * @param info mandatory parameter containing CheckoutConfiguration to use in this builder
-         */
-        Builder(final CheckoutConfiguration info) {
-            this.listUrl = info.listUrl;
-            this.orientation = info.orientation;
-            this.checkoutTheme = info.checkoutTheme;
-        }
-
-        /**
          * Set the orientation of the Payment Page, the following orientation modes are supported:
          * <p>
          * ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE

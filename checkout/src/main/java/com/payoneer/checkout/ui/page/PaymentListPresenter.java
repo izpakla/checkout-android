@@ -142,7 +142,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         view.showRefreshAccountDialog(listener);
     }
 
-    void setPaymentActivityResult(CheckoutActivityResult activityResult) {
+    void setCheckoutActivityResult(CheckoutActivityResult activityResult) {
         this.activityResult = activityResult;
     }
 
@@ -263,7 +263,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         if (UPDATE.equals(session.getListOperationType())) {
             handleUpdatePaymentResult(resultCode, result);
         } else {
-            handleProcessPaymentResult(resultCode, result);
+            handleProcessCheckoutResult(resultCode, result);
         }
     }
 
@@ -314,20 +314,20 @@ final class PaymentListPresenter extends BasePaymentPresenter
         }
     }
 
-    private void handleProcessPaymentResult(int resultCode, CheckoutResult result) {
+    private void handleProcessCheckoutResult(int resultCode, CheckoutResult result) {
         switch (resultCode) {
             case RESULT_CODE_PROCEED:
                 closeWithProceedCode(result);
                 break;
             case RESULT_CODE_ERROR:
-                handleProcessPaymentError(result);
+                handleProcessCheckoutError(result);
                 break;
             default:
                 showPaymentSession();
         }
     }
 
-    private void handleProcessPaymentError(CheckoutResult result) {
+    private void handleProcessCheckoutError(CheckoutResult result) {
         if (result.isNetworkFailure()) {
             handleProcessNetworkFailure(result);
             return;
@@ -501,7 +501,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     private void handleChargeError(CheckoutActivityResult checkoutActivityResult) {
-        Interaction interaction = checkoutActivityResult.getPaymentResult().getInteraction();
+        Interaction interaction = checkoutActivityResult.getCheckoutResult().getInteraction();
         switch (interaction.getCode()) {
             case RELOAD:
             case TRY_OTHER_ACCOUNT:

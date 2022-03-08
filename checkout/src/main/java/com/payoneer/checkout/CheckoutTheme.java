@@ -14,7 +14,7 @@ import androidx.annotation.StyleRes;
 import androidx.annotation.StyleableRes;
 
 /**
- * Class to hold the theme settings of the payment screens in the Android SDK
+ * Class to hold the theme settings of the screens in the Android SDK
  */
 public final class CheckoutTheme implements Parcelable {
     private final int paymentListTheme;

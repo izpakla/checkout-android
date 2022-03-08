@@ -40,7 +40,7 @@ final class CheckoutPresenter {
      * @param activityResult containing the payment result
      */
     void handlePaymentActivityResult(CheckoutActivityResult activityResult) {
-        CheckoutResult checkoutResult = activityResult.getPaymentResult();
+        CheckoutResult checkoutResult = activityResult.getCheckoutResult();
         switch (activityResult.getResultCode()) {
             case RESULT_CODE_PROCEED:
                 handlePaymentResultProceed(checkoutResult);

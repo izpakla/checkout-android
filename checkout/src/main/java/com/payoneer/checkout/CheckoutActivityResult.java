@@ -12,7 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 /**
- * A container for a payment activity result as obtained from the Android SDK
+ * A container holding the CheckoutResult provided through the onActivityResult callback method
  */
 public final class CheckoutActivityResult {
 
@@ -24,11 +24,11 @@ public final class CheckoutActivityResult {
     private final CheckoutResult checkoutResult;
 
     /**
-     * Construct a new PaymentActivityResult Object
+     * Construct a new CheckoutActivityResult Object
      *
      * @param requestCode activity requestCode
      * @param resultCode activity resultCode
-     * @param checkoutResult containing the result of the payment request
+     * @param checkoutResult containing the result of the checkout request
      */
     public CheckoutActivityResult(int requestCode, int resultCode, CheckoutResult checkoutResult) {
         this.requestCode = requestCode;
@@ -37,7 +37,7 @@ public final class CheckoutActivityResult {
     }
 
     /**
-     * Construct a new PaymentActivityResult Object
+     * Construct a new CheckoutActivityResult Object
      *
      * @param requestCode activity requestCode
      * @param resultCode activity resultCode
@@ -74,7 +74,7 @@ public final class CheckoutActivityResult {
         return resultCode;
     }
 
-    public CheckoutResult getPaymentResult() {
+    public CheckoutResult getCheckoutResult() {
         return checkoutResult;
     }
 }

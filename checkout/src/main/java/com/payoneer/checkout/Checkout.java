@@ -8,13 +8,13 @@
 
 package com.payoneer.checkout;
 
-import android.app.Activity;
-import android.content.Intent;
-
 import com.payoneer.checkout.localization.LocalLocalizationHolder;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.ui.page.ChargePaymentActivity;
 import com.payoneer.checkout.ui.page.PaymentListActivity;
+
+import android.app.Activity;
+import android.content.Intent;
 
 /**
  * The Checkout class is the controller to initialize and launch the Payment List.
@@ -24,11 +24,6 @@ public final class Checkout {
 
     private final CheckoutConfiguration.Builder builder;
 
-    /**
-     * Create a new Checkout class with the mandatory listUrl
-     *
-     * @param builder contains the CheckoutConfiguration builder
-     */
     private Checkout(final CheckoutConfiguration.Builder builder) {
         this.builder = builder;
     }
@@ -37,7 +32,7 @@ public final class Checkout {
      * Create a new Checkout class with the listUrl
      *
      * @param listUrl contains the Url string of the payment list
-     * @return newly created new Checkout Object
+     * @return newly created Checkout Object
      */
     public static Checkout with(final String listUrl) {
         CheckoutConfiguration.Builder builder = new CheckoutConfiguration.Builder(listUrl);
@@ -66,10 +61,9 @@ public final class Checkout {
     }
 
     /**
-     * Open the PaymentPage and instruct the page to immediately charge the PresetAccount.
-     * If no PresetAccount is set in the ListResult then an error will be returned.
+     * Charge the PresetAccount, if no PresetAccount is set in the ListResult then an error will be returned.
      *
-     * @param activity    the activity that will be notified when this PaymentPage is finished
+     * @param activity the activity that will be notified with a CheckoutResult
      * @param requestCode the requestCode to be used for identifying results in the parent activity
      */
     public CheckoutConfiguration chargePresetAccount(final Activity activity, final int requestCode) {
@@ -81,9 +75,9 @@ public final class Checkout {
     }
 
     /**
-     * Open the PaymentPage containing the list of supported payment methods.
+     * Show the PaymentList containing the list of supported payment methods.
      *
-     * @param activity    the activity that will be notified when this PaymentPage is finished
+     * @param activity the activity that will be notified when the PaymentList is closed
      * @param requestCode the requestCode to be used for identifying results in the parent activity
      */
     public CheckoutConfiguration showPaymentList(final Activity activity, final int requestCode) {
@@ -97,8 +91,8 @@ public final class Checkout {
     /**
      * Validate Android SDK Settings and Localization before launching the Activity.
      *
-     * @param activity    the activity that will be notified when this PaymentPage is finished
-     * @param intent      containing the session information
+     * @param activity the activity that will be notified when this PaymentPage is finished
+     * @param intent containing the session information
      * @param requestCode the requestCode to be used for identifying results in the parent activity
      */
     private void launchActivity(Activity activity, Intent intent, int requestCode) {

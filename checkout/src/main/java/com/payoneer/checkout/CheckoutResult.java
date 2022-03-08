@@ -21,7 +21,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 /**
- * A container for the payment result as obtained from the Payment API
+ * A class containing the result as obtained from the Payment API
  */
 public final class CheckoutResult implements Parcelable {
 
@@ -42,7 +42,7 @@ public final class CheckoutResult implements Parcelable {
     private Throwable cause;
 
     /**
-     * Construct a new PaymentResult with the operationResult
+     * Construct a new CheckoutResult with the operationResult
      *
      * @param operationResult containing the result of the operation
      */
@@ -51,7 +51,7 @@ public final class CheckoutResult implements Parcelable {
     }
 
     /**
-     * Constructs a new PaymentResult with the errorInfo
+     * Constructs a new CheckoutResult with the errorInfo
      *
      * @param errorInfo containing the Interaction and resultInfo
      */
@@ -60,7 +60,7 @@ public final class CheckoutResult implements Parcelable {
     }
 
     /**
-     * Constructs a new PaymentResult with the errorInfo and optional cause
+     * Constructs a new CheckoutResult with the errorInfo and optional cause
      *
      * @param errorInfo containing the Interaction and resultInfo
      * @param cause the optional Throwable that caused the error

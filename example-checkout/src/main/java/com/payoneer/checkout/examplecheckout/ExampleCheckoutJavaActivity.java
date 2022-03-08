@@ -24,7 +24,6 @@ import androidx.test.espresso.IdlingResource;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.CheckoutActivityResult;
-import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutTheme;
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding;
@@ -59,7 +58,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         super.onResume();
         resultHandled = false;
         if (activityResult != null) {
-            showPaymentActivityResult(activityResult);
+            showCheckoutActivityResult(activityResult);
             setResultHandledIdleState(true);
         }
     }
@@ -72,14 +71,14 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         }
     }
 
-    private void clearPaymentResult() {
+    private void clearCheckoutResult() {
         setResultHandledIdleState(false);
         binding.labelResultheader.setVisibility(View.GONE);
         binding.layoutResult.setVisibility(View.GONE);
         this.activityResult = null;
     }
 
-    private void showPaymentActivityResult(CheckoutActivityResult sdkResult) {
+    private void showCheckoutActivityResult(CheckoutActivityResult sdkResult) {
         int resultCode = sdkResult.getResultCode();
         binding.labelResultheader.setVisibility(View.VISIBLE);
         binding.layoutResult.setVisibility(View.VISIBLE);
@@ -89,7 +88,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         String code = null;
         String reason = null;
         String error = null;
-        CheckoutResult checkoutResult = sdkResult.getPaymentResult();
+        CheckoutResult checkoutResult = sdkResult.getCheckoutResult();
 
         if (checkoutResult != null) {
             info = checkoutResult.getResultInfo();
@@ -125,7 +124,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
             return;
         }
         closeKeyboard();
-        clearPaymentResult();
+        clearCheckoutResult();
         checkout.theme(createPaymentTheme());
 
         // Uncomment if you like to fix e.g. the orientation to landscape mode
@@ -139,7 +138,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
             return;
         }
         closeKeyboard();
-        clearPaymentResult();
+        clearCheckoutResult();
         checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE);
     }
 

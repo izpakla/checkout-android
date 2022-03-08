@@ -115,7 +115,7 @@ public final class CheckoutConfiguration implements Parcelable {
         }
 
         /**
-         * Set the orientation of the Payment Page, the following orientation modes are supported:
+         * Set the orientation of the screens, the following orientation modes are supported:
          * <p>
          * ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
          * ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -125,7 +125,7 @@ public final class CheckoutConfiguration implements Parcelable {
          * <p>
          * The SCREEN_ORIENTATION_LOCKED is by default used.
          *
-         * @param orientation mode for the Payment Page
+         * @param orientation mode for the screens
          */
         void setOrientation(final int orientation) {
             switch (orientation) {

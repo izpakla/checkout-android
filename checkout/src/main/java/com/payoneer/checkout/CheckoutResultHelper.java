@@ -20,12 +20,12 @@ import com.payoneer.checkout.model.InteractionCode;
 import android.content.Intent;
 
 /**
- * Class with helper methods to construct a PaymentResult
+ * Class with helper methods to construct a CheckoutResult
  */
 public final class CheckoutResultHelper {
 
     /**
-     * Helper method to construct a default PaymentResult from the error message
+     * Helper method to construct a default CheckoutResult from the error message
      *
      * @param errorMessage describing the error that occurred
      * @return the newly created PaymentResult
@@ -35,9 +35,9 @@ public final class CheckoutResultHelper {
     }
 
     /**
-     * Helper method to construct a PaymentResult with the provided Interaction.Code and error message
+     * Helper method to construct a CheckoutResult with the provided Interaction.Code and error message
      *
-     * @param interactionCode code used for creating the PaymentResult
+     * @param interactionCode code used for creating the CheckoutResult
      * @param errorMessage describing the error that occurred
      * @return the newly created PaymentResult
      */
@@ -48,7 +48,7 @@ public final class CheckoutResultHelper {
     }
 
     /**
-     * Helper method to construct a default PaymentResult from the Throwable
+     * Helper method to construct a default CheckoutResult from the Throwable
      *
      * @param error the throwable that caused the error
      * @return the newly created PaymentResult
@@ -58,11 +58,11 @@ public final class CheckoutResultHelper {
     }
 
     /**
-     * Helper method to construct a default PaymentResult from the Throwable object
+     * Helper method to construct a default CheckoutResult from the Throwable object
      *
-     * @param interactionCode code used for creating the PaymentResult
+     * @param interactionCode code used for creating the CheckoutResult
      * @param error the throwable that caused the error
-     * @return the newly created PaymentResult
+     * @return the newly created CheckoutResult
      */
     public static CheckoutResult fromThrowable(String interactionCode, Throwable error) {
         ErrorInfo errorInfo = null;
@@ -84,10 +84,10 @@ public final class CheckoutResultHelper {
     }
 
     /**
-     * Put the PaymentResult into the provided result intent.
+     * Put the CheckoutResult into the provided result intent.
      *
      * @param checkoutResult to be put inside the intent
-     * @param intent into which this PaymentResult should be stored
+     * @param intent into which this CheckoutResult should be stored
      */
     public static void putIntoResultIntent(CheckoutResult checkoutResult, Intent intent) {
         if (intent != null) {
@@ -96,10 +96,10 @@ public final class CheckoutResultHelper {
     }
 
     /**
-     * Get the PaymentResult from the result intent.
+     * Get the CheckoutResult from the result intent.
      *
-     * @param intent containing the PaymentResult
-     * @return PaymentResult or null if not stored in the intent
+     * @param intent containing the CheckoutResult
+     * @return CheckoutResult or null if not stored in the intent
      */
     public static CheckoutResult fromResultIntent(Intent intent) {
         if (intent != null) {

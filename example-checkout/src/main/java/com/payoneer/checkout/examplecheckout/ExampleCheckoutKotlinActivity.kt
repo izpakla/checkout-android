@@ -23,7 +23,6 @@ import androidx.test.espresso.IdlingResource
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.payoneer.checkout.Checkout
 import com.payoneer.checkout.CheckoutActivityResult
-import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.CheckoutTheme
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
@@ -56,7 +55,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         super.onResume()
         resultHandled = false
         if (activityResult != null) {
-            showPaymentActivityResult(activityResult!!)
+            showCheckoutActivityResult(activityResult!!)
             setResultHandledIdleState(true)
         }
     }
@@ -74,7 +73,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
             return
         }
         closeKeyboard()
-        clearPaymentResult()
+        clearCheckoutResult()
         checkout.theme(createPaymentTheme())
 
         // Uncomment if you like to fix e.g. the orientation to landscape mode
@@ -87,7 +86,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
             return
         }
         closeKeyboard()
-        clearPaymentResult()
+        clearCheckoutResult()
         checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE)
     }
 
@@ -115,7 +114,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(binder, 0)
     }
 
-    private fun clearPaymentResult() {
+    private fun clearCheckoutResult() {
         setResultHandledIdleState(false)
         binding.apply {
             labelResultheader.isVisible = false
@@ -139,9 +138,9 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         CheckoutTheme.createDefault()
     }
 
-    private fun showPaymentActivityResult(sdkResult: CheckoutActivityResult) {
+    private fun showCheckoutActivityResult(sdkResult: CheckoutActivityResult) {
         val resultCode = sdkResult.resultCode
-        val paymentResult = sdkResult.paymentResult
+        val paymentResult = sdkResult.checkoutResult
 
         val info = paymentResult?.resultInfo
         val interaction = paymentResult?.interaction

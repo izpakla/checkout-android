@@ -13,8 +13,6 @@ import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.CheckoutResult;
-import com.payoneer.checkout.CheckoutTheme;
-import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
@@ -123,7 +121,7 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
 
     @Override
     public void passOnActivityResult(CheckoutActivityResult checkoutActivityResult) {
-        setResultIntent(checkoutActivityResult.getResultCode(), checkoutActivityResult.getPaymentResult());
+        setResultIntent(checkoutActivityResult.getResultCode(), checkoutActivityResult.getCheckoutResult());
         supportFinishAfterTransition();
         idlingResources.setCloseIdlingState(true);
     }

@@ -68,7 +68,7 @@ final class SummaryPresenter {
     void handlePaymentActivityResult(CheckoutActivityResult activityResult) {
         switch (activityResult.getRequestCode()) {
             case SummaryActivity.PAYMENT_REQUEST_CODE:
-                handlePaymentResult(activityResult);
+                handleCheckoutResult(activityResult);
                 break;
             case SummaryActivity.EDIT_REQUEST_CODE:
                 handleEditResult(activityResult);
@@ -111,7 +111,7 @@ final class SummaryPresenter {
     private void handleEditResult(CheckoutActivityResult result) {
         switch (result.getResultCode()) {
             case RESULT_CODE_ERROR:
-                handlePaymentResultError(result.getPaymentResult());
+                handleCheckoutResultError(result.getCheckoutResult());
                 break;
             case RESULT_CANCELED:
                 // This resultCode is returned when the user closed the payment page and there is no payment result available
@@ -121,26 +121,26 @@ final class SummaryPresenter {
         }
     }
 
-    private void handlePaymentResult(CheckoutActivityResult activityResult) {
-        CheckoutResult checkoutResult = activityResult.getPaymentResult();
+    private void handleCheckoutResult(CheckoutActivityResult activityResult) {
+        CheckoutResult checkoutResult = activityResult.getCheckoutResult();
         switch (activityResult.getResultCode()) {
             case RESULT_CODE_PROCEED:
-                handlePaymentResultProceed(checkoutResult);
+                handleCheckoutResultProceed(checkoutResult);
                 break;
             case RESULT_CODE_ERROR:
-                handlePaymentResultError(checkoutResult);
+                handleCheckoutResultError(checkoutResult);
                 break;
         }
     }
 
-    private void handlePaymentResultProceed(CheckoutResult result) {
+    private void handleCheckoutResultProceed(CheckoutResult result) {
         Interaction interaction = result.getInteraction();
         if (interaction != null) {
             view.showPaymentConfirmation();
         }
     }
 
-    private void handlePaymentResultError(CheckoutResult result) {
+    private void handleCheckoutResultError(CheckoutResult result) {
         Interaction interaction = result.getInteraction();
         switch (interaction.getCode()) {
             case InteractionCode.ABORT:

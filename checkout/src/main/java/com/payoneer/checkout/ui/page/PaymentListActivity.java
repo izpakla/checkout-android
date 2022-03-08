@@ -98,7 +98,7 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         CheckoutActivityResult result = CheckoutActivityResult.fromActivityResult(requestCode, resultCode, data);
-        presenter.setPaymentActivityResult(result);
+        presenter.setCheckoutActivityResult(result);
     }
 
     @Override

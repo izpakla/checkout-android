@@ -25,7 +25,7 @@ import android.util.Log;
  */
 public final class CheckoutResult implements Parcelable {
 
-    public final static String EXTRA_PAYMENT_RESULT = "paymentresult";
+    public final static String EXTRA_CHECKOUT_RESULT = "checkoutResult";
     public final static Parcelable.Creator<CheckoutResult> CREATOR = new Parcelable.Creator<CheckoutResult>() {
 
         public CheckoutResult createFromParcel(Parcel in) {

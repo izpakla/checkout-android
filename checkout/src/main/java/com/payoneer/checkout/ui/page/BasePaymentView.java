@@ -84,14 +84,14 @@ interface BasePaymentView {
      * PaymentUI.RESULT_CODE_ERROR
      *
      * @param resultCode the current resultCode
-     * @param result containing the Payment result state
+     * @param result containing the checkout result state
      */
     void setPaymentResult(int resultCode, CheckoutResult result);
 
     /**
      * Pass on the ActivityResult to the activity that started this View.
      *
-     * @param checkoutActivityResult to be pass on
+     * @param checkoutActivityResult to be passed on
      */
     void passOnActivityResult(CheckoutActivityResult checkoutActivityResult);
 

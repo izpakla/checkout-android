@@ -10,13 +10,12 @@ package com.payoneer.checkout;
 
 import static com.payoneer.checkout.model.InteractionReason.CLIENTSIDE_ERROR;
 import static com.payoneer.checkout.model.InteractionReason.COMMUNICATION_FAILURE;
-import static com.payoneer.checkout.CheckoutResult.EXTRA_PAYMENT_RESULT;
+import static com.payoneer.checkout.CheckoutResult.EXTRA_CHECKOUT_RESULT;
 
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;
-import com.payoneer.checkout.CheckoutResult;
 
 import android.content.Intent;
 
@@ -92,7 +91,7 @@ public final class CheckoutResultHelper {
      */
     public static void putIntoResultIntent(CheckoutResult checkoutResult, Intent intent) {
         if (intent != null) {
-            intent.putExtra(EXTRA_PAYMENT_RESULT, checkoutResult);
+            intent.putExtra(EXTRA_CHECKOUT_RESULT, checkoutResult);
         }
     }
 
@@ -104,7 +103,7 @@ public final class CheckoutResultHelper {
      */
     public static CheckoutResult fromResultIntent(Intent intent) {
         if (intent != null) {
-            return intent.getParcelableExtra(EXTRA_PAYMENT_RESULT);
+            return intent.getParcelableExtra(EXTRA_CHECKOUT_RESULT);
         }
         return null;
     }

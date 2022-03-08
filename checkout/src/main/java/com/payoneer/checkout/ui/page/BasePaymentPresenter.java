@@ -37,7 +37,7 @@ abstract class BasePaymentPresenter {
     /**
      * Construct a new BasePaymentPresenter
      *
-     * @param configuration self URL of the ListResult
+     * @param configuration contains config for the request
      */
     BasePaymentPresenter(CheckoutConfiguration configuration, BasePaymentView view) {
         this.configuration = configuration;

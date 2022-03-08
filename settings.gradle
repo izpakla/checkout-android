@@ -1,1 +1,6 @@
-include ':checkout', ':example-checkout', ':example-shop', ':shared-test', 'riskprovider-iovation', 'paymentservice-googlepay'
+include ':checkout',
+        ':example-checkout',
+        ':example-shop',
+        ':shared-test',
+        ':riskprovider:iovation',
+        ':paymentservice-googlepay'

@@ -71,17 +71,8 @@ public class Redirect {
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("Redirect [");
-        if (url != null) {
-            builder.append("url=").append(url).append(", ");
-        }
         if (method != null) {
             builder.append("method=").append(method).append(", ");
-        }
-        if (parameters != null) {
-            builder.append("parameters=").append(parameters).append(", ");
-        }
-        if (suppressIFrame != null) {
-            builder.append("suppressIFrame=").append(suppressIFrame).append(", ");
         }
         if (type != null) {
             builder.append("type=").append(type);

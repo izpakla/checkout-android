@@ -313,7 +313,7 @@ public class Validator {
             return expYear <= (curYear + MAX_EXPIRY_YEAR);
         } catch (NumberFormatException e) {
             // this should never happen since the regex makes sure both are integers
-            Log.w("sdk_Validator", e);
+            Log.w("checkout-sdk", e);
         }
         return false;
     }

@@ -8,6 +8,8 @@
 
 package com.payoneer.checkout.ui.service.basic;
 
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 import static com.payoneer.checkout.model.InteractionCode.ABORT;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
 import static com.payoneer.checkout.model.InteractionCode.VERIFY;
@@ -15,9 +17,9 @@ import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
 import static com.payoneer.checkout.model.NetworkOperationType.PAYOUT;
 import static com.payoneer.checkout.model.RedirectType.HANDLER3DS2;
 import static com.payoneer.checkout.model.RedirectType.PROVIDER;
-import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
-import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.form.DeleteAccount;
 import com.payoneer.checkout.form.Operation;
@@ -25,11 +27,9 @@ import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.redirect.RedirectRequest;
-import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.ui.service.NetworkService;
 import com.payoneer.checkout.ui.service.OperationListener;
 import com.payoneer.checkout.ui.service.OperationService;
-import com.payoneer.checkout.CheckoutResultHelper;
 
 import android.content.Context;
 import android.util.Log;

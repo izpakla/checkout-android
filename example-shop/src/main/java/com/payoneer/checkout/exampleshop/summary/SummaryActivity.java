@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.Map;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.exampleshop.R;
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity;
 import com.payoneer.checkout.exampleshop.settings.SettingsActivity;
@@ -19,7 +20,6 @@ import com.payoneer.checkout.exampleshop.shared.BaseActivity;
 import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.PaymentMethod;
 import com.payoneer.checkout.model.PresetAccount;
-import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
 import com.payoneer.checkout.util.AccountMaskUtils;
 import com.payoneer.checkout.util.NetworkLogoLoader;

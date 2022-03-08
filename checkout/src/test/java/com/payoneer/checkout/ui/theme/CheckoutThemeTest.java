@@ -13,8 +13,8 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.payoneer.checkout.R;
 import com.payoneer.checkout.CheckoutTheme;
+import com.payoneer.checkout.R;
 
 public class CheckoutThemeTest {
 

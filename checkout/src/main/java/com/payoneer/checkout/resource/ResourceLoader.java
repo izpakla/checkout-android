@@ -31,7 +31,7 @@ import android.content.res.Resources;
 public final class ResourceLoader {
 
     /**
-     * Load the payment group definition json file and return the map of PaymentGroups that should be used in the PaymentPage.
+     * Load the payment group definition json file and return the map of PaymentGroups that should be used.
      * Each PaymentGroupItem code can be used as lookup key to find the corresponding PaymentGroup.
      *
      * @param res the System resources

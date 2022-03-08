@@ -14,6 +14,8 @@ import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 
 import java.util.concurrent.Callable;
 
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.exampleshop.shared.ShopException;
 import com.payoneer.checkout.model.Interaction;
@@ -21,8 +23,6 @@ import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.network.ListConnection;
-import com.payoneer.checkout.CheckoutActivityResult;
-import com.payoneer.checkout.CheckoutResult;
 
 import android.content.Context;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;

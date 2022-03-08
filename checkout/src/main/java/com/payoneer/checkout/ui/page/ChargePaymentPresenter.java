@@ -13,7 +13,7 @@ import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
 import static com.payoneer.checkout.ui.page.ChargePaymentActivity.TYPE_CHARGE_PRESET_ACCOUNT;
 
-import android.content.Context;
+import java.util.Objects;
 
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
@@ -36,7 +36,7 @@ import com.payoneer.checkout.ui.service.NetworkServiceListener;
 import com.payoneer.checkout.ui.service.PaymentSessionListener;
 import com.payoneer.checkout.ui.service.PaymentSessionService;
 
-import java.util.Objects;
+import android.content.Context;
 
 /**
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.

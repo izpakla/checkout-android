@@ -13,7 +13,10 @@ import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
 import static com.payoneer.checkout.model.NetworkOperationType.PRESET;
 import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 
-import android.content.Context;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.R;
@@ -34,10 +37,7 @@ import com.payoneer.checkout.resource.ResourceLoader;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.validation.Validator;
 
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import android.content.Context;
 
 /**
  * The PaymentSessionService providing asynchronous loading of the PaymentSession, validator and localizations.
@@ -98,7 +98,7 @@ public final class PaymentSessionService {
      * Load the PaymentSession with the given listUrl, this will load the list result, languages and validator.
      *
      * @param configuration is the object containing URL pointing to the list on the Payment API
-     * @param context       Android context in which this service is used
+     * @param context Android context in which this service is used
      */
     public void loadPaymentSession(final CheckoutConfiguration configuration, final Context context) {
 
@@ -160,9 +160,9 @@ public final class PaymentSessionService {
             throw new PaymentException("List operationType is not supported: " + operationType);
         }
         PaymentSession session = new PaymentSessionBuilder()
-                .setListResult(listResult)
-                .setPaymentGroups(loadPaymentGroups(context))
-                .build();
+            .setListResult(listResult)
+            .setPaymentGroups(loadPaymentGroups(context))
+            .build();
 
         loadValidator(context);
         loadLocalizations(context, session);

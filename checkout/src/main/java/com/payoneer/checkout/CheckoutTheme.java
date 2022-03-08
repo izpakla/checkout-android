@@ -11,7 +11,6 @@ package com.payoneer.checkout;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.StyleRes;
-import androidx.annotation.StyleableRes;
 
 /**
  * Class to hold the theme settings of the screens in the Android SDK

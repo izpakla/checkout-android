@@ -21,13 +21,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import org.junit.After;
 import org.junit.Before;
 
+import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.core.PaymentNetworkCodes;
 import com.payoneer.checkout.model.AccountInputData;
 import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListService;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 import com.payoneer.checkout.sharedtest.view.UiDeviceHelper;
-import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.ui.page.ChargePaymentActivity;
 import com.payoneer.checkout.ui.page.PaymentListActivity;
 

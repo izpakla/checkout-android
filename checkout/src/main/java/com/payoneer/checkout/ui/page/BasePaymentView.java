@@ -8,9 +8,9 @@
 
 package com.payoneer.checkout.ui.page;
 
-import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 
 import android.app.Activity;

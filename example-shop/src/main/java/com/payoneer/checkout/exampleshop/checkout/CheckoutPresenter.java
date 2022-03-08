@@ -8,14 +8,14 @@
 
 package com.payoneer.checkout.exampleshop.checkout;
 
-import static com.payoneer.checkout.model.RedirectType.SUMMARY;
 import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
+import static com.payoneer.checkout.model.RedirectType.SUMMARY;
 
-import com.payoneer.checkout.model.Interaction;
-import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.model.Interaction;
+import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.util.PaymentUtils;
 
 /**

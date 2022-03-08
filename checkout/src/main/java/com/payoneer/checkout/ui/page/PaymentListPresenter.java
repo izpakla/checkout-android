@@ -8,6 +8,8 @@
 
 package com.payoneer.checkout.ui.page;
 
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
+import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
 import static com.payoneer.checkout.model.InteractionCode.RELOAD;
 import static com.payoneer.checkout.model.InteractionCode.RETRY;
@@ -19,15 +21,16 @@ import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
 import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_CODE;
 import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_REASON;
-import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
-import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.CheckoutConfiguration;
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.form.DeleteAccount;
 import com.payoneer.checkout.form.Operation;
@@ -40,8 +43,6 @@ import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
-import com.payoneer.checkout.CheckoutActivityResult;
-import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.list.PaymentListListener;
 import com.payoneer.checkout.ui.model.AccountCard;
@@ -53,7 +54,6 @@ import com.payoneer.checkout.ui.service.NetworkServiceListener;
 import com.payoneer.checkout.ui.service.PaymentSessionListener;
 import com.payoneer.checkout.ui.service.PaymentSessionService;
 import com.payoneer.checkout.ui.widget.FormWidget;
-import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
@@ -71,7 +71,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private Operation operation;
     private DeleteAccount deleteAccount;
-    private CheckoutConfiguration configuration;
+    private final CheckoutConfiguration configuration;
 
     private PaymentSession session;
     private CheckoutActivityResult activityResult;

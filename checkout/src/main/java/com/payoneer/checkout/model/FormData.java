@@ -54,24 +54,4 @@ public class FormData {
     public void setDataPrivacyConsentUrl(final URL dataPrivacyConsentUrl) {
         this.dataPrivacyConsentUrl = dataPrivacyConsentUrl;
     }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("FormData [");
-        if (account != null) {
-            builder.append("account=").append(account).append(", ");
-        }
-        if (customer != null) {
-            builder.append("customer=").append(customer).append(", ");
-        }
-        if (installments != null) {
-            builder.append("installments=").append(installments).append(", ");
-        }
-        if (dataPrivacyConsentUrl != null) {
-            builder.append("dataPrivacyConsentUrl=").append(dataPrivacyConsentUrl);
-        }
-        builder.append("]");
-        return builder.toString();
-    }
 }

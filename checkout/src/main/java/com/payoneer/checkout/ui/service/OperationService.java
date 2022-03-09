@@ -14,12 +14,11 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.WorkerSubscriber;
 import com.payoneer.checkout.core.WorkerTask;
 import com.payoneer.checkout.core.Workers;
-import com.payoneer.checkout.form.BrowserDataBuilder;
 import com.payoneer.checkout.form.DeleteAccount;
 import com.payoneer.checkout.form.Operation;
-import com.payoneer.checkout.model.BrowserData;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.network.PaymentConnection;
+import com.payoneer.checkout.risk.RiskProviders;
 
 import android.content.Context;
 
@@ -29,18 +28,14 @@ import android.content.Context;
  */
 public final class OperationService {
     private final PaymentConnection paymentConnection;
-    private final BrowserData browserData;
     private OperationListener listener;
     private WorkerTask<OperationResult> task;
 
     /**
      * Create a new OperationService
-     *
-     * @param context context in which this service will run
      */
-    public OperationService(Context context) {
-        paymentConnection = new PaymentConnection(context);
-        browserData = BrowserDataBuilder.createFromContext(context);
+    public OperationService() {
+        paymentConnection = new PaymentConnection();
     }
 
     /**
@@ -75,8 +70,9 @@ public final class OperationService {
      * Delete a saved account
      *
      * @param account to be deleted
+     * @param context in which this account will be deleted
      */
-    public void deleteAccount(final DeleteAccount account) {
+    public void deleteAccount(final DeleteAccount account, final Context context) {
 
         if (isActive()) {
             throw new IllegalStateException("OperationService is already active, stop first");
@@ -84,7 +80,7 @@ public final class OperationService {
         task = WorkerTask.fromCallable(new Callable<OperationResult>() {
             @Override
             public OperationResult call() throws PaymentException {
-                return asyncDeleteAccount(account);
+                return asyncDeleteAccount(account, context);
             }
         });
         task.subscribe(new WorkerSubscriber<OperationResult>() {
@@ -113,8 +109,9 @@ public final class OperationService {
      * Post an operation to the Payment API
      *
      * @param operation to be posted to the Payment API
+     * @param context in which this operation will be posted
      */
-    public void postOperation(final Operation operation) {
+    public void postOperation(final Operation operation, final Context context) {
 
         if (isActive()) {
             throw new IllegalStateException("Already posting operation, stop first");
@@ -122,7 +119,7 @@ public final class OperationService {
         task = WorkerTask.fromCallable(new Callable<OperationResult>() {
             @Override
             public OperationResult call() throws PaymentException {
-                return asyncPostOperation(operation);
+                return asyncPostOperation(operation, context);
             }
         });
         task.subscribe(new WorkerSubscriber<OperationResult>() {
@@ -147,12 +144,21 @@ public final class OperationService {
         Workers.getInstance().forNetworkTasks().execute(task);
     }
 
-    private OperationResult asyncPostOperation(Operation operation) throws PaymentException {
-        operation.setBrowserData(browserData);
+    private OperationResult asyncPostOperation(final Operation operation, final Context context) throws PaymentException {
+        paymentConnection.initialize(context);
+        addRiskProviderRequests(operation, context);
         return paymentConnection.postOperation(operation);
     }
 
-    private OperationResult asyncDeleteAccount(DeleteAccount account) throws PaymentException {
+    private OperationResult asyncDeleteAccount(final DeleteAccount account, final Context context) throws PaymentException {
+        paymentConnection.initialize(context);
         return paymentConnection.deleteAccount(account);
+    }
+
+    private void addRiskProviderRequests(final Operation operation, final Context context) {
+        RiskProviders riskProviders = RiskProviders.getInstance();
+        if (riskProviders != null) {
+            operation.putProviderRequests(riskProviders.getRiskProviderRequests(context));
+        }
     }
 }

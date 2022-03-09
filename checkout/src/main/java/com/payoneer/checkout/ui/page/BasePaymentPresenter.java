@@ -68,7 +68,7 @@ abstract class BasePaymentPresenter {
     }
 
     NetworkService loadNetworkService(String code, String paymentMethod) throws PaymentException {
-        NetworkService service = NetworkServiceLookup.createService(view.getActivity(), code, paymentMethod);
+        NetworkService service = NetworkServiceLookup.createService(code, paymentMethod);
         if (service == null) {
             throw new PaymentException("Missing NetworkService for: " + code + ", " + paymentMethod);
         }

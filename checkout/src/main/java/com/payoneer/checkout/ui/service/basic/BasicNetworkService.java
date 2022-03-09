@@ -49,11 +49,9 @@ public final class BasicNetworkService extends NetworkService {
     /**
      * Create a new BasicNetworkService, this service is a basic implementation
      * that sends an operation to the Payment API.
-     *
-     * @param context context in which this network service will operate
      */
-    public BasicNetworkService(Context context) {
-        operationService = new OperationService(context);
+    public BasicNetworkService() {
+        operationService = new OperationService();
         operationService.setListener(new OperationListener() {
 
             @Override
@@ -84,17 +82,17 @@ public final class BasicNetworkService extends NetworkService {
     }
 
     @Override
-    public void processPayment(Operation operation) {
+    public void processPayment(Operation operation, Context context) {
         this.operationType = operation.getOperationType();
         listener.showProgress(true);
-        operationService.postOperation(operation);
+        operationService.postOperation(operation, context);
     }
 
     @Override
-    public void deleteAccount(DeleteAccount account) {
+    public void deleteAccount(DeleteAccount account, Context context) {
         this.operationType = account.getOperationType();
         listener.showProgress(true);
-        operationService.deleteAccount(account);
+        operationService.deleteAccount(account, context);
     }
 
     @Override

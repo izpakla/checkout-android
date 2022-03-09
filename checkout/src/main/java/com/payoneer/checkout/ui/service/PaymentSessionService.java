@@ -34,6 +34,7 @@ import com.payoneer.checkout.network.ListConnection;
 import com.payoneer.checkout.network.LocalizationConnection;
 import com.payoneer.checkout.resource.PaymentGroup;
 import com.payoneer.checkout.resource.ResourceLoader;
+import com.payoneer.checkout.risk.RiskProviders;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.validation.Validator;
 
@@ -58,12 +59,10 @@ public final class PaymentSessionService {
 
     /**
      * Create a new PaymentSessionService, this service is used to load the PaymentSession.
-     *
-     * @param context context in which this service will run
      */
-    public PaymentSessionService(Context context) {
-        this.listConnection = new ListConnection(context);
-        this.locConnection = new LocalizationConnection(context);
+    public PaymentSessionService() {
+        this.listConnection = new ListConnection();
+        this.locConnection = new LocalizationConnection();
     }
 
     /**
@@ -149,6 +148,9 @@ public final class PaymentSessionService {
     }
 
     private PaymentSession asyncLoadPaymentSession(String listUrl, Context context) throws PaymentException {
+        listConnection.initialize(context);
+        locConnection.initialize(context);
+
         ListResult listResult = listConnection.getListResult(listUrl);
 
         String integrationType = listResult.getIntegrationType();
@@ -165,7 +167,8 @@ public final class PaymentSessionService {
             .build();
 
         loadValidator(context);
-        loadLocalizations(context, session);
+        loadLocalizations(session, context);
+        loadRiskProviders(session, context);
         return session;
     }
 
@@ -180,7 +183,7 @@ public final class PaymentSessionService {
         }
     }
 
-    private void loadLocalizations(Context context, PaymentSession session) throws PaymentException {
+    private void loadLocalizations(final PaymentSession session, final Context context) throws PaymentException {
         String listUrl = session.getListSelfUrl();
         if (!Objects.equals(listUrl, cache.getCacheId())) {
             cache.clear();
@@ -206,5 +209,17 @@ public final class PaymentSessionService {
             cache.put(langUrl, holder);
         }
         return holder;
+    }
+
+    private void loadRiskProviders(final PaymentSession session, final Context context) {
+        String listUrl = session.getListSelfUrl();
+        RiskProviders riskProviders = RiskProviders.getInstance();
+
+        if (riskProviders != null && riskProviders.containsRiskProvidersId(listUrl)) {
+            return;
+        }
+        riskProviders = new RiskProviders(listUrl);
+        riskProviders.initializeRiskProviders(session.getRiskProviders(), context);
+        RiskProviders.setInstance(riskProviders);
     }
 }

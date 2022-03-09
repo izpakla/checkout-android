@@ -13,7 +13,7 @@ import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
 import static com.payoneer.checkout.ui.page.ChargePaymentActivity.TYPE_CHARGE_PRESET_ACCOUNT;
 
-import java.util.Objects;
+import android.content.Context;
 
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
@@ -36,7 +36,7 @@ import com.payoneer.checkout.ui.service.NetworkServiceListener;
 import com.payoneer.checkout.ui.service.PaymentSessionListener;
 import com.payoneer.checkout.ui.service.PaymentSessionService;
 
-import android.content.Context;
+import java.util.Objects;
 
 /**
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
@@ -58,7 +58,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
      */
     ChargePaymentPresenter(CheckoutConfiguration configuration, BasePaymentView view) {
         super(configuration, view);
-        sessionService = new PaymentSessionService(view.getActivity());
+        sessionService = new PaymentSessionService();
         sessionService.setListener(this);
     }
 
@@ -137,6 +137,16 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         RedirectService.redirect(context, redirectRequest);
     }
 
+    private void processPayment() {
+        try {
+            networkService = loadNetworkService(operation.getNetworkCode(), operation.getPaymentMethod());
+            networkService.setListener(this);
+            processPayment(operation);
+        } catch (PaymentException e) {
+            closeWithErrorCode(CheckoutResultHelper.fromThrowable(e));
+        }
+    }
+
     boolean onBackPressed() {
         view.showWarningMessage(Localization.translate(CHARGE_INTERRUPTED));
         return true;
@@ -161,14 +171,9 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
             closeWithErrorCode("operation not found in ListResult");
             return;
         }
-        try {
-            this.session = session;
-            networkService = loadNetworkService(operation.getNetworkCode(), operation.getPaymentMethod());
-            networkService.setListener(this);
-            processPayment(operation);
-        } catch (PaymentException e) {
-            closeWithErrorCode(CheckoutResultHelper.fromThrowable(e));
-        }
+
+        this.session = session;
+        processPayment();
     }
 
     private void handleLoadingError(Throwable cause) {
@@ -238,7 +243,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     private void processPayment(Operation operation) {
         setState(PROCESS);
-        networkService.processPayment(operation);
+        networkService.processPayment(operation, view.getActivity());
     }
 
     private void showMessageAndCloseWithErrorCode(CheckoutResult result) {

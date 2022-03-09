@@ -13,11 +13,11 @@ package com.payoneer.checkout.exampleshop.checkout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.payoneer.checkout.CheckoutActivityResult
+import com.payoneer.checkout.CheckoutResult
 import com.payoneer.checkout.exampleshop.util.Event
 import com.payoneer.checkout.model.InteractionCode
 import com.payoneer.checkout.model.RedirectType
-import com.payoneer.checkout.ui.PaymentActivityResult
-import com.payoneer.checkout.ui.PaymentResult
 import com.payoneer.checkout.util.PaymentUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -39,15 +39,15 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
      *
      * @param activityResult containing the payment result
      */
-    fun handlePaymentActivityResult(activityResult: PaymentActivityResult) {
-        val paymentResult = activityResult.paymentResult
+    fun handlePaymentActivityResult(activityResult: CheckoutActivityResult) {
+        val checkoutResult = activityResult.checkoutResult
         when (activityResult.resultCode) {
-            PaymentActivityResult.RESULT_CODE_PROCEED -> handlePaymentResultProceed(paymentResult)
-            PaymentActivityResult.RESULT_CODE_ERROR -> handlePaymentResultError(paymentResult)
+            CheckoutActivityResult.RESULT_CODE_PROCEED -> handlePaymentResultProceed(checkoutResult)
+            CheckoutActivityResult.RESULT_CODE_ERROR -> handlePaymentResultError(checkoutResult)
         }
     }
 
-    private fun handlePaymentResultProceed(result: PaymentResult) {
+    private fun handlePaymentResultProceed(result: CheckoutResult) {
         if (result.interaction == null) return
         if (PaymentUtils.containsRedirectType(result.operationResult, RedirectType.SUMMARY)) {
             _showPaymentSummary.value = Event()
@@ -56,7 +56,7 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
         _showPaymentConfirmation.value = Event()
     }
 
-    private fun handlePaymentResultError(result: PaymentResult) {
+    private fun handlePaymentResultError(result: CheckoutResult) {
         val interaction = result.interaction
         when (interaction.code) {
             InteractionCode.ABORT -> {

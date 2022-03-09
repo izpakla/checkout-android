@@ -16,6 +16,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.payoneer.checkout.CheckoutActivityResult
+import com.payoneer.checkout.CheckoutResult
 import com.payoneer.checkout.core.PaymentException
 import com.payoneer.checkout.exampleshop.shared.BaseActivity.Companion.EDIT_REQUEST_CODE
 import com.payoneer.checkout.exampleshop.shared.BaseActivity.Companion.PAYMENT_REQUEST_CODE
@@ -27,8 +29,6 @@ import com.payoneer.checkout.model.InteractionCode
 import com.payoneer.checkout.model.ListResult
 import com.payoneer.checkout.model.PresetAccount
 import com.payoneer.checkout.network.ListConnection
-import com.payoneer.checkout.ui.PaymentActivityResult
-import com.payoneer.checkout.ui.PaymentResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +58,7 @@ class SummaryViewModel @Inject constructor(@ApplicationContext val context: Cont
     private val _loadPaymentDetails = MutableLiveData<ContentEvent<Boolean>>()
     val loadPaymentDetails: LiveData<ContentEvent<Boolean>> get() = _loadPaymentDetails
 
-    fun handlePaymentActivityResult(activityResult: PaymentActivityResult) {
+    fun handlePaymentActivityResult(activityResult: CheckoutActivityResult) {
         when (activityResult.requestCode) {
             PAYMENT_REQUEST_CODE -> handlePaymentResult(activityResult)
             EDIT_REQUEST_CODE -> handleEditResult(activityResult)
@@ -96,37 +96,37 @@ class SummaryViewModel @Inject constructor(@ApplicationContext val context: Cont
         continuation: Continuation<CoroutineResult<ListResult>?>
     ) {
         try {
-            val listResult = ListConnection(context).getListResult(listUrl)
+            val listResult = ListConnection().getListResult(listUrl)
             continuation.resume(CoroutineResult(data = listResult))
         } catch (e: PaymentException) {
             continuation.resume(CoroutineResult(error = e))
         }
     }
 
-    private fun handleEditResult(result: PaymentActivityResult) {
+    private fun handleEditResult(result: CheckoutActivityResult) {
         when (result.resultCode) {
-            PaymentActivityResult.RESULT_CODE_ERROR -> handlePaymentResultError(result.paymentResult)
-            Activity.RESULT_CANCELED, PaymentActivityResult.RESULT_CODE_PROCEED -> _loadPaymentDetails.value =
+            CheckoutActivityResult.RESULT_CODE_ERROR -> handlePaymentResultError(result.checkoutResult)
+            Activity.RESULT_CANCELED, CheckoutActivityResult.RESULT_CODE_PROCEED -> _loadPaymentDetails.value =
                 ContentEvent(true)
         }
     }
 
-    private fun handlePaymentResult(activityResult: PaymentActivityResult) {
-        val paymentResult = activityResult.paymentResult
+    private fun handlePaymentResult(activityResult: CheckoutActivityResult) {
+        val paymentResult = activityResult.checkoutResult
         when (activityResult.resultCode) {
-            PaymentActivityResult.RESULT_CODE_PROCEED -> handlePaymentResultProceed(paymentResult)
-            PaymentActivityResult.RESULT_CODE_ERROR -> handlePaymentResultError(paymentResult)
+            CheckoutActivityResult.RESULT_CODE_PROCEED -> handlePaymentResultProceed(paymentResult)
+            CheckoutActivityResult.RESULT_CODE_ERROR -> handlePaymentResultError(paymentResult)
         }
     }
 
-    private fun handlePaymentResultProceed(result: PaymentResult) {
+    private fun handlePaymentResultProceed(result: CheckoutResult) {
         val interaction = result.interaction
         if (interaction != null) {
             _showPaymentConfirmation.value = Event()
         }
     }
 
-    private fun handlePaymentResultError(result: PaymentResult) {
+    private fun handlePaymentResultError(result: CheckoutResult) {
         val interaction = result.interaction
         when (interaction.code) {
             InteractionCode.ABORT -> if (!result.isNetworkFailure) {

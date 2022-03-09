@@ -13,12 +13,12 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.core.content.res.ResourcesCompat
+import com.payoneer.checkout.Checkout
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
 import com.payoneer.checkout.exampleshop.databinding.ActivityCheckoutBinding
 import com.payoneer.checkout.exampleshop.shared.BaseActivity
 import com.payoneer.checkout.exampleshop.summary.SummaryActivity
-import com.payoneer.checkout.ui.PaymentUI
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -74,9 +74,8 @@ class CheckoutActivity : BaseActivity() {
     }
 
     private fun onButtonClicked() {
-        val paymentUI = PaymentUI.getInstance()
-        paymentUI.listUrl = listUrl
-        paymentUI.showPaymentPage(this, PAYMENT_REQUEST_CODE)
+        val checkout = Checkout.with(listUrl)
+        checkout.showPaymentList(this, PAYMENT_REQUEST_CODE)
     }
 
     override fun onResume() {

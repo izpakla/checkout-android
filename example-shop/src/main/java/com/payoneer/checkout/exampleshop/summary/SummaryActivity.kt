@@ -18,6 +18,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.test.espresso.IdlingResource
+import com.payoneer.checkout.Checkout
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
 import com.payoneer.checkout.exampleshop.databinding.ActivitySummaryBinding
@@ -28,7 +29,6 @@ import com.payoneer.checkout.exampleshop.util.Resource
 import com.payoneer.checkout.model.AccountMask
 import com.payoneer.checkout.model.PaymentMethod
 import com.payoneer.checkout.model.PresetAccount
-import com.payoneer.checkout.ui.PaymentUI
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
 import com.payoneer.checkout.util.AccountMaskUtils
 import com.payoneer.checkout.util.NetworkLogoLoader
@@ -45,6 +45,7 @@ class SummaryActivity : BaseActivity() {
     private lateinit var layoutSummarydetailsBinding: LayoutSummarydetailsBinding
     private lateinit var presetTitle: TextView
     private lateinit var presetSubtitle: TextView
+    private lateinit var checkout: Checkout
 
     // For automated UI Testing
     private var loadCompleted = false
@@ -54,6 +55,7 @@ class SummaryActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySummaryBinding.inflate(layoutInflater)
         layoutSummarydetailsBinding = LayoutSummarydetailsBinding.bind(binding.root)
+        checkout = Checkout.with(listUrl)
         setContentView(binding.root)
         initToolbar()
         initListenersAndViews()
@@ -173,14 +175,12 @@ class SummaryActivity : BaseActivity() {
     }
 
     private fun showPaymentList() {
-        val paymentUI = PaymentUI.getInstance()
-        paymentUI.showPaymentPage(this, EDIT_REQUEST_CODE)
+        checkout.showPaymentList(this, EDIT_REQUEST_CODE)
     }
 
     private fun onPayClicked() {
         if (presetAccount != null) {
-            val paymentUI = PaymentUI.getInstance()
-            paymentUI.chargePresetAccount(this, PAYMENT_REQUEST_CODE)
+            checkout.chargePresetAccount(this, PAYMENT_REQUEST_CODE)
         }
     }
 

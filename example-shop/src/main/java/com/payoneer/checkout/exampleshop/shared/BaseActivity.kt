@@ -13,8 +13,8 @@ import android.view.MenuItem
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.test.espresso.IdlingResource
+import com.payoneer.checkout.CheckoutActivityResult
 import com.payoneer.checkout.exampleshop.R
-import com.payoneer.checkout.ui.PaymentActivityResult
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
@@ -25,7 +25,7 @@ import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
 abstract class BaseActivity : AppCompatActivity() {
 
     protected var listUrl: String? = null
-    protected var activityResult: PaymentActivityResult? = null
+    protected var activityResult: CheckoutActivityResult? = null
     private var resultHandledIdlingResource: SimpleIdlingResource? = null
     private var resultHandled = false
 
@@ -59,7 +59,7 @@ abstract class BaseActivity : AppCompatActivity() {
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PAYMENT_REQUEST_CODE || requestCode == EDIT_REQUEST_CODE) {
-            activityResult = PaymentActivityResult.fromActivityResult(requestCode, resultCode, data)
+            activityResult = CheckoutActivityResult.fromActivityResult(requestCode, resultCode, data)
         }
     }
 

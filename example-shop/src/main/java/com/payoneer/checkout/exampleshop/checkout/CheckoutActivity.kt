@@ -95,7 +95,7 @@ class CheckoutActivity : BaseActivity() {
          * Create an Intent to launch this checkout activity
          *
          * @param context the context
-         * @param listUrl url of the current list
+         * @param checkoutConfiguration contains the listUrl and theming
          * @return the newly created intent
          */
         @JvmStatic

@@ -204,7 +204,7 @@ class SummaryActivity : BaseActivity() {
          * Create an Intent to launch this checkout activity
          *
          * @param context the context
-         * @param listUrl the URL pointing to the list
+         * @param checkoutConfiguration contains the listUrl and theming
          * @return the newly created intent
          */
         fun createStartIntent(context: Context?, checkoutConfiguration: CheckoutConfiguration?): Intent {

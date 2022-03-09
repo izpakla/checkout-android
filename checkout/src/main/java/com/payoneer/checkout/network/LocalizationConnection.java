@@ -20,8 +20,6 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.localization.LocalizationHolder;
 import com.payoneer.checkout.localization.MapLocalizationHolder;
 
-import android.content.Context;
-
 /**
  * Class implementing the communication with the payment API to load localization files
  * <p>
@@ -31,15 +29,6 @@ import android.content.Context;
  * at the same time.
  */
 public final class LocalizationConnection extends BaseConnection {
-
-    /**
-     * Construct a new LocalizationConnection
-     *
-     * @param context used to create the custom UserAgent value
-     */
-    public LocalizationConnection(Context context) {
-        super(context);
-    }
 
     /**
      * Load the localization file given the URL.

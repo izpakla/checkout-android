@@ -15,12 +15,12 @@ ext.getVersionNameFromFile = { ->
 }
 
 ext.getVersionCode = { ->
-   return getVersionCodeFromFile()
+    return getVersionCodeFromFile()
 }
 
 ext.getVersionName = { ->
     def versionName = getVersionNameFromFile()
-    return isReleaseVersion() ? versionName : (versionName  + '-SNAPSHOT')
+    return isReleaseVersion() ? versionName : (versionName + '-SNAPSHOT')
 }
 
 ext.increaseVersionName = { index ->

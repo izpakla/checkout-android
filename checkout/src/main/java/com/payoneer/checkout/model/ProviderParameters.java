@@ -8,7 +8,9 @@
 
 package com.payoneer.checkout.model;
 
+import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Describes a collection of provider specific parameters.
@@ -16,8 +18,12 @@ import java.util.List;
 public class ProviderParameters {
     /** optional, provider code. */
     private String providerCode;
+    /** optional, provider type. */
+    private String providerType;
     /** collection of parameters. */
     private List<Parameter> parameters;
+    /** Simple API, always present */
+    private Map<String, URL> links;
 
     public String getProviderCode() {
         return providerCode;
@@ -25,6 +31,14 @@ public class ProviderParameters {
 
     public void setProviderCode(final String providerCode) {
         this.providerCode = providerCode;
+    }
+
+    public String getProviderType() {
+        return providerType;
+    }
+
+    public void setProviderType(final String providerType) {
+        this.providerType = providerType;
     }
 
     public List<Parameter> getParameters() {
@@ -35,14 +49,11 @@ public class ProviderParameters {
         this.parameters = parameters;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("ProviderParameters [");
-        if (providerCode != null) {
-            builder.append("providerCode=").append(providerCode);
-        }
-        builder.append("]");
-        return builder.toString();
+    public Map<String, URL> getLinks() {
+        return links;
+    }
+
+    public void setLinks(final Map<String, URL> links) {
+        this.links = links;
     }
 }

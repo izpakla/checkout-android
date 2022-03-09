@@ -35,19 +35,19 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
     val stopPaymentWithErrorMessage: LiveData<Event> get() = _stopPaymentWithErrorMessage
 
     /**
-     * Handle the PaymentActivityResult received from the Checkout SDK.
+     * Handle the CheckoutActivityResult received from the Checkout SDK.
      *
-     * @param activityResult containing the payment result
+     * @param activityResult containing the checkout result
      */
-    fun handlePaymentActivityResult(activityResult: CheckoutActivityResult) {
+    fun handleCheckoutActivityResult(activityResult: CheckoutActivityResult) {
         val checkoutResult = activityResult.checkoutResult
         when (activityResult.resultCode) {
-            CheckoutActivityResult.RESULT_CODE_PROCEED -> handlePaymentResultProceed(checkoutResult)
-            CheckoutActivityResult.RESULT_CODE_ERROR -> handlePaymentResultError(checkoutResult)
+            CheckoutActivityResult.RESULT_CODE_PROCEED -> handleCheckoutResultProceed(checkoutResult)
+            CheckoutActivityResult.RESULT_CODE_ERROR -> handleCheckoutResultError(checkoutResult)
         }
     }
 
-    private fun handlePaymentResultProceed(result: CheckoutResult) {
+    private fun handleCheckoutResultProceed(result: CheckoutResult) {
         if (result.interaction == null) return
         if (PaymentUtils.containsRedirectType(result.operationResult, RedirectType.SUMMARY)) {
             _showPaymentSummary.value = Event()
@@ -56,7 +56,7 @@ class CheckoutViewModel @Inject constructor() : ViewModel() {
         _showPaymentConfirmation.value = Event()
     }
 
-    private fun handlePaymentResultError(result: CheckoutResult) {
+    private fun handleCheckoutResultError(result: CheckoutResult) {
         val interaction = result.interaction
         when (interaction.code) {
             InteractionCode.ABORT -> {

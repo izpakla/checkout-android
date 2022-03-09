@@ -2,11 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 android {
-    lintOptions {
-        abortOnError true
-        checkDependencies true
-        ignoreWarnings true
-    }
 
     testOptions {
         unitTests {
@@ -38,6 +33,11 @@ android {
         }
         applicationVariants {
         }
+    }
+    lint {
+        abortOnError true
+        checkDependencies true
+        ignoreWarnings true
     }
 }
 

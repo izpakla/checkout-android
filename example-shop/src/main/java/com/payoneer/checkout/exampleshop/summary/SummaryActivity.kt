@@ -10,7 +10,6 @@ package com.payoneer.checkout.exampleshop.summary
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -19,6 +18,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.test.espresso.IdlingResource
 import com.payoneer.checkout.Checkout
+import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
 import com.payoneer.checkout.exampleshop.databinding.ActivitySummaryBinding
@@ -55,7 +55,7 @@ class SummaryActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySummaryBinding.inflate(layoutInflater)
         layoutSummarydetailsBinding = LayoutSummarydetailsBinding.bind(binding.root)
-        checkout = Checkout.with(listUrl)
+        checkout = Checkout.with(checkoutConfiguration)
         setContentView(binding.root)
         initToolbar()
         initListenersAndViews()
@@ -78,7 +78,7 @@ class SummaryActivity : BaseActivity() {
         }
         viewModel.loadPaymentDetails.observe(this) {
             it.getContentIfNotHandled()?.let { load ->
-                if (load) viewModel.loadPaymentDetails(listUrl!!)
+                if (load) viewModel.loadPaymentDetails(checkoutConfiguration!!)
             }
         }
         viewModel.showPaymentDetails.observe(this) { resource ->
@@ -115,10 +115,10 @@ class SummaryActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         if (activityResult != null) {
-            viewModel.handlePaymentActivityResult(activityResult!!)
+            viewModel.handleCheckoutActivityResult(activityResult!!)
             activityResult = null
         } else {
-            viewModel.loadPaymentDetails(listUrl!!)
+            viewModel.loadPaymentDetails(checkoutConfiguration!!)
         }
     }
 
@@ -207,11 +207,11 @@ class SummaryActivity : BaseActivity() {
          * @param listUrl the URL pointing to the list
          * @return the newly created intent
          */
-        fun createStartIntent(context: Context?, listUrl: String?): Intent {
+        fun createStartIntent(context: Context?, checkoutConfiguration: CheckoutConfiguration?): Intent {
             requireNotNull(context) { "context may not be null" }
-            require(!TextUtils.isEmpty(listUrl)) { "listUrl may not be null or empty" }
+            requireNotNull(checkoutConfiguration) { "checkoutConfiguration cannot be null" }
             val intent = Intent(context, SummaryActivity::class.java)
-            intent.putExtra(EXTRA_LISTURL, listUrl)
+            intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, checkoutConfiguration)
             return intent
         }
     }

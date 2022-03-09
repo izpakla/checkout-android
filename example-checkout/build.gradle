@@ -6,11 +6,6 @@ assemble.dependsOn('lint')
 
 android {
 
-    lintOptions {
-        abortOnError true
-        checkDependencies true
-        ignoreWarnings true
-    }
 
     compileOptions {
         sourceCompatibility rootProject.javaCompatVersion
@@ -74,6 +69,11 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+    lint {
+        abortOnError true
+        checkDependencies true
+        ignoreWarnings true
     }
 }
 

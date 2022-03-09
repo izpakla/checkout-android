@@ -14,6 +14,7 @@ import android.text.TextUtils
 import android.util.Patterns
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.checkout.CheckoutActivity.Companion.createStartIntent
 import com.payoneer.checkout.exampleshop.databinding.ActivitySettingsBinding
@@ -32,7 +33,6 @@ class SettingsActivity : BaseActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         editTextListInput = binding.inputListurl
-        listUrl.let { url -> editTextListInput.setText(url) }
         binding.buttonSettings.setOnClickListener { onButtonClicked() }
     }
 
@@ -43,7 +43,8 @@ class SettingsActivity : BaseActivity() {
             showErrorDialog(R.string.dialog_error_listurl_invalid)
             return
         }
-        val intent = createStartIntent(this, listUrl)
+        val checkoutConfiguration = CheckoutConfiguration.createBuilder(listUrl).build();
+        val intent = createStartIntent(this, checkoutConfiguration)
         startActivity(intent)
     }
 

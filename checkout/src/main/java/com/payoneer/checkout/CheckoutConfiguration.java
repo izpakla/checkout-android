@@ -11,10 +11,12 @@ package com.payoneer.checkout;
 import android.content.pm.ActivityInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 /**
  * The CheckoutConfiguration is the class containing information about the payment session.
+ * This class contains the listUrl and theming of the screens and dialogs.
  */
 public final class CheckoutConfiguration implements Parcelable {
 
@@ -81,6 +83,20 @@ public final class CheckoutConfiguration implements Parcelable {
         return orientation;
     }
 
+    public static Builder createBuilder(final String listUrl) {
+        if (TextUtils.isEmpty(listUrl)) {
+            throw new IllegalArgumentException("listUrl cannot be null or empty");
+        }
+        return new Builder(listUrl);
+    }
+
+    public static Builder createBuilder(final CheckoutConfiguration checkoutConfiguration) {
+        if (checkoutConfiguration == null) {
+            throw new IllegalArgumentException("checkoutConfiguration cannot be null");
+        }
+        return new Builder(checkoutConfiguration);
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -97,7 +113,7 @@ public final class CheckoutConfiguration implements Parcelable {
         return builder.toString();
     }
 
-    static final class Builder {
+    public static final class Builder {
         String listUrl;
         int orientation;
         CheckoutTheme checkoutTheme;
@@ -107,7 +123,7 @@ public final class CheckoutConfiguration implements Parcelable {
          *
          * @param listUrl mandatory parameter for creating this builder
          */
-        Builder(final String listUrl) {
+        private Builder(@NonNull final String listUrl) {
             this.listUrl = listUrl;
             this.orientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED;
             this.checkoutTheme = CheckoutTheme.createDefault();
@@ -118,7 +134,7 @@ public final class CheckoutConfiguration implements Parcelable {
          *
          * @param checkoutConfiguration mandatory parameter for creating this builder
          */
-        Builder(final CheckoutConfiguration checkoutConfiguration) {
+        private Builder(@NonNull final CheckoutConfiguration checkoutConfiguration) {
             this.listUrl = checkoutConfiguration.listUrl;
             this.orientation = checkoutConfiguration.orientation;
             this.checkoutTheme = checkoutConfiguration.checkoutTheme;
@@ -137,7 +153,7 @@ public final class CheckoutConfiguration implements Parcelable {
          *
          * @param orientation mode for the screens
          */
-        void setOrientation(final int orientation) {
+        public void orientation(final int orientation) {
             switch (orientation) {
                 case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
                 case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
@@ -151,14 +167,14 @@ public final class CheckoutConfiguration implements Parcelable {
             }
         }
 
-        void setTheme(final CheckoutTheme checkoutTheme) {
+        public void theme(final CheckoutTheme checkoutTheme) {
             if (checkoutTheme == null) {
                 throw new IllegalStateException("CheckoutTheme cannot be null");
             }
             this.checkoutTheme = checkoutTheme;
         }
 
-        CheckoutConfiguration build() {
+        public CheckoutConfiguration build() {
             return new CheckoutConfiguration(this);
         }
     }

@@ -35,7 +35,7 @@ public final class Checkout {
      * @return newly created Checkout Object
      */
     public static Checkout with(final String listUrl) {
-        CheckoutConfiguration.Builder builder = new CheckoutConfiguration.Builder(listUrl);
+        CheckoutConfiguration.Builder builder = CheckoutConfiguration.createBuilder(listUrl);
         return new Checkout(builder);
     }
 
@@ -46,7 +46,7 @@ public final class Checkout {
      * @return newly created Checkout Object
      */
     public static Checkout with(final CheckoutConfiguration checkoutConfiguration) {
-        CheckoutConfiguration.Builder builder = new CheckoutConfiguration.Builder(checkoutConfiguration);
+        CheckoutConfiguration.Builder builder = CheckoutConfiguration.createBuilder(checkoutConfiguration);
         return new Checkout(builder);
     }
 
@@ -56,7 +56,7 @@ public final class Checkout {
      * @return this Checkout Object
      */
     public Checkout orientation(final int orientation) {
-        builder.setOrientation(orientation);
+        builder.orientation(orientation);
         return this;
     }
 
@@ -67,7 +67,7 @@ public final class Checkout {
      * @return this Checkout Object
      */
     public Checkout theme(final CheckoutTheme theme) {
-        builder.setTheme(theme);
+        builder.theme(theme);
         return this;
     }
 

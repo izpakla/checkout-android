@@ -40,6 +40,17 @@ public final class Checkout {
     }
 
     /**
+     * Create a new Checkout class from the provided CheckoutConfiguration
+     *
+     * @param checkoutConfiguration contains the listUrl and theming
+     * @return newly created Checkout Object
+     */
+    public static Checkout with(final CheckoutConfiguration checkoutConfiguration) {
+        CheckoutConfiguration.Builder builder = new CheckoutConfiguration.Builder(checkoutConfiguration);
+        return new Checkout(builder);
+    }
+
+    /**
      * Set the orientation in this Checkout Object
      *
      * @return this Checkout Object
@@ -50,7 +61,7 @@ public final class Checkout {
     }
 
     /**
-     * SEt the theme in this Checkout Object
+     * Set the theme in this Checkout Object
      *
      * @param theme to be set
      * @return this Checkout Object

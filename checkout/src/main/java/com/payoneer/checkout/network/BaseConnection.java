@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.model.BrowserData;
 import com.payoneer.checkout.model.ErrorInfo;
 
 import android.content.Context;
@@ -38,6 +39,7 @@ abstract class BaseConnection {
     final static String HEADER_ACCEPT = "Accept";
     final static String HEADER_CONTENT_TYPE = "Content-Type";
     final static String VALUE_APP_JSON = "application/json;charset=UTF-8";
+
     private final static int TIMEOUT_CONNECT = 5000;
     private final static int TIMEOUT_READ = 30000;
     private final static String HEADER_USER_AGENT = "User-Agent";
@@ -45,18 +47,12 @@ abstract class BaseConnection {
     private final static String HTTP_POST = "POST";
     private final static String HTTP_DELETE = "DELETE";
     private final static String CONTENTTYPE_JSON = "application/json";
-    private static volatile String userAgent;
 
-    /**
-     * For now we will use Gson to parse json content
-     * This will be changed at a later stage as no external
-     * libraries should be used
-     */
+    static volatile String userAgent;
+    static volatile BrowserData browserData;
+
     final Gson gson = new GsonBuilder().create();
 
-    /**
-     * Just a default constructor for classes that do not need a context
-     */
     BaseConnection() {
         if (CookieHandler.getDefault() == null) {
             CookieHandler.setDefault(new CookieManager());
@@ -64,29 +60,22 @@ abstract class BaseConnection {
     }
 
     /**
-     * Construct a new BaseConnection
+     * Create the UserAgent and BrowserData objects using the provided Context.
+     * This method should not be called from the Main UI Thread as it may take time to construct the UserAgent
+     * and BrowserData.
      *
-     * @param context used to initialize the custom UserAgent
+     * param context contains information about the application environment
      */
-    BaseConnection(Context context) {
-        this();
+    public final void initialize(final Context context) {
         if (context == null) {
-            throw new IllegalArgumentException("Context cannot be null");
-        }
-        initUserAgent(context);
-    }
-
-    /**
-     * Get the user agent to be send with each request
-     * param context used to construct the custom UserAgent value
-     */
-    private void initUserAgent(Context context) {
-        if (userAgent != null) {
-            return;
+            throw new IllegalArgumentException("Context cannot be null for setting up user agent");
         }
         synchronized (BaseConnection.class) {
             if (userAgent == null) {
                 userAgent = UserAgentBuilder.createFromContext(context);
+            }
+            if (browserData == null) {
+                browserData = BrowserDataBuilder.createFromContext(context);
             }
         }
     }

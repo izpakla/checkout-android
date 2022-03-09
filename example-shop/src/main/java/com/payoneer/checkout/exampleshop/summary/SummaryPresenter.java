@@ -182,7 +182,9 @@ final class SummaryPresenter {
     }
 
     private ListResult asyncLoadPaymentSession(Context context, String listUrl) throws ShopException {
-        ListConnection conn = new ListConnection(context);
+        ListConnection conn = new ListConnection();
+        conn.initialize(context);
+
         try {
             return conn.getListResult(listUrl);
         } catch (PaymentException e) {

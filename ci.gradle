@@ -19,6 +19,22 @@ task publishCheckoutReleaseVersion() {
     dependsOn ':checkout:publishReleaseVersion'
 }
 
+task buildRiskProviders() {
+    dependsOn ':riskprovider:iovation:assembleRelease'
+}
+
+task testRiskProviders() {
+    dependsOn ':riskprovider:iovation:test'
+}
+
+task publishRiskProvidersSnapshotVersion() {
+    dependsOn ':riskprovider:iovation:publishSnapshotVersion'
+}
+
+task publishRiskProvidersReleaseVersion() {
+    dependsOn ':riskprovider:iovation:publishReleaseVersion'
+}
+
 task uploadExampleCheckoutToAppLive() {
     dependsOn ':example-checkout:uploadToAppLive'
 }

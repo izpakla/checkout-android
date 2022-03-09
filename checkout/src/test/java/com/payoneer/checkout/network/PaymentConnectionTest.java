@@ -29,7 +29,8 @@ public class PaymentConnectionTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void createOperation_invalidData_exception() throws PaymentException {
-        PaymentConnection conn = new PaymentConnection(ApplicationProvider.getApplicationContext());
+        PaymentConnection conn = new PaymentConnection();
+        conn.initialize(ApplicationProvider.getApplicationContext());
         conn.postOperation(null);
     }
 }

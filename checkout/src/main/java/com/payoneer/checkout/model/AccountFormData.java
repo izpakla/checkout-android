@@ -23,15 +23,4 @@ public class AccountFormData {
     public void setHolderName(final String holderName) {
         this.holderName = holderName;
     }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("AccountFormData [");
-        if (holderName != null) {
-            builder.append("holderName=").append(holderName);
-        }
-        builder.append("]");
-        return builder.toString();
-    }
 }

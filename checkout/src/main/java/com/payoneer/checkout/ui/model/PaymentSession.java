@@ -9,11 +9,13 @@
 package com.payoneer.checkout.ui.model;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.payoneer.checkout.model.ListResult;
+import com.payoneer.checkout.model.ProviderParameters;
 
 /**
  * Class for storing the ListResult and the payment sections. The following sections
@@ -107,5 +109,10 @@ public final class PaymentSession {
             section.putLanguageLinks(links);
         }
         return links;
+    }
+
+    public List<ProviderParameters> getRiskProviders() {
+        List<ProviderParameters> providers = listResult.getRiskProviders();
+        return providers != null ? providers : Collections.emptyList();
     }
 }

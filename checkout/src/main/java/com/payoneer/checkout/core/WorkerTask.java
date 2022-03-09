@@ -63,6 +63,31 @@ public final class WorkerTask<V> extends FutureTask<V> {
     }
 
     /**
+     * Helper method to unsubscribe the workerTask. The worker task will only be unsubscribed if
+     * previously subscribed.
+     *
+     * @param workerTask to unsubscribe, may be null
+     * @return true when unsubscribed, false otherwise
+     */
+    public static boolean unsubscribe(WorkerTask workerTask) {
+        if (workerTask != null && workerTask.isSubscribed()) {
+            workerTask.unsubscribe();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Helper method to check if the provider workerTask is subscribed
+     *
+     * @param workerTask to be checked
+     * @return true when subscribed, false otherwise
+     */
+    public static boolean isSubscribed(WorkerTask workerTask) {
+        return workerTask != null && workerTask.isSubscribed();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

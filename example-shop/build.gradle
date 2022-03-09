@@ -1,5 +1,10 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.browserstack.gradle'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.browserstack.gradle'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
 
 assemble.dependsOn('lint')
 
@@ -68,6 +73,9 @@ android {
             }
         }
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -77,6 +85,11 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxjava:${rootProject.rxjavaVersion}"
     implementation "io.reactivex.rxjava3:rxandroid:${rootProject.rxandroidVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
+    implementation "com.google.dagger:hilt-android:${rootProject.hiltVersion}"
+    kapt "com.google.dagger:hilt-compiler:${rootProject.hiltVersion}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.lifecycleVersion}"
+    implementation "androidx.activity:activity-ktx:${rootProject.activityVersion}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.lifecycleVersion}"
 
     // Uncomment the following two lines for enabling the Iovation FraudForce risk provider
     // implementation project(":riskprovider:iovation")
@@ -90,6 +103,9 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.androidxTestEspressoVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-intents:${rootProject.androidxTestEspressoVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:${rootProject.androidxTestEspressoVersion}"
+    implementation "androidx.core:core-ktx:${rootProject.coreKtxVersion}"
 }
-
+kapt {
+    correctErrorTypes = true
+}
 apply from: 'browserstack.gradle'

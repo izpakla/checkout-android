@@ -96,7 +96,7 @@ class SummaryViewModel @Inject constructor(@ApplicationContext val context: Cont
         continuation: Continuation<CoroutineResult<ListResult>?>
     ) {
         try {
-            val listResult = ListConnection(context).getListResult(listUrl)
+            val listResult = ListConnection().getListResult(listUrl)
             continuation.resume(CoroutineResult(data = listResult))
         } catch (e: PaymentException) {
             continuation.resume(CoroutineResult(error = e))

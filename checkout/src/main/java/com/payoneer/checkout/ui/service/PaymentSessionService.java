@@ -186,11 +186,6 @@ public final class PaymentSessionService {
     }
 
     private void loadLocalizations(final PaymentSession session, final Context context) throws PaymentException {
-        String listUrl = session.getListSelfUrl();
-        if (!listUrl.equals(cache.getCacheId())) {
-            cache.clear();
-            cache.setCacheId(listUrl);
-        }
         LocalizationHolder localHolder = new LocalLocalizationHolder(context);
         LocalizationHolder sharedHolder = loadLocalizationHolder(session.getListLanguageLink(), localHolder);
 

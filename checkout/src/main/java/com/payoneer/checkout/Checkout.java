@@ -22,21 +22,21 @@ import android.content.Intent;
  */
 public final class Checkout {
 
-    private final CheckoutConfiguration.Builder builder;
+    private final CheckoutConfiguration checkoutConfiguration;
 
-    private Checkout(final CheckoutConfiguration.Builder builder) {
-        this.builder = builder;
+    private Checkout(final CheckoutConfiguration checkoutConfiguration) {
+        this.checkoutConfiguration = checkoutConfiguration;
     }
 
     /**
-     * Create a new Checkout class with the listUrl
+     * Helper method to create a Checkout from a listUrl with the default theming and orientation
      *
      * @param listUrl contains the Url string of the payment list
      * @return newly created Checkout Object
      */
-    public static Checkout with(final String listUrl) {
-        CheckoutConfiguration.Builder builder = CheckoutConfiguration.createBuilder(listUrl);
-        return new Checkout(builder);
+    public static Checkout of(final String listUrl) {
+        CheckoutConfiguration checkoutConfiguration = CheckoutConfiguration.createBuilder(listUrl).build();
+        return new Checkout(checkoutConfiguration);
     }
 
     /**
@@ -45,30 +45,17 @@ public final class Checkout {
      * @param checkoutConfiguration contains the listUrl and theming
      * @return newly created Checkout Object
      */
-    public static Checkout with(final CheckoutConfiguration checkoutConfiguration) {
-        CheckoutConfiguration.Builder builder = CheckoutConfiguration.createBuilder(checkoutConfiguration);
-        return new Checkout(builder);
+    public static Checkout of(final CheckoutConfiguration checkoutConfiguration) {
+        return new Checkout(checkoutConfiguration);
     }
 
     /**
-     * Set the orientation in this Checkout Object
+     * Get the CheckoutConfiguration containing the listUrl and theming configuration
      *
-     * @return this Checkout Object
+     * @return CheckoutConfiguration of this Checkout
      */
-    public Checkout orientation(final int orientation) {
-        builder.orientation(orientation);
-        return this;
-    }
-
-    /**
-     * Set the theme in this Checkout Object
-     *
-     * @param theme to be set
-     * @return this Checkout Object
-     */
-    public Checkout theme(final CheckoutTheme theme) {
-        builder.theme(theme);
-        return this;
+    public CheckoutConfiguration getCheckoutConfiguration() {
+        return checkoutConfiguration;
     }
 
     /**
@@ -76,14 +63,11 @@ public final class Checkout {
      *
      * @param activity the activity that will be notified with a CheckoutResult
      * @param requestCode the requestCode to be used for identifying results in the parent activity
-     * @return CheckoutConfiguration contains the listUrl and theming settings
      */
-    public CheckoutConfiguration chargePresetAccount(final Activity activity, final int requestCode) {
-        CheckoutConfiguration configuration = builder.build();
-        Intent intent = ChargePaymentActivity.createStartIntent(activity, configuration);
+    public void chargePresetAccount(final Activity activity, final int requestCode) {
+        Intent intent = ChargePaymentActivity.createStartIntent(activity, checkoutConfiguration);
         launchActivity(activity, intent, requestCode);
         activity.overridePendingTransition(ChargePaymentActivity.getStartTransition(), R.anim.no_animation);
-        return configuration;
     }
 
     /**
@@ -91,14 +75,11 @@ public final class Checkout {
      *
      * @param activity the activity that will be notified when the PaymentList is closed
      * @param requestCode the requestCode to be used for identifying results in the parent activity
-     * @return CheckoutConfiguration contains the listUrl and theming settings
      */
-    public CheckoutConfiguration showPaymentList(final Activity activity, final int requestCode) {
-        CheckoutConfiguration configuration = builder.build();
-        Intent intent = PaymentListActivity.createStartIntent(activity, configuration);
+    public void showPaymentList(final Activity activity, final int requestCode) {
+        Intent intent = PaymentListActivity.createStartIntent(activity, checkoutConfiguration);
         launchActivity(activity, intent, requestCode);
         activity.overridePendingTransition(PaymentListActivity.getStartTransition(), R.anim.no_animation);
-        return configuration;
     }
 
     /**

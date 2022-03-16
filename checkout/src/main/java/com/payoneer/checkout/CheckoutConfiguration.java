@@ -90,13 +90,6 @@ public final class CheckoutConfiguration implements Parcelable {
         return new Builder(listUrl);
     }
 
-    public static Builder createBuilder(final CheckoutConfiguration checkoutConfiguration) {
-        if (checkoutConfiguration == null) {
-            throw new IllegalArgumentException("checkoutConfiguration cannot be null");
-        }
-        return new Builder(checkoutConfiguration);
-    }
-
     @NonNull
     @Override
     public String toString() {
@@ -114,9 +107,9 @@ public final class CheckoutConfiguration implements Parcelable {
     }
 
     public static final class Builder {
-        String listUrl;
-        int orientation;
-        CheckoutTheme checkoutTheme;
+        private final String listUrl;
+        private int orientation;
+        private CheckoutTheme checkoutTheme;
 
         /**
          * Create a new default Builder for creating CheckoutConfiguration instances
@@ -127,17 +120,6 @@ public final class CheckoutConfiguration implements Parcelable {
             this.listUrl = listUrl;
             this.orientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED;
             this.checkoutTheme = CheckoutTheme.createDefault();
-        }
-
-        /**
-         * Create a new Builder from the provided CheckoutConfiguration
-         *
-         * @param checkoutConfiguration mandatory parameter for creating this builder
-         */
-        private Builder(@NonNull final CheckoutConfiguration checkoutConfiguration) {
-            this.listUrl = checkoutConfiguration.listUrl;
-            this.orientation = checkoutConfiguration.orientation;
-            this.checkoutTheme = checkoutConfiguration.checkoutTheme;
         }
 
         /**
@@ -152,8 +134,9 @@ public final class CheckoutConfiguration implements Parcelable {
          * The SCREEN_ORIENTATION_LOCKED is by default used.
          *
          * @param orientation mode for the screens
+         * @return this builder
          */
-        public void orientation(final int orientation) {
+        public Builder orientation(final int orientation) {
             switch (orientation) {
                 case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
                 case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
@@ -161,17 +144,24 @@ public final class CheckoutConfiguration implements Parcelable {
                 case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
                 case ActivityInfo.SCREEN_ORIENTATION_LOCKED:
                     this.orientation = orientation;
-                    return;
+                    return this;
                 default:
                     throw new IllegalArgumentException("Orientation mode is not supported: " + orientation);
             }
         }
 
-        public void theme(final CheckoutTheme checkoutTheme) {
+        /**
+         * Set the checkout theme in this builder
+         *
+         * @param checkoutTheme containing the theming for the screens and dialogs
+         * @return this builder
+         */
+        public Builder theme(final CheckoutTheme checkoutTheme) {
             if (checkoutTheme == null) {
                 throw new IllegalStateException("CheckoutTheme cannot be null");
             }
             this.checkoutTheme = checkoutTheme;
+            return this;
         }
 
         public CheckoutConfiguration build() {

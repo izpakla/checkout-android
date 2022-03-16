@@ -10,6 +10,7 @@ package com.payoneer.checkout.examplecheckout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutTheme;
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding;
@@ -40,7 +41,6 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     private CheckoutActivityResult activityResult;
     private SimpleIdlingResource resultHandledIdlingResource;
     private boolean resultHandled;
-    private Checkout checkout;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -119,39 +119,43 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     }
 
     private void showPaymentList() {
-        if (!setListUrl()) {
+        CheckoutConfiguration configuration = createCheckoutConfiguration();
+        if (configuration == null) {
             return;
         }
         closeKeyboard();
         clearCheckoutResult();
-        checkout.theme(createPaymentTheme());
 
-        // Uncomment if you like to fix e.g. the orientation to landscape mode
-        // checkout.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
+        Checkout checkout = Checkout.of(configuration);
         checkout.showPaymentList(this, PAYMENT_REQUEST_CODE);
     }
 
     private void chargePresetAccount() {
-        if (!setListUrl()) {
+        CheckoutConfiguration configuration = createCheckoutConfiguration();
+        if (configuration == null) {
             return;
         }
         closeKeyboard();
         clearCheckoutResult();
+
+        Checkout checkout = Checkout.of(configuration);
         checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE);
     }
 
-    private boolean setListUrl() {
+    private CheckoutConfiguration createCheckoutConfiguration() {
         String listUrl = binding.inputListurl.getText().toString().trim();
         if (TextUtils.isEmpty(listUrl) || !Patterns.WEB_URL.matcher(listUrl).matches()) {
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid));
-            return false;
+            return null;
         }
-        checkout = Checkout.with(listUrl);
-        return true;
+        return CheckoutConfiguration.createBuilder(listUrl)
+            .theme(createCheckoutTheme())
+            // Uncomment to set screens to landscape orientation
+            //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+            .build();
     }
 
-    private CheckoutTheme createPaymentTheme() {
+    private CheckoutTheme createCheckoutTheme() {
         if (binding.switchTheme.isChecked()) {
             return CheckoutTheme.createBuilder().
                 setPaymentListTheme(R.style.CustomTheme_Toolbar).

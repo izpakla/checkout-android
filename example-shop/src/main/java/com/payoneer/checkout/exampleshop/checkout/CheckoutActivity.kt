@@ -74,7 +74,7 @@ class CheckoutActivity : BaseActivity() {
     }
 
     private fun onButtonClicked() {
-        val checkout = Checkout.with(checkoutConfiguration)
+        val checkout = Checkout.of(checkoutConfiguration)
         checkout.showPaymentList(this, PAYMENT_REQUEST_CODE)
     }
 

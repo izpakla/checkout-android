@@ -23,6 +23,7 @@ import androidx.test.espresso.IdlingResource
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.payoneer.checkout.Checkout
 import com.payoneer.checkout.CheckoutActivityResult
+import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.CheckoutTheme
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
@@ -38,7 +39,6 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityExamplecheckoutBinding
-    private lateinit var checkout: Checkout
     private var activityResult: CheckoutActivityResult? = null
     private var resultHandledIdlingResource: SimpleIdlingResource? = null
     private var resultHandled = false
@@ -69,36 +69,21 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     }
 
     private fun openPaymentList() {
-        if (!setListUrl()) {
-            return
-        }
+        val checkoutConfiguration = createCheckoutConfiguration() ?: return
         closeKeyboard()
         clearCheckoutResult()
-        checkout.theme(createPaymentTheme())
 
-        // Uncomment if you like to fix e.g. the orientation to landscape mode
-        // paymentUI.setOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        checkout.showPaymentList(this, PAYMENT_REQUEST_CODE)
+        val checkout = Checkout.of(checkoutConfiguration)
+        checkout.showPaymentList(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE)
     }
 
     private fun chargePresetAccount() {
-        if (!setListUrl()) {
-            return
-        }
+        val checkoutConfiguration = createCheckoutConfiguration() ?: return
         closeKeyboard()
         clearCheckoutResult()
-        checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE)
-    }
 
-    private fun setListUrl(): Boolean {
-        val listUrl: String = binding.inputListurl.text.toString().trim { it <= ' ' }
-        return if (listUrl.isNotEmpty() || Patterns.WEB_URL.matcher(listUrl).matches()) {
-            checkout = Checkout.with(listUrl)
-            true
-        } else {
-            showErrorDialog(getString(R.string.dialog_error_listurl_invalid))
-            false
-        }
+        val checkout = Checkout.of(checkoutConfiguration)
+        checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE)
     }
 
     private fun showErrorDialog(message: String) =
@@ -131,7 +116,20 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         resultHandledIdlingResource?.setIdleState(handledState)
     }
 
-    private fun createPaymentTheme(): CheckoutTheme? = if (binding.switchTheme.isChecked) {
+    private fun createCheckoutConfiguration(): CheckoutConfiguration? {
+        val listUrl: String = binding.inputListurl.text.toString().trim()
+        if (TextUtils.isEmpty(listUrl) || !Patterns.WEB_URL.matcher(listUrl).matches()) {
+            showErrorDialog(getString(R.string.dialog_error_listurl_invalid))
+            return null
+        }
+        return CheckoutConfiguration.createBuilder(listUrl)
+            .theme(createCheckoutTheme())
+            // Uncomment the following line to fix the orientation of the screens
+            //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+            .build()
+    }
+
+    private fun createCheckoutTheme(): CheckoutTheme? = if (binding.switchTheme.isChecked) {
         CheckoutTheme.createBuilder().setPaymentListTheme(R.style.CustomTheme_Toolbar)
             .setChargePaymentTheme(R.style.CustomTheme_NoToolbar).build()
     } else {

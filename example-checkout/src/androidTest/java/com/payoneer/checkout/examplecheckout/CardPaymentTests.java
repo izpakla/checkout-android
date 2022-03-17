@@ -229,5 +229,47 @@ public final class CardPaymentTests extends BaseKotlinTest {
         matchResultInteraction(InteractionCode.PROCEED, InteractionReason.OK);
         unregister(resultIdlingResource);
     }
+
+    @Test
+    public void testPostRedirect_clickAbort_confirmWarningIsShown() {
+        enterListUrl(createListUrl());
+        clickShowPaymentListButton();
+
+        int groupCardIndex = 1;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(groupCardIndex, "card.group");
+
+        PaymentListHelper.fillPaymentListCard(groupCardIndex, TestDataProvider.postRedirectCardTestData());
+        PaymentListHelper.clickPaymentListCardButton(groupCardIndex);
+
+        clickCustomerDecisionPageButton("customer-abort");
+        waitForAppRelaunch();
+
+        ChargePaymentHelper.waitForChargePaymentDialog();
+        PaymentDialogHelper.clickPaymentDialogButton("OK");
+        intended(hasComponent(PaymentListActivity.class.getName()));
+    }
+
+    @Test
+    public void testPostRedirect_clickAAccept_confirmWarningIsShown() {
+        IdlingResource resultIdlingResource = getResultIdlingResource();
+
+        enterListUrl(createListUrl());
+        clickShowPaymentListButton();
+
+        int groupCardIndex = 1;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(groupCardIndex, "card.group");
+
+        PaymentListHelper.fillPaymentListCard(groupCardIndex, TestDataProvider.postRedirectCardTestData());
+        PaymentListHelper.clickPaymentListCardButton(groupCardIndex);
+
+        clickCustomerDecisionPageButton("customer-accept");
+        waitForAppRelaunch();
+
+        register(resultIdlingResource);
+        matchResultInteraction(InteractionCode.PROCEED, InteractionReason.OK);
+        unregister(resultIdlingResource);
+    }
 }
 

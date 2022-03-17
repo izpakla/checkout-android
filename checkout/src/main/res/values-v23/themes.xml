@@ -1,12 +1,12 @@
 <resources>
 
-    <style name="PaymentTheme.Toolbar">
-        <item name="toolbarStyle">@style/Widget.Payment.Toolbar</item>
+    <style name="CheckoutTheme.Toolbar">
+        <item name="toolbarStyle">@style/Widget.Checkout.Toolbar</item>
         <item name="android:statusBarColor">@color/pm_white</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="PaymentTheme.NoToolbar">
+    <style name="CheckoutTheme.NoToolbar">
         <item name="android:statusBarColor">@color/pm_white</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>

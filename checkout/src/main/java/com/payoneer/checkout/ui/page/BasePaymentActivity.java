@@ -8,18 +8,16 @@
 
 package com.payoneer.checkout.ui.page;
 
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.localization.Localization;
-import com.payoneer.checkout.ui.PaymentActivityResult;
-import com.payoneer.checkout.ui.PaymentResult;
-import com.payoneer.checkout.ui.PaymentTheme;
-import com.payoneer.checkout.ui.PaymentUI;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
-import com.payoneer.checkout.util.PaymentResultHelper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,6 +33,12 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 abstract class BasePaymentActivity extends AppCompatActivity implements BasePaymentView {
 
+    final static int TYPE_CHARGE_OPERATION = 1;
+    final static int TYPE_CHARGE_PRESET_ACCOUNT = 2;
+    final static String EXTRA_OPERATION = "operation";
+    final static String EXTRA_CHARGE_TYPE = "charge_type";
+    final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
+
     ProgressView progressView;
 
     // Automated testing
@@ -44,7 +48,6 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(PaymentUI.getInstance().getOrientation());
         idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
     }
 
@@ -118,13 +121,13 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     }
 
     @Override
-    public void setPaymentResult(int resultCode, PaymentResult result) {
+    public void setCheckoutResult(int resultCode, CheckoutResult result) {
         setResultIntent(resultCode, result);
     }
 
     @Override
-    public void passOnActivityResult(PaymentActivityResult paymentActivityResult) {
-        setResultIntent(paymentActivityResult.getResultCode(), paymentActivityResult.getPaymentResult());
+    public void passOnActivityResult(CheckoutActivityResult checkoutActivityResult) {
+        setResultIntent(checkoutActivityResult.getResultCode(), checkoutActivityResult.getCheckoutResult());
         supportFinishAfterTransition();
         idlingResources.setCloseIdlingState(true);
     }
@@ -147,15 +150,6 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     }
 
     /**
-     * Get the current PaymentTheme from the PaymentUI.
-     *
-     * @return the current PaymentTheme
-     */
-    PaymentTheme getPaymentTheme() {
-        return PaymentUI.getInstance().getPaymentTheme();
-    }
-
-    /**
      * Get the root view of this Activity.
      *
      * @return the root view
@@ -165,14 +159,14 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     }
 
     /**
-     * Set the ActivityResult with the given resultCode and PaymentResult.
+     * Set the ActivityResult with the given resultCode and CheckoutResult.
      *
      * @param resultCode of the ActivityResult
      * @param result to be added as extra to the intent
      */
-    void setResultIntent(int resultCode, PaymentResult result) {
+    void setResultIntent(int resultCode, CheckoutResult result) {
         Intent intent = new Intent();
-        PaymentResultHelper.putIntoResultIntent(result, intent);
+        CheckoutResultHelper.putIntoResultIntent(result, intent);
         setResult(resultCode, intent);
     }
 

@@ -10,15 +10,15 @@ package com.payoneer.checkout.exampleshop.checkout
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.core.content.res.ResourcesCompat
+import com.payoneer.checkout.Checkout
+import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
 import com.payoneer.checkout.exampleshop.databinding.ActivityCheckoutBinding
 import com.payoneer.checkout.exampleshop.shared.BaseActivity
 import com.payoneer.checkout.exampleshop.summary.SummaryActivity
-import com.payoneer.checkout.ui.PaymentUI
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -54,7 +54,7 @@ class CheckoutActivity : BaseActivity() {
     private fun observeViewModel() {
         checkoutViewModel.showPaymentSummary.observe(this) {
             it.getIfNotHandled()?.let {
-                val intent = SummaryActivity.createStartIntent(this, listUrl)
+                val intent = SummaryActivity.createStartIntent(this, checkoutConfiguration)
                 startActivity(intent)
                 setResultHandledIdleState()
             }
@@ -74,15 +74,14 @@ class CheckoutActivity : BaseActivity() {
     }
 
     private fun onButtonClicked() {
-        val paymentUI = PaymentUI.getInstance()
-        paymentUI.listUrl = listUrl
-        paymentUI.showPaymentPage(this, PAYMENT_REQUEST_CODE)
+        val checkout = Checkout.from(checkoutConfiguration)
+        checkout.showPaymentList(this, PAYMENT_REQUEST_CODE)
     }
 
     override fun onResume() {
         super.onResume()
         if (activityResult != null) {
-            checkoutViewModel.handlePaymentActivityResult(activityResult!!)
+            checkoutViewModel.handleCheckoutActivityResult(activityResult!!)
             activityResult = null
         }
     }
@@ -96,15 +95,15 @@ class CheckoutActivity : BaseActivity() {
          * Create an Intent to launch this checkout activity
          *
          * @param context the context
-         * @param listUrl url of the current list
+         * @param checkoutConfiguration contains the listUrl and theming
          * @return the newly created intent
          */
         @JvmStatic
-        fun createStartIntent(context: Context?, listUrl: String?): Intent {
+        fun createStartIntent(context: Context?, checkoutConfiguration: CheckoutConfiguration?): Intent {
             requireNotNull(context) { "context may not be null" }
-            require(!TextUtils.isEmpty(listUrl)) { "listUrl may not be null or empty" }
+            requireNotNull(checkoutConfiguration) { "checkoutConfiguration cannot be null" }
             val intent = Intent(context, CheckoutActivity::class.java)
-            intent.putExtra(EXTRA_LISTURL, listUrl)
+            intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, checkoutConfiguration)
             return intent
         }
     }

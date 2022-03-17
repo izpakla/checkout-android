@@ -1,53 +1,51 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui;
-
-import com.payoneer.checkout.util.PaymentResultHelper;
+package com.payoneer.checkout;
 
 import android.app.Activity;
 import android.content.Intent;
 
 /**
- * A container for a payment activity result as obtained from the Android SDK
+ * A container holding the CheckoutResult provided through the onActivityResult callback method
  */
-public final class PaymentActivityResult {
+public final class CheckoutActivityResult {
 
     public final static int RESULT_CODE_PROCEED = Activity.RESULT_FIRST_USER;
     public final static int RESULT_CODE_ERROR = Activity.RESULT_FIRST_USER + 1;
 
     private final int requestCode;
     private final int resultCode;
-    private final PaymentResult paymentResult;
+    private final CheckoutResult checkoutResult;
 
     /**
-     * Construct a new PaymentActivityResult Object
+     * Construct a new CheckoutActivityResult Object
      *
      * @param requestCode activity requestCode
      * @param resultCode activity resultCode
-     * @param paymentResult containing the result of the payment request
+     * @param checkoutResult containing the result of the checkout request
      */
-    public PaymentActivityResult(int requestCode, int resultCode, PaymentResult paymentResult) {
+    public CheckoutActivityResult(final int requestCode, final int resultCode, final CheckoutResult checkoutResult) {
         this.requestCode = requestCode;
         this.resultCode = resultCode;
-        this.paymentResult = paymentResult;
+        this.checkoutResult = checkoutResult;
     }
 
     /**
-     * Construct a new PaymentActivityResult Object
+     * Construct a new CheckoutActivityResult Object
      *
      * @param requestCode activity requestCode
      * @param resultCode activity resultCode
      * @param data containing the activity result data
      */
-    public static PaymentActivityResult fromActivityResult(int requestCode, int resultCode, Intent data) {
-        PaymentResult result = PaymentResultHelper.fromResultIntent(data);
-        return new PaymentActivityResult(requestCode, resultCode, result);
+    public static CheckoutActivityResult fromActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        CheckoutResult result = CheckoutResultHelper.fromResultIntent(data);
+        return new CheckoutActivityResult(requestCode, resultCode, result);
     }
 
     /**
@@ -55,7 +53,7 @@ public final class PaymentActivityResult {
      *
      * @return the String representation of the resultCode
      */
-    public static String resultCodeToString(int resultCode) {
+    public static String resultCodeToString(final int resultCode) {
         switch (resultCode) {
             case RESULT_CODE_PROCEED:
                 return "RESULT_CODE_PROCEED";
@@ -76,7 +74,7 @@ public final class PaymentActivityResult {
         return resultCode;
     }
 
-    public PaymentResult getPaymentResult() {
-        return paymentResult;
+    public CheckoutResult getCheckoutResult() {
+        return checkoutResult;
     }
 }

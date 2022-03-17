@@ -6,13 +6,11 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.payment.googlepay;
+package com.payoneer.checkout.payment.googlepay.braintree;
 
 import com.payoneer.checkout.core.PaymentNetworkCodes;
-import com.payoneer.checkout.model.PaymentMethod;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceFactory;
-import com.payoneer.checkout.payment.basic.BasicPaymentService;
 
 public class GooglePayPaymentServiceFactory implements PaymentServiceFactory {
 

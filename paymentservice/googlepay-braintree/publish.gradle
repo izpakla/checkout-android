@@ -47,19 +47,19 @@ afterEvaluate {
             nexusSnapshots(MavenPublication) {
                 from components.release
                 groupId = 'com.payoneer'
-                artifactId = 'paymentservice-googlepay'
+                artifactId = 'paymentservice'
                 version = versionName
             }
             nexusReleases(MavenPublication) {
                 from components.release
                 groupId = 'com.payoneer'
-                artifactId = 'paymentservice-googlepay'
+                artifactId = 'paymentservice'
                 version = versionName
             }
             packagecloud(MavenPublication) {
                 from components.release
                 groupId = 'com.payoneer'
-                artifactId = 'paymentservice-googlepay'
+                artifactId = 'paymentservice'
                 version = versionName
             }
         }

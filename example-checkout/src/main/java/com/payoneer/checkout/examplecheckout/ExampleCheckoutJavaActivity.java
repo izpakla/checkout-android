@@ -126,7 +126,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         closeKeyboard();
         clearCheckoutResult();
 
-        Checkout checkout = Checkout.of(configuration);
+        Checkout checkout = Checkout.from(configuration);
         checkout.showPaymentList(this, PAYMENT_REQUEST_CODE);
     }
 
@@ -138,7 +138,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         closeKeyboard();
         clearCheckoutResult();
 
-        Checkout checkout = Checkout.of(configuration);
+        Checkout checkout = Checkout.from(configuration);
         checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE);
     }
 

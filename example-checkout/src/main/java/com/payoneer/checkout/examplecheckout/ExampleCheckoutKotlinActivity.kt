@@ -73,7 +73,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         closeKeyboard()
         clearCheckoutResult()
 
-        val checkout = Checkout.of(checkoutConfiguration)
+        val checkout = Checkout.from(checkoutConfiguration)
         checkout.showPaymentList(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE)
     }
 
@@ -82,7 +82,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         closeKeyboard()
         clearCheckoutResult()
 
-        val checkout = Checkout.of(checkoutConfiguration)
+        val checkout = Checkout.from(checkoutConfiguration)
         checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE)
     }
 

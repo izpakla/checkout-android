@@ -73,7 +73,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         closeKeyboard()
         clearCheckoutResult()
 
-        val checkout = Checkout.from(checkoutConfiguration)
+        val checkout = Checkout.of(checkoutConfiguration)
         checkout.showPaymentList(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE)
     }
 
@@ -82,7 +82,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         closeKeyboard()
         clearCheckoutResult()
 
-        val checkout = Checkout.from(checkoutConfiguration)
+        val checkout = Checkout.of(checkoutConfiguration)
         checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE)
     }
 
@@ -130,8 +130,8 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     }
 
     private fun createCheckoutTheme(): CheckoutTheme? = if (binding.switchTheme.isChecked) {
-        CheckoutTheme.createBuilder().setPaymentListTheme(R.style.CustomTheme_Toolbar)
-            .setChargePaymentTheme(R.style.CustomTheme_NoToolbar).build()
+        CheckoutTheme.createBuilder().setToolbarTheme(R.style.CustomTheme_Toolbar)
+            .setNoToolbarTheme(R.style.CustomTheme_NoToolbar).build()
     } else {
         CheckoutTheme.createDefault()
     }

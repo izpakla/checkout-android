@@ -16,23 +16,23 @@ import androidx.annotation.StyleRes;
  * Class to hold the theme settings of the screens in the Android SDK
  */
 public final class CheckoutTheme implements Parcelable {
-    private final int paymentListTheme;
-    private final int chargePaymentTheme;
+    private final int toolbarTheme;
+    private final int noToolbarTheme;
 
     private CheckoutTheme(final Builder builder) {
-        this.paymentListTheme = builder.paymentListTheme;
-        this.chargePaymentTheme = builder.chargePaymentTheme;
+        this.toolbarTheme = builder.toolbarTheme;
+        this.noToolbarTheme = builder.noToolbarTheme;
     }
 
     protected CheckoutTheme(final Parcel in) {
-        paymentListTheme = in.readInt();
-        chargePaymentTheme = in.readInt();
+        toolbarTheme = in.readInt();
+        noToolbarTheme = in.readInt();
     }
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeInt(paymentListTheme);
-        dest.writeInt(chargePaymentTheme);
+        dest.writeInt(toolbarTheme);
+        dest.writeInt(noToolbarTheme);
     }
 
     @Override
@@ -58,43 +58,43 @@ public final class CheckoutTheme implements Parcelable {
 
     public static CheckoutTheme createDefault() {
         return createBuilder().
-            setPaymentListTheme(R.style.CheckoutTheme_Toolbar).
-            setChargePaymentTheme(R.style.CheckoutTheme_NoToolbar).
+            setToolbarTheme(R.style.CheckoutTheme_Toolbar).
+            setNoToolbarTheme(R.style.CheckoutTheme_NoToolbar).
             build();
     }
 
-    public int getPaymentListTheme() {
-        return paymentListTheme;
+    public int getToolbarTheme() {
+        return toolbarTheme;
     }
 
-    public int getChargePaymentTheme() {
-        return chargePaymentTheme;
+    public int getNoToolbarTheme() {
+        return noToolbarTheme;
     }
 
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("CheckoutTheme [");
-        builder.append("paymentListTheme=").append(paymentListTheme).append(", ");
-        builder.append("chargePaymentTheme=").append(chargePaymentTheme);
+        builder.append("toolbarTheme=").append(toolbarTheme).append(", ");
+        builder.append("noToolbarTheme=").append(noToolbarTheme);
         builder.append("]");
         return builder.toString();
     }
 
     public static final class Builder {
-        int paymentListTheme;
-        int chargePaymentTheme;
+        int toolbarTheme;
+        int noToolbarTheme;
 
         Builder() {
         }
 
-        public Builder setPaymentListTheme(@StyleRes final int paymentListTheme) {
-            this.paymentListTheme = paymentListTheme;
+        public Builder setToolbarTheme(@StyleRes final int toolbarTheme) {
+            this.toolbarTheme = toolbarTheme;
             return this;
         }
 
-        public Builder setChargePaymentTheme(@StyleRes final int chargePaymentTheme) {
-            this.chargePaymentTheme = chargePaymentTheme;
+        public Builder setNoToolbarTheme(@StyleRes final int noToolbarTheme) {
+            this.noToolbarTheme = noToolbarTheme;
             return this;
         }
 

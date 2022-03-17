@@ -68,7 +68,7 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
             this.configuration = bundle.getParcelable(EXTRA_CHECKOUT_CONFIGURATION);
         }
         setRequestedOrientation(configuration.getOrientation());
-        int theme = configuration.getCheckoutTheme().getPaymentListTheme();
+        int theme = configuration.getCheckoutTheme().getToolbarTheme();
         if (theme != 0) {
             setTheme(theme);
         }

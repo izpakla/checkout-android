@@ -10,6 +10,8 @@
 
 package com.payoneer.checkout.examplecheckout;
 
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static com.payoneer.checkout.sharedtest.checkout.MagicNumbers.CHARGE_PROCEED_OK;
 
 import androidx.test.espresso.IdlingResource;
@@ -25,6 +27,7 @@ import com.payoneer.checkout.sharedtest.checkout.PaymentDialogHelper;
 import com.payoneer.checkout.sharedtest.checkout.PaymentListHelper;
 import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
+import com.payoneer.checkout.ui.page.PaymentListActivity;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -182,6 +185,48 @@ public final class CardPaymentTests extends BaseKotlinTest {
 
         register(resultIdlingResource);
         matchResultInteraction(InteractionCode.ABORT, InteractionReason.SYSTEM_FAILURE);
+        unregister(resultIdlingResource);
+    }
+
+    @Test
+    public void testGetRedirect_clickAbort_confirmWarningIsShown() {
+        enterListUrl(createListUrl());
+        clickShowPaymentListButton();
+
+        int groupCardIndex = 1;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(groupCardIndex, "card.group");
+
+        PaymentListHelper.fillPaymentListCard(groupCardIndex, TestDataProvider.getRedirectCardTestData());
+        PaymentListHelper.clickPaymentListCardButton(groupCardIndex);
+
+        clickCustomerDecisionPageButton("customer-abort");
+        waitForAppRelaunch();
+
+        ChargePaymentHelper.waitForChargePaymentDialog();
+        PaymentDialogHelper.clickPaymentDialogButton("OK");
+        intended(hasComponent(PaymentListActivity.class.getName()));
+    }
+
+    @Test
+    public void testGetRedirect_clickAAccept_confirmWarningIsShown() {
+        IdlingResource resultIdlingResource = getResultIdlingResource();
+
+        enterListUrl(createListUrl());
+        clickShowPaymentListButton();
+
+        int groupCardIndex = 1;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(groupCardIndex, "card.group");
+
+        PaymentListHelper.fillPaymentListCard(groupCardIndex, TestDataProvider.getRedirectCardTestData());
+        PaymentListHelper.clickPaymentListCardButton(groupCardIndex);
+
+        clickCustomerDecisionPageButton("customer-accept");
+        waitForAppRelaunch();
+
+        register(resultIdlingResource);
+        matchResultInteraction(InteractionCode.PROCEED, InteractionReason.OK);
         unregister(resultIdlingResource);
     }
 }

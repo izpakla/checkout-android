@@ -209,7 +209,7 @@ public final class CardPaymentTests extends BaseKotlinTest {
     }
 
     @Test
-    public void testGetRedirect_clickAAccept_confirmWarningIsShown() {
+    public void testGetRedirect_clickAccept_confirmWarningIsShown() {
         IdlingResource resultIdlingResource = getResultIdlingResource();
 
         enterListUrl(createListUrl());
@@ -251,7 +251,7 @@ public final class CardPaymentTests extends BaseKotlinTest {
     }
 
     @Test
-    public void testPostRedirect_clickAAccept_confirmWarningIsShown() {
+    public void testPostRedirect_clickAccept_confirmWarningIsShown() {
         IdlingResource resultIdlingResource = getResultIdlingResource();
 
         enterListUrl(createListUrl());

@@ -235,7 +235,7 @@ public final class PaymentUtils {
     }
 
     /**
-     * Obtain the customer registration id from the PaymentResult
+     * Obtain the customer registration id from the operationResult
      *
      * @param operationResult the result that may contain the customer registration id
      * @return the customer registration id or null if not found

@@ -13,38 +13,38 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import com.payoneer.checkout.CheckoutTheme;
 import com.payoneer.checkout.R;
-import com.payoneer.checkout.ui.PaymentTheme;
 
-public class PaymentThemeTest {
+public class CheckoutThemeTest {
 
     @Test
     public void createBuilder() {
-        PaymentTheme.Builder builder = PaymentTheme.createBuilder();
+        CheckoutTheme.Builder builder = CheckoutTheme.createBuilder();
         assertNotNull(builder);
     }
 
     @Test
     public void createDefault() {
-        PaymentTheme theme = PaymentTheme.createDefault();
+        CheckoutTheme theme = CheckoutTheme.createDefault();
         assertNotNull(theme);
 
-        assertEquals(theme.getPaymentListTheme(), R.style.PaymentTheme_Toolbar);
-        assertEquals(theme.getChargePaymentTheme(), R.style.PaymentTheme_NoToolbar);
+        assertEquals(theme.getPaymentListTheme(), R.style.CheckoutTheme_Toolbar);
+        assertEquals(theme.getChargePaymentTheme(), R.style.CheckoutTheme_NoToolbar);
     }
 
     @Test
     public void getPaymentListTheme() {
-        int value = R.style.PaymentTheme;
-        PaymentTheme theme = PaymentTheme.createBuilder().
+        int value = R.style.CheckoutTheme;
+        CheckoutTheme theme = CheckoutTheme.createBuilder().
             setPaymentListTheme(value).build();
         assertEquals(theme.getPaymentListTheme(), value);
     }
 
     @Test
     public void getChargePaymentTheme() {
-        int value = R.style.PaymentTheme;
-        PaymentTheme theme = PaymentTheme.createBuilder().
+        int value = R.style.CheckoutTheme;
+        CheckoutTheme theme = CheckoutTheme.createBuilder().
             setChargePaymentTheme(value).build();
         assertEquals(theme.getChargePaymentTheme(), value);
     }

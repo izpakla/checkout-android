@@ -10,7 +10,6 @@ package com.payoneer.checkout.exampleshop.summary
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -18,6 +17,8 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.test.espresso.IdlingResource
+import com.payoneer.checkout.Checkout
+import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.confirm.ConfirmActivity
 import com.payoneer.checkout.exampleshop.databinding.ActivitySummaryBinding
@@ -28,7 +29,6 @@ import com.payoneer.checkout.exampleshop.util.Resource
 import com.payoneer.checkout.model.AccountMask
 import com.payoneer.checkout.model.PaymentMethod
 import com.payoneer.checkout.model.PresetAccount
-import com.payoneer.checkout.ui.PaymentUI
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
 import com.payoneer.checkout.util.AccountMaskUtils
 import com.payoneer.checkout.util.NetworkLogoLoader
@@ -45,6 +45,7 @@ class SummaryActivity : BaseActivity() {
     private lateinit var layoutSummarydetailsBinding: LayoutSummarydetailsBinding
     private lateinit var presetTitle: TextView
     private lateinit var presetSubtitle: TextView
+    private lateinit var checkout: Checkout
 
     // For automated UI Testing
     private var loadCompleted = false
@@ -54,6 +55,7 @@ class SummaryActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySummaryBinding.inflate(layoutInflater)
         layoutSummarydetailsBinding = LayoutSummarydetailsBinding.bind(binding.root)
+        checkout = Checkout.from(checkoutConfiguration)
         setContentView(binding.root)
         initToolbar()
         initListenersAndViews()
@@ -76,7 +78,7 @@ class SummaryActivity : BaseActivity() {
         }
         viewModel.loadPaymentDetails.observe(this) {
             it.getContentIfNotHandled()?.let { load ->
-                if (load) viewModel.loadPaymentDetails(listUrl!!)
+                if (load) viewModel.loadPaymentDetails(checkoutConfiguration!!)
             }
         }
         viewModel.showPaymentDetails.observe(this) { resource ->
@@ -113,10 +115,10 @@ class SummaryActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         if (activityResult != null) {
-            viewModel.handlePaymentActivityResult(activityResult!!)
+            viewModel.handleCheckoutActivityResult(activityResult!!)
             activityResult = null
         } else {
-            viewModel.loadPaymentDetails(listUrl!!)
+            viewModel.loadPaymentDetails(checkoutConfiguration!!)
         }
     }
 
@@ -173,14 +175,12 @@ class SummaryActivity : BaseActivity() {
     }
 
     private fun showPaymentList() {
-        val paymentUI = PaymentUI.getInstance()
-        paymentUI.showPaymentPage(this, EDIT_REQUEST_CODE)
+        checkout.showPaymentList(this, EDIT_REQUEST_CODE)
     }
 
     private fun onPayClicked() {
         if (presetAccount != null) {
-            val paymentUI = PaymentUI.getInstance()
-            paymentUI.chargePresetAccount(this, PAYMENT_REQUEST_CODE)
+            checkout.chargePresetAccount(this, PAYMENT_REQUEST_CODE)
         }
     }
 
@@ -204,14 +204,14 @@ class SummaryActivity : BaseActivity() {
          * Create an Intent to launch this checkout activity
          *
          * @param context the context
-         * @param listUrl the URL pointing to the list
+         * @param checkoutConfiguration contains the listUrl and theming
          * @return the newly created intent
          */
-        fun createStartIntent(context: Context?, listUrl: String?): Intent {
+        fun createStartIntent(context: Context?, checkoutConfiguration: CheckoutConfiguration?): Intent {
             requireNotNull(context) { "context may not be null" }
-            require(!TextUtils.isEmpty(listUrl)) { "listUrl may not be null or empty" }
+            requireNotNull(checkoutConfiguration) { "checkoutConfiguration cannot be null" }
             val intent = Intent(context, SummaryActivity::class.java)
-            intent.putExtra(EXTRA_LISTURL, listUrl)
+            intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, checkoutConfiguration)
             return intent
         }
     }

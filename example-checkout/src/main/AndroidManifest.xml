@@ -11,7 +11,7 @@
         <activity
             android:name=".ExampleCheckoutKotlinActivity"
             android:exported="true"
-            android:theme="@style/PaymentTheme.Toolbar"
+            android:theme="@style/CheckoutTheme.Toolbar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,13 +22,13 @@
         <activity
             android:name=".ExampleCheckoutJavaActivity"
             android:exported="true"
-            android:theme="@style/PaymentTheme.Toolbar"
+            android:theme="@style/CheckoutTheme.Toolbar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.payoneer.checkout.redirect.PaymentRedirectActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/PaymentTheme.NoToolbar">
+            android:theme="@style/CheckoutTheme.NoToolbar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

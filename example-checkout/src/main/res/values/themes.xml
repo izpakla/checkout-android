@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="CustomTheme" parent="@style/PaymentTheme">
+    <style name="CustomTheme" parent="@style/CheckoutTheme">
         <item name="colorPrimary">@color/custom_blue</item>
         <item name="colorPrimaryDark">@color/custom_blue</item>
         <item name="colorControlNormal">@color/custom_blue</item>
@@ -29,7 +29,7 @@
         <item name="materialCardViewStyle">@style/Widget.Custom.CardView</item>
     </style>
 
-    <style name="ThemeOverlay.Custom.MaterialAlertDialog" parent="ThemeOverlay.Payment.MaterialAlertDialog">
+    <style name="ThemeOverlay.Custom.MaterialAlertDialog" parent="ThemeOverlay.Checkout.MaterialAlertDialog">
         <item name="alertDialogStyle">@style/MaterialAlertDialog.Custom</item>
         <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.Custom.Title.Text</item>
         <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.Custom.Body.Text</item>

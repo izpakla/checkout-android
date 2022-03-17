@@ -24,5 +24,5 @@ public class MagicNumbers {
 
     public final static BigDecimal UPDATE_PROCEED_PENDING = BigDecimal.valueOf(7.51);
     public final static BigDecimal THREE3DS2 = BigDecimal.valueOf(1.23);
-    public final static BigDecimal SYSTEM_FAIL = BigDecimal.valueOf(8.27);
+    public final static BigDecimal UPDATE_ABORT_SYSTEM_FAILURE = BigDecimal.valueOf(8.27);
 }

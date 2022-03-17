@@ -173,7 +173,7 @@ public final class CardPaymentTests extends BaseKotlinTest {
 
         settings.setRegistrationId(registrationId);
         settings.setOperationType(NetworkOperationType.UPDATE);
-        settings.setAmount(MagicNumbers.SYSTEM_FAIL);
+        settings.setAmount(MagicNumbers.UPDATE_ABORT_SYSTEM_FAILURE);
         enterListUrl(createListUrl(settings));
         clickShowPaymentListButton();
 

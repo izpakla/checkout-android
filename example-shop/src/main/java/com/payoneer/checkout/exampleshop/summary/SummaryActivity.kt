@@ -55,7 +55,7 @@ class SummaryActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySummaryBinding.inflate(layoutInflater)
         layoutSummarydetailsBinding = LayoutSummarydetailsBinding.bind(binding.root)
-        checkout = Checkout.of(checkoutConfiguration)
+        checkout = Checkout.from(checkoutConfiguration)
         setContentView(binding.root)
         initToolbar()
         initListenersAndViews()

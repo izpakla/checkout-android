@@ -30,23 +30,12 @@ public final class Checkout {
     }
 
     /**
-     * Helper method to create a Checkout from a listUrl with the default theming and orientation
-     *
-     * @param listUrl contains the Url string of the payment list
-     * @return newly created Checkout Object
-     */
-    public static Checkout of(final String listUrl) {
-        CheckoutConfiguration checkoutConfiguration = CheckoutConfiguration.createBuilder(listUrl).build();
-        return new Checkout(checkoutConfiguration);
-    }
-
-    /**
      * Create a new Checkout class from the provided CheckoutConfiguration
      *
      * @param checkoutConfiguration contains the listUrl and theming
      * @return newly created Checkout Object
      */
-    public static Checkout of(final CheckoutConfiguration checkoutConfiguration) {
+    public static Checkout from(final CheckoutConfiguration checkoutConfiguration) {
         if (checkoutConfiguration == null) {
             throw new IllegalArgumentException("checkoutConfiguration cannot be null");
         }

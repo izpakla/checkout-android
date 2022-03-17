@@ -12,11 +12,13 @@ package com.payoneer.checkout.examplecheckout;
 
 import static com.payoneer.checkout.sharedtest.checkout.MagicNumbers.CHARGE_PROCEED_OK;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import androidx.test.espresso.IdlingResource;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 
 import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.InteractionReason;
+import com.payoneer.checkout.model.NetworkOperationType;
 import com.payoneer.checkout.sharedtest.checkout.ChargePaymentHelper;
 import com.payoneer.checkout.sharedtest.checkout.MagicNumbers;
 import com.payoneer.checkout.sharedtest.checkout.PaymentDialogHelper;
@@ -24,9 +26,8 @@ import com.payoneer.checkout.sharedtest.checkout.PaymentListHelper;
 import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 
-import androidx.test.espresso.IdlingResource;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -157,6 +158,30 @@ public final class CardPaymentTests extends BaseKotlinTest {
 
         register(resultIdlingResource);
         matchResultInteraction(InteractionCode.ABORT, InteractionReason.RISK_DETECTED);
+        unregister(resultIdlingResource);
+    }
+
+    @Test
+    public void testUpdateSavedAccount_FAIL() {
+        IdlingResource resultIdlingResource = getResultIdlingResource();
+
+        ListSettings settings = createDefaultListSettings();
+        String registrationId = registerExpiredAccount(settings);
+
+        settings.setRegistrationId(registrationId);
+        settings.setOperationType(NetworkOperationType.UPDATE);
+        settings.setAmount(MagicNumbers.SYSTEM_FAIL);
+        enterListUrl(createListUrl(settings));
+        clickShowPaymentListButton();
+
+        int accountCardIndex = 1;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(accountCardIndex, "card.account");
+        PaymentListHelper.fillPaymentListCard(accountCardIndex, TestDataProvider.updateCardData());
+        PaymentListHelper.clickPaymentListCardButton(accountCardIndex);
+
+        register(resultIdlingResource);
+        matchResultInteraction(InteractionCode.ABORT, InteractionReason.SYSTEM_FAILURE);
         unregister(resultIdlingResource);
     }
 }

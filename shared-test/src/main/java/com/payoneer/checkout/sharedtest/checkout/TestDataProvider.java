@@ -27,6 +27,13 @@ public final class TestDataProvider {
         return values;
     }
 
+    public static Map<String, String> updateCardData() {
+        Map<String, String> values = new LinkedHashMap<>();
+        values.put("inputelement.expiryDate", "1245");
+        values.put("inputelement.verificationCode", "123");
+        return values;
+    }
+
     public static Map<String, String> amexCardTestData() {
         Map<String, String> values = new LinkedHashMap<>();
         values.put("inputelement.number", "370000000000002");

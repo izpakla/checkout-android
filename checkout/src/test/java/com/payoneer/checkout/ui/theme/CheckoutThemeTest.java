@@ -29,23 +29,23 @@ public class CheckoutThemeTest {
         CheckoutTheme theme = CheckoutTheme.createDefault();
         assertNotNull(theme);
 
-        assertEquals(theme.getPaymentListTheme(), R.style.CheckoutTheme_Toolbar);
-        assertEquals(theme.getChargePaymentTheme(), R.style.CheckoutTheme_NoToolbar);
+        assertEquals(theme.getToolbarTheme(), R.style.CheckoutTheme_Toolbar);
+        assertEquals(theme.getNoToolbarTheme(), R.style.CheckoutTheme_NoToolbar);
     }
 
     @Test
     public void getPaymentListTheme() {
         int value = R.style.CheckoutTheme;
         CheckoutTheme theme = CheckoutTheme.createBuilder().
-            setPaymentListTheme(value).build();
-        assertEquals(theme.getPaymentListTheme(), value);
+            setToolbarTheme(value).build();
+        assertEquals(theme.getToolbarTheme(), value);
     }
 
     @Test
     public void getChargePaymentTheme() {
         int value = R.style.CheckoutTheme;
         CheckoutTheme theme = CheckoutTheme.createBuilder().
-            setChargePaymentTheme(value).build();
-        assertEquals(theme.getChargePaymentTheme(), value);
+            setNoToolbarTheme(value).build();
+        assertEquals(theme.getNoToolbarTheme(), value);
     }
 }

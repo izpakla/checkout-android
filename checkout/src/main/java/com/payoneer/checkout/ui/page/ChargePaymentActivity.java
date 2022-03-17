@@ -92,7 +92,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
             this.configuration = bundle.getParcelable(EXTRA_CHECKOUT_CONFIGURATION);
         }
         setRequestedOrientation(configuration.getOrientation());
-        int theme = configuration.getCheckoutTheme().getChargePaymentTheme();
+        int theme = configuration.getCheckoutTheme().getNoToolbarTheme();
         if (theme != 0) {
             setTheme(theme);
         }

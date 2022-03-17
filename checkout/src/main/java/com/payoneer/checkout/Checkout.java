@@ -35,7 +35,7 @@ public final class Checkout {
      * @param checkoutConfiguration contains the listUrl and theming
      * @return newly created Checkout Object
      */
-    public static Checkout from(final CheckoutConfiguration checkoutConfiguration) {
+    public static Checkout of(final CheckoutConfiguration checkoutConfiguration) {
         if (checkoutConfiguration == null) {
             throw new IllegalArgumentException("checkoutConfiguration cannot be null");
         }

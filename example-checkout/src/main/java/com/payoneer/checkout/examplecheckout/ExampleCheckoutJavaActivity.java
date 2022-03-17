@@ -126,7 +126,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         closeKeyboard();
         clearCheckoutResult();
 
-        Checkout checkout = Checkout.from(configuration);
+        Checkout checkout = Checkout.of(configuration);
         checkout.showPaymentList(this, PAYMENT_REQUEST_CODE);
     }
 
@@ -138,7 +138,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         closeKeyboard();
         clearCheckoutResult();
 
-        Checkout checkout = Checkout.from(configuration);
+        Checkout checkout = Checkout.of(configuration);
         checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE);
     }
 
@@ -158,8 +158,8 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     private CheckoutTheme createCheckoutTheme() {
         if (binding.switchTheme.isChecked()) {
             return CheckoutTheme.createBuilder().
-                setPaymentListTheme(R.style.CustomTheme_Toolbar).
-                setChargePaymentTheme(R.style.CustomTheme_NoToolbar).
+                setToolbarTheme(R.style.CustomTheme_Toolbar).
+                setNoToolbarTheme(R.style.CustomTheme_NoToolbar).
                 build();
         } else {
             return CheckoutTheme.createDefault();

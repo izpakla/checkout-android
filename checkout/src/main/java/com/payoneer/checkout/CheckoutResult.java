@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui;
+package com.payoneer.checkout;
 
 import static com.payoneer.checkout.model.InteractionReason.COMMUNICATION_FAILURE;
 
@@ -21,19 +21,19 @@ import android.os.Parcelable;
 import android.util.Log;
 
 /**
- * A container for the payment result as obtained from the Payment API
+ * A class containing the result as obtained from the Payment API
  */
-public final class PaymentResult implements Parcelable {
+public final class CheckoutResult implements Parcelable {
 
-    public final static String EXTRA_PAYMENT_RESULT = "paymentresult";
-    public final static Parcelable.Creator<PaymentResult> CREATOR = new Parcelable.Creator<PaymentResult>() {
+    public final static String EXTRA_CHECKOUT_RESULT = "checkoutResult";
+    public final static Parcelable.Creator<CheckoutResult> CREATOR = new Parcelable.Creator<CheckoutResult>() {
 
-        public PaymentResult createFromParcel(Parcel in) {
-            return new PaymentResult(in);
+        public CheckoutResult createFromParcel(final Parcel in) {
+            return new CheckoutResult(in);
         }
 
-        public PaymentResult[] newArray(int size) {
-            return new PaymentResult[size];
+        public CheckoutResult[] newArray(final int size) {
+            return new CheckoutResult[size];
         }
     };
 
@@ -42,35 +42,35 @@ public final class PaymentResult implements Parcelable {
     private Throwable cause;
 
     /**
-     * Construct a new PaymentResult with the operationResult
+     * Construct a new CheckoutResult with the operationResult
      *
      * @param operationResult containing the result of the operation
      */
-    public PaymentResult(OperationResult operationResult) {
+    public CheckoutResult(final OperationResult operationResult) {
         this.operationResult = operationResult;
     }
 
     /**
-     * Constructs a new PaymentResult with the errorInfo
+     * Constructs a new CheckoutResult with the errorInfo
      *
      * @param errorInfo containing the Interaction and resultInfo
      */
-    public PaymentResult(ErrorInfo errorInfo) {
+    public CheckoutResult(final ErrorInfo errorInfo) {
         this(errorInfo, null);
     }
 
     /**
-     * Constructs a new PaymentResult with the errorInfo and optional cause
+     * Constructs a new CheckoutResult with the errorInfo and optional cause
      *
      * @param errorInfo containing the Interaction and resultInfo
      * @param cause the optional Throwable that caused the error
      */
-    public PaymentResult(ErrorInfo errorInfo, Throwable cause) {
+    public CheckoutResult(final ErrorInfo errorInfo, final Throwable cause) {
         this.errorInfo = errorInfo;
         this.cause = cause;
     }
 
-    private PaymentResult(Parcel in) {
+    private CheckoutResult(final Parcel in) {
         GsonHelper gson = GsonHelper.getInstance();
         try {
             operationResult = gson.fromJson(in.readString(), OperationResult.class);
@@ -135,20 +135,28 @@ public final class PaymentResult implements Parcelable {
      * {@inheritDoc}
      */
     @Override
-    public void writeToParcel(Parcel out, int flags) {
+    public void writeToParcel(final Parcel out, final int flags) {
         GsonHelper gson = GsonHelper.getInstance();
         out.writeString(gson.toJson(operationResult));
         out.writeString(gson.toJson(errorInfo));
         out.writeSerializable(cause);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public String toString() {
-        Interaction interaction = getInteraction();
-        return "PaymentResult[resultInfo: " + getResultInfo() + ", code: " + interaction.getCode() + ", reason: " + interaction.getReason()
-            + "]";
+        final StringBuilder builder = new StringBuilder();
+        builder.append("CheckoutResult [");
+        if (operationResult != null) {
+            builder.append("operationResult=").append(operationResult).append(", ");
+        }
+        if (errorInfo != null) {
+            builder.append("errorInfo=").append(errorInfo).append(", ");
+        }
+        if (cause != null) {
+            builder.append("cause=").append(cause);
+        }
+        builder.append("]");
+        return builder.toString();
     }
 }

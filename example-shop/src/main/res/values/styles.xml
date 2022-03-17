@@ -7,11 +7,11 @@
         <item name="android:elevation">0dp</item>
     </style>
 
-    <style name="TextAppearance.ExampleDemo.CollapsingToolbar.Expanded" parent="TextAppearance.Payment.Headline6">
+    <style name="TextAppearance.ExampleDemo.CollapsingToolbar.Expanded" parent="TextAppearance.Checkout.Headline6">
         <item name="android:textColor">@color/pm_transparent</item>
     </style>
 
-    <style name="TextAppearance.ExampleDemo.CollapsingToolbar.Collapsed" parent="TextAppearance.Payment.Headline6">
+    <style name="TextAppearance.ExampleDemo.CollapsingToolbar.Collapsed" parent="TextAppearance.Checkout.Headline6">
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 

@@ -6,66 +6,65 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.util;
+package com.payoneer.checkout;
 
+import static com.payoneer.checkout.CheckoutResult.EXTRA_CHECKOUT_RESULT;
 import static com.payoneer.checkout.model.InteractionReason.CLIENTSIDE_ERROR;
 import static com.payoneer.checkout.model.InteractionReason.COMMUNICATION_FAILURE;
-import static com.payoneer.checkout.ui.PaymentResult.EXTRA_PAYMENT_RESULT;
 
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;
-import com.payoneer.checkout.ui.PaymentResult;
 
 import android.content.Intent;
 
 /**
- * Class with helper methods to construct a PaymentResult
+ * Class with helper methods to construct a CheckoutResult
  */
-public class PaymentResultHelper {
+public final class CheckoutResultHelper {
 
     /**
-     * Helper method to construct a default PaymentResult from the error message
+     * Helper method to construct a default CheckoutResult from the error message
      *
      * @param errorMessage describing the error that occurred
-     * @return the newly created PaymentResult
+     * @return the newly created CheckoutResult
      */
-    public static PaymentResult fromErrorMessage(String errorMessage) {
+    public static CheckoutResult fromErrorMessage(final String errorMessage) {
         return fromErrorMessage(InteractionCode.ABORT, errorMessage);
     }
 
     /**
-     * Helper method to construct a PaymentResult with the provided Interaction.Code and error message
+     * Helper method to construct a CheckoutResult with the provided Interaction.Code and error message
      *
-     * @param interactionCode code used for creating the PaymentResult
+     * @param interactionCode code used for creating the CheckoutResult
      * @param errorMessage describing the error that occurred
-     * @return the newly created PaymentResult
+     * @return the newly created CheckoutResult
      */
-    public static PaymentResult fromErrorMessage(String interactionCode, String errorMessage) {
+    public static CheckoutResult fromErrorMessage(final String interactionCode, final String errorMessage) {
         Interaction interaction = new Interaction(interactionCode, CLIENTSIDE_ERROR);
         ErrorInfo errorInfo = new ErrorInfo(errorMessage, interaction);
-        return new PaymentResult(errorInfo);
+        return new CheckoutResult(errorInfo);
     }
 
     /**
-     * Helper method to construct a default PaymentResult from the Throwable
+     * Helper method to construct a default CheckoutResult from the Throwable
      *
      * @param error the throwable that caused the error
-     * @return the newly created PaymentResult
+     * @return the newly created CheckoutResult
      */
-    public static PaymentResult fromThrowable(Throwable error) {
+    public static CheckoutResult fromThrowable(final Throwable error) {
         return fromThrowable(InteractionCode.ABORT, error);
     }
 
     /**
-     * Helper method to construct a default PaymentResult from the Throwable object
+     * Helper method to construct a default CheckoutResult from the Throwable object
      *
-     * @param interactionCode code used for creating the PaymentResult
+     * @param interactionCode code used for creating the CheckoutResult
      * @param error the throwable that caused the error
-     * @return the newly created PaymentResult
+     * @return the newly created CheckoutResult
      */
-    public static PaymentResult fromThrowable(String interactionCode, Throwable error) {
+    public static CheckoutResult fromThrowable(final String interactionCode, final Throwable error) {
         ErrorInfo errorInfo = null;
         boolean networkFailure = false;
         Throwable cause = error;
@@ -81,30 +80,30 @@ public class PaymentResultHelper {
             Interaction interaction = new Interaction(interactionCode, reason);
             errorInfo = new ErrorInfo(error.getMessage(), interaction);
         }
-        return new PaymentResult(errorInfo, cause);
+        return new CheckoutResult(errorInfo, cause);
     }
 
     /**
-     * Put the PaymentResult into the provided result intent.
+     * Put the CheckoutResult into the provided result intent.
      *
-     * @param paymentResult to be put inside the intent
-     * @param intent into which this PaymentResult should be stored
+     * @param checkoutResult to be put inside the intent
+     * @param intent into which this CheckoutResult should be stored
      */
-    public static void putIntoResultIntent(PaymentResult paymentResult, Intent intent) {
+    public static void putIntoResultIntent(final CheckoutResult checkoutResult, final Intent intent) {
         if (intent != null) {
-            intent.putExtra(EXTRA_PAYMENT_RESULT, paymentResult);
+            intent.putExtra(EXTRA_CHECKOUT_RESULT, checkoutResult);
         }
     }
 
     /**
-     * Get the PaymentResult from the result intent.
+     * Get the CheckoutResult from the result intent.
      *
-     * @param intent containing the PaymentResult
-     * @return PaymentResult or null if not stored in the intent
+     * @param intent containing the CheckoutResult
+     * @return CheckoutResult or null if not stored in the intent
      */
-    public static PaymentResult fromResultIntent(Intent intent) {
+    public static CheckoutResult fromResultIntent(final Intent intent) {
         if (intent != null) {
-            return intent.getParcelableExtra(EXTRA_PAYMENT_RESULT);
+            return intent.getParcelableExtra(EXTRA_CHECKOUT_RESULT);
         }
         return null;
     }

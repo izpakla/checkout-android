@@ -16,8 +16,9 @@ import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
+import java.util.Objects;
 
+import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.WorkerSubscriber;
@@ -51,7 +52,9 @@ public final class PaymentSessionService {
     private PaymentSessionListener listener;
     private WorkerTask<PaymentSession> sessionTask;
 
-    /** Memory cache of localizations */
+    /**
+     * Memory cache of localizations
+     */
     private static final LocalizationCache cache = new LocalizationCache();
 
     /**
@@ -93,20 +96,15 @@ public final class PaymentSessionService {
     /**
      * Load the PaymentSession with the given listUrl, this will load the list result, languages and validator.
      *
-     * @param listUrl URL pointing to the list on the Payment API
+     * @param configuration is the object containing URL pointing to the list on the Payment API
      * @param context Android context in which this service is used
      */
-    public void loadPaymentSession(final String listUrl, final Context context) {
+    public void loadPaymentSession(final CheckoutConfiguration configuration, final Context context) {
 
         if (sessionTask != null) {
             throw new IllegalStateException("Already loading payment session, stop first");
         }
-        sessionTask = WorkerTask.fromCallable(new Callable<PaymentSession>() {
-            @Override
-            public PaymentSession call() throws PaymentException {
-                return asyncLoadPaymentSession(listUrl, context);
-            }
-        });
+        sessionTask = WorkerTask.fromCallable(() -> asyncLoadPaymentSession(configuration.getListUrl(), context));
         sessionTask.subscribe(new WorkerSubscriber<PaymentSession>() {
             @Override
             public void onSuccess(PaymentSession paymentSession) {
@@ -187,7 +185,7 @@ public final class PaymentSessionService {
 
     private void loadLocalizations(final PaymentSession session, final Context context) throws PaymentException {
         String listUrl = session.getListSelfUrl();
-        if (!listUrl.equals(cache.getCacheId())) {
+        if (!Objects.equals(listUrl, cache.getCacheId())) {
             cache.clear();
             cache.setCacheId(listUrl);
         }

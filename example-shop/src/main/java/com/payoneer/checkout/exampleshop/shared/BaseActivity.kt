@@ -13,8 +13,9 @@ import android.view.MenuItem
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.test.espresso.IdlingResource
+import com.payoneer.checkout.CheckoutActivityResult
+import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.exampleshop.R
-import com.payoneer.checkout.ui.PaymentActivityResult
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
@@ -24,8 +25,8 @@ import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
  */
 abstract class BaseActivity : AppCompatActivity() {
 
-    protected var listUrl: String? = null
-    protected var activityResult: PaymentActivityResult? = null
+    protected var checkoutConfiguration: CheckoutConfiguration? = null
+    protected var activityResult: CheckoutActivityResult? = null
     private var resultHandledIdlingResource: SimpleIdlingResource? = null
     private var resultHandled = false
 
@@ -42,13 +43,13 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val bundle = savedInstanceState ?: intent.extras
         bundle?.let {
-            listUrl = it.getString(EXTRA_LISTURL)
+            checkoutConfiguration = it.getParcelable(EXTRA_CHECKOUT_CONFIGURATION)
         }
     }
 
     public override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putString(EXTRA_LISTURL, listUrl)
+        savedInstanceState.putParcelable(EXTRA_CHECKOUT_CONFIGURATION, checkoutConfiguration)
     }
 
     public override fun onResume() {
@@ -59,7 +60,7 @@ abstract class BaseActivity : AppCompatActivity() {
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PAYMENT_REQUEST_CODE || requestCode == EDIT_REQUEST_CODE) {
-            activityResult = PaymentActivityResult.fromActivityResult(requestCode, resultCode, data)
+            activityResult = CheckoutActivityResult.fromActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -125,7 +126,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val EXTRA_LISTURL = "listurl"
+        const val EXTRA_CHECKOUT_CONFIGURATION = "checkoutconfiguration"
         const val PAYMENT_REQUEST_CODE = 1
         const val EDIT_REQUEST_CODE = 2
     }

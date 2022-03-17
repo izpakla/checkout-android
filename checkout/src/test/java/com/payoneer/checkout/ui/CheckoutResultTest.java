@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;
@@ -23,7 +24,7 @@ import com.payoneer.checkout.model.OperationResult;
 import android.os.Parcel;
 
 @RunWith(RobolectricTestRunner.class)
-public class PaymentResultTest {
+public class CheckoutResultTest {
 
     @Test
     public void construct_withOperationResult() {
@@ -31,11 +32,11 @@ public class PaymentResultTest {
         OperationResult operationResult = new OperationResult();
         operationResult.setInteraction(interaction);
         operationResult.setResultInfo("resultInfo");
-        PaymentResult paymentResult = new PaymentResult(operationResult);
+        CheckoutResult checkoutResult = new CheckoutResult(operationResult);
 
-        assertEquals(operationResult, paymentResult.getOperationResult());
-        assertEquals(interaction, paymentResult.getInteraction());
-        assertEquals("resultInfo", paymentResult.getResultInfo());
+        assertEquals(operationResult, checkoutResult.getOperationResult());
+        assertEquals(interaction, checkoutResult.getInteraction());
+        assertEquals("resultInfo", checkoutResult.getResultInfo());
     }
 
     @Test
@@ -44,11 +45,11 @@ public class PaymentResultTest {
         ErrorInfo errorInfo = new ErrorInfo();
         errorInfo.setInteraction(interaction);
         errorInfo.setResultInfo("resultInfo");
-        PaymentResult paymentResult = new PaymentResult(errorInfo);
+        CheckoutResult checkoutResult = new CheckoutResult(errorInfo);
 
-        assertEquals(errorInfo, paymentResult.getErrorInfo());
-        assertEquals("resultInfo", paymentResult.getResultInfo());
-        assertEquals(interaction, paymentResult.getInteraction());
+        assertEquals(errorInfo, checkoutResult.getErrorInfo());
+        assertEquals("resultInfo", checkoutResult.getResultInfo());
+        assertEquals(interaction, checkoutResult.getInteraction());
     }
 
     @Test
@@ -56,25 +57,25 @@ public class PaymentResultTest {
         Interaction interaction = new Interaction(InteractionCode.ABORT, InteractionReason.CLIENTSIDE_ERROR);
         Throwable cause = new Throwable();
         ErrorInfo errorInfo = new ErrorInfo("resultInfo", interaction);
-        PaymentResult paymentResult = new PaymentResult(errorInfo, cause);
+        CheckoutResult checkoutResult = new CheckoutResult(errorInfo, cause);
 
-        assertEquals(errorInfo, paymentResult.getErrorInfo());
-        assertEquals(cause, paymentResult.getCause());
-        assertEquals("resultInfo", paymentResult.getResultInfo());
-        assertEquals(interaction, paymentResult.getInteraction());
+        assertEquals(errorInfo, checkoutResult.getErrorInfo());
+        assertEquals(cause, checkoutResult.getCause());
+        assertEquals("resultInfo", checkoutResult.getResultInfo());
+        assertEquals(interaction, checkoutResult.getInteraction());
     }
 
     @Test
     public void writeToParcel() {
         Interaction interaction = new Interaction(InteractionCode.ABORT, InteractionReason.CLIENTSIDE_ERROR);
         ErrorInfo errorInfo = new ErrorInfo("resultInfo", interaction);
-        PaymentResult writeResult = new PaymentResult(errorInfo);
+        CheckoutResult writeResult = new CheckoutResult(errorInfo);
 
         Parcel parcel = Parcel.obtain();
         writeResult.writeToParcel(parcel, 0);
 
         parcel.setDataPosition(0);
-        PaymentResult readResult = PaymentResult.CREATOR.createFromParcel(parcel);
+        CheckoutResult readResult = CheckoutResult.CREATOR.createFromParcel(parcel);
         assertEquals(readResult.toString(), writeResult.toString());
     }
 }

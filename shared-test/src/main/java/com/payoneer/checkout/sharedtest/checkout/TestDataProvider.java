@@ -27,6 +27,13 @@ public final class TestDataProvider {
         return values;
     }
 
+    public static Map<String, String> updateCardData() {
+        Map<String, String> values = new LinkedHashMap<>();
+        values.put("inputelement.expiryDate", "1245");
+        values.put("inputelement.verificationCode", "123");
+        return values;
+    }
+
     public static Map<String, String> amexCardTestData() {
         Map<String, String> values = new LinkedHashMap<>();
         values.put("inputelement.number", "370000000000002");
@@ -60,5 +67,23 @@ public final class TestDataProvider {
         inputData.setVerificationCode("123");
         inputData.setHolderName("Expired User");
         return inputData;
+    }
+
+    public static Map<String, String> getRedirectCardTestData() {
+        Map<String, String> values = new LinkedHashMap<>();
+        values.put("inputelement.number", "4111111111111400");
+        values.put("inputelement.expiryDate", "0330");
+        values.put("inputelement.verificationCode", "333");
+        values.put("inputelement.holderName", "John Doe");
+        return values;
+    }
+
+    public static Map<String, String> postRedirectCardTestData() {
+        Map<String, String> values = new LinkedHashMap<>();
+        values.put("inputelement.number", "4111111111111400");
+        values.put("inputelement.expiryDate", "0330");
+        values.put("inputelement.verificationCode", "333");
+        values.put("inputelement.holderName", "John Doe");
+        return values;
     }
 }

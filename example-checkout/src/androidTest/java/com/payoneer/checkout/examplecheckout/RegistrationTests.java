@@ -80,7 +80,7 @@ public final class RegistrationTests extends BaseKotlinTest {
         // First register an ApplicableNetwork
         PaymentListHelper.waitForPaymentListLoaded(1);
         PaymentListHelper.openPaymentListCard(cardIndex, "card.group");
-        PaymentListHelper.fillPaymentListCard(cardIndex, TestDataProvider.visaCardTestData());
+        PaymentListHelper.fillPaymentListCard(cardIndex, TestDataProvider.masterCardTestData());
         PaymentListHelper.clickPaymentListCardButton(cardIndex);
 
         // Open the newly registered account and click the delete button

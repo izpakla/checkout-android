@@ -94,7 +94,7 @@ public abstract class BaseTest {
         ListService service = createListService();
         String networkCode = PaymentNetworkCodes.VISA;
         AccountInputData inputData = TestDataProvider.expiredAccountInputData();
-        return service.registerAccount(settings, networkCode, inputData, true, true);
+        return service.registerAccount(settings, networkCode, inputData, true, false);
     }
 
     protected void clickShowPaymentListButton() {

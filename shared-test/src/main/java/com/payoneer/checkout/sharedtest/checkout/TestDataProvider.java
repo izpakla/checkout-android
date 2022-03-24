@@ -27,6 +27,15 @@ public final class TestDataProvider {
         return values;
     }
 
+    public static Map<String, String> masterCardTestData() {
+        Map<String, String> values = new LinkedHashMap<>();
+        values.put("inputelement.number", "5555555555554444");
+        values.put("inputelement.expiryDate", "1245");
+        values.put("inputelement.verificationCode", "123");
+        values.put("inputelement.holderName", "Thomas Smith");
+        return values;
+    }
+
     public static Map<String, String> updateCardData() {
         Map<String, String> values = new LinkedHashMap<>();
         values.put("inputelement.expiryDate", "1245");
@@ -63,7 +72,7 @@ public final class TestDataProvider {
         AccountInputData inputData = new AccountInputData();
         inputData.setExpiryMonth("12");
         inputData.setExpiryYear("2019");
-        inputData.setNumber("4111111111111111");
+        inputData.setNumber("5555555555554444");
         inputData.setVerificationCode("123");
         inputData.setHolderName("Expired User");
         return inputData;

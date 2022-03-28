@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui;
+package com.payoneer.checkout;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;

@@ -6,15 +6,12 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.theme;
+package com.payoneer.checkout;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
-
-import com.payoneer.checkout.CheckoutTheme;
-import com.payoneer.checkout.R;
 
 public class CheckoutThemeTest {
 

@@ -14,13 +14,14 @@ import java.nio.charset.StandardCharsets;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.PaymentInputCategory;
 import com.payoneer.checkout.core.PaymentInputType;
-import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.model.AccountInputData;
 import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.network.ListConnection;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.network.PaymentConnection;
+import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.text.TextUtils;
@@ -93,11 +94,12 @@ public final class ListService {
             if (network == null) {
                 throw new ListServiceException("Missing ApplicableNetwork in ListResult: " + networkCode);
             }
-            Operation operation = Operation.fromApplicableNetwork(network);
-            operation.setAccountInputData(inputData);
+            PaymentRequest paymentRequest = PaymentRequest.fromApplicableNetwork(network);
+            paymentRequest.setAccountInputData(inputData);
 
-            operation.putBooleanValue(PaymentInputCategory.REGISTRATION, PaymentInputType.AUTO_REGISTRATION, autoRegistration);
-            operation.putBooleanValue(PaymentInputCategory.REGISTRATION, PaymentInputType.ALLOW_RECURRENCE, allowRecurrence);
+            paymentRequest.putBooleanValue(PaymentInputCategory.REGISTRATION, PaymentInputType.AUTO_REGISTRATION, autoRegistration);
+            paymentRequest.putBooleanValue(PaymentInputCategory.REGISTRATION, PaymentInputType.ALLOW_RECURRENCE, allowRecurrence);
+            Operation operation = new Operation(paymentRequest.getOperationLink(), paymentRequest.getOperationData());
 
             OperationResult result = paymentConnection.postOperation(operation);
             String registrationId = PaymentUtils.getCustomerRegistrationId(result);

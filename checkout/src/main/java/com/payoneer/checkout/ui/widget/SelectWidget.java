@@ -12,7 +12,6 @@ import java.util.List;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.SelectOption;

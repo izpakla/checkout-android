@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2021 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service;
+package com.payoneer.checkout.ui.session;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import com.payoneer.checkout.model.NetworkOperationType;
-import com.payoneer.checkout.ui.session.PaymentSessionService;
 
 @RunWith(RobolectricTestRunner.class)
 public class PaymentSessionServiceTest {

@@ -14,9 +14,8 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static com.payoneer.checkout.sharedtest.checkout.MagicNumbers.CHARGE_PROCEED_OK;
 
-import androidx.test.espresso.IdlingResource;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.InteractionReason;
@@ -29,8 +28,9 @@ import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 import com.payoneer.checkout.ui.page.PaymentListActivity;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import androidx.test.espresso.IdlingResource;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest

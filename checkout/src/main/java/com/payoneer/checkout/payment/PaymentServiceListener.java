@@ -15,7 +15,7 @@ import com.payoneer.checkout.redirect.RedirectRequest;
 /**
  * Presenter to be called by the NetworkService to inform about payment updates and to show i.e. a progress view or progress dialog.
  */
-public interface NetworkServiceListener {
+public interface PaymentServiceListener {
 
     /**
      * Notify the presenter that the service is in progress and requires a progress indicator

@@ -37,8 +37,7 @@
 
                 <include layout="@layout/layout_product" />
 
-                <include
-                    layout="@layout/layout_summarydetails" />
+                <include layout="@layout/layout_summarydetails" />
 
             </LinearLayout>
 

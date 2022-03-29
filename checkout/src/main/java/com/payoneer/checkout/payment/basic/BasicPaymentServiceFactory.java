@@ -10,13 +10,13 @@ package com.payoneer.checkout.payment.basic;
 
 import com.payoneer.checkout.core.PaymentNetworkCodes;
 import com.payoneer.checkout.model.PaymentMethod;
-import com.payoneer.checkout.payment.NetworkService;
-import com.payoneer.checkout.payment.NetworkServiceFactory;
+import com.payoneer.checkout.payment.PaymentService;
+import com.payoneer.checkout.payment.PaymentServiceFactory;
 
 /**
  * Specific implementation for basic networks like i.e. Visa, mastercard and sepa.
  */
-public final class BasicNetworkServiceFactory implements NetworkServiceFactory {
+public final class BasicPaymentServiceFactory implements PaymentServiceFactory {
 
     /**
      * {@inheritDoc}
@@ -46,7 +46,7 @@ public final class BasicNetworkServiceFactory implements NetworkServiceFactory {
      * {@inheritDoc}
      */
     @Override
-    public NetworkService createService() {
-        return new BasicNetworkService();
+    public PaymentService createService() {
+        return new BasicPaymentService();
     }
 }

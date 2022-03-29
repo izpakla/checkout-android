@@ -11,7 +11,6 @@ package com.payoneer.checkout.ui.widget;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.markdown.MarkdownSpannableStringBuilder;
 import com.payoneer.checkout.model.CheckboxMode;
 

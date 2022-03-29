@@ -35,7 +35,7 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
 
     final static int TYPE_CHARGE_OPERATION = 1;
     final static int TYPE_CHARGE_PRESET_ACCOUNT = 2;
-    final static String EXTRA_OPERATION = "operation";
+    final static String EXTRA_PAYMENT_REQUEST = "operation";
     final static String EXTRA_CHARGE_TYPE = "charge_type";
     final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
 

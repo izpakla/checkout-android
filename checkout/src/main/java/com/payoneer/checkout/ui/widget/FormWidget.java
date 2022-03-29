@@ -9,7 +9,6 @@
 package com.payoneer.checkout.ui.widget;
 
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.text.TextUtils;

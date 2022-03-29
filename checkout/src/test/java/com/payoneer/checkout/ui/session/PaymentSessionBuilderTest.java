@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2021 Payoneer Germany GmbH
- * https://payoneer.com
+ * Copyright (c) 2022 Payoneer Germany GmbH
+ * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service;
+package com.payoneer.checkout.ui.session;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -19,7 +19,6 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.resource.PaymentGroup;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.ui.session.PaymentSessionBuilder;
 
 public class PaymentSessionBuilderTest {
 

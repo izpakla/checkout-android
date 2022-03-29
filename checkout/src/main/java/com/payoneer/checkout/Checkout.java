@@ -15,7 +15,6 @@ import com.payoneer.checkout.ui.page.PaymentListActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.text.TextUtils;
 
 /**
  * The Checkout class is the controller to initialize and launch the Payment List.

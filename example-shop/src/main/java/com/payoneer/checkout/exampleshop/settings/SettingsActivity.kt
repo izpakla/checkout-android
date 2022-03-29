@@ -43,7 +43,7 @@ class SettingsActivity : BaseActivity() {
             showErrorDialog(R.string.dialog_error_listurl_invalid)
             return
         }
-        val checkoutConfiguration = CheckoutConfiguration.createBuilder(listUrl).build();
+        val checkoutConfiguration = CheckoutConfiguration.createBuilder(listUrl).build()
         val intent = createStartIntent(this, checkoutConfiguration)
         startActivity(intent)
     }

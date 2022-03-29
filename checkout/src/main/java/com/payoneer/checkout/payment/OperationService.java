@@ -14,9 +14,9 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.WorkerSubscriber;
 import com.payoneer.checkout.core.WorkerTask;
 import com.payoneer.checkout.core.Workers;
+import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.network.DeleteAccount;
 import com.payoneer.checkout.network.Operation;
-import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.network.PaymentConnection;
 import com.payoneer.checkout.risk.RiskProviders;
 
@@ -158,7 +158,7 @@ public final class OperationService {
     private void addRiskProviderRequests(final Operation operation, final Context context) {
         RiskProviders riskProviders = RiskProviders.getInstance();
         if (riskProviders != null) {
-            operation.putProviderRequests(riskProviders.getRiskProviderRequests(context));
+            //operation.putProviderRequests(riskProviders.getRiskProviderRequests(context));
         }
     }
 }

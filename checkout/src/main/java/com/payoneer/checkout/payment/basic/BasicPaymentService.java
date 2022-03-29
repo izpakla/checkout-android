@@ -21,15 +21,16 @@ import static com.payoneer.checkout.model.RedirectType.PROVIDER;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.network.DeleteAccount;
-import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Redirect;
-import com.payoneer.checkout.redirect.RedirectRequest;
-import com.payoneer.checkout.payment.NetworkService;
+import com.payoneer.checkout.network.DeleteAccount;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.payment.OperationListener;
 import com.payoneer.checkout.payment.OperationService;
+import com.payoneer.checkout.payment.PaymentRequest;
+import com.payoneer.checkout.payment.PaymentService;
+import com.payoneer.checkout.redirect.RedirectRequest;
 
 import android.content.Context;
 import android.util.Log;
@@ -38,7 +39,7 @@ import android.util.Log;
  * BasicNetworkService implementing the handling of basic payment methods like Visa, Mastercard and Sepa.
  * This network service also supports redirect networks like Paypal.
  */
-public final class BasicNetworkService extends NetworkService {
+public final class BasicPaymentService extends PaymentService {
 
     private final static int PROCESSPAYMENT_REQUEST_CODE = 0;
     private final static int DELETEACCOUNT_REQUEST_CODE = 1;
@@ -50,7 +51,7 @@ public final class BasicNetworkService extends NetworkService {
      * Create a new BasicNetworkService, this service is a basic implementation
      * that sends an operation to the Payment API.
      */
-    public BasicNetworkService() {
+    public BasicPaymentService() {
         operationService = new OperationService();
         operationService.setListener(new OperationListener() {
 
@@ -82,9 +83,11 @@ public final class BasicNetworkService extends NetworkService {
     }
 
     @Override
-    public void processPayment(Operation operation, Context context) {
-        this.operationType = operation.getOperationType();
+    public void processPayment(final PaymentRequest paymentRequest, Context context) {
+        this.operationType = paymentRequest.getOperationType();
         listener.showProgress(true);
+
+        Operation operation = new Operation(paymentRequest.getOperationLink(), paymentRequest.getOperationData());
         operationService.postOperation(operation, context);
     }
 

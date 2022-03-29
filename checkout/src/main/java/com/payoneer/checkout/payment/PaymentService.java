@@ -8,9 +8,8 @@
 
 package com.payoneer.checkout.payment;
 
-import com.payoneer.checkout.network.DeleteAccount;
-import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.model.OperationResult;
+import com.payoneer.checkout.network.DeleteAccount;
 import com.payoneer.checkout.redirect.RedirectRequest;
 
 import android.content.Context;
@@ -19,9 +18,9 @@ import android.content.Context;
  * Interface for network services, a NetworkService is responsible for activating and
  * processing a payment through the supported payment network.
  */
-public abstract class NetworkService {
+public abstract class PaymentService {
 
-    protected NetworkServiceListener listener;
+    protected PaymentServiceListener listener;
 
     /**
      * Stop this NetworkService
@@ -34,17 +33,17 @@ public abstract class NetworkService {
      *
      * @param listener the listener to be set
      */
-    public void setListener(NetworkServiceListener listener) {
+    public void setListener(PaymentServiceListener listener) {
         this.listener = listener;
     }
 
     /**
      * Process the payment through this NetworkService.
      *
-     * @param operation that should be processed
+     * @param paymentRequest that should be processed
      * @param context in which this payment will be processed
      */
-    public void processPayment(Operation operation, Context context) {
+    public void processPayment(PaymentRequest paymentRequest, Context context) {
     }
 
     /**

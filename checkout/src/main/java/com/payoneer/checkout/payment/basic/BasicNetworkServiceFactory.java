@@ -6,12 +6,12 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service.basic;
+package com.payoneer.checkout.payment.basic;
 
 import com.payoneer.checkout.core.PaymentNetworkCodes;
 import com.payoneer.checkout.model.PaymentMethod;
-import com.payoneer.checkout.ui.service.NetworkService;
-import com.payoneer.checkout.ui.service.NetworkServiceFactory;
+import com.payoneer.checkout.payment.NetworkService;
+import com.payoneer.checkout.payment.NetworkServiceFactory;
 
 /**
  * Specific implementation for basic networks like i.e. Visa, mastercard and sepa.

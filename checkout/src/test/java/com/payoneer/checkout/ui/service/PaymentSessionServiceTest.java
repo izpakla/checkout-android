@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import com.payoneer.checkout.model.NetworkOperationType;
+import com.payoneer.checkout.ui.session.PaymentSessionService;
 
 @RunWith(RobolectricTestRunner.class)
 public class PaymentSessionServiceTest {

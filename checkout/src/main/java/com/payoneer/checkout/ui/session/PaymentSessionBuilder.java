@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2021 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service;
+package com.payoneer.checkout.ui.session;
 
 import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_UPDATE_ACCOUNT;
 import static com.payoneer.checkout.localization.LocalizationKey.LIST_HEADER_ACCOUNTS;
@@ -35,6 +35,7 @@ import com.payoneer.checkout.model.ExtraElements;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.Networks;
 import com.payoneer.checkout.model.PresetAccount;
+import com.payoneer.checkout.payment.NetworkServiceLookup;
 import com.payoneer.checkout.resource.PaymentGroup;
 import com.payoneer.checkout.ui.model.AccountCard;
 import com.payoneer.checkout.ui.model.AccountCard.AccountIcon;

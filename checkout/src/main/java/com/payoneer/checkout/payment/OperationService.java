@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service;
+package com.payoneer.checkout.payment;
 
 import java.util.concurrent.Callable;
 
@@ -14,8 +14,8 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.WorkerSubscriber;
 import com.payoneer.checkout.core.WorkerTask;
 import com.payoneer.checkout.core.Workers;
-import com.payoneer.checkout.form.DeleteAccount;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.DeleteAccount;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.network.PaymentConnection;
 import com.payoneer.checkout.risk.RiskProviders;

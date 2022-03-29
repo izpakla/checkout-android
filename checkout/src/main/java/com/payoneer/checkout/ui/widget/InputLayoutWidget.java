@@ -14,7 +14,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.ui.widget.input.EditTextInputMode;
 import com.payoneer.checkout.validation.ValidationResult;
 
@@ -134,10 +134,10 @@ public abstract class InputLayoutWidget extends FormWidget {
     }
 
     @Override
-    public void putValue(Operation operation) throws PaymentException {
+    public void putValue(WidgetInputCollector collector) throws PaymentException {
         String val = getValue();
         if (!TextUtils.isEmpty(val)) {
-            operation.putStringValue(category, name, val);
+            collector.putStringValue(category, name, val);
         }
     }
 

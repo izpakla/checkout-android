@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service;
+package com.payoneer.checkout.payment;
 
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.core.PaymentException;

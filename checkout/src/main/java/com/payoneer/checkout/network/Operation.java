@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.form;
+package com.payoneer.checkout.network;
 
 import static com.payoneer.checkout.core.PaymentInputCategory.INPUTELEMENT;
 import static com.payoneer.checkout.core.PaymentInputCategory.REGISTRATION;

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service;
+package com.payoneer.checkout.ui.session;
 
 import static com.payoneer.checkout.model.IntegrationType.MOBILE_NATIVE;
 import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
@@ -16,7 +16,6 @@ import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.R;

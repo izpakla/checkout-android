@@ -30,6 +30,7 @@ import com.payoneer.checkout.model.NetworkOperationType;
 import com.payoneer.checkout.model.RegistrationType;
 import com.payoneer.checkout.ui.model.RegistrationOptions;
 import com.payoneer.checkout.ui.model.RegistrationOptions.RegistrationOption;
+import com.payoneer.checkout.ui.session.RegistrationOptionsBuilder;
 
 @RunWith(RobolectricTestRunner.class)
 public class RegistrationOptionsBuilderTest {

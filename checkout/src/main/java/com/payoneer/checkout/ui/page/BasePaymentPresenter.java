@@ -18,8 +18,8 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.ui.service.NetworkService;
-import com.payoneer.checkout.ui.service.NetworkServiceLookup;
+import com.payoneer.checkout.payment.NetworkService;
+import com.payoneer.checkout.payment.NetworkServiceLookup;
 
 /**
  * Base class for payment presenters

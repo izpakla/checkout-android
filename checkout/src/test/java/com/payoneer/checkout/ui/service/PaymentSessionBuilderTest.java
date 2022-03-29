@@ -19,6 +19,7 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.resource.PaymentGroup;
 import com.payoneer.checkout.ui.model.PaymentSession;
+import com.payoneer.checkout.ui.session.PaymentSessionBuilder;
 
 public class PaymentSessionBuilderTest {
 

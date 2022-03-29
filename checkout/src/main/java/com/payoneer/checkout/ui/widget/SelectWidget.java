@@ -12,7 +12,7 @@ import java.util.List;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.SelectOption;
@@ -61,11 +61,11 @@ public final class SelectWidget extends FormWidget {
     }
 
     @Override
-    public void putValue(Operation operation) throws PaymentException {
+    public void putValue(WidgetInputCollector collector) throws PaymentException {
         SpinnerItem selected = (SpinnerItem) spinner.getSelectedItem();
 
         if (selected != null) {
-            operation.putStringValue(category, name, selected.value);
+            collector.putStringValue(category, name, selected.value);
         }
     }
 

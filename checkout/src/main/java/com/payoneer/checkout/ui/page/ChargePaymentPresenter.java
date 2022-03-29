@@ -19,7 +19,7 @@ import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
@@ -31,10 +31,10 @@ import com.payoneer.checkout.redirect.RedirectService;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.ui.service.NetworkService;
-import com.payoneer.checkout.ui.service.NetworkServiceListener;
-import com.payoneer.checkout.ui.service.PaymentSessionListener;
-import com.payoneer.checkout.ui.service.PaymentSessionService;
+import com.payoneer.checkout.payment.NetworkService;
+import com.payoneer.checkout.payment.NetworkServiceListener;
+import com.payoneer.checkout.ui.session.PaymentSessionListener;
+import com.payoneer.checkout.ui.session.PaymentSessionService;
 
 import java.util.Objects;
 

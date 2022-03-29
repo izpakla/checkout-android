@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service;
+package com.payoneer.checkout.payment;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -67,7 +67,7 @@ public class NetworkServiceLookup {
     private static void initFactories() {
         synchronized (factories) {
             if (factories.size() == 0) {
-                loadFactory("com.payoneer.checkout.ui.service.basic.BasicNetworkServiceFactory");
+                loadFactory("com.payoneer.checkout.payment.basic.BasicNetworkServiceFactory");
             }
         }
     }

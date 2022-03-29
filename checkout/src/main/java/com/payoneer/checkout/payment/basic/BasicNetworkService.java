@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.service.basic;
+package com.payoneer.checkout.payment.basic;
 
 import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
@@ -21,15 +21,15 @@ import static com.payoneer.checkout.model.RedirectType.PROVIDER;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.DeleteAccount;
-import com.payoneer.checkout.form.Operation;
+import com.payoneer.checkout.network.DeleteAccount;
+import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.redirect.RedirectRequest;
-import com.payoneer.checkout.ui.service.NetworkService;
-import com.payoneer.checkout.ui.service.OperationListener;
-import com.payoneer.checkout.ui.service.OperationService;
+import com.payoneer.checkout.payment.NetworkService;
+import com.payoneer.checkout.payment.OperationListener;
+import com.payoneer.checkout.payment.OperationService;
 
 import android.content.Context;
 import android.util.Log;

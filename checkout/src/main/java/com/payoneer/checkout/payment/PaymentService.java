@@ -9,7 +9,7 @@
 package com.payoneer.checkout.payment;
 
 import com.payoneer.checkout.model.OperationResult;
-import com.payoneer.checkout.network.DeleteAccount;
+import com.payoneer.checkout.operation.DeleteAccount;
 import com.payoneer.checkout.redirect.RedirectRequest;
 
 import android.content.Context;

@@ -15,6 +15,8 @@ import java.net.MalformedURLException;
 import com.google.gson.JsonParseException;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.OperationResult;
+import com.payoneer.checkout.operation.DeleteAccount;
+import com.payoneer.checkout.operation.Operation;
 
 /**
  * Class containing methods to send Payment Operation requests to the Payment API.
@@ -76,7 +78,6 @@ public final class PaymentConnection extends BaseConnection {
             conn.setRequestProperty(HEADER_CONTENT_TYPE, VALUE_APP_JSON);
             conn.setRequestProperty(HEADER_ACCEPT, VALUE_APP_JSON);
 
-            operation.setBrowserData(browserData);
             writeToOutputStream(conn, operation.toJson());
             conn.connect();
             final int rc = conn.getResponseCode();

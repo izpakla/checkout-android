@@ -39,7 +39,8 @@ import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.Redirect;
-import com.payoneer.checkout.network.DeleteAccount;
+import com.payoneer.checkout.operation.DeleteAccount;
+import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceListener;
@@ -470,14 +471,13 @@ final class PaymentListPresenter extends BasePaymentPresenter
         paymentService.deleteAccount(account, view.getActivity());
     }
 
-    private PaymentRequest createPaymentRequest(PaymentCard card, Map<String, FormWidget> widgets) throws PaymentException {
-        Map<String, URL> links = card.getLinks();
-        PaymentRequest request = new PaymentRequest(card.getNetworkCode(), card.getPaymentMethod(), card.getOperationType(), links);
-
+    private PaymentRequest createPaymentRequest(final PaymentCard card, final Map<String, FormWidget> widgets) {
+        PaymentInputValues inputValues = new PaymentInputValues();
         for (FormWidget widget : widgets.values()) {
-            widget.putValue(request);
+            widget.putValue(inputValues);
         }
-        return request;
+        return new PaymentRequest(card.getNetworkCode(), card.getPaymentMethod(),
+            card.getOperationType(), card.getLinks(), inputValues);
     }
 
     /**

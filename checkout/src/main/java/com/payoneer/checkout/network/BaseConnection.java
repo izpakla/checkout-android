@@ -23,7 +23,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.model.BrowserData;
 import com.payoneer.checkout.model.ErrorInfo;
 
 import android.content.Context;
@@ -49,7 +48,7 @@ abstract class BaseConnection {
     private final static String CONTENTTYPE_JSON = "application/json";
 
     static volatile String userAgent;
-    static volatile BrowserData browserData;
+
 
     final Gson gson = new GsonBuilder().create();
 
@@ -73,9 +72,6 @@ abstract class BaseConnection {
         synchronized (BaseConnection.class) {
             if (userAgent == null) {
                 userAgent = UserAgentBuilder.createFromContext(context);
-            }
-            if (browserData == null) {
-                browserData = BrowserDataBuilder.createFromContext(context);
             }
         }
     }

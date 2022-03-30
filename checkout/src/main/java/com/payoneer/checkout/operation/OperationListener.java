@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.payment;
+package com.payoneer.checkout.operation;
 
 import com.payoneer.checkout.model.OperationResult;
 

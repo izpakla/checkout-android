@@ -25,6 +25,7 @@ import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
+import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceListener;
@@ -157,14 +158,13 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     private void handleLoadSessionProceed(PaymentSession session) {
-        // When charging PresetAccounts, the Operation object will be created after the ListResult has been loaded.
         if (chargeType == TYPE_CHARGE_PRESET_ACCOUNT) {
             PresetAccount account = session.getListResult().getPresetAccount();
             if (account == null) {
                 closeWithErrorCode("PresetAccount not found in ListResult");
                 return;
             }
-            this.paymentRequest = PaymentRequest.fromPresetAccount(account);
+            this.paymentRequest = PaymentRequest.from(account, new PaymentInputValues());
         }
         this.session = session;
         processPayment();

@@ -38,6 +38,7 @@ import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.validation.Validator;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * The PaymentSessionService providing asynchronous loading of the PaymentSession, validator and localizations.
@@ -116,6 +117,7 @@ public final class PaymentSessionService {
 
             @Override
             public void onError(Throwable cause) {
+                Log.w("checkout-sdk", cause);
                 sessionTask = null;
 
                 if (listener != null) {

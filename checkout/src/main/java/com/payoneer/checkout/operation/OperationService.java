@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.payment;
+package com.payoneer.checkout.operation;
 
 import java.util.concurrent.Callable;
 
@@ -14,9 +14,8 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.WorkerSubscriber;
 import com.payoneer.checkout.core.WorkerTask;
 import com.payoneer.checkout.core.Workers;
+import com.payoneer.checkout.model.BrowserData;
 import com.payoneer.checkout.model.OperationResult;
-import com.payoneer.checkout.network.DeleteAccount;
-import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.network.PaymentConnection;
 import com.payoneer.checkout.risk.RiskProviders;
 
@@ -30,6 +29,7 @@ public final class OperationService {
     private final PaymentConnection paymentConnection;
     private OperationListener listener;
     private WorkerTask<OperationResult> task;
+    static volatile BrowserData browserData;
 
     /**
      * Create a new OperationService
@@ -146,6 +146,7 @@ public final class OperationService {
 
     private OperationResult asyncPostOperation(final Operation operation, final Context context) throws PaymentException {
         paymentConnection.initialize(context);
+        addBrowserData(operation, context);
         addRiskProviderRequests(operation, context);
         return paymentConnection.postOperation(operation);
     }
@@ -158,7 +159,18 @@ public final class OperationService {
     private void addRiskProviderRequests(final Operation operation, final Context context) {
         RiskProviders riskProviders = RiskProviders.getInstance();
         if (riskProviders != null) {
-            //operation.putProviderRequests(riskProviders.getRiskProviderRequests(context));
+            operation.putProviderRequests(riskProviders.getRiskProviderRequests(context));
         }
+    }
+
+    private void addBrowserData(final Operation operation, final Context context) {
+        if (browserData == null) {
+            synchronized (OperationService.class) {
+                if (browserData == null) {
+                    browserData = BrowserDataBuilder.createFromContext(context);
+                }
+            }
+        }
+        operation.setBrowserData(browserData);
     }
 }

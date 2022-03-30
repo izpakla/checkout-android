@@ -8,7 +8,7 @@
 
 package com.payoneer.checkout.ui.widget;
 
-import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.text.TextUtils;
@@ -161,11 +161,11 @@ public abstract class FormWidget {
     }
 
     /**
-     * Request the widget to inject its input value into the input collector.
+     * Request the widget to put its value into the inputValues
      *
-     * @param collector in which the input value should be added
+     * @param inputValues in which the input value should be added
      */
-    public void putValue(WidgetInputCollector collector) throws PaymentException {
+    public void putValue(PaymentInputValues inputValues) {
     }
 
     /**

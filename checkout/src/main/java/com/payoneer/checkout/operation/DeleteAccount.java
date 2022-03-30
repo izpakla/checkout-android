@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.network;
+package com.payoneer.checkout.operation;
 
 import java.net.URL;
 

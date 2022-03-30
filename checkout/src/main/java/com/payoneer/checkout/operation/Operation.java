@@ -6,14 +6,17 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.network;
+package com.payoneer.checkout.operation;
 
 import java.net.URL;
+import java.util.List;
 
 import com.google.gson.JsonSyntaxException;
 import com.payoneer.checkout.model.BrowserData;
 import com.payoneer.checkout.model.OperationData;
+import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.util.GsonHelper;
+import com.payoneer.checkout.util.PaymentUtils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -70,6 +73,23 @@ public class Operation implements Parcelable {
 
     public void setBrowserData(BrowserData browserData) {
         operationData.setBrowserData(browserData);
+    }
+
+    public void setProviderRequest(ProviderParameters params) {
+        operationData.setProviderRequest(params);
+    }
+
+    /**
+     * Put ProviderParameters requests into this operation.
+     * If a request with the code and type is already stored, it will be replaced with the new request.
+     *
+     * @param providerRequests list of requests to be put into this operation
+     */
+    public void putProviderRequests(List<ProviderParameters> providerRequests) {
+        if (providerRequests == null || providerRequests.isEmpty()) {
+            return;
+        }
+        PaymentUtils.putProviderRequests(operationData, providerRequests);
     }
 
     public String toJson() {

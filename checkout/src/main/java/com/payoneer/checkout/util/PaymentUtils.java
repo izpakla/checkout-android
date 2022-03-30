@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -28,8 +29,10 @@ import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.Networks;
+import com.payoneer.checkout.model.OperationData;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Parameter;
+import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.model.Redirect;
 
 import android.content.res.Resources;
@@ -211,6 +214,20 @@ public final class PaymentUtils {
     }
 
     /**
+     * Get the URL from the map of URLs with the provided key
+     *
+     * @param key of the url
+     * @param urls from where to find the URL
+     * @return the url with the key or null if not found
+     */
+    public static URL getURL(final String key, final Map<String, URL> urls) {
+        if (urls == null || !urls.containsKey(key)) {
+            return null;
+        }
+        return urls.get(key);
+    }
+
+    /**
      * Get the applicableNetwork from the listResult
      *
      * @param listResult contains the applicableNetwork
@@ -249,6 +266,50 @@ public final class PaymentUtils {
             return null;
         }
         return getParameterValue("customerRegistrationId", redirect.getParameters());
+    }
+
+
+    /**
+     * Put ProviderParameters requests into this operation.
+     * If a request with the code and type is already stored, it will be replaced with the new request.
+     *
+     * @param providerRequests list of requests to be put into this operation
+     */
+    public static void putProviderRequests(final OperationData operationData, final List<ProviderParameters> providerRequests) {
+        List<ProviderParameters> list = operationData.getProviderRequests();
+        if (list == null) {
+            list = new ArrayList<>();
+            operationData.setProviderRequests(list);
+        }
+        for (ProviderParameters request : providerRequests) {
+            int index = getProviderRequestIndex(operationData, request);
+            if (index == -1) {
+                list.add(request);
+            } else {
+                list.set(index, request);
+            }
+        }
+    }
+
+    /**
+     * get the index of the provider request from the operationData, if the provider request was not found than return -1
+     *
+     * @param operationData in which the provider request should be found
+     * @param providerRequest to be found in the operationData
+     * @return the index of the providerRequest or -1 if not found
+     */
+    public static int getProviderRequestIndex(final OperationData operationData, final ProviderParameters providerRequest) {
+        List<ProviderParameters> list = operationData.getProviderRequests();
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                ProviderParameters parameters = list.get(i);
+                if ((Objects.equals(parameters.getProviderCode(), providerRequest.getProviderCode())) &&
+                    (Objects.equals(parameters.getProviderType(), providerRequest.getProviderType()))) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     /**

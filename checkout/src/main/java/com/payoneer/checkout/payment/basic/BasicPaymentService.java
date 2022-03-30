@@ -21,13 +21,14 @@ import static com.payoneer.checkout.model.RedirectType.PROVIDER;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Redirect;
-import com.payoneer.checkout.network.DeleteAccount;
-import com.payoneer.checkout.network.Operation;
-import com.payoneer.checkout.payment.OperationListener;
-import com.payoneer.checkout.payment.OperationService;
+import com.payoneer.checkout.operation.DeleteAccount;
+import com.payoneer.checkout.operation.Operation;
+import com.payoneer.checkout.operation.OperationListener;
+import com.payoneer.checkout.operation.OperationService;
 import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.redirect.RedirectRequest;
@@ -85,9 +86,9 @@ public final class BasicPaymentService extends PaymentService {
     @Override
     public void processPayment(final PaymentRequest paymentRequest, Context context) {
         this.operationType = paymentRequest.getOperationType();
-        listener.showProgress(true);
 
-        Operation operation = new Operation(paymentRequest.getOperationLink(), paymentRequest.getOperationData());
+        listener.showProgress(true);
+        Operation operation = paymentRequest.createOperationWithLink(PaymentLinkType.OPERATION);
         operationService.postOperation(operation, context);
     }
 

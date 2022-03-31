@@ -41,7 +41,7 @@ public class ListConnectionTest {
     @Test(expected = IllegalArgumentException.class)
     public void createPaymentSession_invalidAuthorization_IllegalArgumentException() throws PaymentException {
         ListConnection conn = createListConnection();
-        conn.createPaymentSession("http://localhost", null, "{}");
+        conn.createPaymentSession(null, null, "{}");
     }
 
     /**
@@ -52,7 +52,7 @@ public class ListConnectionTest {
     @Test(expected = IllegalArgumentException.class)
     public void createPaymentSession_invalidListData_IllegalArgumentException() throws PaymentException {
         ListConnection conn = createListConnection();
-        conn.createPaymentSession("http://localhost", "auth123", "");
+        conn.createPaymentSession(null, "auth123", "");
     }
 
     /**

@@ -19,6 +19,8 @@ import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.checkout.CheckoutActivity.Companion.createStartIntent
 import com.payoneer.checkout.exampleshop.databinding.ActivitySettingsBinding
 import com.payoneer.checkout.exampleshop.shared.BaseActivity
+import java.net.MalformedURLException
+import java.net.URL
 
 /**
  * This is the main Activity of this shop app in which users can paste a listUrl and start the shop.
@@ -38,15 +40,24 @@ class SettingsActivity : BaseActivity() {
 
     private fun onButtonClicked() {
         closeKeyboard()
-        val listUrl = editTextListInput.text.toString().trim { it <= ' ' }
-        if (TextUtils.isEmpty(listUrl) || !Patterns.WEB_URL.matcher(listUrl).matches()) {
+        val stringUrl = editTextListInput.text.toString().trim { it <= ' ' }
+        if (TextUtils.isEmpty(stringUrl) || !Patterns.WEB_URL.matcher(stringUrl).matches()) {
             showErrorDialog(R.string.dialog_error_listurl_invalid)
             return
         }
-        val checkoutConfiguration = CheckoutConfiguration.createBuilder(listUrl).build();
+        val listURL = createListURL(stringUrl)
+        val checkoutConfiguration = CheckoutConfiguration.createBuilder(listURL).build();
         val intent = createStartIntent(this, checkoutConfiguration)
         startActivity(intent)
     }
+
+    private fun createListURL(stringUrl: String) =
+        try {
+            URL(stringUrl);
+        } catch (e: MalformedURLException) {
+            e.printStackTrace()
+            null
+        }
 
     private fun closeKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?

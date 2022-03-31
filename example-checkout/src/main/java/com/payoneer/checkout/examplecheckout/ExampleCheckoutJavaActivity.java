@@ -7,6 +7,21 @@
  */
 package com.payoneer.checkout.examplecheckout;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.Patterns;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.IdlingResource;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.CheckoutActivityResult;
@@ -17,24 +32,15 @@ import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckout
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.text.TextUtils;
-import android.util.Patterns;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
-import androidx.annotation.VisibleForTesting;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.test.espresso.IdlingResource;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * This is the main Activity of this example app demonstrating how to use the Checkout SDK
  */
 public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
 
+    private final String TAG = ExampleCheckoutJavaActivity.class.getSimpleName();
     private final static int PAYMENT_REQUEST_CODE = 1;
     private final static int CHARGE_PRESET_ACCOUNT_REQUEST_CODE = 2;
     private ActivityExamplecheckoutBinding binding;
@@ -143,24 +149,37 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     }
 
     private CheckoutConfiguration createCheckoutConfiguration() {
-        String listUrl = binding.inputListurl.getText().toString().trim();
-        if (TextUtils.isEmpty(listUrl) || !Patterns.WEB_URL.matcher(listUrl).matches()) {
+        String stringUrl = binding.inputListurl.getText().toString().trim();
+
+        if (TextUtils.isEmpty(stringUrl) || !Patterns.WEB_URL.matcher(stringUrl).matches()) {
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid));
             return null;
         }
+
+        URL listUrl = createListURL(stringUrl);
         return CheckoutConfiguration.createBuilder(listUrl)
-            .theme(createCheckoutTheme())
-            // Uncomment to set screens to landscape orientation
-            //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-            .build();
+                .theme(createCheckoutTheme())
+                // Uncomment to set screens to landscape orientation
+                //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                .build();
+    }
+
+    private URL createListURL(String stringUrl) {
+        URL url = null;
+        try {
+            url = new URL(stringUrl);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Error with creating URL ", e);
+        }
+        return url;
     }
 
     private CheckoutTheme createCheckoutTheme() {
         if (binding.switchTheme.isChecked()) {
             return CheckoutTheme.createBuilder().
-                setToolbarTheme(R.style.CustomTheme_Toolbar).
-                setNoToolbarTheme(R.style.CustomTheme_NoToolbar).
-                build();
+                    setToolbarTheme(R.style.CustomTheme_Toolbar).
+                    setNoToolbarTheme(R.style.CustomTheme_NoToolbar).
+                    build();
         } else {
             return CheckoutTheme.createDefault();
         }

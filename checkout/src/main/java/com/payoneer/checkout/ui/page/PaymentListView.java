@@ -23,15 +23,6 @@ interface PaymentListView extends BasePaymentView {
     void clearPaymentList();
 
     /**
-     * Show the Charge payment screen for the provided operation
-     *
-     * @param requestCode the code identifying the request
-     * @param paymentRequest to be handled by the charge payment screen
-     * @param configuration is the config object
-     */
-    void showChargePaymentScreen(int requestCode, PaymentRequest paymentRequest, CheckoutConfiguration configuration);
-
-    /**
      * Stop loading and show the PaymentSession
      *
      * @param session the payment session to be shown to the user

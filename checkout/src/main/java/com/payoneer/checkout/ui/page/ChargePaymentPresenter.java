@@ -28,9 +28,7 @@ import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.payment.PaymentService;
-import com.payoneer.checkout.payment.PaymentServiceListener;
-import com.payoneer.checkout.redirect.RedirectRequest;
-import com.payoneer.checkout.redirect.RedirectService;
+import com.payoneer.checkout.payment.PaymentServiceController;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentSession;
@@ -43,13 +41,12 @@ import android.content.Context;
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
  * First this presenter will load the list, checks if the operation is present and then post the operation to the Payment API.
  */
-final class ChargePaymentPresenter extends BasePaymentPresenter implements PaymentSessionListener, PaymentServiceListener {
+final class ChargePaymentPresenter extends BasePaymentPresenter implements PaymentSessionListener, PaymentServiceController {
 
     private final PaymentSessionService sessionService;
     private PaymentSession session;
     private PaymentRequest paymentRequest;
     private PaymentService paymentService;
-    private RedirectRequest redirectRequest;
     private int chargeType;
 
     /**
@@ -70,9 +67,8 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         }
         setState(STARTED);
 
-        if (redirectRequest != null) {
-            handleRedirectRequest(redirectRequest);
-            redirectRequest = null;
+        if (paymentService != null && paymentService.isProcessing()) {
+            paymentService.resumeProcessing();
         } else {
             loadPaymentSession();
         }
@@ -100,6 +96,11 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     @Override
+    public Context getContext() {
+        return view.getActivity();
+    }
+
+    @Override
     public void onPaymentSessionError(Throwable cause) {
         handleLoadingError(cause);
     }
@@ -110,7 +111,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     @Override
-    public void onProcessCheckoutResult(int resultCode, CheckoutResult result) {
+    public void onProcessPaymentResult(int resultCode, CheckoutResult result) {
         setState(STARTED);
         switch (resultCode) {
             case RESULT_CODE_PROCEED:
@@ -126,22 +127,10 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     public void onDeleteAccountResult(int resultCode, CheckoutResult result) {
     }
 
-    @Override
-    public void redirect(RedirectRequest redirectRequest) throws PaymentException {
-        Context context = view.getActivity();
-
-        if (!RedirectService.supports(context, redirectRequest)) {
-            throw new PaymentException("The Redirect payment method is not supported by the Android-SDK");
-        }
-        this.redirectRequest = redirectRequest;
-        view.showProgress(false);
-        RedirectService.redirect(context, redirectRequest);
-    }
-
     private void processPayment() {
         try {
             paymentService = loadNetworkService(paymentRequest.getNetworkCode(), paymentRequest.getPaymentMethod());
-            paymentService.setListener(this);
+            paymentService.setController(this);
             processPayment(paymentRequest);
         } catch (PaymentException e) {
             closeWithErrorCode(CheckoutResultHelper.fromThrowable(e));
@@ -151,10 +140,6 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     boolean onBackPressed() {
         view.showWarningMessage(Localization.translate(CHARGE_INTERRUPTED));
         return true;
-    }
-
-    private void handleRedirectRequest(RedirectRequest redirectRequest) {
-        paymentService.onRedirectResult(redirectRequest, RedirectService.getRedirectResult());
     }
 
     private void handleLoadSessionProceed(PaymentSession session) {

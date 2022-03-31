@@ -12,10 +12,12 @@ import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.redirect.RedirectRequest;
 
+import android.content.Context;
+
 /**
  * Presenter to be called by the NetworkService to inform about payment updates and to show i.e. a progress view or progress dialog.
  */
-public interface PaymentServiceListener {
+public interface PaymentServiceController {
 
     /**
      * Notify the presenter that the service is in progress and requires a progress indicator
@@ -25,22 +27,22 @@ public interface PaymentServiceListener {
     void showProgress(boolean visible);
 
     /**
-     * Ask the network service to redirect the payment to an external address
+     * Get the context in which this controller is operating
      *
-     * @param request containing the redirect data
+     * @return current context
      */
-    void redirect(RedirectRequest request) throws PaymentException;
+    Context getContext();
 
     /**
-     * Called when NetworkService is done processing the request.
+     * Called when PaymentService is done processing the request.
      *
      * @param resultCode code describing the state of the ChechkoutResult
      * @param checkoutResult containing the information describing the result
      */
-    void onProcessCheckoutResult(int resultCode, CheckoutResult checkoutResult);
+    void onProcessPaymentResult(int resultCode, CheckoutResult checkoutResult);
 
     /**
-     * Called when NetworkService is done deleting the account.
+     * Called when PaymentService is done deleting the account.
      *
      * @param resultCode code describing the state of the CheckoutResult
      * @param checkoutResult containing the information describing the result

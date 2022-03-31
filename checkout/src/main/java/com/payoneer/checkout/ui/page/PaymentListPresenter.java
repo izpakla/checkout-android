@@ -32,6 +32,7 @@ import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
@@ -43,7 +44,7 @@ import com.payoneer.checkout.operation.DeleteAccount;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.payment.PaymentService;
-import com.payoneer.checkout.payment.PaymentServiceListener;
+import com.payoneer.checkout.payment.PaymentServiceController;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
@@ -64,20 +65,16 @@ import android.text.TextUtils;
  * The PaymentListPresenter implementing the presenter part of the MVP
  */
 final class PaymentListPresenter extends BasePaymentPresenter
-    implements PaymentSessionListener, PaymentServiceListener, PaymentListListener {
+    implements PaymentSessionListener, PaymentServiceController, PaymentListListener {
 
-    private final static int CHARGEPAYMENT_REQUEST_CODE = 1;
     private final PaymentSessionService sessionService;
     private final PaymentListView listView;
-
-    private PaymentRequest paymentRequest;
-    private DeleteAccount deleteAccount;
     private final CheckoutConfiguration configuration;
 
     private PaymentSession session;
-    private CheckoutActivityResult activityResult;
     private PaymentService paymentService;
-    private RedirectRequest redirectRequest;
+    private PaymentRequest paymentRequest;
+    private DeleteAccount deleteAccount;
 
     /**
      * Create a new PaymentListPresenter
@@ -96,15 +93,13 @@ final class PaymentListPresenter extends BasePaymentPresenter
     void onStart() {
         setState(STARTED);
 
-        if (redirectRequest != null) {
-            handleRedirectRequest(redirectRequest);
-            redirectRequest = null;
-        } else if (activityResult != null) {
-            handleCheckoutActivityResult(activityResult);
-            activityResult = null;
-        } else if (session == null) {
+        if (paymentService != null && paymentService.isProcessing()) {
+            paymentService.resumeProcessing();
+        }
+        else if (session == null) {
             loadPaymentSession();
-        } else {
+        }
+        else {
             showPaymentSession();
         }
     }
@@ -116,6 +111,11 @@ final class PaymentListPresenter extends BasePaymentPresenter
         if (paymentService != null) {
             paymentService.stop();
         }
+    }
+
+    @Override
+    public Context getContext() {
+        return view.getActivity();
     }
 
     public void onRefresh(boolean hasUserInputData) {
@@ -141,10 +141,6 @@ final class PaymentListPresenter extends BasePaymentPresenter
             }
         };
         view.showRefreshAccountDialog(listener);
-    }
-
-    void setCheckoutActivityResult(CheckoutActivityResult activityResult) {
-        this.activityResult = activityResult;
     }
 
     @Override
@@ -248,18 +244,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public void redirect(RedirectRequest redirectRequest) throws PaymentException {
-        Context context = view.getActivity();
-        if (!RedirectService.supports(context, redirectRequest)) {
-            throw new PaymentException("The Redirect payment method is not supported by the Android-SDK");
-        }
-        this.redirectRequest = redirectRequest;
-        view.showProgress(false);
-        RedirectService.redirect(context, redirectRequest);
-    }
-
-    @Override
-    public void onProcessCheckoutResult(int resultCode, CheckoutResult result) {
+    public void onProcessPaymentResult(int resultCode, CheckoutResult result) {
         setState(STARTED);
         if (UPDATE.equals(session.getListOperationType())) {
             handleUpdateCheckoutResult(resultCode, result);
@@ -369,12 +354,6 @@ final class PaymentListPresenter extends BasePaymentPresenter
         });
     }
 
-    private void handleRedirectRequest(RedirectRequest redirectRequest) {
-        setState(PROCESS);
-        OperationResult result = RedirectService.getRedirectResult();
-        paymentService.onRedirectResult(redirectRequest, result);
-    }
-
     private void handleLoadPaymentSessionProceed(PaymentSession session) {
         if (session.isEmpty()) {
             closeWithErrorCode("There are no payment methods available");
@@ -403,17 +382,6 @@ final class PaymentListPresenter extends BasePaymentPresenter
         });
     }
 
-    private void handleCheckoutActivityResult(CheckoutActivityResult activityResult) {
-        if (this.session == null) {
-            closeWithErrorCode("Missing cached PaymentSession in PaymentListPresenter");
-            return;
-        }
-        int requestCode = activityResult.getRequestCode();
-        if (requestCode == CHARGEPAYMENT_REQUEST_CODE) {
-            handleChargeActivityResult(activityResult);
-        }
-    }
-
     private void handleDeleteNetworkFailure(final CheckoutResult result) {
         view.showConnectionErrorDialog(new PaymentDialogListener() {
             @Override
@@ -436,13 +404,9 @@ final class PaymentListPresenter extends BasePaymentPresenter
     private void processPaymentCard(PaymentCard paymentCard, Map<String, FormWidget> widgets) {
         try {
             paymentRequest = createPaymentRequest(paymentCard, widgets);
-            if (CHARGE.equals(paymentRequest.getOperationType())) {
-                listView.showChargePaymentScreen(CHARGEPAYMENT_REQUEST_CODE, paymentRequest, configuration);
-            } else {
-                paymentService = loadNetworkService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
-                paymentService.setListener(this);
-                processPaymentRequest(paymentRequest);
-            }
+            paymentService = loadNetworkService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
+            paymentService.setController(this);
+            processPaymentRequest(paymentRequest);
         } catch (PaymentException e) {
             closeWithErrorCode(CheckoutResultHelper.fromThrowable(e));
         }
@@ -451,9 +415,9 @@ final class PaymentListPresenter extends BasePaymentPresenter
     private void deleteAccountCard(AccountCard card) {
         try {
             paymentService = loadNetworkService(card.getNetworkCode(), card.getPaymentMethod());
-            paymentService.setListener(this);
+            paymentService.setController(this);
 
-            URL url = card.getLink("self");
+            URL url = card.getLink(PaymentLinkType.SELF);
             deleteAccount = new DeleteAccount(url, session.getListOperationType());
             deleteAccount(deleteAccount);
         } catch (PaymentException e) {
@@ -478,41 +442,6 @@ final class PaymentListPresenter extends BasePaymentPresenter
         }
         return new PaymentRequest(card.getNetworkCode(), card.getPaymentMethod(),
             card.getOperationType(), card.getLinks(), inputValues);
-    }
-
-    /**
-     * The Charge result is received from the ChargePaymentActivity. Error messages are not displayed by this presenter since
-     * the ChargePaymentActivity has taken care of displaying error and warning messages.
-     *
-     * @param checkoutActivityResult result received after a charge has been performed
-     */
-    private void handleChargeActivityResult(CheckoutActivityResult checkoutActivityResult) {
-        switch (checkoutActivityResult.getResultCode()) {
-            case RESULT_CODE_ERROR:
-                handleChargeError(checkoutActivityResult);
-                break;
-            case RESULT_CODE_PROCEED:
-                view.passOnActivityResult(checkoutActivityResult);
-                break;
-            default:
-                showPaymentSession();
-        }
-    }
-
-    private void handleChargeError(CheckoutActivityResult checkoutActivityResult) {
-        Interaction interaction = checkoutActivityResult.getCheckoutResult().getInteraction();
-        switch (interaction.getCode()) {
-            case RELOAD:
-            case TRY_OTHER_ACCOUNT:
-            case TRY_OTHER_NETWORK:
-                loadPaymentSession();
-                break;
-            case RETRY:
-                showPaymentSession();
-                break;
-            default:
-                view.passOnActivityResult(checkoutActivityResult);
-        }
     }
 
     private void onPresetCardSelected(PresetCard card) {

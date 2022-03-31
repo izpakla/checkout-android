@@ -20,21 +20,23 @@ import android.content.Context;
  */
 public abstract class PaymentService {
 
-    protected PaymentServiceListener listener;
+    protected PaymentServiceController controller;
 
-    /**
-     * Stop this NetworkService
-     */
-    public void stop() {
+    public abstract void stop();
+
+    public abstract void resumeProcessing();
+
+    public boolean isProcessing() {
+        return false;
     }
 
     /**
      * Set the listener in this NetworkService
      *
-     * @param listener the listener to be set
+     * @param controller the listener to be set
      */
-    public void setListener(PaymentServiceListener listener) {
-        this.listener = listener;
+    public void setController(PaymentServiceController controller) {
+        this.controller = controller;
     }
 
     /**
@@ -53,14 +55,5 @@ public abstract class PaymentService {
      * @param context in which this account will be deleted
      */
     public void deleteAccount(DeleteAccount account, Context context) {
-    }
-
-    /**
-     * Notify the network service that the payment has been redirected
-     *
-     * @param request the original redirect request that triggered this result
-     * @param result optional redirect result
-     */
-    public void onRedirectResult(RedirectRequest request, OperationResult result) {
     }
 }

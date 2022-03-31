@@ -8,16 +8,18 @@
 
 package com.payoneer.checkout.network;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
+import android.net.Uri;
+import android.text.TextUtils;
 
 import com.google.gson.JsonParseException;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.ListResult;
 
-import android.net.Uri;
-import android.text.TextUtils;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Class implementing the communication with the List payment API
@@ -34,15 +36,15 @@ public final class ListConnection extends BaseConnection {
      * a request mobile apps should be making as this call is normally executed
      * Merchant Server-side. This request will be removed later.
      *
-     * @param listUrl the listUrl of the Payment API
+     * @param listURL       the listURL of the Payment API
      * @param authorization the authorization header data
-     * @param listData the data containing the request body for the list request
+     * @param listData      the data containing the request body for the list request
      * @return the ListResult
      */
-    public ListResult createPaymentSession(final String listUrl, final String authorization, final String listData)
-        throws PaymentException {
-        if (TextUtils.isEmpty(listUrl)) {
-            throw new IllegalArgumentException("listUrl cannot be null or empty");
+    public ListResult createPaymentSession(final URL listURL, final String authorization, final String listData)
+            throws PaymentException {
+        if (listURL == null) {
+            throw new IllegalArgumentException("createPaymentSession - listURL cannot be null or empty");
         }
         if (TextUtils.isEmpty(authorization)) {
             throw new IllegalArgumentException("authorization cannot be null or empty");
@@ -53,7 +55,7 @@ public final class ListConnection extends BaseConnection {
 
         HttpURLConnection conn = null;
         try {
-            conn = createPostConnection(listUrl);
+            conn = createPostConnection(listURL);
             conn.setRequestProperty(HEADER_AUTHORIZATION, authorization);
             conn.setRequestProperty(HEADER_CONTENT_TYPE, VALUE_APP_JSON);
             conn.setRequestProperty(HEADER_ACCEPT, VALUE_APP_JSON);
@@ -82,15 +84,17 @@ public final class ListConnection extends BaseConnection {
      * @param url the url pointing to the list
      * @return the NetworkResponse containing either an error or the ListResult
      */
-    public ListResult getListResult(final String url) throws PaymentException {
-        if (TextUtils.isEmpty(url)) {
-            throw new IllegalArgumentException("url cannot be null or empty");
+    public ListResult getListResult(final URL url) throws PaymentException {
+        if (url == null) {
+            throw new IllegalArgumentException("getListResult - URL cannot be null");
         }
         HttpURLConnection conn = null;
 
         try {
-            final String requestUrl = Uri.parse(url).buildUpon()
-                .build().toString();
+            //We first call toURI then parse because toURI() returns a java.net.URI.
+            // So we need to map to string and then parse into android.net.Uri
+            final String requestUrl = Uri.parse(url.toURI().toString()).buildUpon()
+                    .build().toString();
 
             conn = createGetConnection(requestUrl);
             conn.setRequestProperty(HEADER_CONTENT_TYPE, VALUE_APP_JSON);
@@ -102,7 +106,7 @@ public final class ListConnection extends BaseConnection {
                 return handleGetListResultOk(readFromInputStream(conn));
             }
             throw createPaymentException(rc, conn);
-        } catch (JsonParseException | MalformedURLException | SecurityException e) {
+        } catch (JsonParseException | MalformedURLException | URISyntaxException | SecurityException e) {
             throw createPaymentException(e, false);
         } catch (IOException e) {
             throw createPaymentException(e, true);

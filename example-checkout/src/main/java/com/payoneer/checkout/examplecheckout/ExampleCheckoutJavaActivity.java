@@ -7,20 +7,8 @@
  */
 package com.payoneer.checkout.examplecheckout;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.text.TextUtils;
-import android.util.Log;
-import android.util.Patterns;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
-
-import androidx.annotation.VisibleForTesting;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.test.espresso.IdlingResource;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.payoneer.checkout.Checkout;
@@ -32,17 +20,27 @@ import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckout
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.IdlingResource;
 
 /**
  * This is the main Activity of this example app demonstrating how to use the Checkout SDK
  */
 public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
 
-    private final String TAG = ExampleCheckoutJavaActivity.class.getSimpleName();
     private final static int PAYMENT_REQUEST_CODE = 1;
     private final static int CHARGE_PRESET_ACCOUNT_REQUEST_CODE = 2;
+    private final String TAG = ExampleCheckoutJavaActivity.class.getSimpleName();
     private ActivityExamplecheckoutBinding binding;
     private CheckoutActivityResult activityResult;
     private SimpleIdlingResource resultHandledIdlingResource;
@@ -150,18 +148,19 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
 
     private CheckoutConfiguration createCheckoutConfiguration() {
         String stringUrl = binding.inputListurl.getText().toString().trim();
+        try {
+            URL listUrl = new URL(stringUrl);
 
-        if (TextUtils.isEmpty(stringUrl) || !Patterns.WEB_URL.matcher(stringUrl).matches()) {
-            showErrorDialog(getString(R.string.dialog_error_listurl_invalid));
-            return null;
-        }
-
-        URL listUrl = createListURL(stringUrl);
-        return CheckoutConfiguration.createBuilder(listUrl)
+            return CheckoutConfiguration.createBuilder(listUrl)
                 .theme(createCheckoutTheme())
                 // Uncomment to set screens to landscape orientation
                 //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
                 .build();
+        } catch (MalformedURLException exception) {
+            Log.e(TAG, "createCheckoutConfigurationJava - Error creating URL");
+            showErrorDialog(getString(R.string.dialog_error_listurl_invalid));
+            return null;
+        }
     }
 
     private URL createListURL(String stringUrl) {
@@ -177,9 +176,9 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     private CheckoutTheme createCheckoutTheme() {
         if (binding.switchTheme.isChecked()) {
             return CheckoutTheme.createBuilder().
-                    setToolbarTheme(R.style.CustomTheme_Toolbar).
-                    setNoToolbarTheme(R.style.CustomTheme_NoToolbar).
-                    build();
+                setToolbarTheme(R.style.CustomTheme_Toolbar).
+                setNoToolbarTheme(R.style.CustomTheme_NoToolbar).
+                build();
         } else {
             return CheckoutTheme.createDefault();
         }

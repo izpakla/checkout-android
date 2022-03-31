@@ -13,7 +13,7 @@ package com.payoneer.checkout.examplecheckout
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Patterns
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.VisibleForTesting
@@ -38,7 +38,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     companion object {
         const val PAYMENT_REQUEST_CODE = 1
         const val CHARGE_PRESET_ACCOUNT_REQUEST_CODE = 2
-        private const val TAG = "ExampleCheckoutKotlinActivity"
+        private const val TAG = "CheckoutKotlinActivity"
     }
 
     private lateinit var binding: ActivityExamplecheckoutBinding
@@ -121,26 +121,20 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
 
     private fun createCheckoutConfiguration(): CheckoutConfiguration? {
         val stringUrl: String = binding.inputListurl.text.toString().trim()
-        if (TextUtils.isEmpty(stringUrl) || !Patterns.WEB_URL.matcher(stringUrl).matches()) {
-            showErrorDialog(getString(R.string.dialog_error_listurl_invalid))
-            return null
-        }
+        return try {
+            val listUrl = URL(stringUrl)
 
-        val listUrl = createListURL(stringUrl)
-        return CheckoutConfiguration.createBuilder(listUrl)
-            .theme(createCheckoutTheme())
-            // Uncomment the following line to fix the orientation of the screens
-            //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-            .build()
-    }
-
-    private fun createListURL(stringUrl: String) =
-        try {
-            URL(stringUrl);
+            CheckoutConfiguration.createBuilder(listUrl)
+                .theme(createCheckoutTheme())
+                // Uncomment the following line to fix the orientation of the screens
+                //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                .build()
         } catch (e: MalformedURLException) {
-            e.printStackTrace()
+            Log.e(TAG, "createCheckoutConfigurationKotlin - Error creating URL")
+            showErrorDialog(getString(R.string.dialog_error_listurl_invalid))
             null
         }
+    }
 
     private fun createCheckoutTheme(): CheckoutTheme? = if (binding.switchTheme.isChecked) {
         CheckoutTheme.createBuilder().setToolbarTheme(R.style.CustomTheme_Toolbar)

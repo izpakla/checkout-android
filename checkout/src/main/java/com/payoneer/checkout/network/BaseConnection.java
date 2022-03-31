@@ -8,17 +8,6 @@
 
 package com.payoneer.checkout.network;
 
-import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
-import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.model.BrowserData;
-import com.payoneer.checkout.model.ErrorInfo;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +18,17 @@ import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.model.BrowserData;
+import com.payoneer.checkout.model.ErrorInfo;
+
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * The base class for all Payment API implementations
@@ -94,16 +94,6 @@ abstract class BaseConnection {
     }
 
     /**
-     * Creates a new HTTP GET connection given the String url
-     *
-     * @param url the url pointing to the Payment API
-     * @return HttpURLConnection a HttpURLConnection object
-     */
-    HttpURLConnection createGetConnection(final String url) throws IOException {
-        return createGetConnection(new URL(url));
-    }
-
-    /**
      * Creates a new HTTP GET connection
      *
      * @param url the Url pointing to the Payment API
@@ -157,8 +147,8 @@ abstract class BaseConnection {
     String readFromInputStream(final HttpURLConnection conn) throws IOException {
 
         try (InputStream in = conn.getInputStream();
-             InputStreamReader ir = new InputStreamReader(in);
-             BufferedReader rd = new BufferedReader(ir)) {
+            InputStreamReader ir = new InputStreamReader(in);
+            BufferedReader rd = new BufferedReader(ir)) {
             return readFromBufferedReader(rd);
         }
     }
@@ -175,8 +165,8 @@ abstract class BaseConnection {
             return null;
         }
         try (InputStream in = conn.getErrorStream();
-             InputStreamReader ir = new InputStreamReader(in);
-             BufferedReader rd = new BufferedReader(ir)) {
+            InputStreamReader ir = new InputStreamReader(in);
+            BufferedReader rd = new BufferedReader(ir)) {
             return readFromBufferedReader(rd);
         }
     }
@@ -199,7 +189,7 @@ abstract class BaseConnection {
      * Handle the error response from the Payment API
      *
      * @param statusCode the status code
-     * @param conn       the conn
+     * @param conn the conn
      * @return PaymentException network exception
      */
     PaymentException createPaymentException(final int statusCode, final HttpURLConnection conn) {
@@ -227,7 +217,7 @@ abstract class BaseConnection {
     /**
      * Handle the error response from the Payment API
      *
-     * @param cause          the cause
+     * @param cause the cause
      * @param networkFailure was the error caused by a network failure
      * @return NetworkResponse network exception
      */

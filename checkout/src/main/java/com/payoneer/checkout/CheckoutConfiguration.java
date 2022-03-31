@@ -8,13 +8,12 @@
 
 package com.payoneer.checkout;
 
+import java.net.URL;
+
 import android.content.pm.ActivityInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
-
-import java.net.URL;
 
 /**
  * The CheckoutConfiguration is the class containing information about the payment session.
@@ -22,16 +21,25 @@ import java.net.URL;
  */
 public final class CheckoutConfiguration implements Parcelable {
 
+    public static final Creator<CheckoutConfiguration> CREATOR = new Creator<CheckoutConfiguration>() {
+        @Override
+        public CheckoutConfiguration createFromParcel(Parcel in) {
+            return new CheckoutConfiguration(in);
+        }
+
+        @Override
+        public CheckoutConfiguration[] newArray(final int size) {
+            return new CheckoutConfiguration[size];
+        }
+    };
     /**
      * The self url pointing to the payment session list
      */
     private final URL listURL;
-
     /**
      * The theming to be applied to the screens and dialogs
      */
     private final CheckoutTheme checkoutTheme;
-
     /**
      * The orientation of the screens, by default it is in locked mode
      */
@@ -49,6 +57,13 @@ public final class CheckoutConfiguration implements Parcelable {
         orientation = in.readInt();
     }
 
+    public static Builder createBuilder(final URL listURL) {
+        if (listURL == null) {
+            throw new IllegalArgumentException("URL cannot be null");
+        }
+        return new Builder(listURL);
+    }
+
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeSerializable(listURL);
@@ -61,18 +76,6 @@ public final class CheckoutConfiguration implements Parcelable {
         return 0;
     }
 
-    public static final Creator<CheckoutConfiguration> CREATOR = new Creator<CheckoutConfiguration>() {
-        @Override
-        public CheckoutConfiguration createFromParcel(Parcel in) {
-            return new CheckoutConfiguration(in);
-        }
-
-        @Override
-        public CheckoutConfiguration[] newArray(final int size) {
-            return new CheckoutConfiguration[size];
-        }
-    };
-
     public URL getListURL() {
         return listURL;
     }
@@ -83,13 +86,6 @@ public final class CheckoutConfiguration implements Parcelable {
 
     public int getOrientation() {
         return orientation;
-    }
-
-    public static Builder createBuilder(final URL listURL) {
-        if (listURL == null) {
-            throw new IllegalArgumentException("URL cannot be null");
-        }
-        return new Builder(listURL);
     }
 
     @NonNull

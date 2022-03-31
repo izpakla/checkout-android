@@ -45,16 +45,14 @@ import android.content.Context;
  */
 public final class PaymentSessionService {
 
-    private final ListConnection listConnection;
-    private final LocalizationConnection locConnection;
-
-    private PaymentSessionListener listener;
-    private WorkerTask<PaymentSession> sessionTask;
-
     /**
      * Memory cache of localizations
      */
     private static final LocalizationCache cache = new LocalizationCache();
+    private final ListConnection listConnection;
+    private final LocalizationConnection locConnection;
+    private PaymentSessionListener listener;
+    private WorkerTask<PaymentSession> sessionTask;
 
     /**
      * Create a new PaymentSessionService, this service is used to load the PaymentSession.

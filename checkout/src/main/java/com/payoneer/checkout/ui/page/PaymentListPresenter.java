@@ -17,22 +17,18 @@ import static com.payoneer.checkout.model.InteractionCode.TRY_OTHER_ACCOUNT;
 import static com.payoneer.checkout.model.InteractionCode.TRY_OTHER_NETWORK;
 import static com.payoneer.checkout.model.InteractionReason.OK;
 import static com.payoneer.checkout.model.InteractionReason.PENDING;
-import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
 import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_CODE;
 import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_REASON;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
@@ -40,13 +36,10 @@ import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.Redirect;
-import com.payoneer.checkout.operation.DeleteAccount;
 import com.payoneer.checkout.payment.PaymentInputValues;
-import com.payoneer.checkout.payment.PaymentRequest;
+import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceController;
-import com.payoneer.checkout.redirect.RedirectRequest;
-import com.payoneer.checkout.redirect.RedirectService;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.list.PaymentListListener;
 import com.payoneer.checkout.ui.model.AccountCard;
@@ -60,6 +53,7 @@ import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * The PaymentListPresenter implementing the presenter part of the MVP
@@ -73,13 +67,13 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private PaymentSession session;
     private PaymentService paymentService;
-    private PaymentRequest paymentRequest;
-    private DeleteAccount deleteAccount;
+    private RequestData requestData;
 
     /**
      * Create a new PaymentListPresenter
      *
      * @param view The PaymentListView displaying the payment list
+     * @param checkoutConfiguration containing the configuration e.g. listURL
      */
     PaymentListPresenter(PaymentListView view, CheckoutConfiguration checkoutConfiguration) {
         super(checkoutConfiguration, view);
@@ -91,25 +85,26 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     void onStart() {
+        if (paymentService != null && paymentService.isPaused()) {
+            Log.i("AAAA", "onStart payment list presenter");
+            setState(PROCESS);
+            paymentService.resume();
+            return;
+        }
         setState(STARTED);
-
-        if (paymentService != null && paymentService.isProcessing()) {
-            paymentService.resumeProcessing();
-        }
-        else if (session == null) {
+        if (session == null) {
             loadPaymentSession();
-        }
-        else {
+        } else {
             showPaymentSession();
         }
     }
 
     void onStop() {
         setState(STOPPED);
-        sessionService.stop();
+        sessionService.onStop();
 
         if (paymentService != null) {
-            paymentService.stop();
+            paymentService.onStop();
         }
     }
 
@@ -213,19 +208,18 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public void showProgress(boolean visible) {
-        view.showProgress(visible);
+    public void onProcessing() {
+        view.showProgress(true);
     }
 
     @Override
-    public void onDeleteAccountResult(int resultCode, CheckoutResult result) {
+    public void onDeleteAccountResult(final int resultCode, final CheckoutResult result) {
+        setState(STARTED);
         if (result.isNetworkFailure()) {
-            handleDeleteNetworkFailure(result);
+            handleDeleteAccountNetworkFailure(result);
             return;
         }
         Interaction interaction = result.getInteraction();
-        setState(STARTED);
-
         switch (interaction.getCode()) {
             case PROCEED:
             case RELOAD:
@@ -244,16 +238,16 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public void onProcessPaymentResult(int resultCode, CheckoutResult result) {
+    public void onProcessPaymentResult(final int resultCode, final CheckoutResult result) {
         setState(STARTED);
         if (UPDATE.equals(session.getListOperationType())) {
             handleUpdateCheckoutResult(resultCode, result);
         } else {
-            handleProcessCheckoutResult(resultCode, result);
+            handleProcessPaymentResult(resultCode, result);
         }
     }
 
-    private void handleUpdateCheckoutResult(int resultCode, CheckoutResult result) {
+    private void handleUpdateCheckoutResult(final int resultCode, final CheckoutResult result) {
         switch (resultCode) {
             case RESULT_CODE_PROCEED:
                 handleUpdatePaymentProceed(result);
@@ -266,7 +260,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         }
     }
 
-    private void handleUpdatePaymentProceed(CheckoutResult result) {
+    private void handleUpdatePaymentProceed(final CheckoutResult result) {
         Interaction interaction = result.getInteraction();
         switch (interaction.getReason()) {
             case PENDING:
@@ -280,7 +274,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         }
     }
 
-    private void handleUpdatePaymentError(CheckoutResult result) {
+    private void handleUpdatePaymentError(final CheckoutResult result) {
         if (result.isNetworkFailure()) {
             handleProcessNetworkFailure(result);
             return;
@@ -300,20 +294,20 @@ final class PaymentListPresenter extends BasePaymentPresenter
         }
     }
 
-    private void handleProcessCheckoutResult(int resultCode, CheckoutResult result) {
+    private void handleProcessPaymentResult(final int resultCode, final CheckoutResult result) {
         switch (resultCode) {
             case RESULT_CODE_PROCEED:
                 closeWithProceedCode(result);
                 break;
             case RESULT_CODE_ERROR:
-                handleProcessCheckoutError(result);
+                handleProcessPaymentError(result);
                 break;
             default:
                 showPaymentSession();
         }
     }
 
-    private void handleProcessCheckoutError(CheckoutResult result) {
+    private void handleProcessPaymentError(final CheckoutResult result) {
         if (result.isNetworkFailure()) {
             handleProcessNetworkFailure(result);
             return;
@@ -339,7 +333,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         view.showConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
-                processPaymentRequest(paymentRequest);
+                processPayment(requestData);
             }
 
             @Override
@@ -363,7 +357,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
         showPaymentSession();
     }
 
-    private void handleLoadingNetworkFailure(final CheckoutResult result) {
+    private void handleLoadingNetworkFailure(final CheckoutResult checkoutResult) {
         view.showConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
@@ -372,21 +366,21 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
             @Override
             public void onNegativeButtonClicked() {
-                closeWithErrorCode(result);
+                closeWithErrorCode(checkoutResult);
             }
 
             @Override
             public void onDismissed() {
-                closeWithErrorCode(result);
+                closeWithErrorCode(checkoutResult);
             }
         });
     }
 
-    private void handleDeleteNetworkFailure(final CheckoutResult result) {
+    private void handleDeleteAccountNetworkFailure(final CheckoutResult checkoutResult) {
         view.showConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
-                deleteAccount(deleteAccount);
+                deleteAccount(requestData);
             }
 
             @Override
@@ -403,10 +397,18 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private void processPaymentCard(PaymentCard paymentCard, Map<String, FormWidget> widgets) {
         try {
-            paymentRequest = createPaymentRequest(paymentCard, widgets);
             paymentService = loadNetworkService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
             paymentService.setController(this);
-            processPaymentRequest(paymentRequest);
+
+            PaymentInputValues inputValues = new PaymentInputValues();
+            for (FormWidget widget : widgets.values()) {
+                widget.putValue(inputValues);
+            }
+            requestData = new RequestData(session.getListOperationType(), paymentCard.getNetworkCode(),
+                paymentCard.getPaymentMethod(), paymentCard.getOperationType(),
+                paymentCard.getLinks(), inputValues);
+
+            processPayment(requestData);
         } catch (PaymentException e) {
             closeWithErrorCode(CheckoutResultHelper.fromThrowable(e));
         }
@@ -417,31 +419,23 @@ final class PaymentListPresenter extends BasePaymentPresenter
             paymentService = loadNetworkService(card.getNetworkCode(), card.getPaymentMethod());
             paymentService.setController(this);
 
-            URL url = card.getLink(PaymentLinkType.SELF);
-            deleteAccount = new DeleteAccount(url, session.getListOperationType());
-            deleteAccount(deleteAccount);
+            requestData = new RequestData(session.getListOperationType(), card.getNetworkCode(),
+                card.getPaymentMethod(), card.getOperationType(),
+                card.getLinks(), new PaymentInputValues());
+            deleteAccount(requestData);
         } catch (PaymentException e) {
             closeWithErrorCode(CheckoutResultHelper.fromThrowable(e));
         }
     }
 
-    private void processPaymentRequest(final PaymentRequest paymentRequest) {
+    private void processPayment(final RequestData requestData) {
         setState(PROCESS);
-        paymentService.processPayment(paymentRequest, view.getActivity());
+        paymentService.processPayment(requestData, view.getActivity());
     }
 
-    private void deleteAccount(DeleteAccount account) {
+    private void deleteAccount(final RequestData requestData) {
         setState(PROCESS);
-        paymentService.deleteAccount(account, view.getActivity());
-    }
-
-    private PaymentRequest createPaymentRequest(final PaymentCard card, final Map<String, FormWidget> widgets) {
-        PaymentInputValues inputValues = new PaymentInputValues();
-        for (FormWidget widget : widgets.values()) {
-            widget.putValue(inputValues);
-        }
-        return new PaymentRequest(card.getNetworkCode(), card.getPaymentMethod(),
-            card.getOperationType(), card.getLinks(), inputValues);
+        paymentService.deleteAccount(requestData, view.getActivity());
     }
 
     private void onPresetCardSelected(PresetCard card) {

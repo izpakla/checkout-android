@@ -75,9 +75,9 @@ public final class PaymentSessionService {
     }
 
     /**
-     * Stop and unsubscribe from tasks that are currently active in this service.
+     * Notify that the processing should be stopped
      */
-    public void stop() {
+    public void onStop() {
         if (sessionTask != null) {
             sessionTask.unsubscribe();
             sessionTask = null;

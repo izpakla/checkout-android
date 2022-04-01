@@ -10,6 +10,7 @@ package com.payoneer.checkout.payment;
 
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.operation.DeleteAccount;
 import com.payoneer.checkout.redirect.RedirectRequest;
 
 import android.content.Context;
@@ -20,11 +21,9 @@ import android.content.Context;
 public interface PaymentServiceController {
 
     /**
-     * Notify the presenter that the service is in progress and requires a progress indicator
-     *
-     * @param visible true to show the progress indicator, false to hide the progress
+     * Notify the controller that the payment service is processing the payment or deleting the account
      */
-    void showProgress(boolean visible);
+    void onProcessing();
 
     /**
      * Get the context in which this controller is operating
@@ -39,7 +38,7 @@ public interface PaymentServiceController {
      * @param resultCode code describing the state of the ChechkoutResult
      * @param checkoutResult containing the information describing the result
      */
-    void onProcessPaymentResult(int resultCode, CheckoutResult checkoutResult);
+    void onProcessPaymentResult(final int resultCode, final CheckoutResult checkoutResult);
 
     /**
      * Called when PaymentService is done deleting the account.
@@ -47,5 +46,5 @@ public interface PaymentServiceController {
      * @param resultCode code describing the state of the CheckoutResult
      * @param checkoutResult containing the information describing the result
      */
-    void onDeleteAccountResult(int resultCode, CheckoutResult checkoutResult);
+    void onDeleteAccountResult(final int resultCode, final CheckoutResult checkoutResult);
 }

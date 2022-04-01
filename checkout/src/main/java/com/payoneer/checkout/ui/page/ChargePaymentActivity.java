@@ -14,7 +14,6 @@ import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
-import com.payoneer.checkout.payment.PaymentRequest;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -28,30 +27,8 @@ import androidx.annotation.NonNull;
  */
 public final class ChargePaymentActivity extends BasePaymentActivity implements BasePaymentView {
 
-    private int chargeType;
     private ChargePaymentPresenter presenter;
-    private PaymentRequest paymentRequest;
     private CheckoutConfiguration configuration;
-
-    /**
-     * Create the start intent for this ChargePaymentActivity
-     *
-     * @param context Context to create the intent
-     * @return newly created start intent
-     */
-    public static Intent createStartIntent(Context context, CheckoutConfiguration checkoutConfiguration, PaymentRequest paymentRequest) {
-        if (context == null) {
-            throw new IllegalArgumentException("context may not be null");
-        }
-        if (paymentRequest == null) {
-            throw new IllegalArgumentException("paymentRequest may not be null");
-        }
-        Intent intent = new Intent(context, ChargePaymentActivity.class);
-        intent.putExtra(EXTRA_CHARGE_TYPE, TYPE_CHARGE_OPERATION);
-        intent.putExtra(EXTRA_PAYMENT_REQUEST, paymentRequest);
-        intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, checkoutConfiguration);
-        return intent;
-    }
 
     /**
      * Create the start intent for this ChargePaymentActivity
@@ -87,8 +64,6 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
         super.onCreate(savedInstanceState);
         Bundle bundle = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
         if (bundle != null) {
-            this.paymentRequest = bundle.getParcelable(EXTRA_PAYMENT_REQUEST);
-            this.chargeType = bundle.getInt(EXTRA_CHARGE_TYPE);
             this.configuration = bundle.getParcelable(EXTRA_CHECKOUT_CONFIGURATION);
         }
         setRequestedOrientation(configuration.getOrientation());
@@ -108,7 +83,6 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putParcelable(EXTRA_PAYMENT_REQUEST, this.paymentRequest);
         savedInstanceState.putParcelable(EXTRA_CHECKOUT_CONFIGURATION, this.configuration);
     }
 
@@ -127,7 +101,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
     @Override
     public void onResume() {
         super.onResume();
-        presenter.onStart(paymentRequest, chargeType);
+        presenter.onStart();
     }
 
     /**

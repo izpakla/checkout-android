@@ -8,8 +8,6 @@
 
 package com.payoneer.checkout.ui.page;
 
-import com.payoneer.checkout.CheckoutConfiguration;
-import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.ui.model.PaymentSession;
 
 /**

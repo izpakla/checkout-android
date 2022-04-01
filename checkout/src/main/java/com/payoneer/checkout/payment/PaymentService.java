@@ -8,9 +8,25 @@
 
 package com.payoneer.checkout.payment;
 
+import static com.payoneer.checkout.model.InteractionCode.ABORT;
+import static com.payoneer.checkout.model.InteractionCode.VERIFY;
+import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
+import static com.payoneer.checkout.model.NetworkOperationType.PAYOUT;
+import static com.payoneer.checkout.model.RedirectType.HANDLER3DS2;
+import static com.payoneer.checkout.model.RedirectType.PROVIDER;
+
+import java.net.URL;
+
+import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.core.PaymentLinkType;
+import com.payoneer.checkout.model.AccountInputData;
+import com.payoneer.checkout.model.OperationData;
 import com.payoneer.checkout.model.OperationResult;
+import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.operation.DeleteAccount;
+import com.payoneer.checkout.operation.Operation;
 import com.payoneer.checkout.redirect.RedirectRequest;
+import com.payoneer.checkout.redirect.RedirectService;
 
 import android.content.Context;
 
@@ -22,38 +38,51 @@ public abstract class PaymentService {
 
     protected PaymentServiceController controller;
 
-    public abstract void stop();
+    public abstract void onStop();
 
-    public abstract void resumeProcessing();
+    public abstract boolean isPaused();
 
-    public boolean isProcessing() {
-        return false;
-    }
+    public abstract void resume();
 
-    /**
-     * Set the listener in this NetworkService
-     *
-     * @param controller the listener to be set
-     */
-    public void setController(PaymentServiceController controller) {
+    public abstract void processPayment(final RequestData requestData, final Context context);
+
+    public abstract void deleteAccount(final RequestData requestData, final Context context);
+
+    public void setController(final PaymentServiceController controller) {
         this.controller = controller;
     }
 
-    /**
-     * Process the payment through this NetworkService.
-     *
-     * @param paymentRequest that should be processed
-     * @param context in which this payment will be processed
-     */
-    public void processPayment(PaymentRequest paymentRequest, Context context) {
+    protected Operation createOperation(final RequestData requestData, final String link) {
+        OperationData operationData = new OperationData();
+        operationData.setAccount(new AccountInputData());
+
+        requestData.getPaymentInputValues().copyInto(operationData);
+        return new Operation(requestData.getLink(link), operationData);
     }
 
-    /**
-     * Delete the AccountRegistration through this NetworkService.
-     *
-     * @param account to be deleted from this network
-     * @param context in which this account will be deleted
-     */
-    public void deleteAccount(DeleteAccount account, Context context) {
+    protected DeleteAccount createDeleteAccount(final RequestData requestData) {
+        URL url = requestData.getLink(PaymentLinkType.SELF);
+        return new DeleteAccount(url);
+    }
+
+    protected boolean requiresRedirect(final OperationResult operationResult) {
+        Redirect redirect = operationResult.getRedirect();
+        String type = redirect != null ? redirect.getType() : null;
+        return PROVIDER.equals(type) || HANDLER3DS2.equals(type);
+    }
+
+    protected String getErrorInteractionCode(final String operationType) {
+        return CHARGE.equals(operationType) || PAYOUT.equals(operationType) ? VERIFY : ABORT;
+    }
+
+    protected RedirectRequest redirect(final int requestCode, final OperationResult operationResult) throws PaymentException {
+        Context context = controller.getContext();
+        RedirectRequest redirectRequest = RedirectRequest.fromOperationResult(requestCode, operationResult);
+
+        if (!RedirectService.supports(context, redirectRequest)) {
+            throw new PaymentException("The Redirect payment method is not supported by the Android-SDK");
+        }
+        RedirectService.redirect(context, redirectRequest);
+        return redirectRequest;
     }
 }

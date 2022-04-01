@@ -25,7 +25,6 @@ import com.payoneer.checkout.ui.model.PaymentSession;
  * Base class for payment presenters
  */
 abstract class BasePaymentPresenter {
-
     final static int STOPPED = 0;
     final static int STARTED = 1;
     final static int PROCESS = 2;
@@ -44,15 +43,15 @@ abstract class BasePaymentPresenter {
         this.view = view;
     }
 
-    boolean checkState(int state) {
+    boolean checkState(final int state) {
         return this.state == state;
     }
 
-    void setState(int state) {
+    void setState(final int state) {
         this.state = state;
     }
 
-    void closeWithProceedCode(CheckoutResult result) {
+    void closeWithProceedCode(final CheckoutResult result) {
         view.setCheckoutResult(RESULT_CODE_PROCEED, result);
         view.close();
     }

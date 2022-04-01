@@ -10,11 +10,9 @@ package com.payoneer.checkout.ui.page;
 
 import static com.payoneer.checkout.localization.LocalizationKey.LIST_TITLE;
 
-import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
-import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.ui.list.PaymentList;
 import com.payoneer.checkout.ui.model.PaymentSession;
 

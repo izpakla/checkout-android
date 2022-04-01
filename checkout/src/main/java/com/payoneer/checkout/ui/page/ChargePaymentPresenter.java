@@ -59,7 +59,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     void onStart() {
-        if ( paymentService != null && paymentService.isPaused()) {
+        if (paymentService != null && paymentService.isPaused()) {
             paymentService.resume();
         } else {
             loadPaymentSession();
@@ -97,7 +97,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     @Override
-    public void onProcessing() {
+    public void onProgress(final boolean interrupt) {
         view.showProgress(true);
     }
 
@@ -138,8 +138,8 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
             closeWithErrorCode("PresetAccount not found in ListResult");
             return;
         }
-        this.requestData = createRequestData(account);
         this.session = session;
+        this.requestData = createRequestData(account);
         processPayment();
     }
 

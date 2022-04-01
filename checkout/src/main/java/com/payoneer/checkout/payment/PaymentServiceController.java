@@ -21,9 +21,9 @@ import android.content.Context;
 public interface PaymentServiceController {
 
     /**
-     * Notify the controller that the payment service is processing the payment or deleting the account
+     * Notify the controller that the payment service is progressing
      */
-    void onProcessing();
+    void onProgress(final boolean interrupt);
 
     /**
      * Get the context in which this controller is operating

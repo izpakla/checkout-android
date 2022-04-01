@@ -38,20 +38,50 @@ public abstract class PaymentService {
 
     protected PaymentServiceController controller;
 
+    /**
+     *
+     */
     public abstract void onStop();
 
+    /**
+     *
+     * @return
+     */
     public abstract boolean isPaused();
 
+    /**
+     *
+     */
     public abstract void resume();
 
+    /**
+     *
+     * @param requestData
+     * @param context
+     */
     public abstract void processPayment(final RequestData requestData, final Context context);
 
+    /**
+     *
+     * @param requestData
+     * @param context
+     */
     public abstract void deleteAccount(final RequestData requestData, final Context context);
 
+    /**
+     *
+     * @param controller
+     */
     public void setController(final PaymentServiceController controller) {
         this.controller = controller;
     }
 
+    /**
+     *
+     * @param requestData
+     * @param link
+     * @return
+     */
     protected Operation createOperation(final RequestData requestData, final String link) {
         OperationData operationData = new OperationData();
         operationData.setAccount(new AccountInputData());
@@ -60,21 +90,45 @@ public abstract class PaymentService {
         return new Operation(requestData.getLink(link), operationData);
     }
 
+    /**
+     *
+     * @param requestData
+     * @return
+     */
     protected DeleteAccount createDeleteAccount(final RequestData requestData) {
         URL url = requestData.getLink(PaymentLinkType.SELF);
         return new DeleteAccount(url);
     }
 
+    /**
+     *
+     * @param operationResult
+     * @return
+     */
     protected boolean requiresRedirect(final OperationResult operationResult) {
         Redirect redirect = operationResult.getRedirect();
         String type = redirect != null ? redirect.getType() : null;
         return PROVIDER.equals(type) || HANDLER3DS2.equals(type);
     }
 
+    /**
+     * Get the error interaction code.
+     *
+     * @param operationType
+     * @return
+     */
     protected String getErrorInteractionCode(final String operationType) {
         return CHARGE.equals(operationType) || PAYOUT.equals(operationType) ? VERIFY : ABORT;
     }
 
+    /**
+     * Create a redirect request and open a custom chrome tab to continue processing the request.
+     *
+     * @param requestCode code to identify the origin request
+     * @param operationResult containing the redirect details like redirect URL
+     * @return newly created RedirectRequest
+     * @throws PaymentException when an error occurred while redirecting
+     */
     protected RedirectRequest redirect(final int requestCode, final OperationResult operationResult) throws PaymentException {
         Context context = controller.getContext();
         RedirectRequest redirectRequest = RedirectRequest.fromOperationResult(requestCode, operationResult);

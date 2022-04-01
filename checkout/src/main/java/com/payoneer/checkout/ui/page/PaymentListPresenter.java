@@ -208,7 +208,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public void onProcessing() {
+    public void onProgress(final boolean interrupt) {
         view.showProgress(true);
     }
 

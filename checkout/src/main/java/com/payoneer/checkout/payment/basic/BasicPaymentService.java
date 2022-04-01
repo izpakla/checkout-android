@@ -97,7 +97,7 @@ public final class BasicPaymentService extends PaymentService {
         this.requestData = requestData;
         this.redirectRequest = null;
 
-        controller.onProcessing();
+        controller.onProgress(true);
         Operation operation = createOperation(requestData, PaymentLinkType.OPERATION);
         operationService.postOperation(operation, context);
     }
@@ -107,7 +107,7 @@ public final class BasicPaymentService extends PaymentService {
         this.requestData = requestData;
         this.redirectRequest = null;
 
-        controller.onProcessing();
+        controller.onProgress(true);
         DeleteAccount deleteAccount = createDeleteAccount(requestData);
         operationService.deleteAccount(deleteAccount, context);
     }
@@ -115,6 +115,8 @@ public final class BasicPaymentService extends PaymentService {
     private void handleRedirectResult(RedirectRequest request) {
         int resultCode;
         CheckoutResult checkoutResult;
+
+        controller.onProgress(true);
         OperationResult operationResult = RedirectService.getRedirectResult();
 
         if (operationResult != null) {

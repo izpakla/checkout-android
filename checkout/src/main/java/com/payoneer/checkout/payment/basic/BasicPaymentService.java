@@ -46,7 +46,7 @@ public final class BasicPaymentService extends PaymentService {
 
     /**
      * Create a new BasicNetworkService, this service is a basic implementation
-     * that sends an operation to the Payment API.
+     * of the payment service that handles credit/debit cards and redirect networks.
      */
     public BasicPaymentService() {
         operationService = new OperationService();
@@ -147,6 +147,7 @@ public final class BasicPaymentService extends PaymentService {
         }
         if (!requiresRedirect(operationResult)) {
             controller.onProcessPaymentResult(RESULT_CODE_PROCEED, checkoutResult);
+            return;
         }
         try {
             redirectRequest = redirect(PROCESSPAYMENT_REQUEST_CODE, operationResult);
@@ -158,7 +159,6 @@ public final class BasicPaymentService extends PaymentService {
     private void handleProcessPaymentError(Throwable cause) {
         String code = getErrorInteractionCode(requestData.getOperationType());
         CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(code, cause);
-
         Log.i("checkout-sdk", "handleProcessPaymentError: " + checkoutResult);
         controller.onProcessPaymentResult(RESULT_CODE_ERROR, checkoutResult);
     }

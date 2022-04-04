@@ -24,14 +24,14 @@ class SettingsActivityTest {
     val settingsActivityRule = ActivityTestRule(SettingsActivity::class.java)
 
     @Test
-    fun clickingButtonWithEmptyUrlConfirmErrorDialogShown() {
+    fun clickingDemoButtonWithEmptyUrlConfirmErrorDialogShown() {
         onView(withId(R.id.button_settings)).perform(click())
 
         onView(withText("Please paste a valid List Url in the input field.")).check(matches(isDisplayed()))
     }
 
     @Test
-    fun clickingButtonWithInvalidUrlConfirmErrorDialogShown() {
+    fun clickingDemoButtonWithInvalidUrlConfirmErrorDialogShown() {
         onView(withId(R.id.input_listurl)).perform(typeText("somelistUrl"))
 
         onView(withId(R.id.button_settings)).perform(click())

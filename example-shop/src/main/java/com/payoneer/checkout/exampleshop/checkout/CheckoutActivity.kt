@@ -100,8 +100,8 @@ class CheckoutActivity : BaseActivity() {
          */
         @JvmStatic
         fun createStartIntent(context: Context?, checkoutConfiguration: CheckoutConfiguration?): Intent {
-            requireNotNull(context) { "context may not be null" }
-            requireNotNull(checkoutConfiguration) { "checkoutConfiguration cannot be null" }
+            requireNotNull(context) { "CheckoutActivity - context may not be null" }
+            requireNotNull(checkoutConfiguration) { "CheckoutActivity - checkoutConfiguration cannot be null" }
             val intent = Intent(context, CheckoutActivity::class.java)
             intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, checkoutConfiguration)
             return intent

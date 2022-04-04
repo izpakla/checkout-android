@@ -120,8 +120,9 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     }
 
     private fun createCheckoutConfiguration(): CheckoutConfiguration? {
-        val stringUrl: String = binding.inputListurl.text.toString().trim()
         return try {
+            val stringUrl: String = binding.inputListurl.text.toString().trim()
+
             val listUrl = URL(stringUrl)
 
             CheckoutConfiguration.createBuilder(listUrl)
@@ -129,8 +130,8 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
                 // Uncomment the following line to fix the orientation of the screens
                 //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
                 .build()
-        } catch (e: MalformedURLException) {
-            Log.e(TAG, "createCheckoutConfigurationKotlin - Error creating URL")
+        } catch (urlException: MalformedURLException) {
+            Log.e(TAG, "createCheckoutConfigurationKotlin - Error creating URL", urlException)
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid))
             null
         }

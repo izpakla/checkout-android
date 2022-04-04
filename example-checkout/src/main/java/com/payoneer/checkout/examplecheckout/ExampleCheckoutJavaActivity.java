@@ -147,8 +147,9 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     }
 
     private CheckoutConfiguration createCheckoutConfiguration() {
-        String stringUrl = binding.inputListurl.getText().toString().trim();
         try {
+            String stringUrl = binding.inputListurl.getText().toString().trim();
+
             URL listUrl = new URL(stringUrl);
 
             return CheckoutConfiguration.createBuilder(listUrl)
@@ -157,7 +158,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
                 //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
                 .build();
         } catch (MalformedURLException exception) {
-            Log.e(TAG, "createCheckoutConfigurationJava - Error creating URL");
+            Log.e(TAG, "createCheckoutConfigurationJava - Error creating URL", exception);
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid));
             return null;
         }

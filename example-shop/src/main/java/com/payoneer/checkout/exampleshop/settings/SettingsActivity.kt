@@ -39,12 +39,13 @@ class SettingsActivity : BaseActivity() {
 
     private fun onButtonClicked() {
         closeKeyboard()
-        val stringUrl = editTextListInput.text.toString().trim { it <= ' ' }
         val configuration = try {
+            val stringUrl = editTextListInput.text.toString().trim { it <= ' ' }
+
             val listURL = URL(stringUrl)
             CheckoutConfiguration.createBuilder(listURL).build()
-        } catch (e: MalformedURLException) {
-            Log.e(TAG, "createCheckoutConfigurationKotlin - Error creating URL")
+        } catch (urlException: MalformedURLException) {
+            Log.e(TAG, "createCheckoutConfigurationKotlin - Error creating URL", urlException)
             showErrorDialog(R.string.dialog_error_listurl_invalid)
             null
         }

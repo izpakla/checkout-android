@@ -22,8 +22,10 @@ public interface PaymentServiceController {
 
     /**
      * Notify the controller that the payment service is progressing
+     *
+     * @param interruptible a hint if the progress can be interrupted by the user
      */
-    void onProgress(final boolean interrupt);
+    void onProgress(final boolean interruptible);
 
     /**
      * Get the context in which this controller is operating

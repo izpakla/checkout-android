@@ -86,7 +86,6 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     void onStart() {
         if (paymentService != null && paymentService.isPaused()) {
-            Log.i("AAAA", "onStart payment list presenter");
             setState(PROCESS);
             paymentService.resume();
             return;

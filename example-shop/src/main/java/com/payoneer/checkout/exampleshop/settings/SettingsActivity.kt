@@ -10,8 +10,7 @@ package com.payoneer.checkout.exampleshop.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Patterns
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import com.payoneer.checkout.CheckoutConfiguration
@@ -41,23 +40,18 @@ class SettingsActivity : BaseActivity() {
     private fun onButtonClicked() {
         closeKeyboard()
         val stringUrl = editTextListInput.text.toString().trim { it <= ' ' }
-        if (TextUtils.isEmpty(stringUrl) || !Patterns.WEB_URL.matcher(stringUrl).matches()) {
-            showErrorDialog(R.string.dialog_error_listurl_invalid)
-            return
-        }
-        val listURL = createListURL(stringUrl)
-        val checkoutConfiguration = CheckoutConfiguration.createBuilder(listURL).build();
-        val intent = createStartIntent(this, checkoutConfiguration)
-        startActivity(intent)
-    }
-
-    private fun createListURL(stringUrl: String) =
-        try {
-            URL(stringUrl);
+        val configuration = try {
+            val listURL = URL(stringUrl)
+            CheckoutConfiguration.createBuilder(listURL).build()
         } catch (e: MalformedURLException) {
-            e.printStackTrace()
+            Log.e(TAG, "createCheckoutConfigurationKotlin - Error creating URL")
+            showErrorDialog(R.string.dialog_error_listurl_invalid)
             null
         }
+
+        val intent = createStartIntent(this, configuration)
+        startActivity(intent)
+    }
 
     private fun closeKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
@@ -68,6 +62,8 @@ class SettingsActivity : BaseActivity() {
     }
 
     companion object {
+        private const val TAG = "SettingsActivity"
+
         /**
          * Create an Intent to launch this settings activity
          *

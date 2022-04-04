@@ -163,16 +163,6 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         }
     }
 
-    private URL createListURL(String stringUrl) {
-        URL url = null;
-        try {
-            url = new URL(stringUrl);
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "Error with creating URL ", e);
-        }
-        return url;
-    }
-
     private CheckoutTheme createCheckoutTheme() {
         if (binding.switchTheme.isChecked()) {
             return CheckoutTheme.createBuilder().

@@ -8,56 +8,18 @@
 
 package com.payoneer.checkout;
 
+import java.net.URL;
+
 import android.content.pm.ActivityInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 /**
  * The CheckoutConfiguration is the class containing information about the payment session.
- * This class contains the listUrl and theming of the screens and dialogs.
+ * This class contains the listURL and theming of the screens and dialogs.
  */
 public final class CheckoutConfiguration implements Parcelable {
-
-    /**
-     * The self url pointing to the payment session list
-     */
-    private final String listUrl;
-
-    /**
-     * The theming to be applied to the screens and dialogs
-     */
-    private final CheckoutTheme checkoutTheme;
-
-    /**
-     * The orientation of the screens, by default it is in locked mode
-     */
-    private final int orientation;
-
-    private CheckoutConfiguration(final Builder builder) {
-        this.listUrl = builder.listUrl;
-        this.checkoutTheme = builder.checkoutTheme;
-        this.orientation = builder.orientation;
-    }
-
-    private CheckoutConfiguration(final Parcel in) {
-        listUrl = in.readString();
-        checkoutTheme = in.readParcelable(CheckoutTheme.class.getClassLoader());
-        orientation = in.readInt();
-    }
-
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeString(listUrl);
-        dest.writeParcelable(checkoutTheme, flags);
-        dest.writeInt(orientation);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
     public static final Creator<CheckoutConfiguration> CREATOR = new Creator<CheckoutConfiguration>() {
         @Override
@@ -70,9 +32,52 @@ public final class CheckoutConfiguration implements Parcelable {
             return new CheckoutConfiguration[size];
         }
     };
+    /**
+     * The self url pointing to the payment session list
+     */
+    private final URL listURL;
+    /**
+     * The theming to be applied to the screens and dialogs
+     */
+    private final CheckoutTheme checkoutTheme;
+    /**
+     * The orientation of the screens, by default it is in locked mode
+     */
+    private final int orientation;
 
-    public String getListUrl() {
-        return listUrl;
+    private CheckoutConfiguration(final Builder builder) {
+        this.listURL = builder.listURL;
+        this.checkoutTheme = builder.checkoutTheme;
+        this.orientation = builder.orientation;
+    }
+
+    private CheckoutConfiguration(final Parcel in) {
+        listURL = (URL) in.readSerializable();
+        checkoutTheme = in.readParcelable(CheckoutTheme.class.getClassLoader());
+        orientation = in.readInt();
+    }
+
+    public static Builder createBuilder(final URL listURL) {
+        if (listURL == null) {
+            throw new IllegalArgumentException("URL cannot be null");
+        }
+        return new Builder(listURL);
+    }
+
+    @Override
+    public void writeToParcel(final Parcel dest, final int flags) {
+        dest.writeSerializable(listURL);
+        dest.writeParcelable(checkoutTheme, flags);
+        dest.writeInt(orientation);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public URL getListURL() {
+        return listURL;
     }
 
     public CheckoutTheme getCheckoutTheme() {
@@ -83,20 +88,13 @@ public final class CheckoutConfiguration implements Parcelable {
         return orientation;
     }
 
-    public static Builder createBuilder(final String listUrl) {
-        if (TextUtils.isEmpty(listUrl)) {
-            throw new IllegalArgumentException("listUrl cannot be null or empty");
-        }
-        return new Builder(listUrl);
-    }
-
     @NonNull
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("CheckoutConfiguration [");
-        if (listUrl != null) {
-            builder.append("listUrl=").append(listUrl).append(", ");
+        if (listURL != null) {
+            builder.append("listURL=").append(listURL).append(", ");
         }
         if (checkoutTheme != null) {
             builder.append("theme=").append(checkoutTheme).append(", ");
@@ -107,17 +105,17 @@ public final class CheckoutConfiguration implements Parcelable {
     }
 
     public static final class Builder {
-        private final String listUrl;
+        private final URL listURL;
         private int orientation;
         private CheckoutTheme checkoutTheme;
 
         /**
          * Create a new default Builder for creating CheckoutConfiguration instances
          *
-         * @param listUrl mandatory parameter for creating this builder
+         * @param listURL mandatory parameter for creating this builder
          */
-        private Builder(@NonNull final String listUrl) {
-            this.listUrl = listUrl;
+        private Builder(@NonNull final URL listURL) {
+            this.listURL = listURL;
             this.orientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED;
             this.checkoutTheme = CheckoutTheme.createDefault();
         }

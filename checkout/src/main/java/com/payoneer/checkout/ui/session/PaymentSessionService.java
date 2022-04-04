@@ -46,16 +46,14 @@ import android.util.Log;
  */
 public final class PaymentSessionService {
 
-    private final ListConnection listConnection;
-    private final LocalizationConnection locConnection;
-
-    private PaymentSessionListener listener;
-    private WorkerTask<PaymentSession> sessionTask;
-
     /**
      * Memory cache of localizations
      */
     private static final LocalizationCache cache = new LocalizationCache();
+    private final ListConnection listConnection;
+    private final LocalizationConnection locConnection;
+    private PaymentSessionListener listener;
+    private WorkerTask<PaymentSession> sessionTask;
 
     /**
      * Create a new PaymentSessionService, this service is used to load the PaymentSession.
@@ -104,7 +102,7 @@ public final class PaymentSessionService {
         if (sessionTask != null) {
             throw new IllegalStateException("Already loading payment session, stop first");
         }
-        sessionTask = WorkerTask.fromCallable(() -> asyncLoadPaymentSession(configuration.getListUrl(), context));
+        sessionTask = WorkerTask.fromCallable(() -> asyncLoadPaymentSession(configuration.getListURL(), context));
         sessionTask.subscribe(new WorkerSubscriber<PaymentSession>() {
             @Override
             public void onSuccess(PaymentSession paymentSession) {
@@ -148,11 +146,11 @@ public final class PaymentSessionService {
         }
     }
 
-    private PaymentSession asyncLoadPaymentSession(String listUrl, Context context) throws PaymentException {
+    private PaymentSession asyncLoadPaymentSession(URL listURL, Context context) throws PaymentException {
         listConnection.initialize(context);
         locConnection.initialize(context);
 
-        ListResult listResult = listConnection.getListResult(listUrl);
+        ListResult listResult = listConnection.getListResult(listURL);
 
         String integrationType = listResult.getIntegrationType();
         if (!MOBILE_NATIVE.equals(integrationType)) {

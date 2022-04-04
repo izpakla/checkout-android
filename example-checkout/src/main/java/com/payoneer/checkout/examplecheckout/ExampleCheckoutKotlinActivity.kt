@@ -13,7 +13,7 @@ package com.payoneer.checkout.examplecheckout
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Patterns
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.VisibleForTesting
@@ -27,6 +27,8 @@ import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.CheckoutTheme
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
+import java.net.MalformedURLException
+import java.net.URL
 
 /**
  * This is the main Activity of this example app demonstrating how to use the Checkout SDK in kotlin
@@ -36,6 +38,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     companion object {
         const val PAYMENT_REQUEST_CODE = 1
         const val CHARGE_PRESET_ACCOUNT_REQUEST_CODE = 2
+        private const val TAG = "CheckoutKotlinActivity"
     }
 
     private lateinit var binding: ActivityExamplecheckoutBinding
@@ -117,16 +120,21 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
     }
 
     private fun createCheckoutConfiguration(): CheckoutConfiguration? {
-        val listUrl: String = binding.inputListurl.text.toString().trim()
-        if (TextUtils.isEmpty(listUrl) || !Patterns.WEB_URL.matcher(listUrl).matches()) {
+        return try {
+            val stringUrl: String = binding.inputListurl.text.toString().trim()
+
+            val listUrl = URL(stringUrl)
+
+            CheckoutConfiguration.createBuilder(listUrl)
+                .theme(createCheckoutTheme())
+                // Uncomment the following line to fix the orientation of the screens
+                //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                .build()
+        } catch (urlException: MalformedURLException) {
+            Log.e(TAG, "createCheckoutConfigurationKotlin - Error creating URL", urlException)
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid))
-            return null
+            null
         }
-        return CheckoutConfiguration.createBuilder(listUrl)
-            .theme(createCheckoutTheme())
-            // Uncomment the following line to fix the orientation of the screens
-            //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-            .build()
     }
 
     private fun createCheckoutTheme(): CheckoutTheme? = if (binding.switchTheme.isChecked) {

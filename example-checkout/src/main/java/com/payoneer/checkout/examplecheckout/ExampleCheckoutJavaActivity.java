@@ -7,6 +7,9 @@
  */
 package com.payoneer.checkout.examplecheckout;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.payoneer.checkout.Checkout;
 import com.payoneer.checkout.CheckoutActivityResult;
@@ -22,7 +25,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.util.Patterns;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -37,6 +40,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
 
     private final static int PAYMENT_REQUEST_CODE = 1;
     private final static int CHARGE_PRESET_ACCOUNT_REQUEST_CODE = 2;
+    private final String TAG = ExampleCheckoutJavaActivity.class.getSimpleName();
     private ActivityExamplecheckoutBinding binding;
     private CheckoutActivityResult activityResult;
     private SimpleIdlingResource resultHandledIdlingResource;
@@ -143,16 +147,21 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     }
 
     private CheckoutConfiguration createCheckoutConfiguration() {
-        String listUrl = binding.inputListurl.getText().toString().trim();
-        if (TextUtils.isEmpty(listUrl) || !Patterns.WEB_URL.matcher(listUrl).matches()) {
+        try {
+            String stringUrl = binding.inputListurl.getText().toString().trim();
+
+            URL listUrl = new URL(stringUrl);
+
+            return CheckoutConfiguration.createBuilder(listUrl)
+                .theme(createCheckoutTheme())
+                // Uncomment to set screens to landscape orientation
+                //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                .build();
+        } catch (MalformedURLException exception) {
+            Log.e(TAG, "createCheckoutConfigurationJava - Error creating URL", exception);
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid));
             return null;
         }
-        return CheckoutConfiguration.createBuilder(listUrl)
-            .theme(createCheckoutTheme())
-            // Uncomment to set screens to landscape orientation
-            //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-            .build();
     }
 
     private CheckoutTheme createCheckoutTheme() {

@@ -18,6 +18,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.junit.After;
 import org.junit.Before;
 
@@ -33,6 +36,7 @@ import com.payoneer.checkout.ui.page.PaymentListActivity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.intent.Intents;
@@ -41,6 +45,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 public abstract class BaseTest {
 
     public final static String CHROME_CLOSE_BUTTON = "com.android.chrome:id/close_button";
+    private static final String TAG = "BaseTest";
 
     @Before
     public void beforeTest() {
@@ -86,7 +91,7 @@ public abstract class BaseTest {
         String paymentApiListUrl = BuildConfig.paymentApiListUrl;
         String merchantCode = BuildConfig.merchantCode;
         String merchantPaymentToken = BuildConfig.merchantPaymentToken;
-        ListService service = ListService.createInstance(paymentApiListUrl, merchantCode, merchantPaymentToken);
+        ListService service = ListService.createInstance(createListURL(paymentApiListUrl), merchantCode, merchantPaymentToken);
         return service.newListSelfUrl(settings);
     }
 
@@ -132,7 +137,7 @@ public abstract class BaseTest {
         String paymentApiListUrl = BuildConfig.paymentApiListUrl;
         String merchantCode = BuildConfig.merchantCode;
         String merchantPaymentToken = BuildConfig.merchantPaymentToken;
-        return ListService.createInstance(paymentApiListUrl, merchantCode, merchantPaymentToken);
+        return ListService.createInstance(createListURL(paymentApiListUrl), merchantCode, merchantPaymentToken);
     }
 
     protected void waitForAppRelaunch() {
@@ -141,5 +146,15 @@ public abstract class BaseTest {
 
     protected void pressActionBarUp() {
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+    }
+
+    private URL createListURL(String stringUrl) {
+        URL url = null;
+        try {
+            url = new URL(stringUrl);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Error with creating URL ", e);
+        }
+        return url;
     }
 }

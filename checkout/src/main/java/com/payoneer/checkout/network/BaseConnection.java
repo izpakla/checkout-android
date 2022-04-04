@@ -63,7 +63,7 @@ abstract class BaseConnection {
      * Create the UserAgent and BrowserData objects using the provided Context.
      * This method should not be called from the Main UI Thread as it may take time to construct the UserAgent
      * and BrowserData.
-     *
+     * <p>
      * param context contains information about the application environment
      */
     public final void initialize(final Context context) {
@@ -94,16 +94,6 @@ abstract class BaseConnection {
     }
 
     /**
-     * Creates a new HTTP GET connection given the String url
-     *
-     * @param url the url pointing to the Payment API
-     * @return HttpURLConnection a HttpURLConnection object
-     */
-    HttpURLConnection createGetConnection(final String url) throws IOException {
-        return createGetConnection(new URL(url));
-    }
-
-    /**
      * Creates a new HTTP GET connection
      *
      * @param url the Url pointing to the Payment API
@@ -131,16 +121,6 @@ abstract class BaseConnection {
         conn.setDoInput(true);
         conn.setDoOutput(true);
         return conn;
-    }
-
-    /**
-     * Creates an HTTP POST connection with the given String url
-     *
-     * @param url the url for the connection
-     * @return HttpURLConnection the created HttpURLConnection
-     */
-    HttpURLConnection createPostConnection(final String url) throws IOException {
-        return createPostConnection(new URL(url));
     }
 
     /**

@@ -15,7 +15,6 @@ import com.payoneer.checkout.ui.page.PaymentListActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.text.TextUtils;
 
 /**
  * The Checkout class is the controller to initialize and launch the Payment List.
@@ -32,7 +31,7 @@ public final class Checkout {
     /**
      * Create a new Checkout class from the provided CheckoutConfiguration
      *
-     * @param checkoutConfiguration contains the listUrl and theming
+     * @param checkoutConfiguration contains the listURL and theming
      * @return newly created Checkout Object
      */
     public static Checkout of(final CheckoutConfiguration checkoutConfiguration) {
@@ -43,7 +42,7 @@ public final class Checkout {
     }
 
     /**
-     * Get the CheckoutConfiguration containing the listUrl and theming configuration
+     * Get the CheckoutConfiguration containing the listURL and theming configuration
      *
      * @return CheckoutConfiguration of this Checkout
      */

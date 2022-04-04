@@ -35,6 +35,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.URL
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -72,7 +73,7 @@ class SummaryViewModel @Inject constructor(@ApplicationContext val context: Cont
             withContext(Dispatchers.Default) {
                 _showPaymentDetails.postValue(Resource.loading())
                 val result: CoroutineResult<ListResult>? = suspendCoroutine { continuation ->
-                    loadListResult(checkoutConfiguration.listUrl, continuation)
+                    loadListResult(checkoutConfiguration.listURL, continuation)
                 }
                 if (result != null) {
                     if (result.data != null) {
@@ -93,7 +94,7 @@ class SummaryViewModel @Inject constructor(@ApplicationContext val context: Cont
     }
 
     private fun loadListResult(
-        listUrl: String,
+        listUrl: URL,
         continuation: Continuation<CoroutineResult<ListResult>?>
     ) {
         try {

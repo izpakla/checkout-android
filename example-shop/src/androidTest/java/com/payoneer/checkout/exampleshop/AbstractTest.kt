@@ -32,6 +32,8 @@ import com.payoneer.checkout.sharedtest.view.PaymentActions
 import com.payoneer.checkout.ui.page.ChargePaymentActivity
 import org.junit.After
 import org.junit.Before
+import java.net.MalformedURLException
+import java.net.URL
 
 open class AbstractTest {
 
@@ -120,7 +122,15 @@ open class AbstractTest {
             .setAppId(context.packageName)
             .setOperationType(operationType)
         val service =
-            ListService.createInstance(paymentApiListUrl, merchantCode, merchantPaymentToken)
+            ListService.createInstance(createListURL(paymentApiListUrl), merchantCode, merchantPaymentToken)
         return service.newListSelfUrl(settings)
     }
+
+    private fun createListURL(stringUrl: String) =
+        try {
+            URL(stringUrl);
+        } catch (e: MalformedURLException) {
+            e.printStackTrace()
+            null
+        }
 }

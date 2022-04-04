@@ -10,8 +10,7 @@ package com.payoneer.checkout.exampleshop.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Patterns
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import com.payoneer.checkout.CheckoutConfiguration
@@ -19,6 +18,8 @@ import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.checkout.CheckoutActivity.Companion.createStartIntent
 import com.payoneer.checkout.exampleshop.databinding.ActivitySettingsBinding
 import com.payoneer.checkout.exampleshop.shared.BaseActivity
+import java.net.MalformedURLException
+import java.net.URL
 
 /**
  * This is the main Activity of this shop app in which users can paste a listUrl and start the shop.
@@ -38,13 +39,18 @@ class SettingsActivity : BaseActivity() {
 
     private fun onButtonClicked() {
         closeKeyboard()
-        val listUrl = editTextListInput.text.toString().trim { it <= ' ' }
-        if (TextUtils.isEmpty(listUrl) || !Patterns.WEB_URL.matcher(listUrl).matches()) {
+        val configuration = try {
+            val stringUrl = editTextListInput.text.toString().trim { it <= ' ' }
+
+            val listURL = URL(stringUrl)
+            CheckoutConfiguration.createBuilder(listURL).build()
+        } catch (urlException: MalformedURLException) {
+            Log.e(TAG, "createCheckoutConfigurationKotlin - Error creating URL", urlException)
             showErrorDialog(R.string.dialog_error_listurl_invalid)
-            return
+            null
         }
-        val checkoutConfiguration = CheckoutConfiguration.createBuilder(listUrl).build();
-        val intent = createStartIntent(this, checkoutConfiguration)
+
+        val intent = createStartIntent(this, configuration)
         startActivity(intent)
     }
 
@@ -57,6 +63,8 @@ class SettingsActivity : BaseActivity() {
     }
 
     companion object {
+        private const val TAG = "SettingsActivity"
+
         /**
          * Create an Intent to launch this settings activity
          *

@@ -8,6 +8,9 @@
 
 package com.payoneer.checkout.network;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -41,7 +44,7 @@ public class ListConnectionTest {
     @Test(expected = IllegalArgumentException.class)
     public void createPaymentSession_invalidAuthorization_IllegalArgumentException() throws PaymentException {
         ListConnection conn = createListConnection();
-        conn.createPaymentSession("http://localhost", null, "{}");
+        conn.createPaymentSession(createTestURL(), null, "{}");
     }
 
     /**
@@ -52,7 +55,7 @@ public class ListConnectionTest {
     @Test(expected = IllegalArgumentException.class)
     public void createPaymentSession_invalidListData_IllegalArgumentException() throws PaymentException {
         ListConnection conn = createListConnection();
-        conn.createPaymentSession("http://localhost", "auth123", "");
+        conn.createPaymentSession(createTestURL(), "auth123", "");
     }
 
     /**
@@ -70,5 +73,15 @@ public class ListConnectionTest {
         ListConnection conn = new ListConnection();
         conn.initialize(ApplicationProvider.getApplicationContext());
         return conn;
+    }
+
+    private URL createTestURL() {
+        URL url = null;
+        try {
+            url = new URL("http://localhost");
+        } catch (MalformedURLException exception) {
+            exception.printStackTrace();
+        }
+        return url;
     }
 }

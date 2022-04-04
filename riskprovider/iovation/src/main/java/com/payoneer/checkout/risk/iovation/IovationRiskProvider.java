@@ -16,7 +16,6 @@ import com.payoneer.checkout.risk.RiskProviderInfo;
 import com.payoneer.checkout.risk.RiskProviderResult;
 
 import android.content.Context;
-import android.util.Log;
 
 /**
  * Iovation Risk provider implementation

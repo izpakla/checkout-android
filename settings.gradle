@@ -3,4 +3,5 @@ include ':checkout',
         ':example-shop',
         ':shared-test',
         ':riskprovider:iovation',
-        ':paymentservice:googlepay-braintree'
+        ':paymentservice:googlepay-braintree',
+        ':paymentservice:googlepay-adyen'

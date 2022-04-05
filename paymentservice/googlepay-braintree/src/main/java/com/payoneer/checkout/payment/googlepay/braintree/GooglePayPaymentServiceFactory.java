@@ -19,7 +19,7 @@ public class GooglePayPaymentServiceFactory implements PaymentServiceFactory {
      */
     @Override
     public boolean supports(String code, String method) {
-        return PaymentNetworkCodes.GOOGLEPAY.equals(code);
+        return false;
     }
 
     /**

@@ -52,7 +52,7 @@ class ExampleCheckoutKotlinActivityTest {
 
         onView(withId(R.id.button_charge_preset_acount)).perform(click())
 
-        onView(withText("Please paste a valid List Url in the input field."))
+        onView(withText("Error"))
             .check(matches(isDisplayed()))
     }
 }

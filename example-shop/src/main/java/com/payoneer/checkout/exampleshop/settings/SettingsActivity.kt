@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.exampleshop.checkout.CheckoutActivity.Companion.createStartIntent
@@ -43,15 +44,21 @@ class SettingsActivity : BaseActivity() {
             val stringUrl = editTextListInput.text.toString().trim { it <= ' ' }
 
             val listURL = URL(stringUrl)
-            val config = CheckoutConfiguration.createBuilder(listURL).build()
-            val intent = createStartIntent(this, config)
+            val configuration = CheckoutConfiguration.createBuilder(listURL).build()
+            val intent = createStartIntent(this, configuration)
             startActivity(intent)
         } catch (urlException: MalformedURLException) {
             Log.e(TAG, "createCheckoutConfigurationKotlin - Error creating URL", urlException)
-            showErrorDialog(R.string.dialog_error_listurl_invalid)
-            null
+            showErrorDialog()
         }
     }
+
+    private fun showErrorDialog() =
+        MaterialAlertDialogBuilder(this).apply {
+            setTitle(R.string.dialog_error_title)
+            setMessage(R.string.dialog_error_listurl_invalid)
+            setPositiveButton(getString(R.string.dialog_error_button), null)
+        }.create().show()
 
     private fun closeKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?

@@ -3,12 +3,11 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
-        minSdk 21
-        targetSdk 32
-
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -19,13 +18,28 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions {
+        abortOnError true
+        checkDependencies true
+        ignoreWarnings true
+    }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility rootProject.javaCompatVersion
+        targetCompatibility rootProject.javaCompatVersion
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources true
+        }
     }
 }
 
 dependencies {
+    compileOnly project(":checkout")
+    implementation 'com.google.android.gms:play-services-wallet:19.1.0'
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'

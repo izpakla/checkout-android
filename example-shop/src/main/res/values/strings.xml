@@ -40,6 +40,7 @@
     <string name="confirm_success">Your order is\nconfirmed!</string>
 
     <string name="dialog_error_title">Error</string>
+    <string name="dialog_error_button">Close</string>
     <string name="dialog_error_message">An error occurred while processing your payment</string>
     <string name="dialog_error_listurl_invalid">Please paste a valid List Url in the input field.</string>
 

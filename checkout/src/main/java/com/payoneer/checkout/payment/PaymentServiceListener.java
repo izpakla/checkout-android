@@ -26,6 +26,8 @@ public interface PaymentServiceListener {
 
     void showGooglePay(String auth);
 
+    void showGooglePayAdyen(String gatewayMerchantId);
+
     /**
      * Ask the network service to redirect the payment to an external address
      *

@@ -8,9 +8,8 @@
 
 package com.payoneer.checkout.payment;
 
-import com.payoneer.checkout.network.DeleteAccount;
-import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.model.OperationResult;
+import com.payoneer.checkout.network.DeleteAccount;
 import com.payoneer.checkout.redirect.RedirectRequest;
 
 import android.content.Context;
@@ -39,7 +38,9 @@ public abstract class PaymentService {
     }
 
     public void makeGoogleCharge(String nonce, Context context) {
+    }
 
+    public void makeGoogleChargeWithAdyen(String token, Context context) {
     }
 
     /**

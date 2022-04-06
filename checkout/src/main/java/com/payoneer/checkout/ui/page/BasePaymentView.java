@@ -109,4 +109,6 @@ interface BasePaymentView {
      * Close this payment view
      */
     void close();
+
+    void showGooglePayAdyen(String gatewayMerchantId);
 }

@@ -50,6 +50,11 @@ public final class PaymentListActivity extends BasePaymentActivity implements Pa
 
     }
 
+    @Override
+    public void showGooglePayAdyen(final String gatewayMerchantId) {
+
+    }
+
     /**
      * Get the transition used when this Activity is being started
      *

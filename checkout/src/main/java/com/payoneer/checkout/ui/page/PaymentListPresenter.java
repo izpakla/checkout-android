@@ -221,9 +221,10 @@ final class PaymentListPresenter extends BasePaymentPresenter
         view.showProgress(visible);
     }
 
-    public void showGooglePay(String auth) {
+    public void showGooglePay(String auth) { }
 
-    }
+    @Override
+    public void showGooglePayAdyen(final String gatewayMerchantId) { }
 
     @Override
     public void onDeleteAccountResult(int resultCode, PaymentResult result) {

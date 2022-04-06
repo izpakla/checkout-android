@@ -104,11 +104,15 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
             closeWithErrorCode(result);
         }
     }
-
+    @Override
     public void showGooglePay(String auth) {
         view.showGooglePay(auth);
     }
 
+    @Override
+    public void showGooglePayAdyen(String gatewayMerchantId) {
+       view.showGooglePayAdyen(gatewayMerchantId);
+    }
 
     @Override
     public void onPaymentSessionError(Throwable cause) {

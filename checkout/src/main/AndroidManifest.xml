@@ -17,5 +17,8 @@
             android:name="com.payoneer.checkout.ui.page.ChargePaymentActivity"
             android:exported="true"
             android:theme="@style/PaymentTheme" />
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
     </application>
 </manifest>

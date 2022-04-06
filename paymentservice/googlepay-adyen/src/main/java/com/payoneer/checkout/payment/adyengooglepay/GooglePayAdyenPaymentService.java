@@ -19,10 +19,14 @@ import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_ERROR;
 import static com.payoneer.checkout.ui.PaymentActivityResult.RESULT_CODE_PROCEED;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.OperationResult;
+import com.payoneer.checkout.model.Parameter;
+import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.network.DeleteAccount;
 import com.payoneer.checkout.network.Operation;
@@ -71,13 +75,9 @@ public class GooglePayAdyenPaymentService extends PaymentService {
     }
 
     private void handleProcessPaymentSuccess(final OperationResult operationResult) {
-        String auth = getProviderParameterValue("braintreeJsAuthorisation", operationResult);
-        Log.i(TAG, "Show Google Adyen fragment now");
-        listener.showGooglePay(auth);
-    }
-
-    private String getProviderParameterValue(final String braintreeJsAuthorisation, final OperationResult operationResult) {
-        return null;
+        String merchantId = getProviderParameterValue("googleMerchantId", operationResult);
+        Log.i(TAG, "Show Google Adyen fragment now with the following merchant ID " + merchantId);
+        listener.showGooglePayAdyen(merchantId);
     }
 
     private void handleProcessPaymentError(final Throwable cause) {
@@ -118,6 +118,22 @@ public class GooglePayAdyenPaymentService extends PaymentService {
         operationService.stop();
     }
 
+    public void makeGoogleChargeWithAdyen(String token, Context context) {
+        ProviderParameters providerParams = new ProviderParameters();
+        providerParams.setProviderCode("GOOGLEPAY");
+
+        List<Parameter> params = new ArrayList<>();
+        Parameter param = new Parameter();
+        param.setName("nonce");
+        param.setValue(token);
+        params.add(param);
+        providerParams.setParameters(params);
+        request.setProviderRequest(providerParams);
+
+        Operation operation = new Operation(request.getLink("operation"), request.getOperationData());
+        operationService.postOperation(operation, context);
+    }
+
     @Override
     public void processPayment(PaymentRequest request, Context context) {
         this.request = request;
@@ -152,5 +168,25 @@ public class GooglePayAdyenPaymentService extends PaymentService {
         PaymentResult paymentResult = PaymentResultHelper.fromThrowable(ABORT, cause);
         Log.i(TAG, "handleDeleteAccountError: " + paymentResult);
         listener.onDeleteAccountResult(RESULT_CODE_ERROR, paymentResult);
+    }
+
+    private String getProviderParameterValue(String key, OperationResult result) {
+        if (result == null) {
+            return null;
+        }
+        ProviderParameters parameters = result.getProviderResponse();
+        if (parameters == null) {
+            return null;
+        }
+        List<Parameter> params = parameters.getParameters();
+        if (params == null) {
+            return null;
+        }
+        for (Parameter p : params) {
+            if (p.getName().equals(key)) {
+                return p.getValue();
+            }
+        }
+        return null;
     }
 }

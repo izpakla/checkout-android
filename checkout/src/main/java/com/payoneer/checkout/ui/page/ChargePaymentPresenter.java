@@ -16,7 +16,6 @@ import static com.payoneer.checkout.ui.page.ChargePaymentActivity.TYPE_PRESET_AC
 import java.util.Objects;
 
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.network.Operation;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
@@ -24,6 +23,8 @@ import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.payment.PaymentRequest;
+import com.payoneer.checkout.payment.PaymentService;
+import com.payoneer.checkout.payment.PaymentServiceListener;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 import com.payoneer.checkout.ui.PaymentResult;
@@ -31,15 +32,11 @@ import com.payoneer.checkout.ui.PaymentUI;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.payment.PaymentService;
-import com.payoneer.checkout.payment.PaymentServiceListener;
 import com.payoneer.checkout.ui.service.PaymentSessionListener;
 import com.payoneer.checkout.ui.service.PaymentSessionService;
 import com.payoneer.checkout.util.PaymentResultHelper;
 
 import android.content.Context;
-import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
@@ -67,6 +64,10 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     void makeGoogleCharge(String nonce) {
         paymentService.makeGoogleCharge(nonce, view.getActivity());
+    }
+
+    void makeGoogleChargeWithAdyen(String token) {
+        paymentService.makeGoogleChargeWithAdyen(token, view.getActivity());
     }
 
     void onStart(PaymentRequest paymentRequest, int chargeType) {
@@ -104,6 +105,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
             closeWithErrorCode(result);
         }
     }
+
     @Override
     public void showGooglePay(String auth) {
         view.showGooglePay(auth);
@@ -111,7 +113,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     @Override
     public void showGooglePayAdyen(String gatewayMerchantId) {
-       view.showGooglePayAdyen(gatewayMerchantId);
+        view.showGooglePayAdyen(gatewayMerchantId);
     }
 
     @Override

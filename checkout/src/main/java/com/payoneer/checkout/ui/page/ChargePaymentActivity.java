@@ -250,9 +250,11 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
 
             // Logging token string.
             Log.d(TAG, "Google Pay token is " + token);
+            presenter.makeGoogleChargeWithAdyen(token);
 
         } catch (JSONException e) {
-            throw new RuntimeException("The selected garment cannot be parsed from the list of elements");
+            throw new RuntimeException(
+                "ChargePaymentActivity - Error getting the payment data details with the following error " + e.getMessage());
         }
     }
 

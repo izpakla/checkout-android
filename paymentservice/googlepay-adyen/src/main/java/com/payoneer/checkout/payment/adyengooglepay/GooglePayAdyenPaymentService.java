@@ -118,13 +118,14 @@ public class GooglePayAdyenPaymentService extends PaymentService {
         operationService.stop();
     }
 
+    @Override
     public void makeGoogleChargeWithAdyen(String token, Context context) {
         ProviderParameters providerParams = new ProviderParameters();
         providerParams.setProviderCode("GOOGLEPAY");
 
         List<Parameter> params = new ArrayList<>();
         Parameter param = new Parameter();
-        param.setName("nonce");
+        param.setName("googlepay_token");
         param.setValue(token);
         params.add(param);
         providerParams.setParameters(params);

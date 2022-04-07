@@ -43,6 +43,9 @@ android {
         checkDependencies true
         ignoreWarnings true
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -52,6 +55,7 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${rootProject.androidxSwiperefreshlayoutVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
     implementation "androidx.fragment:fragment:${rootProject.androidxFragmentVersion}"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     testImplementation "org.robolectric:robolectric:${rootProject.robolectricVersion}"
     testImplementation "androidx.test:core:${rootProject.androidxTestCoreVersion}"

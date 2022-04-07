@@ -57,16 +57,16 @@ public abstract class PaymentService {
     /**
      *
      * @param requestData
-     * @param context
+     * @param applicationContext
      */
-    public abstract void processPayment(final RequestData requestData, final Context context);
+    public abstract void processPayment(final RequestData requestData, final Context applicationContext);
 
     /**
      *
      * @param requestData
-     * @param context
+     * @param applicationContext
      */
-    public abstract void deleteAccount(final RequestData requestData, final Context context);
+    public abstract void deleteAccount(final RequestData requestData, final Context applicationContext);
 
     /**
      *

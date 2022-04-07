@@ -9,7 +9,6 @@
 package com.payoneer.checkout.ui.page;
 
 import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
-import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
 
 import java.util.Objects;
@@ -25,9 +24,9 @@ import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.payment.PaymentInputValues;
-import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceController;
+import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentSession;
@@ -102,19 +101,16 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     @Override
-    public void onProcessPaymentResult(int resultCode, CheckoutResult result) {
-        switch (resultCode) {
-            case RESULT_CODE_PROCEED:
-                closeWithProceedCode(result);
-                break;
-            case RESULT_CODE_ERROR:
-                handleProcessPaymentError(result);
-                break;
+    public void onProcessPaymentResult(CheckoutResult result) {
+        if (result.isProceed()) {
+            closeWithProceedCode(result);
+        } else {
+            handleProcessPaymentError(result);
         }
     }
 
     @Override
-    public void onDeleteAccountResult(int resultCode, CheckoutResult result) {
+    public void onDeleteAccountResult(CheckoutResult result) {
     }
 
     private void processPayment() {

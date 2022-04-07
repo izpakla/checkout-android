@@ -37,16 +37,14 @@ public interface PaymentServiceController {
     /**
      * Called when PaymentService is done processing the request.
      *
-     * @param resultCode code describing the state of the ChechkoutResult
      * @param checkoutResult containing the information describing the result
      */
-    void onProcessPaymentResult(final int resultCode, final CheckoutResult checkoutResult);
+    void onProcessPaymentResult(final CheckoutResult checkoutResult);
 
     /**
      * Called when PaymentService is done deleting the account.
      *
-     * @param resultCode code describing the state of the CheckoutResult
      * @param checkoutResult containing the information describing the result
      */
-    void onDeleteAccountResult(final int resultCode, final CheckoutResult checkoutResult);
+    void onDeleteAccountResult(final CheckoutResult checkoutResult);
 }

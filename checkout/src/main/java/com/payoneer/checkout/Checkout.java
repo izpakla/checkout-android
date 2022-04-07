@@ -11,7 +11,7 @@ package com.payoneer.checkout;
 import com.payoneer.checkout.localization.LocalLocalizationHolder;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.ui.page.ChargePaymentActivity;
-import com.payoneer.checkout.ui.page.PaymentListActivity;
+import com.payoneer.checkout.ui.screen.list.CheckoutListActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -69,9 +69,9 @@ public final class Checkout {
      * @param requestCode the requestCode to be used for identifying results in the parent activity
      */
     public void showPaymentList(final Activity activity, final int requestCode) {
-        Intent intent = PaymentListActivity.createStartIntent(activity, checkoutConfiguration);
+        Intent intent = CheckoutListActivity.createStartIntent(activity, checkoutConfiguration);
         launchActivity(activity, intent, requestCode);
-        activity.overridePendingTransition(PaymentListActivity.getStartTransition(), R.anim.no_animation);
+        activity.overridePendingTransition(CheckoutListActivity.getStartTransition(), R.anim.no_animation);
     }
 
     /**

@@ -41,7 +41,7 @@ import android.view.View;
 /**
  * Class with helper methods for creating themed dialogs and snackbars.
  */
-public class PaymentDialogHelper {
+public class PaymentDialogFactory {
 
     /**
      * Create a themed Snackbar given the view and message this Snackbar should show

@@ -17,7 +17,7 @@ import com.payoneer.checkout.CheckoutActivityResult
 import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener
-import com.payoneer.checkout.ui.dialog.PaymentDialogHelper
+import com.payoneer.checkout.ui.dialog.PaymentDialogFactory
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
 
 /**
@@ -88,7 +88,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val title = getString(R.string.dialog_error_title)
         val error = getString(errorResId)
         val tag = "dialog_exampleshop"
-        val dialog = PaymentDialogHelper.createMessageDialog(title, error, tag, listener)
+        val dialog = PaymentDialogFactory.createMessageDialog(title, error, tag, listener)
         dialog.showDialog(supportFragmentManager, null)
     }
 

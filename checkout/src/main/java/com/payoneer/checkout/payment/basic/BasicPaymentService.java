@@ -113,28 +113,24 @@ public final class BasicPaymentService extends PaymentService {
     }
 
     private void handleRedirectResult(RedirectRequest request) {
-        int resultCode;
         CheckoutResult checkoutResult;
-
         controller.onProgress(true);
         OperationResult operationResult = RedirectService.getRedirectResult();
 
         if (operationResult != null) {
             Interaction interaction = operationResult.getInteraction();
-            resultCode = PROCEED.equals(interaction.getCode()) ? RESULT_CODE_PROCEED : RESULT_CODE_ERROR;
             checkoutResult = new CheckoutResult(operationResult);
         } else {
             String message = "Missing OperationResult after client-side redirect";
             String interactionCode = getErrorInteractionCode(requestData.getOperationType());
-            resultCode = RESULT_CODE_ERROR;
             checkoutResult = CheckoutResultHelper.fromErrorMessage(interactionCode, message);
         }
         Log.i("checkout-sdk", "onRedirectResult: " + checkoutResult);
 
         if (request.getRequestCode() == PROCESSPAYMENT_REQUEST_CODE) {
-            controller.onProcessPaymentResult(resultCode, checkoutResult);
+            controller.onProcessPaymentResult(checkoutResult);
         } else {
-            controller.onDeleteAccountResult(resultCode, checkoutResult);
+            controller.onDeleteAccountResult(checkoutResult);
         }
     }
 
@@ -144,11 +140,11 @@ public final class BasicPaymentService extends PaymentService {
         Log.i("checkout-sdk", "handleProcessPaymentSuccess: " + checkoutResult);
 
         if (!PROCEED.equals(interaction.getCode())) {
-            controller.onProcessPaymentResult(RESULT_CODE_ERROR, checkoutResult);
+            controller.onProcessPaymentResult(checkoutResult);
             return;
         }
         if (!requiresRedirect(operationResult)) {
-            controller.onProcessPaymentResult(RESULT_CODE_PROCEED, checkoutResult);
+            controller.onProcessPaymentResult(checkoutResult);
             return;
         }
         try {
@@ -162,7 +158,7 @@ public final class BasicPaymentService extends PaymentService {
         String code = getErrorInteractionCode(requestData.getOperationType());
         CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(code, cause);
         Log.i("checkout-sdk", "handleProcessPaymentError: " + checkoutResult);
-        controller.onProcessPaymentResult(RESULT_CODE_ERROR, checkoutResult);
+        controller.onProcessPaymentResult(checkoutResult);
     }
 
     private void handleDeleteAccountSuccess(OperationResult operationResult) {
@@ -171,11 +167,11 @@ public final class BasicPaymentService extends PaymentService {
         Log.i("checkout-sdk", "handleDeleteAccountSuccess: " + checkoutResult);
 
         if (!PROCEED.equals(interaction.getCode())) {
-            controller.onDeleteAccountResult(RESULT_CODE_ERROR, checkoutResult);
+            controller.onDeleteAccountResult(checkoutResult);
             return;
         }
         if (!requiresRedirect(operationResult)) {
-            controller.onDeleteAccountResult(RESULT_CODE_PROCEED, checkoutResult);
+            controller.onDeleteAccountResult(checkoutResult);
             return;
         }
         try {
@@ -188,6 +184,6 @@ public final class BasicPaymentService extends PaymentService {
     private void handleDeleteAccountError(Throwable cause) {
         CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(ABORT, cause);
         Log.i("checkout-sdk", "handleDeleteAccountError: " + checkoutResult);
-        controller.onDeleteAccountResult(RESULT_CODE_ERROR, checkoutResult);
+        controller.onDeleteAccountResult(checkoutResult);
     }
 }

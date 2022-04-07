@@ -16,7 +16,7 @@ import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
-import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
+import com.payoneer.checkout.ui.dialog.PaymentDialogFactory;
 import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
 
 import android.annotation.SuppressLint;
@@ -65,26 +65,26 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
     @Override
     public void showWarningMessage(String message) {
         if (!TextUtils.isEmpty(message)) {
-            PaymentDialogHelper.createSnackbar(getRootView(), message).show();
+            PaymentDialogFactory.createSnackbar(getRootView(), message).show();
         }
     }
 
     @Override
     public void showConnectionErrorDialog(PaymentDialogListener listener) {
         progressView.setVisible(false);
-        PaymentDialogFragment dialog = PaymentDialogHelper.createConnectionErrorDialog(listener);
+        PaymentDialogFragment dialog = PaymentDialogFactory.createConnectionErrorDialog(listener);
         showPaymentDialog(dialog);
     }
 
     @Override
     public void showDeleteAccountDialog(PaymentDialogListener listener, String displayLabel) {
-        PaymentDialogFragment dialog = PaymentDialogHelper.createDeleteAccountDialog(listener, displayLabel);
+        PaymentDialogFragment dialog = PaymentDialogFactory.createDeleteAccountDialog(listener, displayLabel);
         showPaymentDialog(dialog);
     }
 
     @Override
     public void showRefreshAccountDialog(PaymentDialogListener listener) {
-        PaymentDialogFragment dialog = PaymentDialogHelper.createRefreshAccountDialog(listener);
+        PaymentDialogFragment dialog = PaymentDialogFactory.createRefreshAccountDialog(listener);
         showPaymentDialog(dialog);
     }
 
@@ -96,22 +96,22 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
         progressView.setVisible(false);
         PaymentDialogFragment dialog;
         if (Localization.hasInteractionMessage(interactionMessage)) {
-            dialog = PaymentDialogHelper.createInteractionDialog(interactionMessage, listener);
+            dialog = PaymentDialogFactory.createInteractionDialog(interactionMessage, listener);
         } else {
-            dialog = PaymentDialogHelper.createDefaultErrorDialog(listener);
+            dialog = PaymentDialogFactory.createDefaultErrorDialog(listener);
         }
         showPaymentDialog(dialog);
     }
 
     @Override
     public void showHintDialog(String networkCode, String type, PaymentDialogListener listener) {
-        PaymentDialogFragment dialog = PaymentDialogHelper.createHintDialog(networkCode, type, listener);
+        PaymentDialogFragment dialog = PaymentDialogFactory.createHintDialog(networkCode, type, listener);
         showPaymentDialog(dialog);
     }
 
     @Override
     public void showExpiredDialog(String networkCode) {
-        PaymentDialogFragment dialog = PaymentDialogHelper.createExpiredDialog(networkCode);
+        PaymentDialogFragment dialog = PaymentDialogFactory.createExpiredDialog(networkCode);
         showPaymentDialog(dialog);
     }
 

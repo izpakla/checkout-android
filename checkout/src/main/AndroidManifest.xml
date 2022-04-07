@@ -17,5 +17,9 @@
             android:name="com.payoneer.checkout.ui.page.ChargePaymentActivity"
             android:exported="true"
             android:theme="@style/CheckoutTheme" />
+        <activity
+            android:name="com.payoneer.checkout.ui.screen.list.CheckoutListActivity"
+            android:exported="true"
+            android:theme="@style/CheckoutTheme.Toolbar" />
     </application>
 </manifest>

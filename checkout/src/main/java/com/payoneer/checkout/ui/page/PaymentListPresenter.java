@@ -37,9 +37,9 @@ import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.payment.PaymentInputValues;
-import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceController;
+import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.list.PaymentListListener;
 import com.payoneer.checkout.ui.model.AccountCard;
@@ -53,7 +53,6 @@ import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 /**
  * The PaymentListPresenter implementing the presenter part of the MVP
@@ -212,7 +211,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public void onDeleteAccountResult(final int resultCode, final CheckoutResult result) {
+    public void onDeleteAccountResult(final CheckoutResult result) {
         setState(STARTED);
         if (result.isNetworkFailure()) {
             handleDeleteAccountNetworkFailure(result);
@@ -237,25 +236,20 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public void onProcessPaymentResult(final int resultCode, final CheckoutResult result) {
+    public void onProcessPaymentResult(final CheckoutResult result) {
         setState(STARTED);
         if (UPDATE.equals(session.getListOperationType())) {
-            handleUpdateCheckoutResult(resultCode, result);
+            handleUpdateCheckoutResult(result);
         } else {
-            handleProcessPaymentResult(resultCode, result);
+            handleProcessPaymentResult(result);
         }
     }
 
-    private void handleUpdateCheckoutResult(final int resultCode, final CheckoutResult result) {
-        switch (resultCode) {
-            case RESULT_CODE_PROCEED:
-                handleUpdatePaymentProceed(result);
-                break;
-            case RESULT_CODE_ERROR:
-                handleUpdatePaymentError(result);
-                break;
-            default:
-                showPaymentSession();
+    private void handleUpdateCheckoutResult(final CheckoutResult result) {
+        if (result.isProceed()) {
+            handleUpdatePaymentProceed(result);
+        } else {
+            handleUpdatePaymentError(result);
         }
     }
 
@@ -293,16 +287,11 @@ final class PaymentListPresenter extends BasePaymentPresenter
         }
     }
 
-    private void handleProcessPaymentResult(final int resultCode, final CheckoutResult result) {
-        switch (resultCode) {
-            case RESULT_CODE_PROCEED:
-                closeWithProceedCode(result);
-                break;
-            case RESULT_CODE_ERROR:
-                handleProcessPaymentError(result);
-                break;
-            default:
-                showPaymentSession();
+    private void handleProcessPaymentResult(final CheckoutResult result) {
+        if (result.isProceed()) {
+            closeWithProceedCode(result);
+        } else {
+            handleProcessPaymentError(result);
         }
     }
 

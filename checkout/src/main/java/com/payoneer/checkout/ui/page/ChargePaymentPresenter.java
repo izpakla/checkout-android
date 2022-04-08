@@ -37,6 +37,7 @@ import com.payoneer.checkout.ui.service.PaymentSessionService;
 import com.payoneer.checkout.util.PaymentResultHelper;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
@@ -50,6 +51,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     private PaymentService paymentService;
     private RedirectRequest redirectRequest;
     private int chargeType;
+    private String googleToken;
 
     /**
      * Create a new ChargePaymentPresenter
@@ -62,12 +64,8 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         sessionService.setListener(this);
     }
 
-    void makeGoogleCharge(String nonce) {
-        paymentService.makeGoogleCharge(nonce, view.getActivity());
-    }
-
     void makeGoogleChargeWithAdyen(String token) {
-        paymentService.makeGoogleChargeWithAdyen(token, view.getActivity());
+        this.googleToken = token;
     }
 
     void onStart(PaymentRequest paymentRequest, int chargeType) {
@@ -77,7 +75,12 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         }
         setState(STARTED);
 
-        if (redirectRequest != null) {
+        if (googleToken != null) {
+            Log.i("AAA", "MaKE request in presenter with googleToken: " + googleToken);
+            paymentService.makeGoogleChargeWithAdyen(googleToken, view.getActivity());
+            googleToken = null;
+        }
+        else if (redirectRequest != null) {
             handleRedirectRequest(redirectRequest);
             redirectRequest = null;
         } else {
@@ -104,11 +107,6 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
             PaymentResult result = new PaymentResult(errorInfo, null);
             closeWithErrorCode(result);
         }
-    }
-
-    @Override
-    public void showGooglePay(String auth) {
-        view.showGooglePay(auth);
     }
 
     @Override

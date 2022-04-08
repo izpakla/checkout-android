@@ -16,10 +16,6 @@ import java.util.Optional;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.braintreepayments.api.BraintreeClient;
-import com.braintreepayments.api.GooglePayClient;
-import com.braintreepayments.api.GooglePayRequest;
-import com.braintreepayments.api.PaymentMethodNonce;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wallet.AutoResolveHelper;
@@ -33,6 +29,7 @@ import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.payment.PaymentRequest;
 import com.payoneer.checkout.util.GoogleAdyenUtils;
+import com.payoneer.checkout.util.GooglePay;
 
 import android.app.Activity;
 import android.content.Context;
@@ -62,9 +59,6 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
     private PaymentRequest paymentRequest;
     // A client for interacting with the Google Pay API.
     private PaymentsClient paymentsClient;
-
-    private BraintreeClient braintreeClient;
-    private GooglePayClient googlePayClient;
 
     /**
      * Create the start intent for this ChargePaymentActivity
@@ -141,30 +135,9 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
     }
 
     @Override
-    public void showGooglePay(final String auth) {
-        Log.i("AAA", "auth: " + auth);
-        braintreeClient = new BraintreeClient(this, auth);
-        googlePayClient = new GooglePayClient(braintreeClient);
-
-        GooglePayRequest googlePayRequest = new GooglePayRequest();
-        googlePayRequest.setTransactionInfo(TransactionInfo.newBuilder()
-            .setTotalPrice("1.00")
-            .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
-            .setCurrencyCode("EUR")
-            .build());
-        googlePayRequest.setBillingAddressRequired(true);
-
-        googlePayClient.requestPayment(this, googlePayRequest, error -> {
-            if (error != null) {
-                Log.i("AAA", "error: " + error);
-                // handle error
-            }
-        });
-    }
-
-    @Override
     public void showGooglePayAdyen(String gatewayMerchantId) {
-        final Optional<JSONObject> isReadyToPayJson = GoogleAdyenUtils.getIsReadyToPayRequest();
+        final Optional<JSONObject> isReadyToPayJson = GooglePay.getIsReadyToPayRequest();
+        //final Optional<JSONObject> isReadyToPayJson = GoogleAdyenUtils.getIsReadyToPayRequest();
         if (!isReadyToPayJson.isPresent()) {
             Log.i(TAG, "IsReadyToPay JSON is not present");
             return;
@@ -183,7 +156,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
     }
 
     public void requestPayment(String gatewayMerchantId) {
-        Optional<JSONObject> paymentDataRequestJson = GoogleAdyenUtils.getPaymentDataRequest(gatewayMerchantId);
+        Optional<JSONObject> paymentDataRequestJson = GooglePay.getPaymentDataRequest();
         if (!paymentDataRequestJson.isPresent()) {
             Log.i(TAG, "paymentDataRequestJson JSON is not present");
             return;
@@ -212,7 +185,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
                     break;
 
                 case Activity.RESULT_CANCELED:
-                    Toast.makeText(this, "You have cancellled the operation!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "You have cancelled the operation!", Toast.LENGTH_SHORT).show();
                     break;
 
                 case AutoResolveHelper.RESULT_ERROR:
@@ -233,9 +206,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
     private void handlePaymentSuccess(PaymentData paymentData) {
         // Token will be null if PaymentDataRequest was not constructed using fromJson(String).
         final String paymentInfo = paymentData.toJson();
-        if (paymentInfo == null) {
-            return;
-        }
+        Log.i("AAA", "paymentInfo: " + paymentInfo);
 
         try {
             JSONObject paymentMethodData = new JSONObject(paymentInfo).getJSONObject("paymentMethodData");
@@ -245,16 +216,15 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
             final JSONObject tokenizationData = paymentMethodData.getJSONObject("tokenizationData");
             final String token = tokenizationData.getString("token");
             final JSONObject info = paymentMethodData.getJSONObject("info");
-            final String billingName = info.getJSONObject("billingAddress").getString("name");
-            Toast.makeText(this, billingName, Toast.LENGTH_LONG).show();
+            //final String billingName = info.getJSONObject("billingAddress").getString("name");
+            //Toast.makeText(this, billingName, Toast.LENGTH_LONG).show();
 
             // Logging token string.
             Log.d(TAG, "Google Pay token is " + token);
             presenter.makeGoogleChargeWithAdyen(token);
 
         } catch (JSONException e) {
-            throw new RuntimeException(
-                "ChargePaymentActivity - Error getting the payment data details with the following error " + e.getMessage());
+            Log.w("AAAA", e);
         }
     }
 
@@ -270,11 +240,6 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
     private void handleError(int statusCode) {
         Log.e(TAG, String.format("Error code: %d", statusCode));
         Toast.makeText(this, String.format("Error code: %d", statusCode), Toast.LENGTH_SHORT).show();
-    }
-
-    private void sendGoogleNonceToBackend(PaymentMethodNonce nonce) {
-        Log.i("AAA", "nonce: " + nonce.getString());
-        presenter.makeGoogleCharge(nonce.getString());
     }
 
     /**

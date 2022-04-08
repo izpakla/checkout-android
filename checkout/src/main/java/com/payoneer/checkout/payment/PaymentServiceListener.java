@@ -24,8 +24,6 @@ public interface PaymentServiceListener {
      */
     void showProgress(boolean visible);
 
-    void showGooglePay(String auth);
-
     void showGooglePayAdyen(String gatewayMerchantId);
 
     /**

@@ -116,7 +116,7 @@ public final class PaymentUI {
      * @return the set PaymentTheme or the default PaymentTheme
      */
     public PaymentTheme getPaymentTheme() {
-        return theme;
+        return PaymentTheme.createDefault();
     }
 
     /**

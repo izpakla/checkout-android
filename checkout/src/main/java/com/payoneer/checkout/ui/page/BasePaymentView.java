@@ -35,8 +35,6 @@ interface BasePaymentView {
      */
     void showConnectionErrorDialog(PaymentDialogListener listener);
 
-    void showGooglePay(final String auth);
-
     /**
      * Show the delete account dialog to the user, notify the listener of events in this dialog.
      *

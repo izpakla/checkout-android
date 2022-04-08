@@ -135,7 +135,7 @@ public final class GooglePayPaymentService extends PaymentService {
         Log.i("AAA", "OperationResult: " + operationResult);
         String auth = getProviderParameterValue("braintreeJsAuthorisation", operationResult);
         Log.i("AAA", "showBarintree fragment in listener");
-        listener.showGooglePay(auth);
+        listener.showGooglePayAdyen("");
     }
 
     private void handleProcessPaymentError(Throwable cause) {

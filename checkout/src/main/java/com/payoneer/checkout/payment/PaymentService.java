@@ -37,9 +37,6 @@ public abstract class PaymentService {
         this.listener = listener;
     }
 
-    public void makeGoogleCharge(String nonce, Context context) {
-    }
-
     public void makeGoogleChargeWithAdyen(String token, Context context) {
     }
 

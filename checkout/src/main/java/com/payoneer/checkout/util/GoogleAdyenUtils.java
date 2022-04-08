@@ -31,7 +31,7 @@ public class GoogleAdyenUtils {
     private static final int PAYMENTS_ENVIRONMENT = WalletConstants.ENVIRONMENT_TEST;
     private static final String CURRENCY_CODE = "USD";
     private static final String COUNTRY_CODE = "US";
-    private static final List<String> SHIPPING_SUPPORTED_COUNTRIES = Arrays.asList("US", "GB");
+    private static final List<String> SHIPPING_SUPPORTED_COUNTRIES = Arrays.asList("US", "GB", "KE");
     private static final BigDecimal CENTS_IN_A_UNIT = new BigDecimal(100d);
 
     private static JSONObject getTransactionInfo(String price) throws JSONException {
@@ -50,7 +50,7 @@ public class GoogleAdyenUtils {
     }
 
     public static Optional<JSONObject> getPaymentDataRequest(String gatewayMerchantId) {
-        final String price = centsToString(213123);
+        final String price = centsToString(50);
 
         try {
             JSONObject paymentDataRequest = GoogleAdyenUtils.getBaseRequest();

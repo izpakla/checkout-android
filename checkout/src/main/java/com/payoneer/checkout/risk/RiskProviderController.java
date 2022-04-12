@@ -11,8 +11,9 @@ package com.payoneer.checkout.risk;
 import static com.payoneer.checkout.risk.RiskErrors.RESULTKEY_EXTERNAL_ERROR;
 import static com.payoneer.checkout.risk.RiskErrors.RESULTKEY_INTERNAL_ERROR;
 
-import java.util.Map;
 import java.util.Objects;
+
+import com.payoneer.checkout.model.Parameter;
 
 import android.content.Context;
 import android.util.Log;
@@ -24,8 +25,8 @@ import android.util.Log;
 public final class RiskProviderController {
 
     private final RiskProviderInfo info;
-    private RiskProvider riskProvider;
     private final RiskErrors riskErrors = new RiskErrors();
+    private RiskProvider riskProvider;
 
     public RiskProviderController(final RiskProviderInfo info) {
         this.info = info;
@@ -67,7 +68,10 @@ public final class RiskProviderController {
 
         if (riskProvider == null) {
             String message = "RiskProviderController(" + code + ", " + type + ") could not find RiskProvider";
-            riskErrors.put(RESULTKEY_INTERNAL_ERROR, trimMessage(message));
+            Parameter parameter = new Parameter();
+            parameter.setName(RESULTKEY_INTERNAL_ERROR);
+            parameter.setValue(trimMessage(message));
+            riskErrors.addErrorParameter(parameter);
             Log.w("checkout-sdk", message);
             return;
         }
@@ -76,7 +80,10 @@ public final class RiskProviderController {
             riskProvider.initialize(info, applicationContext);
         } catch (RiskException e) {
             String message = "RiskProviderController(" + code + ", " + type + ") failed to initialize RiskProvider " + e.getMessage();
-            riskErrors.put(RESULTKEY_EXTERNAL_ERROR, trimMessage(message));
+            Parameter parameter = new Parameter();
+            parameter.setName(RESULTKEY_EXTERNAL_ERROR);
+            parameter.setValue(trimMessage(message));
+            riskErrors.addErrorParameter(parameter);
             Log.w("checkout-sdk", message, e);
         }
     }
@@ -97,16 +104,20 @@ public final class RiskProviderController {
             try {
                 Context applicationContext = context.getApplicationContext();
                 result = riskProvider.getRiskProviderResult(applicationContext);
-                for (Map.Entry<String, String> entry : riskErrors.getRiskErrors().entrySet()) {
-                    result.put(entry.getKey(), entry.getValue());
-                }
             } catch (RiskException e) {
                 String message = "RiskProviderController(" + code + ", " + type + ") could not obtain result " + e.getMessage();
-                riskErrors.put(RESULTKEY_EXTERNAL_ERROR, trimMessage(message));
+                Parameter parameter = new Parameter();
+                parameter.setName(RESULTKEY_EXTERNAL_ERROR);
+                parameter.setValue(trimMessage(message));
+                riskErrors.addErrorParameter(parameter);
                 Log.w("checkout-sdk", message, e);
             }
         }
         return (result != null) ? result : new RiskProviderResult();
+    }
+
+    public RiskErrors getRiskErrors() {
+        return riskErrors;
     }
 
     private String trimMessage(String message) {

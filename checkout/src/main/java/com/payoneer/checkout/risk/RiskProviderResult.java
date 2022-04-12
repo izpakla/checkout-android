@@ -37,10 +37,14 @@ public final class RiskProviderResult {
      *
      * @param parameters list of parameters into which the risk result data should be copied to
      */
-    public void copyInto(final List<Parameter> parameters) {
+    public void copyInto(final List<Parameter> parameters, List<Parameter> errorParameters) {
         if (parameters == null) {
             throw new IllegalArgumentException("Parameters cannot be null");
         }
+        if (errorParameters.size() != 0) {
+            parameters.addAll(errorParameters);
+        }
+
         for (Map.Entry<String, String> entry : riskData.entrySet()) {
             Parameter param = new Parameter();
             param.setName(entry.getKey());

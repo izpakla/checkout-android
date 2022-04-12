@@ -64,6 +64,18 @@ public class RiskProviderControllerTest {
         assertNotNull(result);
     }
 
+    @Test
+    public void getRiskProviderResultWithErrors() {
+        RiskProviderInfo info = createRiskProviderInfo("CODE", "TYPE");
+        RiskProviderController controller = new RiskProviderController(info);
+        controller.initialize(null);
+
+        RiskProviderResult result = controller.getRiskProviderResult(ApplicationProvider.getApplicationContext());
+        assertNotNull(result);
+        assertTrue(controller.getRiskErrors().getRiskErrorParameters().stream().anyMatch(parameter -> parameter.getValue()
+            .equals("RiskProviderController(CODE, TYPE) could not find RiskProvider")));
+    }
+
     private RiskProviderInfo createRiskProviderInfo(final String code, final String type) {
         Map<String, String> parameters = new HashMap<>();
         return new RiskProviderInfo(code, type, parameters);

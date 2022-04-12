@@ -10,8 +10,10 @@
 
 package com.payoneer.checkout.risk;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.payoneer.checkout.model.Parameter;
 
 /**
  * This class is basically an extension of {@link com.payoneer.checkout.risk.RiskProviderResult} with a map
@@ -21,13 +23,13 @@ public class RiskErrors {
 
     public static final String RESULTKEY_EXTERNAL_ERROR = "riskPluginExternalError";
     public static final String RESULTKEY_INTERNAL_ERROR = "riskPluginInternalError";
-    private final Map<String, String> riskErrors = new HashMap<>();
+    private final List<Parameter> riskErrorParameters = new ArrayList<>();
 
-    public void put(final String key, final String value) {
-        riskErrors.put(key, value);
+    public void addErrorParameter(Parameter parameter) {
+        riskErrorParameters.add(parameter);
     }
 
-    public Map<String, String> getRiskErrors() {
-        return riskErrors;
+    public List<Parameter> getRiskErrorParameters() {
+        return riskErrorParameters;
     }
 }

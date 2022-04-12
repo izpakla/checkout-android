@@ -25,7 +25,7 @@ public final class RiskProviderController {
 
     private final RiskProviderInfo info;
     private RiskProvider riskProvider;
-    private RiskErrors riskErrors = new RiskErrors();
+    private final RiskErrors riskErrors = new RiskErrors();
 
     public RiskProviderController(final RiskProviderInfo info) {
         this.info = info;

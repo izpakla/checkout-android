@@ -8,51 +8,25 @@
 
 package com.payoneer.checkout.ui.screen.list;
 
-import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
-import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
-import static com.payoneer.checkout.model.InteractionCode.RELOAD;
-import static com.payoneer.checkout.model.InteractionCode.RETRY;
-import static com.payoneer.checkout.model.InteractionCode.TRY_OTHER_ACCOUNT;
-import static com.payoneer.checkout.model.InteractionCode.TRY_OTHER_NETWORK;
-import static com.payoneer.checkout.model.InteractionReason.OK;
-import static com.payoneer.checkout.model.InteractionReason.PENDING;
-import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
-import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_CODE;
-import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_REASON;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
-import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.ListResult;
-import com.payoneer.checkout.model.OperationResult;
-import com.payoneer.checkout.model.Parameter;
-import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentService;
-import com.payoneer.checkout.payment.PaymentServiceController;
-import com.payoneer.checkout.payment.PaymentServiceLookup;
 import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
-import com.payoneer.checkout.ui.model.AccountCard;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.ui.model.PresetCard;
 import com.payoneer.checkout.ui.session.PaymentSessionListener;
 import com.payoneer.checkout.ui.session.PaymentSessionService;
-import com.payoneer.checkout.ui.widget.FormWidget;
-import com.payoneer.checkout.util.PaymentUtils;
-
-import android.content.Context;
-import android.text.TextUtils;
+import com.payoneer.checkout.util.Resource;
 
 /**
  * The CheckoutListPresenter
@@ -63,7 +37,7 @@ final class CheckoutListPresenter implements PaymentSessionListener {
     private final CheckoutConfiguration configuration;
 
     private CheckoutListViewModel viewModel;
-    private PaymentSession session;
+    private PaymentSession paymentSession;
     private PaymentService paymentService;
     private RequestData requestData;
 
@@ -74,7 +48,6 @@ final class CheckoutListPresenter implements PaymentSessionListener {
      */
     CheckoutListPresenter(CheckoutConfiguration checkoutConfiguration) {
         this.configuration = checkoutConfiguration;
-
         sessionService = new PaymentSessionService();
         sessionService.setListener(this);
     }
@@ -83,8 +56,18 @@ final class CheckoutListPresenter implements PaymentSessionListener {
         this.viewModel = viewModel;
     }
 
-    public void loadPaymentSession() {
+    void loadPaymentSession() {
+        this.paymentSession = null;
+        viewModel.clearPaymentSession();
+        viewModel.showPaymentSession(Resource.LOADING, null, null);
         sessionService.loadPaymentSession(configuration, viewModel.getApplicationContext());
+    }
+
+    void deletePaymentCard(final PaymentCard paymentCard) {
+    }
+
+    void processPaymentCard(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
+        
     }
 
     @Override
@@ -96,7 +79,7 @@ final class CheckoutListPresenter implements PaymentSessionListener {
             handleLoadPaymentSessionProceed(session);
         } else {
             ErrorInfo errorInfo = new ErrorInfo(listResult.getResultInfo(), interaction);
-            //closeWithErrorCode(new CheckoutResult(errorInfo));
+            viewModel.closeWithCheckoutResult(new CheckoutResult(errorInfo));
         }
     }
 
@@ -104,19 +87,43 @@ final class CheckoutListPresenter implements PaymentSessionListener {
     public void onPaymentSessionError(Throwable cause) {
         CheckoutResult result = CheckoutResultHelper.fromThrowable(cause);
         if (result.isNetworkFailure()) {
-            //handleLoadingNetworkFailure(result);
+            handleLoadPaymentSessionNetworkFailure(result);
         } else {
-            //closeWithErrorCode(result);
+            viewModel.closeWithCheckoutResult(result);
         }
     }
 
-    private void handleLoadPaymentSessionProceed(PaymentSession session) {
-        if (session.isEmpty()) {
-            //closeWithErrorCode("There are no payment methods available");
+    private void closeWithErrorMessage(String message) {
+        CheckoutResult result = CheckoutResultHelper.fromErrorMessage(message);
+        viewModel.closeWithCheckoutResult(result);
+    }
+
+    private void handleLoadPaymentSessionNetworkFailure(final CheckoutResult checkoutResult) {
+        viewModel.showConnectionErrorDialog(new PaymentDialogListener() {
+            @Override
+            public void onPositiveButtonClicked() {
+                loadPaymentSession();
+            }
+
+            @Override
+            public void onNegativeButtonClicked() {
+                viewModel.closeWithCheckoutResult(checkoutResult);
+            }
+
+            @Override
+            public void onDismissed() {
+                viewModel.closeWithCheckoutResult(checkoutResult);
+            }
+        });
+    }
+
+    private void handleLoadPaymentSessionProceed(PaymentSession paymentSession) {
+        if (paymentSession.isEmpty()) {
+            closeWithErrorMessage("There are no payment methods available");
             return;
         }
-        this.session = session;
-        viewModel.setPaymentSession(session);
+        this.paymentSession = paymentSession;
+        viewModel.showPaymentSession(Resource.SUCCESS, paymentSession, null);
     }
 }
 

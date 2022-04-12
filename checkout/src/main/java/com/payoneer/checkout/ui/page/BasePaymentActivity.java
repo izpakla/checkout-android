@@ -78,13 +78,13 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
 
     @Override
     public void showDeleteAccountDialog(PaymentDialogListener listener, String displayLabel) {
-        PaymentDialogFragment dialog = PaymentDialogFactory.createDeleteAccountDialog(listener, displayLabel);
+        PaymentDialogFragment dialog = PaymentDialogFactory.createConfirmDeleteDialog(listener, displayLabel);
         showPaymentDialog(dialog);
     }
 
     @Override
     public void showRefreshAccountDialog(PaymentDialogListener listener) {
-        PaymentDialogFragment dialog = PaymentDialogFactory.createRefreshAccountDialog(listener);
+        PaymentDialogFragment dialog = PaymentDialogFactory.createConfirmRefreshDialog(listener);
         showPaymentDialog(dialog);
     }
 
@@ -111,7 +111,7 @@ abstract class BasePaymentActivity extends AppCompatActivity implements BasePaym
 
     @Override
     public void showExpiredDialog(String networkCode) {
-        PaymentDialogFragment dialog = PaymentDialogFactory.createExpiredDialog(networkCode);
+        PaymentDialogFragment dialog = PaymentDialogFactory.createExpiredDialog(networkCode, null);
         showPaymentDialog(dialog);
     }
 

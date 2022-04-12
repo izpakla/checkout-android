@@ -35,6 +35,7 @@ import com.payoneer.checkout.core.PaymentInputType;
 import com.payoneer.checkout.core.PaymentNetworkCodes;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.localization.Localization;
+import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 
 import android.view.View;
 
@@ -54,8 +55,7 @@ public class PaymentDialogFactory {
         return Snackbar.make(view, message, Snackbar.LENGTH_LONG);
     }
 
-    public static PaymentDialogFragment createHintDialog(String networkCode, String type,
-        PaymentDialogFragment.PaymentDialogListener listener) {
+    public static PaymentDialogFragment createHintDialog(String networkCode, String type, PaymentDialogListener listener) {
         PaymentDialogFragment dialog = new PaymentDialogFragment();
         dialog.setTitle(Localization.translateAccountHint(networkCode, type, LABEL_TITLE));
         dialog.setMessage(Localization.translateAccountHint(networkCode, type, LABEL_TEXT));
@@ -66,18 +66,17 @@ public class PaymentDialogFactory {
         return dialog;
     }
 
-    public static PaymentDialogFragment createExpiredDialog(String networkCode) {
+    public static PaymentDialogFragment createExpiredDialog(final String networkCode, final PaymentDialogListener listener) {
         PaymentDialogFragment dialog = new PaymentDialogFragment();
         dialog.setTitle(Localization.translate(networkCode, DIALOG_EXPIRED_BADGE_TITLE));
         dialog.setMessage(Localization.translate(networkCode, DIALOG_EXPIRED_BADGE_TEXT));
         dialog.setTag("dialog_expired_icon");
         dialog.setPositiveButton(Localization.translate(BUTTON_OK));
-        dialog.setListener(null);
+        dialog.setListener(listener);
         return dialog;
     }
 
-    public static PaymentDialogFragment createMessageDialog(String title, String message, String tag,
-        PaymentDialogFragment.PaymentDialogListener listener) {
+    public static PaymentDialogFragment createMessageDialog(String title, String message, String tag, PaymentDialogListener listener) {
         PaymentDialogFragment dialog = new PaymentDialogFragment();
         dialog.setListener(listener);
         dialog.setTitle(title);
@@ -111,7 +110,7 @@ public class PaymentDialogFactory {
         return dialog;
     }
 
-    public static PaymentDialogFragment createRefreshAccountDialog(PaymentDialogFragment.PaymentDialogListener listener) {
+    public static PaymentDialogFragment createConfirmRefreshDialog(PaymentDialogFragment.PaymentDialogListener listener) {
         PaymentDialogFragment dialog = new PaymentDialogFragment();
         dialog.setListener(listener);
         dialog.setTitle(Localization.translate(MESSAGES_UNSAVED_TITLE));
@@ -126,7 +125,7 @@ public class PaymentDialogFactory {
     }
 
 
-    public static PaymentDialogFragment createDeleteAccountDialog(PaymentDialogFragment.PaymentDialogListener listener,
+    public static PaymentDialogFragment createConfirmDeleteDialog(PaymentDialogFragment.PaymentDialogListener listener,
         String accountLabel) {
         PaymentDialogFragment dialog = new PaymentDialogFragment();
         dialog.setListener(listener);

@@ -10,6 +10,7 @@ package com.payoneer.checkout.ui.list;
 
 import java.util.Map;
 
+import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.widget.FormWidget;
 
@@ -56,9 +57,9 @@ interface PaymentCardListener {
      * Notify that an action is required for the paymentCard
      *
      * @param paymentCard that initiated the action
-     * @param widgets containing values that should be send
+     * @param inputValues containing input values that should be send
      */
-    void onActionClicked(PaymentCard paymentCard, Map<String, FormWidget> widgets);
+    void onActionClicked(PaymentCard paymentCard, PaymentInputValues inputValues);
 
     /**
      * The card at the given position has been clicked.

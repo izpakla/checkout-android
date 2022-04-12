@@ -10,6 +10,7 @@ package com.payoneer.checkout.ui.list;
 
 import java.util.Map;
 
+import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.widget.FormWidget;
 
@@ -22,9 +23,9 @@ public interface PaymentListListener {
      * Notify that the user clicked the action button in the payment card.
      *
      * @param paymentCard in which the action was clicked
-     * @param widgets map of widgets inside this PaymentCard
+     * @param inputValues values gathered from the input widgets
      */
-    void onActionClicked(PaymentCard paymentCard, Map<String, FormWidget> widgets);
+    void onActionClicked(final PaymentCard paymentCard, final PaymentInputValues inputValues);
 
     /**
      * Notify that the user clicked the delete button in the payment card.

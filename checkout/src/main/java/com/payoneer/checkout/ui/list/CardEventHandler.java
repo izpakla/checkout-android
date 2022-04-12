@@ -9,6 +9,7 @@
 package com.payoneer.checkout.ui.list;
 
 import com.payoneer.checkout.localization.Localization;
+import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.widget.FormWidget;
 import com.payoneer.checkout.ui.widget.WidgetPresenter;
@@ -46,14 +47,18 @@ class CardEventHandler implements WidgetPresenter {
             return;
         }
         boolean error = false;
+        PaymentInputValues inputValues = new PaymentInputValues();
+
         for (FormWidget widget : holder.getFormWidgets().values()) {
-            if (!widget.validate()) {
-                error = true;
-            }
             widget.clearFocus();
+            if (widget.validate()) {
+                widget.putValue(inputValues);
+                continue;
+            }
+            error = true;
         }
-        if (!error) {
-            getCardListener().onActionClicked(holder.getPaymentCard(), holder.getFormWidgets());
+         if (!error) {
+            getCardListener().onActionClicked(holder.getPaymentCard(), inputValues);
         }
     }
 

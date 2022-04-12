@@ -8,14 +8,16 @@
 
 package com.payoneer.checkout.ui.screen.list;
 
+import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.R;
-import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
-import com.payoneer.checkout.ui.model.PaymentSession;
+import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.util.ContentEvent;
+import com.payoneer.checkout.util.Event;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,17 +26,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
- * The PaymentListActivity showing available payment methods in a list.
+ * The CheckoutListActivity showing available payment methods in a list.
  */
 public final class CheckoutListActivity extends AppCompatActivity {
 
     final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
-    private CheckoutListPresenter presenter;
     private CheckoutConfiguration configuration;
-    private CheckoutListViewModel viewModel;
+    private CheckoutListViewModel sharedViewModel;
+    private PaymentIdlingResources idlingResources;
 
     /**
      * Create the start intent for this CheckoutListActivity.
@@ -72,11 +75,12 @@ public final class CheckoutListActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_checkoutlist);
 
-        // initialize view model
-        presenter = new CheckoutListPresenter(configuration);
+        CheckoutListPresenter presenter = new CheckoutListPresenter(configuration);
         ViewModelProvider.Factory factory = new CheckoutListViewModelFactory(getApplicationContext(), presenter);
-        viewModel = new ViewModelProvider(this, factory).get(CheckoutListViewModel.class);
+        sharedViewModel = new ViewModelProvider(this, factory).get(CheckoutListViewModel.class);
+        initViewModelObservers();
 
+        idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
         setCheckoutListFragment();
     }
 
@@ -107,6 +111,35 @@ public final class CheckoutListActivity extends AppCompatActivity {
         //overridePendingTransition(R.anim.no_animation, R.anim.no_animation);
     }
 
+    /**
+     * Only called from UI tests, returns the PaymentIdlingResources instance
+     *
+     * @return PaymentIdlingResources containing the IdlingResources used in this Activity
+     */
+    public PaymentIdlingResources getPaymentIdlingResources() {
+        return idlingResources;
+    }
+
+    private void initViewModelObservers() {
+        sharedViewModel.closeWithCheckoutResult.observe(this, new Observer<ContentEvent>() {
+            @Override
+            public void onChanged(final ContentEvent contentEvent) {
+                CheckoutResult checkoutResult = (CheckoutResult) contentEvent.getContentIfNotHandled();
+                if (checkoutResult != null) {
+                    closeWithCheckoutResult(checkoutResult);
+                }
+            }
+        });
+    }
+
+    private void closeWithCheckoutResult(final CheckoutResult checkoutResult) {
+        Intent intent = new Intent();
+        CheckoutResultHelper.putIntoResultIntent(checkoutResult, intent);
+        setResult(CheckoutActivityResult.getResultCode(checkoutResult), intent);
+        close();
+
+    }
+
     private void setCheckoutListFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -116,9 +149,10 @@ public final class CheckoutListActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void close() {
+    private void close() {
         supportFinishAfterTransition();
         setOverridePendingTransition();
+        idlingResources.setCloseIdlingState(true);
     }
 
     private void setOverridePendingTransition() {

@@ -137,7 +137,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public void onActionClicked(PaymentCard paymentCard, Map<String, FormWidget> widgets) {
+    public void onActionClicked(PaymentCard paymentCard, PaymentInputValues inputValues) {
         if (!checkState(STARTED)) {
             return;
         }
@@ -145,7 +145,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
             onPresetCardSelected((PresetCard) paymentCard);
             return;
         }
-        processPaymentCard(paymentCard, widgets);
+        processPaymentCard(paymentCard, inputValues);
     }
 
     @Override
@@ -383,15 +383,11 @@ final class PaymentListPresenter extends BasePaymentPresenter
         });
     }
 
-    private void processPaymentCard(PaymentCard paymentCard, Map<String, FormWidget> widgets) {
+    private void processPaymentCard(PaymentCard paymentCard, PaymentInputValues inputValues) {
         try {
             paymentService = loadNetworkService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
             paymentService.setController(this);
 
-            PaymentInputValues inputValues = new PaymentInputValues();
-            for (FormWidget widget : widgets.values()) {
-                widget.putValue(inputValues);
-            }
             requestData = new RequestData(session.getListOperationType(), paymentCard.getNetworkCode(),
                 paymentCard.getPaymentMethod(), paymentCard.getOperationType(),
                 paymentCard.getLinks(), inputValues);

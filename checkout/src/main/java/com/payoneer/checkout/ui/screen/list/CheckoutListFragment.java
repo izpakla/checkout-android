@@ -8,14 +8,22 @@
 
 package com.payoneer.checkout.ui.screen.list;
 
-import java.util.Map;
+import static com.payoneer.checkout.localization.LocalizationKey.LIST_TITLE;
 
 import com.payoneer.checkout.R;
+import com.payoneer.checkout.localization.Localization;
+import com.payoneer.checkout.payment.PaymentInputValues;
+import com.payoneer.checkout.ui.dialog.PaymentDialogData;
+import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
+import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
+import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.list.PaymentList;
 import com.payoneer.checkout.ui.list.PaymentListListener;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.ui.widget.FormWidget;
+import com.payoneer.checkout.util.ContentEvent;
+import com.payoneer.checkout.util.Event;
+import com.payoneer.checkout.util.Resource;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,24 +40,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
- *
+ * Fragment to show the Payment Session
  */
-public class CheckoutListFragment extends Fragment implements PaymentListListener {
+public class CheckoutListFragment extends Fragment {
 
-    private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
     private CheckoutListViewModel viewModel;
     private PaymentList paymentList;
+    private ProgressView progressView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private PaymentDialogHelper dialogHelper;
 
     public CheckoutListFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment CheckoutListFragment.
-     */
     public static CheckoutListFragment newInstance() {
         CheckoutListFragment fragment = new CheckoutListFragment();
         Bundle args = new Bundle();
@@ -78,33 +82,57 @@ public class CheckoutListFragment extends Fragment implements PaymentListListene
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(requireActivity()).get(CheckoutListViewModel.class);
+        initDialogHelper();
+        initProgressView(view);
         initSwipeRefreshlayout();
         initToolbar();
-        paymentList = new PaymentList(requireActivity(), this, view.findViewById(R.id.recyclerview_paymentlist));
+        initPaymentList(view);
+        initObservers();
+    }
 
-        viewModel.paymentSession.observe(requireActivity(), new Observer<PaymentSession>() {
-            @Override
-            public void onChanged(@Nullable PaymentSession paymentSession) {
-                if (paymentSession != null) {
-                    paymentList.showPaymentSession(paymentSession);
-                } else {
-                    paymentList.clear();
-                }
-            }
-        });
+    private void initDialogHelper() {
+        CheckoutListActivity activity = (CheckoutListActivity) requireActivity();
+        dialogHelper = new PaymentDialogHelper(activity.getPaymentIdlingResources());
+    }
+
+    private void initProgressView(final View view) {
+        progressView = new ProgressView(view.findViewById(R.id.layout_progress));
     }
 
     private void initSwipeRefreshlayout() {
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            //presenter.onRefresh(paymentList.hasUserInputData());
-            //swipeRefreshLayout.setRefreshing(false);
+            handleOnSwipeRefresh();
         });
+    }
+
+    private void initPaymentList(final View view) {
+        PaymentListListener listener = new PaymentListListener() {
+            @Override
+            public void onActionClicked(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
+                viewModel.processPaymentCard(paymentCard, inputValues);
+            }
+
+            @Override
+            public void onDeleteClicked(final PaymentCard paymentCard) {
+                handleOnDeleteClicked(paymentCard);
+            }
+
+            @Override
+            public void onHintClicked(final String networkCode, final String type) {
+                dialogHelper.showHintDialog(getParentFragmentManager(), networkCode, type, null);
+            }
+
+            @Override
+            public void onExpiredIconClicked(final String networkCode) {
+                dialogHelper.showExpiredDialog(getParentFragmentManager(), networkCode, null);
+            }
+        };
+        paymentList = new PaymentList(requireActivity(), listener, view.findViewById(R.id.recyclerview_paymentlist));
     }
 
     private void initToolbar() {
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
-        toolbar.setTitle("");
+        setToolbarTitle("");
         activity.setSupportActionBar(toolbar);
 
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
@@ -113,32 +141,104 @@ public class CheckoutListFragment extends Fragment implements PaymentListListene
         actionBar.setDisplayShowHomeEnabled(true);
     }
 
-    private void setToolbarTitle(String title) {
+    private void setToolbarTitle(final String title) {
         toolbar.setTitle(title);
+    }
+
+    private void initObservers() {
+        viewModel = new ViewModelProvider(requireActivity()).get(CheckoutListViewModel.class);
+        viewModel.showPaymentSession.observe(requireActivity(), new Observer<Resource>() {
+            @Override
+            public void onChanged(@Nullable Resource resource) {
+                if (resource == null) {
+                    return;
+                }
+                switch (resource.getStatus()) {
+                    case Resource.SUCCESS:
+                        showPaymentSession((PaymentSession) resource.getData());
+                        break;
+                    case Resource.LOADING:
+                        progressView.setVisible(true);
+                        break;
+                    case Resource.ERROR:
+                        // errors will be shown through the popup dialog observers
+                }
+            }
+        });
+
+        viewModel.clearPaymentSession.observe(requireActivity(), new Observer<Event>() {
+            @Override
+            public void onChanged(final Event event) {
+                clearPaymentSession();
+            }
+        });
+
+        viewModel.showPaymentDialog.observe(requireActivity(), new Observer<ContentEvent>() {
+            @Override
+            public void onChanged(final ContentEvent contentEvent) {
+                PaymentDialogData data = (PaymentDialogData)contentEvent.getContentIfNotHandled();
+                if (data != null) {
+                    dialogHelper.showPaymentDialog(getParentFragmentManager(), data);
+                }
+            }
+        });
+    }
+
+    private void clearPaymentSession() {
+        paymentList.clear();
+        resetSwipeRefreshLayout();
+    }
+
+    private void showPaymentSession(final PaymentSession paymentSession) {
+        setToolbarTitle(Localization.translate(LIST_TITLE));
+        paymentList.showPaymentSession(paymentSession);
+        swipeRefreshLayout.setEnabled(paymentSession.swipeRefresh());
+        progressView.setVisible(false);
+    }
+
+    private void handleOnDeleteClicked(final PaymentCard paymentCard) {
+        PaymentDialogListener listener = new PaymentDialogListener() {
+            @Override
+            public void onPositiveButtonClicked() {
+                viewModel.deletePaymentCard(paymentCard);
+            }
+
+            @Override
+            public void onNegativeButtonClicked() {
+            }
+
+            @Override
+            public void onDismissed() {
+            }
+        };
+        dialogHelper.showConfirmDeleteDialog(getParentFragmentManager(), paymentCard.getTitle(), listener);
+    }
+
+    private void handleOnSwipeRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
+        if (!paymentList.hasUserInputData()) {
+            viewModel.loadPaymentSession();
+            return;
+        }
+        PaymentDialogListener listener = new PaymentDialogFragment.PaymentDialogListener() {
+            @Override
+            public void onPositiveButtonClicked() {
+                viewModel.loadPaymentSession();
+            }
+
+            @Override
+            public void onNegativeButtonClicked() {
+            }
+
+            @Override
+            public void onDismissed() {
+            }
+        };
+        dialogHelper.showConfirmRefreshDialog(getParentFragmentManager(), listener);
     }
 
     private void resetSwipeRefreshLayout() {
         swipeRefreshLayout.setRefreshing(false);
         swipeRefreshLayout.setEnabled(false);
-    }
-
-    @Override
-    public void onActionClicked(final PaymentCard paymentCard, final Map<String, FormWidget> widgets) {
-
-    }
-
-    @Override
-    public void onDeleteClicked(final PaymentCard paymentCard) {
-
-    }
-
-    @Override
-    public void onHintClicked(final String code, final String type) {
-
-    }
-
-    @Override
-    public void onExpiredIconClicked(final String networkCode) {
-
     }
 }

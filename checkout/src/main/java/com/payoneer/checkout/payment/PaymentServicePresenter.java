@@ -18,7 +18,7 @@ import android.content.Context;
 /**
  * Presenter to be called by the NetworkService to inform about payment updates and to show i.e. a progress view or progress dialog.
  */
-public interface PaymentServiceController {
+public interface PaymentServicePresenter {
 
     /**
      * Notify the controller that the payment service is progressing

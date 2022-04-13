@@ -8,8 +8,6 @@
 
 package com.payoneer.checkout.ui.page;
 
-import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_ERROR;
-import static com.payoneer.checkout.CheckoutActivityResult.RESULT_CODE_PROCEED;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
 import static com.payoneer.checkout.model.InteractionCode.RELOAD;
 import static com.payoneer.checkout.model.InteractionCode.RETRY;
@@ -22,7 +20,6 @@ import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_CODE;
 import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_REASON;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import com.payoneer.checkout.CheckoutConfiguration;
@@ -38,7 +35,7 @@ import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentService;
-import com.payoneer.checkout.payment.PaymentServiceController;
+import com.payoneer.checkout.payment.PaymentServicePresenter;
 import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.list.PaymentListListener;
@@ -48,7 +45,6 @@ import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.ui.model.PresetCard;
 import com.payoneer.checkout.ui.session.PaymentSessionListener;
 import com.payoneer.checkout.ui.session.PaymentSessionService;
-import com.payoneer.checkout.ui.widget.FormWidget;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
@@ -58,7 +54,7 @@ import android.text.TextUtils;
  * The PaymentListPresenter implementing the presenter part of the MVP
  */
 final class PaymentListPresenter extends BasePaymentPresenter
-    implements PaymentSessionListener, PaymentServiceController, PaymentListListener {
+    implements PaymentSessionListener, PaymentServicePresenter, PaymentListListener {
 
     private final PaymentSessionService sessionService;
     private final PaymentListView listView;

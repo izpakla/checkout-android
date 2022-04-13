@@ -40,7 +40,7 @@ final class CheckoutListViewModel extends AppContextViewModel {
         this.closeWithCheckoutResult = new MutableLiveData<>();
         this.showPaymentDialog = new MutableLiveData<>();
 
-        this.presenter.setViewModel(this);
+        this.presenter.setListViewModel(this);
     }
 
     void loadPaymentSession() {

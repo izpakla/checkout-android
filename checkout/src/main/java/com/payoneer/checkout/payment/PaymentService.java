@@ -36,7 +36,7 @@ import android.content.Context;
  */
 public abstract class PaymentService {
 
-    protected PaymentServiceController controller;
+    protected PaymentServicePresenter controller;
 
     /**
      *
@@ -72,7 +72,7 @@ public abstract class PaymentService {
      *
      * @param controller
      */
-    public void setController(final PaymentServiceController controller) {
+    public void setController(final PaymentServicePresenter controller) {
         this.controller = controller;
     }
 

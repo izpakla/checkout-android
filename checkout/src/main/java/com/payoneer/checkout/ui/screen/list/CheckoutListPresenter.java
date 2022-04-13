@@ -20,6 +20,7 @@ import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentService;
+import com.payoneer.checkout.payment.PaymentServicePresenter;
 import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentCard;
@@ -28,15 +29,19 @@ import com.payoneer.checkout.ui.session.PaymentSessionListener;
 import com.payoneer.checkout.ui.session.PaymentSessionService;
 import com.payoneer.checkout.util.Resource;
 
+import android.content.Context;
+
 /**
  * The CheckoutListPresenter
  */
-final class CheckoutListPresenter implements PaymentSessionListener {
+final class CheckoutListPresenter implements PaymentSessionListener, PaymentServicePresenter {
 
     private final PaymentSessionService sessionService;
     private final CheckoutConfiguration configuration;
 
-    private CheckoutListViewModel viewModel;
+    private CheckoutListViewModel listViewModel;
+    private PaymentServiceViewModel serviceViewModel;
+
     private PaymentSession paymentSession;
     private PaymentService paymentService;
     private RequestData requestData;
@@ -52,22 +57,27 @@ final class CheckoutListPresenter implements PaymentSessionListener {
         sessionService.setListener(this);
     }
 
-    void setViewModel(final CheckoutListViewModel viewModel) {
-        this.viewModel = viewModel;
+    void setListViewModel(final CheckoutListViewModel listViewModel) {
+        this.listViewModel = listViewModel;
     }
 
     void loadPaymentSession() {
         this.paymentSession = null;
-        viewModel.clearPaymentSession();
-        viewModel.showPaymentSession(Resource.LOADING, null, null);
-        sessionService.loadPaymentSession(configuration, viewModel.getApplicationContext());
+        listViewModel.clearPaymentSession();
+        listViewModel.showPaymentSession(Resource.LOADING, null, null);
+        sessionService.loadPaymentSession(configuration, listViewModel.getApplicationContext());
     }
 
     void deletePaymentCard(final PaymentCard paymentCard) {
     }
 
     void processPaymentCard(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
-        
+
+    }
+
+    @Override
+    public void setPaymentServiceViewModel(final PaymentServiceViewModel paymentViewModel) {
+        this.paymentViewModel = paymentViewModel;
     }
 
     @Override
@@ -79,7 +89,7 @@ final class CheckoutListPresenter implements PaymentSessionListener {
             handleLoadPaymentSessionProceed(session);
         } else {
             ErrorInfo errorInfo = new ErrorInfo(listResult.getResultInfo(), interaction);
-            viewModel.closeWithCheckoutResult(new CheckoutResult(errorInfo));
+            listViewModel.closeWithCheckoutResult(new CheckoutResult(errorInfo));
         }
     }
 
@@ -89,17 +99,17 @@ final class CheckoutListPresenter implements PaymentSessionListener {
         if (result.isNetworkFailure()) {
             handleLoadPaymentSessionNetworkFailure(result);
         } else {
-            viewModel.closeWithCheckoutResult(result);
+            listViewModel.closeWithCheckoutResult(result);
         }
     }
 
     private void closeWithErrorMessage(String message) {
         CheckoutResult result = CheckoutResultHelper.fromErrorMessage(message);
-        viewModel.closeWithCheckoutResult(result);
+        listViewModel.closeWithCheckoutResult(result);
     }
 
     private void handleLoadPaymentSessionNetworkFailure(final CheckoutResult checkoutResult) {
-        viewModel.showConnectionErrorDialog(new PaymentDialogListener() {
+        listViewModel.showConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
                 loadPaymentSession();
@@ -107,12 +117,12 @@ final class CheckoutListPresenter implements PaymentSessionListener {
 
             @Override
             public void onNegativeButtonClicked() {
-                viewModel.closeWithCheckoutResult(checkoutResult);
+                listViewModel.closeWithCheckoutResult(checkoutResult);
             }
 
             @Override
             public void onDismissed() {
-                viewModel.closeWithCheckoutResult(checkoutResult);
+                listViewModel.closeWithCheckoutResult(checkoutResult);
             }
         });
     }
@@ -123,7 +133,29 @@ final class CheckoutListPresenter implements PaymentSessionListener {
             return;
         }
         this.paymentSession = paymentSession;
-        viewModel.showPaymentSession(Resource.SUCCESS, paymentSession, null);
+        listViewModel.showPaymentSession(Resource.SUCCESS, paymentSession, null);
+    }
+
+
+    @Override
+    public void onProgress(final boolean interruptible) {
+        // payment service
+    }
+
+    @Override
+    public Context getContext() {
+        //payment service
+        return null;
+    }
+
+    @Override
+    public void onProcessPaymentResult(final CheckoutResult checkoutResult) {
+        // payment service
+    }
+
+    @Override
+    public void onDeleteAccountResult(final CheckoutResult checkoutResult) {
+        // payment service
     }
 }
 

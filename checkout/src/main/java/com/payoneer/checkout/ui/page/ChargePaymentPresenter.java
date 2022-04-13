@@ -25,7 +25,7 @@ import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentService;
-import com.payoneer.checkout.payment.PaymentServiceController;
+import com.payoneer.checkout.payment.PaymentServicePresenter;
 import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
@@ -39,7 +39,7 @@ import android.content.Context;
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
  * First this presenter will load the list, checks if the operation is present and then post the operation to the Payment API.
  */
-final class ChargePaymentPresenter extends BasePaymentPresenter implements PaymentSessionListener, PaymentServiceController {
+final class ChargePaymentPresenter extends BasePaymentPresenter implements PaymentSessionListener, PaymentServicePresenter {
 
     private final PaymentSessionService sessionService;
     private PaymentSession session;

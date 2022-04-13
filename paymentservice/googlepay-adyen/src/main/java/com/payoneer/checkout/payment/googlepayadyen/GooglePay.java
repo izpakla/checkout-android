@@ -51,8 +51,8 @@ public final class GooglePay {
         tokenizationSpecification.put("type", "PAYMENT_GATEWAY");
         tokenizationSpecification.put("parameters",
             new JSONObject()
-                .put("gateway", "???")
-                .put("gatewayMerchantId", "???"));
+                .put("gateway", "adyen")
+                .put("gatewayMerchantId", ""));
 
         return tokenizationSpecification;
     }

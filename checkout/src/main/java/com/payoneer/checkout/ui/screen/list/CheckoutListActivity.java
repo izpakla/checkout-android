@@ -8,6 +8,8 @@
 
 package com.payoneer.checkout.ui.screen.list;
 
+import java.util.List;
+
 import com.payoneer.checkout.CheckoutActivityResult;
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
@@ -131,6 +133,20 @@ public final class CheckoutListActivity extends AppCompatActivity {
         //overridePendingTransition(R.anim.no_animation, R.anim.no_animation);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        passActivityResultToFragment(requestCode, resultCode, data);
+    }
+
+    private void passActivityResultToFragment(int requestCode, int resultCode, Intent data) {
+        FragmentManager fm = getSupportFragmentManager();
+        List<Fragment> fragments = fm.getFragments();
+        for (Fragment fragment : fragments) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     /**
      * Get the payment dialog helper
      *
@@ -161,7 +177,7 @@ public final class CheckoutListActivity extends AppCompatActivity {
         listViewModel.showPaymentDialog.observe(this, new Observer<ContentEvent>() {
             @Override
             public void onChanged(final ContentEvent contentEvent) {
-                PaymentDialogData data = (PaymentDialogData)contentEvent.getContentIfNotHandled();
+                PaymentDialogData data = (PaymentDialogData) contentEvent.getContentIfNotHandled();
                 if (data != null) {
                     dialogHelper.showPaymentDialog(getSupportFragmentManager(), data);
                 }
@@ -171,7 +187,7 @@ public final class CheckoutListActivity extends AppCompatActivity {
         serviceViewModel.showFragment.observe(this, new Observer<ContentEvent>() {
             @Override
             public void onChanged(final ContentEvent event) {
-                Fragment fragment = (Fragment)event.getContentIfNotHandled();
+                Fragment fragment = (Fragment) event.getContentIfNotHandled();
                 if (fragment != null) {
                     showFragment(fragment);
                 }

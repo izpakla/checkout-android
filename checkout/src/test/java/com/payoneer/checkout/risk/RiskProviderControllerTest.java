@@ -65,7 +65,7 @@ public class RiskProviderControllerTest {
     }
 
     @Test
-    public void getRiskProviderResultWithErrors() {
+    public void getRiskProviderResultWithInternalErrors() {
         RiskProviderInfo info = createRiskProviderInfo("CODE", "TYPE");
         RiskProviderController controller = new RiskProviderController(info);
         controller.initialize(null);

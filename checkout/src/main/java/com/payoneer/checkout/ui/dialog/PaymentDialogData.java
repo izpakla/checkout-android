@@ -76,7 +76,7 @@ public final class PaymentDialogData {
      * @param listener to be notified of dialog events
      */
     public static PaymentDialogData interactionDialog(final PaymentDialogListener listener, final InteractionMessage interactionMessage) {
-        return new PaymentDialogData(INTERACTION, listener, null, null);
+        return new PaymentDialogData(INTERACTION, listener, interactionMessage, null);
     }
 
     /**

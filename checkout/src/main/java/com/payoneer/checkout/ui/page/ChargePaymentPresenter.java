@@ -26,6 +26,7 @@ import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServicePresenter;
+import com.payoneer.checkout.payment.PaymentServiceViewModel;
 import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
@@ -34,6 +35,7 @@ import com.payoneer.checkout.ui.session.PaymentSessionListener;
 import com.payoneer.checkout.ui.session.PaymentSessionService;
 
 import android.content.Context;
+import androidx.fragment.app.Fragment;
 
 /**
  * The ChargePaymentPresenter takes care of posting the operation to the Payment API.
@@ -58,7 +60,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     void onStart() {
-        if (paymentService != null && paymentService.isPaused()) {
+        if (paymentService != null && paymentService.isPending()) {
             paymentService.resume();
         } else {
             loadPaymentSession();
@@ -70,6 +72,10 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
         if (paymentService != null) {
             paymentService.onStop();
         }
+    }
+
+    @Override
+    public void setPaymentServiceViewModel(final PaymentServiceViewModel serviceViewModel) {
     }
 
     @Override
@@ -86,7 +92,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     @Override
-    public Context getContext() {
+    public Context getApplicationContext() {
         return view.getActivity();
     }
 
@@ -96,8 +102,13 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     @Override
-    public void onProgress(final boolean interrupt) {
+    public void finalizePayment() {
         view.showProgress(true);
+    }
+
+    @Override
+    public void showFragment(final Fragment fragment) {
+
     }
 
     @Override
@@ -115,8 +126,8 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
 
     private void processPayment() {
         try {
-            paymentService = loadNetworkService(requestData.getNetworkCode(), requestData.getPaymentMethod());
-            paymentService.setController(this);
+            paymentService = loadPaymentService(requestData.getNetworkCode(), requestData.getPaymentMethod());
+            paymentService.setPresenter(this);
             processPayment(requestData);
         } catch (PaymentException e) {
             closeWithErrorCode(CheckoutResultHelper.fromThrowable(e));
@@ -205,7 +216,7 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     private void processPayment(final RequestData requestData) {
-        paymentService.processPayment(requestData, view.getActivity());
+        paymentService.processPayment(requestData);
     }
 
     private void showMessageAndCloseWithErrorCode(CheckoutResult result) {

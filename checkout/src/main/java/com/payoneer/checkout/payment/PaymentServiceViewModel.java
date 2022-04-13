@@ -6,10 +6,11 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.screen.list;
+package com.payoneer.checkout.payment;
 
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.localization.InteractionMessage;
+import com.payoneer.checkout.localization.MultiLocalizationHolder;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
@@ -23,15 +24,19 @@ import com.payoneer.checkout.util.Resource;
 import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
-final class PaymentServiceViewModel extends AppContextViewModel {
+public final class PaymentServiceViewModel extends AppContextViewModel {
 
     private final PaymentServicePresenter presenter;
-    MutableLiveData<Event> showProgress;
+    public MutableLiveData<Event> finalizePayment;
 
     PaymentServiceViewModel(final Context applicationContext, final PaymentServicePresenter presenter) {
         super(applicationContext);
         this.presenter = presenter;
+        finalizePayment = new MutableLiveData<>();
+        presenter.setPaymentServiceViewModel(this);
+    }
 
-        this.presenter.setPaymentServiceViewModel(this);
+    public void finalizePayment() {
+        finalizePayment.setValue(new Event());
     }
 }

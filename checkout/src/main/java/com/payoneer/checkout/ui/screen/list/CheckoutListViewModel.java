@@ -27,18 +27,18 @@ final class CheckoutListViewModel extends AppContextViewModel {
 
     private final CheckoutListPresenter presenter;
     MutableLiveData<Resource> showPaymentSession;
-    MutableLiveData<Event> clearPaymentSession;
     MutableLiveData<ContentEvent> closeWithCheckoutResult;
     MutableLiveData<ContentEvent> showPaymentDialog;
+    MutableLiveData<Boolean> showProgressIndicator;
 
     CheckoutListViewModel(final Context applicationContext, final CheckoutListPresenter presenter) {
         super(applicationContext);
         this.presenter = presenter;
 
         this.showPaymentSession = new MutableLiveData<>();
-        this.clearPaymentSession = new MutableLiveData<>();
         this.closeWithCheckoutResult = new MutableLiveData<>();
         this.showPaymentDialog = new MutableLiveData<>();
+        this.showProgressIndicator = new MutableLiveData<>();
 
         this.presenter.setListViewModel(this);
     }
@@ -57,10 +57,6 @@ final class CheckoutListViewModel extends AppContextViewModel {
 
     void closeWithCheckoutResult(final CheckoutResult checkoutResult) {
         closeWithCheckoutResult.setValue(new ContentEvent(checkoutResult));
-    }
-
-    void clearPaymentSession() {
-        clearPaymentSession.setValue(new Event());
     }
 
     void showPaymentSession(final int status, final PaymentSession paymentSession, final String message) {
@@ -84,5 +80,9 @@ final class CheckoutListViewModel extends AppContextViewModel {
     void showInteractionDialog(final PaymentDialogListener listener, final InteractionMessage interactionMessage) {
         PaymentDialogData data = PaymentDialogData.interactionDialog(listener, interactionMessage);
         showPaymentDialog.setValue(new ContentEvent(data));
+    }
+
+    void showProgressIndicator(final Boolean visible) {
+        showProgressIndicator.setValue(visible);
     }
 }

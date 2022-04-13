@@ -13,9 +13,14 @@ import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.R;
+import com.payoneer.checkout.payment.PaymentServiceViewModel;
+import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
+import com.payoneer.checkout.ui.dialog.PaymentDialogData;
+import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
 import com.payoneer.checkout.util.ContentEvent;
 import com.payoneer.checkout.util.Event;
+import com.payoneer.checkout.util.Resource;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -36,8 +41,10 @@ public final class CheckoutListActivity extends AppCompatActivity {
 
     final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
     private CheckoutConfiguration configuration;
-    private CheckoutListViewModel sharedViewModel;
+    private CheckoutListViewModel listViewModel;
+    private PaymentServiceViewModel serviceViewModel;
     private PaymentIdlingResources idlingResources;
+    private PaymentDialogHelper dialogHelper;
 
     /**
      * Create the start intent for this CheckoutListActivity.
@@ -74,14 +81,25 @@ public final class CheckoutListActivity extends AppCompatActivity {
             setTheme(theme);
         }
         setContentView(R.layout.activity_checkoutlist);
-
-        CheckoutListPresenter presenter = new CheckoutListPresenter(configuration);
-        ViewModelProvider.Factory factory = new CheckoutListViewModelFactory(getApplicationContext(), presenter);
-        sharedViewModel = new ViewModelProvider(this, factory).get(CheckoutListViewModel.class);
-        initViewModelObservers();
+        initViewModels();
 
         idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
-        setCheckoutListFragment();
+        dialogHelper = new PaymentDialogHelper(idlingResources);
+        showCheckoutListFragment();
+    }
+
+    private void initViewModels() {
+        CheckoutListPresenter presenter = new CheckoutListPresenter(configuration);
+        CheckoutListObserver observer = new CheckoutListObserver(presenter);
+        getLifecycle().addObserver(observer);
+
+        ViewModelProvider.Factory listFactory = new CheckoutListViewModelFactory(getApplicationContext(), presenter);
+        listViewModel = new ViewModelProvider(this, listFactory).get(CheckoutListViewModel.class);
+
+        ViewModelProvider.Factory serviceFactory = new PaymentServiceViewModelFactory(getApplicationContext(), presenter);
+        serviceViewModel = new ViewModelProvider(this, serviceFactory).get(PaymentServiceViewModel.class);
+
+        initViewModelObservers();
     }
 
     /**
@@ -112,21 +130,47 @@ public final class CheckoutListActivity extends AppCompatActivity {
     }
 
     /**
-     * Only called from UI tests, returns the PaymentIdlingResources instance
+     * Get the payment dialog helper
      *
-     * @return PaymentIdlingResources containing the IdlingResources used in this Activity
+     * @return
      */
-    public PaymentIdlingResources getPaymentIdlingResources() {
-        return idlingResources;
+    public PaymentDialogHelper getPaymentDialogHelper() {
+        return dialogHelper;
     }
 
     private void initViewModelObservers() {
-        sharedViewModel.closeWithCheckoutResult.observe(this, new Observer<ContentEvent>() {
+        listViewModel.closeWithCheckoutResult.observe(this, new Observer<ContentEvent>() {
             @Override
             public void onChanged(final ContentEvent contentEvent) {
                 CheckoutResult checkoutResult = (CheckoutResult) contentEvent.getContentIfNotHandled();
                 if (checkoutResult != null) {
                     closeWithCheckoutResult(checkoutResult);
+                }
+            }
+        });
+
+        listViewModel.showPaymentSession.observe(this, new Observer<Resource>() {
+            @Override
+            public void onChanged(final Resource resource) {
+                showCheckoutListFragment();
+            }
+        });
+
+        listViewModel.showPaymentDialog.observe(this, new Observer<ContentEvent>() {
+            @Override
+            public void onChanged(final ContentEvent contentEvent) {
+                PaymentDialogData data = (PaymentDialogData)contentEvent.getContentIfNotHandled();
+                if (data != null) {
+                    dialogHelper.showPaymentDialog(getSupportFragmentManager(), data);
+                }
+            }
+        });
+
+        serviceViewModel.finalizePayment.observe(this, new Observer<Event>() {
+            @Override
+            public void onChanged(final Event event) {
+                if (event.getIfNotHandled() != null) {
+                    showFinalizePaymentFragment();
                 }
             }
         });
@@ -137,10 +181,18 @@ public final class CheckoutListActivity extends AppCompatActivity {
         CheckoutResultHelper.putIntoResultIntent(checkoutResult, intent);
         setResult(CheckoutActivityResult.getResultCode(checkoutResult), intent);
         close();
-
     }
 
-    private void setCheckoutListFragment() {
+    private void showFinalizePaymentFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setReorderingAllowed(true);
+
+        transaction.replace(R.id.fragment_container_view, FinalizePaymentFragment.class, null);
+        transaction.commit();
+    }
+
+    private void showCheckoutListFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setReorderingAllowed(true);

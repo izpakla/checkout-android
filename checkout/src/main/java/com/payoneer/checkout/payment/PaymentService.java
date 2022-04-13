@@ -36,7 +36,7 @@ import android.content.Context;
  */
 public abstract class PaymentService {
 
-    protected PaymentServicePresenter controller;
+    protected PaymentServicePresenter presenter;
 
     /**
      *
@@ -47,7 +47,7 @@ public abstract class PaymentService {
      *
      * @return
      */
-    public abstract boolean isPaused();
+    public abstract boolean isPending();
 
     /**
      *
@@ -57,23 +57,21 @@ public abstract class PaymentService {
     /**
      *
      * @param requestData
-     * @param applicationContext
      */
-    public abstract void processPayment(final RequestData requestData, final Context applicationContext);
+    public abstract void processPayment(final RequestData requestData);
 
     /**
      *
      * @param requestData
-     * @param applicationContext
      */
-    public abstract void deleteAccount(final RequestData requestData, final Context applicationContext);
+    public abstract void deleteAccount(final RequestData requestData);
 
     /**
      *
-     * @param controller
+     * @param presenter
      */
-    public void setController(final PaymentServicePresenter controller) {
-        this.controller = controller;
+    public void setPresenter(final PaymentServicePresenter presenter) {
+        this.presenter = presenter;
     }
 
     /**
@@ -130,7 +128,7 @@ public abstract class PaymentService {
      * @throws PaymentException when an error occurred while redirecting
      */
     protected RedirectRequest redirect(final int requestCode, final OperationResult operationResult) throws PaymentException {
-        Context context = controller.getContext();
+        Context context = presenter.getApplicationContext();
         RedirectRequest redirectRequest = RedirectRequest.fromOperationResult(requestCode, operationResult);
 
         if (!RedirectService.supports(context, redirectRequest)) {

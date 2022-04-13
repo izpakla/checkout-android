@@ -36,6 +36,7 @@ import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServicePresenter;
+import com.payoneer.checkout.payment.PaymentServiceViewModel;
 import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.list.PaymentListListener;
@@ -49,6 +50,7 @@ import com.payoneer.checkout.util.PaymentUtils;
 
 import android.content.Context;
 import android.text.TextUtils;
+import androidx.fragment.app.Fragment;
 
 /**
  * The PaymentListPresenter implementing the presenter part of the MVP
@@ -80,7 +82,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     void onStart() {
-        if (paymentService != null && paymentService.isPaused()) {
+        if (paymentService != null && paymentService.isPending()) {
             setState(PROCESS);
             paymentService.resume();
             return;
@@ -103,7 +105,7 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public Context getContext() {
+    public Context getApplicationContext() {
         return view.getActivity();
     }
 
@@ -130,6 +132,10 @@ final class PaymentListPresenter extends BasePaymentPresenter
             }
         };
         view.showRefreshAccountDialog(listener);
+    }
+
+    @Override
+    public void setPaymentServiceViewModel(final PaymentServiceViewModel serviceViewModel) {
     }
 
     @Override
@@ -202,8 +208,13 @@ final class PaymentListPresenter extends BasePaymentPresenter
     }
 
     @Override
-    public void onProgress(final boolean interrupt) {
+    public void finalizePayment() {
         view.showProgress(true);
+    }
+
+    @Override
+    public void showFragment(final Fragment fragment) {
+
     }
 
     @Override
@@ -381,8 +392,8 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private void processPaymentCard(PaymentCard paymentCard, PaymentInputValues inputValues) {
         try {
-            paymentService = loadNetworkService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
-            paymentService.setController(this);
+            paymentService = loadPaymentService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
+            paymentService.setPresenter(this);
 
             requestData = new RequestData(session.getListOperationType(), paymentCard.getNetworkCode(),
                 paymentCard.getPaymentMethod(), paymentCard.getOperationType(),
@@ -396,8 +407,8 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private void deleteAccountCard(AccountCard card) {
         try {
-            paymentService = loadNetworkService(card.getNetworkCode(), card.getPaymentMethod());
-            paymentService.setController(this);
+            paymentService = loadPaymentService(card.getNetworkCode(), card.getPaymentMethod());
+            paymentService.setPresenter(this);
 
             requestData = new RequestData(session.getListOperationType(), card.getNetworkCode(),
                 card.getPaymentMethod(), card.getOperationType(),
@@ -410,12 +421,12 @@ final class PaymentListPresenter extends BasePaymentPresenter
 
     private void processPayment(final RequestData requestData) {
         setState(PROCESS);
-        paymentService.processPayment(requestData, view.getActivity());
+        paymentService.processPayment(requestData);
     }
 
     private void deleteAccount(final RequestData requestData) {
         setState(PROCESS);
-        paymentService.deleteAccount(requestData, view.getActivity());
+        paymentService.deleteAccount(requestData);
     }
 
     private void onPresetCardSelected(PresetCard card) {

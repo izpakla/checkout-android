@@ -62,17 +62,6 @@ public class CheckoutListFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        viewModel.loadPaymentSession();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checkout_list, container, false);
         swipeRefreshLayout = view.findViewById(R.id.layout_swiperefresh);
@@ -92,7 +81,7 @@ public class CheckoutListFragment extends Fragment {
 
     private void initDialogHelper() {
         CheckoutListActivity activity = (CheckoutListActivity) requireActivity();
-        dialogHelper = new PaymentDialogHelper(activity.getPaymentIdlingResources());
+        dialogHelper = activity.getPaymentDialogHelper();
     }
 
     private void initProgressView(final View view) {
@@ -158,28 +147,19 @@ public class CheckoutListFragment extends Fragment {
                         showPaymentSession((PaymentSession) resource.getData());
                         break;
                     case Resource.LOADING:
-                        progressView.setVisible(true);
+                        clearPaymentSession();
                         break;
                     case Resource.ERROR:
+                        clearPaymentSession();
                         // errors will be shown through the popup dialog observers
                 }
             }
         });
 
-        viewModel.clearPaymentSession.observe(requireActivity(), new Observer<Event>() {
+        viewModel.showProgressIndicator.observe(requireActivity(), new Observer<Boolean>() {
             @Override
-            public void onChanged(final Event event) {
-                clearPaymentSession();
-            }
-        });
-
-        viewModel.showPaymentDialog.observe(requireActivity(), new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(final ContentEvent contentEvent) {
-                PaymentDialogData data = (PaymentDialogData)contentEvent.getContentIfNotHandled();
-                if (data != null) {
-                    dialogHelper.showPaymentDialog(getParentFragmentManager(), data);
-                }
+            public void onChanged(final Boolean visible) {
+                progressView.setVisible(visible);
             }
         });
     }
@@ -193,7 +173,6 @@ public class CheckoutListFragment extends Fragment {
         setToolbarTitle(Localization.translate(LIST_TITLE));
         paymentList.showPaymentSession(paymentSession);
         swipeRefreshLayout.setEnabled(paymentSession.swipeRefresh());
-        progressView.setVisible(false);
     }
 
     private void handleOnDeleteClicked(final PaymentCard paymentCard) {

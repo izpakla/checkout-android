@@ -10,10 +10,12 @@ package com.payoneer.checkout.payment;
 
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.model.Payment;
 import com.payoneer.checkout.operation.DeleteAccount;
 import com.payoneer.checkout.redirect.RedirectRequest;
 
 import android.content.Context;
+import androidx.fragment.app.Fragment;
 
 /**
  * Presenter to be called by the NetworkService to inform about payment updates and to show i.e. a progress view or progress dialog.
@@ -21,18 +23,29 @@ import android.content.Context;
 public interface PaymentServicePresenter {
 
     /**
-     * Notify the controller that the payment service is progressing
-     *
-     * @param interruptible a hint if the progress can be interrupted by the user
+     * Set the payment service view model in this presenter
      */
-    void onProgress(final boolean interruptible);
+    void setPaymentServiceViewModel(final PaymentServiceViewModel serviceViewModel);
 
     /**
-     * Get the context in which this controller is operating
+     * Notify the presenter that the payment service is finalizing the payment. This may result
+     * in showing a screen that cannot be interrupted.
+     */
+    void finalizePayment();
+
+    /**
+     * Show the payment service fragment
+     *
+     * @param fragment to be shown
+     */
+    void showFragment(final Fragment fragment);
+
+    /**
+     * Get the application context
      *
      * @return current context
      */
-    Context getContext();
+    Context getApplicationContext();
 
     /**
      * Called when PaymentService is done processing the request.

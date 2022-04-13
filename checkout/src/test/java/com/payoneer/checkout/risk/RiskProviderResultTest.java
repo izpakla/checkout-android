@@ -9,6 +9,7 @@
 package com.payoneer.checkout.risk;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,5 +40,22 @@ public class RiskProviderResultTest {
         Parameter param = parameters.get(0);
         assertEquals("NAME", param.getName());
         assertEquals("VALUE", param.getValue());
+    }
+
+    @Test
+    public void copyIntoWithErrorParameters() {
+        RiskProviderResult result = new RiskProviderResult();
+        result.put("NAME", "VALUE");
+        List<Parameter> errorParams = new ArrayList<>();
+        Parameter parameter = new Parameter();
+        parameter.setName("NEW_NAME");
+        parameter.setValue("NEW_VALUE");
+        errorParams.add(parameter);
+
+        List<Parameter> parameters = new ArrayList<>();
+        result.copyInto(parameters, errorParams);
+
+        assertEquals(2, parameters.size());
+        assertTrue(parameters.stream().anyMatch(param -> param.getValue().equals("NEW_VALUE")));
     }
 }

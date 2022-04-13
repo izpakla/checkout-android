@@ -313,6 +313,33 @@ public final class PaymentUtils {
     }
 
     /**
+     * Get the provider parameter value from the operation result
+     *
+     * @param key of the parameter
+     * @param result the operation result
+     * @return value of the parameter or null if not found
+     */
+    public static String getProviderParameterValue(String key, OperationResult result) {
+        if (result == null) {
+            return null;
+        }
+        ProviderParameters parameters = result.getProviderResponse();
+        if (parameters == null) {
+            return null;
+        }
+        List<Parameter> params = parameters.getParameters();
+        if (params == null) {
+            return null;
+        }
+        for (Parameter p : params) {
+            if (p.getName().equals(key)) {
+                return p.getValue();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Check if the redirect type exists in the OperationResult
      *
      * @param operationResult contains the Redirect object

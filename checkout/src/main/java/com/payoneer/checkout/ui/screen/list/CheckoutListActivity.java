@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -167,6 +168,16 @@ public final class CheckoutListActivity extends AppCompatActivity {
             }
         });
 
+        serviceViewModel.showFragment.observe(this, new Observer<ContentEvent>() {
+            @Override
+            public void onChanged(final ContentEvent event) {
+                Fragment fragment = (Fragment)event.getContentIfNotHandled();
+                if (fragment != null) {
+                    showFragment(fragment);
+                }
+            }
+        });
+
         serviceViewModel.finalizePayment.observe(this, new Observer<Event>() {
             @Override
             public void onChanged(final Event event) {
@@ -190,6 +201,15 @@ public final class CheckoutListActivity extends AppCompatActivity {
         transaction.setReorderingAllowed(true);
 
         transaction.replace(R.id.fragment_container_view, FinalizePaymentFragment.class, null);
+        transaction.commit();
+    }
+
+    private void showFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setReorderingAllowed(true);
+
+        transaction.replace(R.id.fragment_container_view, fragment, null);
         transaction.commit();
     }
 

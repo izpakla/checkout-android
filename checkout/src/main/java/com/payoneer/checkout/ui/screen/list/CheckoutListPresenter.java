@@ -203,6 +203,7 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
 
     @Override
     public void showFragment(final Fragment fragment) {
+        serviceViewModel.showFragment(fragment);
     }
 
     @Override

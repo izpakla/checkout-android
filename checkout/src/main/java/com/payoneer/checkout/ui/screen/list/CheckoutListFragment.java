@@ -13,7 +13,6 @@ import static com.payoneer.checkout.localization.LocalizationKey.LIST_TITLE;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.payment.PaymentInputValues;
-import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
@@ -21,8 +20,7 @@ import com.payoneer.checkout.ui.list.PaymentList;
 import com.payoneer.checkout.ui.list.PaymentListListener;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.util.ContentEvent;
-import com.payoneer.checkout.util.Event;
+import com.payoneer.checkout.ui.screen.ProgressView;
 import com.payoneer.checkout.util.Resource;
 
 import android.os.Bundle;

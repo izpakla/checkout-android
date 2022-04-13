@@ -18,6 +18,7 @@ import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.ui.screen.FinalizePaymentFragment;
 import com.payoneer.checkout.util.ContentEvent;
 import com.payoneer.checkout.util.Event;
 import com.payoneer.checkout.util.Resource;

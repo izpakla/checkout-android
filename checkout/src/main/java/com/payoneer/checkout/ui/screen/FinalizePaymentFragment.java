@@ -6,24 +6,13 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.screen.list;
+package com.payoneer.checkout.ui.screen;
 
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
-import static com.payoneer.checkout.localization.LocalizationKey.LIST_TITLE;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
-import com.payoneer.checkout.payment.PaymentInputValues;
-import com.payoneer.checkout.ui.dialog.PaymentDialogData;
-import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
-import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
-import com.payoneer.checkout.ui.list.PaymentList;
-import com.payoneer.checkout.ui.list.PaymentListListener;
-import com.payoneer.checkout.ui.model.PaymentCard;
-import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.util.ContentEvent;
-import com.payoneer.checkout.util.Resource;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,13 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
  * Fragment to show the Payment Session

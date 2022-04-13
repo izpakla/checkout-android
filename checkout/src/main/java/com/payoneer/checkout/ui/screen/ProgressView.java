@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020 Payoneer Germany GmbH
+ * Copyright (c) 2022 Payoneer Germany GmbH
  * https://www.payoneer.com
  *
  * This file is open source and available under the MIT license.
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.screen.list;
+package com.payoneer.checkout.ui.screen;
 
 import com.payoneer.checkout.R;
 
@@ -17,7 +17,7 @@ import android.widget.TextView;
 /**
  * Class managing showing a ProgressBar with optional labels.
  */
-class ProgressView {
+public class ProgressView {
 
     private final TextView textHeader;
     private final TextView textInfo;
@@ -28,7 +28,7 @@ class ProgressView {
      *
      * @param view the root view containing the progress views and layouts
      */
-    ProgressView(View view) {
+    public ProgressView(View view) {
         this.view = view;
         textHeader = view.findViewById(R.id.text_header);
         textInfo = view.findViewById(R.id.text_info);

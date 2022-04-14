@@ -26,10 +26,21 @@ public class RiskErrors {
     private final List<Parameter> riskErrorParameters = new ArrayList<>();
 
     public void addErrorParameter(Parameter parameter) {
-        riskErrorParameters.add(parameter);
+        Parameter copyParam = new Parameter();
+        copyParam.setName(parameter.getName());
+        copyParam.setValue(trimValue(parameter.getValue()));
+        riskErrorParameters.add(copyParam);
     }
 
     public List<Parameter> getRiskErrorParameters() {
         return riskErrorParameters;
+    }
+
+    private String trimValue(String message) {
+        if (message.length() > 2000) {
+            return message.substring(0, 2000);
+        } else {
+            return message;
+        }
     }
 }

@@ -70,7 +70,7 @@ public final class RiskProviderController {
             String message = "RiskProviderController(" + code + ", " + type + ") could not find RiskProvider";
             Parameter parameter = new Parameter();
             parameter.setName(RESULTKEY_INTERNAL_ERROR);
-            parameter.setValue(trimMessage(message));
+            parameter.setValue(message);
             riskErrors.addErrorParameter(parameter);
             Log.w("checkout-sdk", message);
             return;
@@ -82,7 +82,7 @@ public final class RiskProviderController {
             String message = "RiskProviderController(" + code + ", " + type + ") failed to initialize RiskProvider " + e.getMessage();
             Parameter parameter = new Parameter();
             parameter.setName(RESULTKEY_EXTERNAL_ERROR);
-            parameter.setValue(trimMessage(message));
+            parameter.setValue(message);
             riskErrors.addErrorParameter(parameter);
             Log.w("checkout-sdk", message, e);
         }
@@ -108,7 +108,7 @@ public final class RiskProviderController {
                 String message = "RiskProviderController(" + code + ", " + type + ") could not obtain result " + e.getMessage();
                 Parameter parameter = new Parameter();
                 parameter.setName(RESULTKEY_EXTERNAL_ERROR);
-                parameter.setValue(trimMessage(message));
+                parameter.setValue(message);
                 riskErrors.addErrorParameter(parameter);
                 Log.w("checkout-sdk", message, e);
             }
@@ -118,13 +118,5 @@ public final class RiskProviderController {
 
     public RiskErrors getRiskErrors() {
         return riskErrors;
-    }
-
-    private String trimMessage(String message) {
-        if (message.length() > 2000) {
-            return message.substring(0, 2000);
-        } else {
-            return message;
-        }
     }
 }

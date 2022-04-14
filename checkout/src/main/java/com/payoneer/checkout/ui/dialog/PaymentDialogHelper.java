@@ -26,7 +26,7 @@ import androidx.fragment.app.FragmentManager;
  */
 public class PaymentDialogHelper {
 
-    private PaymentIdlingResources idlingResources;
+    private final PaymentIdlingResources idlingResources;
 
     public PaymentDialogHelper(final PaymentIdlingResources idlingResources) {
         this.idlingResources = idlingResources;

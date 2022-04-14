@@ -41,7 +41,6 @@ import com.payoneer.checkout.ui.session.PaymentSessionService;
 import com.payoneer.checkout.util.Resource;
 
 import android.content.Context;
-import android.util.Log;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -77,8 +76,7 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
     void onCheckoutListResume() {
         if (paymentService != null && paymentService.isPending()) {
             paymentService.resume();
-        }
-        else if (paymentSession == null) {
+        } else if (paymentSession == null) {
             loadPaymentSession();
         }
     }

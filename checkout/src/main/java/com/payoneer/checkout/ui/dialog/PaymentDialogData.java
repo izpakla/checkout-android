@@ -8,12 +8,8 @@
 
 package com.payoneer.checkout.ui.dialog;
 
-import com.payoneer.checkout.CheckoutActivityResult;
-import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
-
-import android.app.Activity;
 
 /**
  * Holding data for showing a specific dialog, e.g. hint or connection error.
@@ -100,7 +96,7 @@ public final class PaymentDialogData {
         return new PaymentDialogData(EXPIRED, listener, networkCode, null);
     }
 
-    public PaymentDialogFragment.PaymentDialogListener getListener(){
+    public PaymentDialogFragment.PaymentDialogListener getListener() {
         return listener;
     }
 

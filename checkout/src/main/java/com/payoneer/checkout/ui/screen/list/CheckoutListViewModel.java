@@ -17,7 +17,6 @@ import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.util.AppContextViewModel;
 import com.payoneer.checkout.util.ContentEvent;
-import com.payoneer.checkout.util.Event;
 import com.payoneer.checkout.util.Resource;
 
 import android.content.Context;

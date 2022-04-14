@@ -14,9 +14,9 @@ import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.localization.Localization;
+import com.payoneer.checkout.ui.dialog.PaymentDialogFactory;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
-import com.payoneer.checkout.ui.dialog.PaymentDialogFactory;
 import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
 
 import android.annotation.SuppressLint;

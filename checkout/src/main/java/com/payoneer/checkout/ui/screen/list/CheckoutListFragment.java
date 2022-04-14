@@ -52,13 +52,6 @@ public class CheckoutListFragment extends Fragment {
     public CheckoutListFragment() {
     }
 
-    public static CheckoutListFragment newInstance() {
-        CheckoutListFragment fragment = new CheckoutListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checkout_list, container, false);
@@ -75,6 +68,12 @@ public class CheckoutListFragment extends Fragment {
         initToolbar();
         initPaymentList(view);
         initObservers();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        resetSwipeRefreshLayout();
     }
 
     private void initDialogHelper() {

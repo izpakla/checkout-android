@@ -128,7 +128,7 @@ open class AbstractTest {
 
     private fun createListURL(stringUrl: String) =
         try {
-            URL(stringUrl);
+            URL(stringUrl)
         } catch (e: MalformedURLException) {
             e.printStackTrace()
             null

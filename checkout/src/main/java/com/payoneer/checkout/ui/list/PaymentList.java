@@ -8,13 +8,10 @@
 
 package com.payoneer.checkout.ui.list;
 
-import java.util.Map;
-
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSection;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.ui.widget.FormWidget;
 
 import android.app.Activity;
 import android.content.Context;

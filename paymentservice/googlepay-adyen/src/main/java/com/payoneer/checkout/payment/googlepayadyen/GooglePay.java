@@ -9,6 +9,7 @@
 package com.payoneer.checkout.payment.googlepayadyen;
 
 import java.util.Optional;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,7 +18,7 @@ import org.json.JSONObject;
  * Google Pay API request configurations
  *
  * @see <a href="https://developers.google.com/pay/api/android/">Google Pay API Android
- *     documentation</a>
+ * documentation</a>
  */
 public final class GooglePay {
 
@@ -44,7 +45,7 @@ public final class GooglePay {
      * @return payment data tokenization for the CARD payment method
      * @throws JSONException
      * @see <a
-     *     href="https://developers.google.com/pay/api/android/reference/object#PaymentMethodTokenizationSpecification">PaymentMethodTokenizationSpecification</a>
+     * href="https://developers.google.com/pay/api/android/reference/object#PaymentMethodTokenizationSpecification">PaymentMethodTokenizationSpecification</a>
      */
     private static JSONObject getTokenizationSpecification() throws JSONException {
         JSONObject tokenizationSpecification = new JSONObject();
@@ -64,7 +65,7 @@ public final class GooglePay {
      *
      * @return allowed card networks
      * @see <a
-     *     href="https://developers.google.com/pay/api/android/reference/object#CardParameters">CardParameters</a>
+     * href="https://developers.google.com/pay/api/android/reference/object#CardParameters">CardParameters</a>
      */
     private static JSONArray getAllowedCardNetworks() {
         return new JSONArray()
@@ -82,7 +83,7 @@ public final class GooglePay {
      *
      * @return allowed card authentication methods
      * @see <a
-     *     href="https://developers.google.com/pay/api/android/reference/object#CardParameters">CardParameters</a>
+     * href="https://developers.google.com/pay/api/android/reference/object#CardParameters">CardParameters</a>
      */
     private static JSONArray getAllowedCardAuthMethods() {
         return new JSONArray()
@@ -99,7 +100,7 @@ public final class GooglePay {
      * @return a CARD PaymentMethod object describing accepted cards
      * @throws JSONException
      * @see <a
-     *     href="https://developers.google.com/pay/api/android/reference/object#PaymentMethod">PaymentMethod</a>
+     * href="https://developers.google.com/pay/api/android/reference/object#PaymentMethod">PaymentMethod</a>
      */
     private static JSONObject getBaseCardPaymentMethod() throws JSONException {
         JSONObject cardPaymentMethod = new JSONObject();
@@ -119,7 +120,7 @@ public final class GooglePay {
      * @return a CARD PaymentMethod describing accepted cards and optional fields
      * @throws JSONException
      * @see <a
-     *     href="https://developers.google.com/pay/api/android/reference/object#PaymentMethod">PaymentMethod</a>
+     * href="https://developers.google.com/pay/api/android/reference/object#PaymentMethod">PaymentMethod</a>
      */
     private static JSONObject getCardPaymentMethod() throws JSONException {
         JSONObject cardPaymentMethod = GooglePay.getBaseCardPaymentMethod();
@@ -134,7 +135,7 @@ public final class GooglePay {
      * @return information about the requested payment
      * @throws JSONException
      * @see <a
-     *     href="https://developers.google.com/pay/api/android/reference/object#TransactionInfo">TransactionInfo</a>
+     * href="https://developers.google.com/pay/api/android/reference/object#TransactionInfo">TransactionInfo</a>
      */
     private static JSONObject getTransactionInfo() throws JSONException {
         JSONObject transactionInfo = new JSONObject();
@@ -151,7 +152,7 @@ public final class GooglePay {
      * @return information about the merchant
      * @throws JSONException
      * @see <a
-     *     href="https://developers.google.com/pay/api/android/reference/object#MerchantInfo">MerchantInfo</a>
+     * href="https://developers.google.com/pay/api/android/reference/object#MerchantInfo">MerchantInfo</a>
      */
     private static JSONObject getMerchantInfo() throws JSONException {
         return new JSONObject()
@@ -164,7 +165,7 @@ public final class GooglePay {
      *
      * @return API version and payment methods supported by the app
      * @see <a
-     *     href="https://developers.google.com/pay/api/android/reference/object#IsReadyToPayRequest">IsReadyToPayRequest</a>
+     * href="https://developers.google.com/pay/api/android/reference/object#IsReadyToPayRequest">IsReadyToPayRequest</a>
      */
     public static Optional<JSONObject> getIsReadyToPayRequest() {
         try {
@@ -182,7 +183,7 @@ public final class GooglePay {
      *
      * @return payment data expected by your app
      * @see <a
-     *     href="https://developers.google.com/pay/api/android/reference/object#PaymentDataRequest">PaymentDataRequest</a>
+     * href="https://developers.google.com/pay/api/android/reference/object#PaymentDataRequest">PaymentDataRequest</a>
      */
     public static Optional<JSONObject> getPaymentDataRequest() {
         try {

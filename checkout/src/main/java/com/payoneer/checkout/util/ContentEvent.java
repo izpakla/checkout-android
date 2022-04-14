@@ -13,7 +13,7 @@ package com.payoneer.checkout.util;
  */
 public class ContentEvent<T> {
 
-    private T content;
+    private final T content;
     private boolean hasBeenHandled;
 
     public ContentEvent(final T content) {

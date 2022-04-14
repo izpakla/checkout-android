@@ -123,7 +123,7 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
         return try {
             var stringUrl: String = binding.inputListurl.text.toString().trim()
             if (TextUtils.isEmpty(stringUrl)) {
-                stringUrl = "https://raw.githubusercontent.com/optile/checkout-android/develop/shared-test/lists/listresult.json";
+                stringUrl = "https://raw.githubusercontent.com/optile/checkout-android/develop/shared-test/lists/listresult.json"
             }
             val listUrl = URL(stringUrl)
 

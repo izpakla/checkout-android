@@ -39,7 +39,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
- * The CheckoutListActivity showing available payment methods in a list.
+ * The CheckoutListActivity showing available payment methods in a recyclerview and handling
+ * payment requests.
  */
 public final class CheckoutListActivity extends AppCompatActivity {
 
@@ -51,12 +52,12 @@ public final class CheckoutListActivity extends AppCompatActivity {
     private PaymentDialogHelper dialogHelper;
 
     /**
-     * Create the start intent for this CheckoutListActivity.
+     * Create the start intent for this CheckoutListActivity
      *
      * @param context Context to create the intent
      * @return newly created start intent
      */
-    public static Intent createStartIntent(Context context, CheckoutConfiguration configuration) {
+    public static Intent createStartIntent(final Context context, final CheckoutConfiguration configuration) {
         Intent intent = new Intent(context, CheckoutListActivity.class);
         intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, configuration);
         return intent;
@@ -69,6 +70,10 @@ public final class CheckoutListActivity extends AppCompatActivity {
      */
     public static int getStartTransition() {
         return R.anim.no_animation;
+    }
+
+    public PaymentDialogHelper getPaymentDialogHelper() {
+        return dialogHelper;
     }
 
     @SuppressLint("WrongConstant")
@@ -129,8 +134,7 @@ public final class CheckoutListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //swipeRefreshLayout.setRefreshing(false);
-        //overridePendingTransition(R.anim.no_animation, R.anim.no_animation);
+        overridePendingTransition(R.anim.no_animation, R.anim.no_animation);
     }
 
     @Override
@@ -145,15 +149,6 @@ public final class CheckoutListActivity extends AppCompatActivity {
         for (Fragment fragment : fragments) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    /**
-     * Get the payment dialog helper
-     *
-     * @return
-     */
-    public PaymentDialogHelper getPaymentDialogHelper() {
-        return dialogHelper;
     }
 
     private void initViewModelObservers() {

@@ -12,14 +12,7 @@ import static io.github.jsonSnapshot.SnapshotMatcher.start;
 import static io.github.jsonSnapshot.SnapshotMatcher.validateSnapshots;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.core.PaymentInputCategory;
-import com.payoneer.checkout.core.PaymentInputType;
-import com.payoneer.checkout.test.util.TestUtils;
 
 public class PaymentRequestTest {
 

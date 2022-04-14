@@ -9,10 +9,6 @@
 package com.payoneer.checkout.payment;
 
 import com.payoneer.checkout.CheckoutResult;
-import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.model.Payment;
-import com.payoneer.checkout.operation.DeleteAccount;
-import com.payoneer.checkout.redirect.RedirectRequest;
 
 import android.content.Context;
 import androidx.fragment.app.Fragment;

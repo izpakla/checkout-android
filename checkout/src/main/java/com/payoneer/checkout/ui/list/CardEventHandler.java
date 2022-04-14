@@ -57,7 +57,7 @@ class CardEventHandler implements WidgetPresenter {
             }
             error = true;
         }
-         if (!error) {
+        if (!error) {
             getCardListener().onActionClicked(holder.getPaymentCard(), inputValues);
         }
     }

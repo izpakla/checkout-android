@@ -13,9 +13,14 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
+/**
+ * Class for observing the lifecycle of the CheckoutListActivity.
+ * Once the CheckoutListActivity is resumed, the presenter is informed that it could
+ * resume processing of a pending payment.
+ */
 class CheckoutListObserver implements LifecycleEventObserver {
 
-    private CheckoutListPresenter presenter;
+    private final CheckoutListPresenter presenter;
 
     CheckoutListObserver(final CheckoutListPresenter presenter) {
         this.presenter = presenter;

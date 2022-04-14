@@ -44,7 +44,6 @@ public abstract class PaymentService {
     public abstract void onStop();
 
     /**
-     *
      * @return
      */
     public abstract boolean isPending();
@@ -55,19 +54,16 @@ public abstract class PaymentService {
     public abstract void resume();
 
     /**
-     *
      * @param requestData
      */
     public abstract void processPayment(final RequestData requestData);
 
     /**
-     *
      * @param requestData
      */
     public abstract void deleteAccount(final RequestData requestData);
 
     /**
-     *
      * @param presenter
      */
     public void setPresenter(final PaymentServicePresenter presenter) {
@@ -75,7 +71,6 @@ public abstract class PaymentService {
     }
 
     /**
-     *
      * @param requestData
      * @param link
      * @return
@@ -89,7 +84,6 @@ public abstract class PaymentService {
     }
 
     /**
-     *
      * @param requestData
      * @return
      */
@@ -99,7 +93,6 @@ public abstract class PaymentService {
     }
 
     /**
-     *
      * @param operationResult
      * @return
      */

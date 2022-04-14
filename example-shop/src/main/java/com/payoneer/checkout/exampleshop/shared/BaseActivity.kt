@@ -16,8 +16,8 @@ import androidx.test.espresso.IdlingResource
 import com.payoneer.checkout.CheckoutActivityResult
 import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.exampleshop.R
-import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener
 import com.payoneer.checkout.ui.dialog.PaymentDialogFactory
+import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
 
 /**

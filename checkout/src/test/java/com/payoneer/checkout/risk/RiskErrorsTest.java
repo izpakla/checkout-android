@@ -29,7 +29,9 @@ public class RiskErrorsTest {
         parameter.setValue("VALUE");
         errors.addErrorParameter(parameter);
         List<Parameter> parameters = errors.getRiskErrorParameters();
-        assertEquals("NAME", parameters.get(0).getName());
+        Parameter firstParam = parameters.get(0);
+        assertEquals("NAME", firstParam.getName());
+        assertEquals("VALUE", firstParam.getValue());
         assertEquals(1, parameters.size());
     }
 
@@ -41,8 +43,9 @@ public class RiskErrorsTest {
         parameter.setValue(generateString(89709890));
         errors.addErrorParameter(parameter);
         List<Parameter> parameters = errors.getRiskErrorParameters();
-        assertEquals("NAME", parameters.get(0).getName());
-        assertEquals(generateString(2000), parameters.get(0).getValue());
+        Parameter firstParam = parameters.get(0);
+        assertEquals("NAME", firstParam.getName());
+        assertEquals(generateString(2000), firstParam.getValue());
         assertEquals(1, parameters.size());
     }
 

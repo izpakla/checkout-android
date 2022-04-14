@@ -8,6 +8,7 @@
 
 package com.payoneer.checkout.risk;
 
+import static com.payoneer.checkout.risk.RiskProviderControllerTest.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -56,6 +57,7 @@ public class RiskProviderResultTest {
         result.copyInto(parameters, errorParams);
 
         assertEquals(2, parameters.size());
-        assertTrue(parameters.stream().anyMatch(param -> param.getValue().equals("NEW_VALUE")));
+        assertTrue(contains(parameters, parameter.getValue(), parameter.getName()));
+        assertTrue(contains(parameters, "VALUE", "NAME"));
     }
 }

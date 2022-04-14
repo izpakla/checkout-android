@@ -12,12 +12,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+
+import com.payoneer.checkout.model.Parameter;
 
 import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
@@ -69,15 +72,28 @@ public class RiskProviderControllerTest {
         RiskProviderInfo info = createRiskProviderInfo("CODE", "TYPE");
         RiskProviderController controller = new RiskProviderController(info);
         controller.initialize(null);
+        Parameter internalErrorParam = new Parameter();
+        internalErrorParam.setName(RiskErrors.RESULTKEY_INTERNAL_ERROR);
+        internalErrorParam.setValue("RiskProviderController(CODE, TYPE) could not find RiskProvider");
 
         RiskProviderResult result = controller.getRiskProviderResult(ApplicationProvider.getApplicationContext());
         assertNotNull(result);
-        assertTrue(controller.getRiskErrors().getRiskErrorParameters().stream().anyMatch(parameter -> parameter.getValue()
-            .equals("RiskProviderController(CODE, TYPE) could not find RiskProvider")));
+        assertTrue(
+            contains(controller.getRiskErrors().getRiskErrorParameters(), internalErrorParam.getValue(), internalErrorParam.getName())
+        );
     }
 
     private RiskProviderInfo createRiskProviderInfo(final String code, final String type) {
         Map<String, String> parameters = new HashMap<>();
         return new RiskProviderInfo(code, type, parameters);
+    }
+
+    public static boolean contains(Collection<Parameter> parameters, String value, String name) {
+        for (Parameter parameter : parameters) {
+            if (parameter != null && parameter.getValue().equals(value) && parameter.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

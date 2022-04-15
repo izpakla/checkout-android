@@ -15,6 +15,7 @@ import static com.payoneer.checkout.model.InteractionCode.TRY_OTHER_ACCOUNT;
 import static com.payoneer.checkout.model.InteractionCode.TRY_OTHER_NETWORK;
 import static com.payoneer.checkout.model.InteractionReason.OK;
 import static com.payoneer.checkout.model.InteractionReason.PENDING;
+import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
 import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 
 import java.util.Objects;
@@ -92,7 +93,6 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
     void loadPaymentSession() {
         this.paymentSession = null;
         listViewModel.showPaymentSession(Resource.LOADING, null, null);
-        listViewModel.showProgressIndicator(true);
         sessionService.loadPaymentSession(configuration, listViewModel.getApplicationContext());
     }
 
@@ -135,8 +135,6 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
 
     @Override
     public void onPaymentSessionSuccess(PaymentSession session) {
-        listViewModel.showProgressIndicator(false);
-
         ListResult listResult = session.getListResult();
         Interaction interaction = listResult.getInteraction();
 
@@ -150,7 +148,6 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
 
     @Override
     public void onPaymentSessionError(Throwable cause) {
-        listViewModel.showProgressIndicator(false);
         listViewModel.showPaymentSession(Resource.ERROR, null, null);
 
         CheckoutResult result = CheckoutResultHelper.fromThrowable(cause);
@@ -195,11 +192,6 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
     }
 
     @Override
-    public void finalizePayment() {
-        serviceViewModel.finalizePayment();
-    }
-
-    @Override
     public void showFragment(final Fragment fragment) {
         serviceViewModel.showFragment(fragment);
     }
@@ -210,8 +202,22 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
     }
 
     @Override
+    public void onProcessPaymentActive(final RequestData requestData) {
+        boolean finalizePayment = CHARGE.equals(requestData.getListOperationType());
+        listViewModel.showProcessPayment(finalizePayment);
+        serviceViewModel.processPaymentActive();
+    }
+
+    @Override
+    public void onDeleteAccountActive(final RequestData requestData) {
+        serviceViewModel.deleteAccountActive();
+
+    }
+
+    @Override
     public void onProcessPaymentResult(final CheckoutResult result) {
-        listViewModel.showProgressIndicator(false);
+        serviceViewModel.processPaymentFinished();
+
         if (UPDATE.equals(paymentSession.getListOperationType())) {
             handleUpdateCheckoutResult(result);
         } else {
@@ -221,7 +227,8 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
 
     @Override
     public void onDeleteAccountResult(final CheckoutResult result) {
-        listViewModel.showProgressIndicator(false);
+        serviceViewModel.deleteAccountFinished();
+
         if (result.isNetworkFailure()) {
             handleDeleteAccountNetworkFailure(result);
             return;
@@ -403,6 +410,4 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
         }
         return InteractionMessage.fromOperationFlow(interaction, paymentSession.getListOperationType());
     }
-
 }
-

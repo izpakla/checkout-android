@@ -17,6 +17,7 @@ import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.util.AppContextViewModel;
 import com.payoneer.checkout.util.ContentEvent;
+import com.payoneer.checkout.util.Event;
 import com.payoneer.checkout.util.Resource;
 
 import android.content.Context;
@@ -28,7 +29,7 @@ final class CheckoutListViewModel extends AppContextViewModel {
     MutableLiveData<Resource> showPaymentSession;
     MutableLiveData<ContentEvent> closeWithCheckoutResult;
     MutableLiveData<ContentEvent> showPaymentDialog;
-    MutableLiveData<Boolean> showProgressIndicator;
+    MutableLiveData<ContentEvent> showProcessPayment;
 
     CheckoutListViewModel(final Context applicationContext, final CheckoutListPresenter presenter) {
         super(applicationContext);
@@ -37,7 +38,7 @@ final class CheckoutListViewModel extends AppContextViewModel {
         this.showPaymentSession = new MutableLiveData<>();
         this.closeWithCheckoutResult = new MutableLiveData<>();
         this.showPaymentDialog = new MutableLiveData<>();
-        this.showProgressIndicator = new MutableLiveData<>();
+        this.showProcessPayment = new MutableLiveData<>();
 
         this.presenter.setListViewModel(this);
     }
@@ -81,7 +82,7 @@ final class CheckoutListViewModel extends AppContextViewModel {
         showPaymentDialog.setValue(new ContentEvent(data));
     }
 
-    void showProgressIndicator(final Boolean visible) {
-        showProgressIndicator.setValue(visible);
+    void showProcessPayment(Boolean interruptible) {
+        showProcessPayment.setValue(new ContentEvent(interruptible));
     }
 }

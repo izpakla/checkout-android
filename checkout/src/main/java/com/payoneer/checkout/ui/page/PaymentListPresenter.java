@@ -109,6 +109,16 @@ final class PaymentListPresenter extends BasePaymentPresenter
         return view.getActivity();
     }
 
+    @Override
+    public void onProcessPaymentActive(final RequestData requestData) {
+
+    }
+
+    @Override
+    public void onDeleteAccountActive(final RequestData requestData) {
+
+    }
+
     public void onRefresh(boolean hasUserInputData) {
         if (!checkState(STARTED)) {
             return;
@@ -205,11 +215,6 @@ final class PaymentListPresenter extends BasePaymentPresenter
         } else {
             closeWithErrorCode(result);
         }
-    }
-
-    @Override
-    public void finalizePayment() {
-        view.showProgress(true);
     }
 
     @Override

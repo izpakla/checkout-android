@@ -19,19 +19,38 @@ import androidx.lifecycle.MutableLiveData;
 public final class PaymentServiceViewModel extends AppContextViewModel {
 
     private final PaymentServicePresenter presenter;
-    public MutableLiveData<Event> finalizePayment;
+    public MutableLiveData<Event> processPaymentActive;
+    public MutableLiveData<Event> processPaymentFinished;
+    public MutableLiveData<Event> deleteAccountActive;
+    public MutableLiveData<Event> deleteAccountFinished;
     public MutableLiveData<ContentEvent> showFragment;
 
     PaymentServiceViewModel(final Context applicationContext, final PaymentServicePresenter presenter) {
         super(applicationContext);
         this.presenter = presenter;
-        finalizePayment = new MutableLiveData<>();
+
         showFragment = new MutableLiveData<>();
+        processPaymentActive = new MutableLiveData<>();
+        processPaymentFinished = new MutableLiveData<>();
+        deleteAccountActive = new MutableLiveData<>();
+        deleteAccountFinished = new MutableLiveData<>();
         presenter.setPaymentServiceViewModel(this);
     }
 
-    public void finalizePayment() {
-        finalizePayment.setValue(new Event());
+    public void processPaymentActive() {
+        processPaymentActive.setValue(new Event());
+    }
+
+    public void processPaymentFinished() {
+        processPaymentFinished.setValue(new Event());
+    }
+
+    public void deleteAccountActive() {
+        deleteAccountActive.setValue(new Event());
+    }
+
+    public void deleteAccountFinished() {
+        deleteAccountFinished.setValue(new Event());
     }
 
     public void showFragment(final Fragment fragment) {

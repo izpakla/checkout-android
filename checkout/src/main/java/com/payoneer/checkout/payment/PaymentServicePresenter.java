@@ -24,12 +24,6 @@ public interface PaymentServicePresenter {
     void setPaymentServiceViewModel(final PaymentServiceViewModel serviceViewModel);
 
     /**
-     * Notify the presenter that the payment service is finalizing the payment. This may result
-     * in showing a screen that cannot be interrupted.
-     */
-    void finalizePayment();
-
-    /**
      * Show the payment service fragment
      *
      * @param fragment to be shown
@@ -39,9 +33,21 @@ public interface PaymentServicePresenter {
     /**
      * Get the application context
      *
-     * @return current context
+     * @return current application context
      */
     Context getApplicationContext();
+
+    /**
+     *
+     * @param requestData
+     */
+    void onProcessPaymentActive(final RequestData requestData);
+
+    /**
+     *
+     * @param requestData
+     */
+    void onDeleteAccountActive(final RequestData requestData);
 
     /**
      * Called when PaymentService is done processing the request.

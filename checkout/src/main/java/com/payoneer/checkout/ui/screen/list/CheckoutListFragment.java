@@ -13,6 +13,7 @@ import static com.payoneer.checkout.localization.LocalizationKey.LIST_TITLE;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.payment.PaymentInputValues;
+import com.payoneer.checkout.payment.PaymentServiceViewModel;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
@@ -21,6 +22,7 @@ import com.payoneer.checkout.ui.list.PaymentListListener;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.ui.screen.ProgressView;
+import com.payoneer.checkout.util.Event;
 import com.payoneer.checkout.util.Resource;
 
 import android.os.Bundle;
@@ -38,12 +40,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
- * Fragment to show the Payment Session
+ * Fragment for displaying the payment session with payment networks and saved accounts.
  */
 public class CheckoutListFragment extends Fragment {
 
     private Toolbar toolbar;
-    private CheckoutListViewModel viewModel;
+    private CheckoutListViewModel listViewModel;
+    private PaymentServiceViewModel serviceViewModel;
     private PaymentList paymentList;
     private ProgressView progressView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -95,7 +98,7 @@ public class CheckoutListFragment extends Fragment {
         PaymentListListener listener = new PaymentListListener() {
             @Override
             public void onActionClicked(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
-                viewModel.processPaymentCard(paymentCard, inputValues);
+                listViewModel.processPaymentCard(paymentCard, inputValues);
             }
 
             @Override
@@ -132,31 +135,43 @@ public class CheckoutListFragment extends Fragment {
     }
 
     private void initObservers() {
-        viewModel = new ViewModelProvider(requireActivity()).get(CheckoutListViewModel.class);
-        viewModel.showPaymentSession.observe(requireActivity(), new Observer<Resource>() {
+        serviceViewModel = new ViewModelProvider(requireActivity()).get(PaymentServiceViewModel.class);
+        serviceViewModel.processPaymentActive.observe(getViewLifecycleOwner(), new Observer<Event>() {
             @Override
-            public void onChanged(@Nullable Resource resource) {
-                if (resource == null) {
-                    return;
-                }
-                switch (resource.getStatus()) {
-                    case Resource.SUCCESS:
-                        showPaymentSession((PaymentSession) resource.getData());
-                        break;
-                    case Resource.LOADING:
-                        clearPaymentSession();
-                        break;
-                    case Resource.ERROR:
-                        clearPaymentSession();
-                        // errors will be shown through the popup dialog observers
+            public void onChanged(@Nullable Event event) {
+                if (event.getIfNotHandled() != null) {
+                    progressView.setVisible(true);
                 }
             }
         });
 
-        viewModel.showProgressIndicator.observe(requireActivity(), new Observer<Boolean>() {
+        serviceViewModel.processPaymentFinished.observe(getViewLifecycleOwner(), new Observer<Event>() {
             @Override
-            public void onChanged(final Boolean visible) {
-                progressView.setVisible(visible);
+            public void onChanged(@Nullable Event event) {
+                if (event.getIfNotHandled() != null) {
+                    progressView.setVisible(false);
+                }
+            }
+        });
+
+        listViewModel = new ViewModelProvider(requireActivity()).get(CheckoutListViewModel.class);
+        listViewModel.showPaymentSession.observe(getViewLifecycleOwner(), new Observer<Resource>() {
+            @Override
+            public void onChanged(@Nullable Resource resource) {
+                switch (resource.getStatus()) {
+                    case Resource.SUCCESS:
+                        progressView.setVisible(false);
+                        showPaymentSession((PaymentSession) resource.getData());
+                        break;
+                    case Resource.LOADING:
+                        progressView.setVisible(true);
+                        clearPaymentSession();
+                        break;
+                    case Resource.ERROR:
+                        progressView.setVisible(false);
+                        clearPaymentSession();
+                        // errors will be shown through the popup dialog observers
+                }
             }
         });
     }
@@ -169,14 +184,16 @@ public class CheckoutListFragment extends Fragment {
     private void showPaymentSession(final PaymentSession paymentSession) {
         setToolbarTitle(Localization.translate(LIST_TITLE));
         paymentList.showPaymentSession(paymentSession);
-        swipeRefreshLayout.setEnabled(paymentSession.swipeRefresh());
+        if (paymentSession != null) {
+            swipeRefreshLayout.setEnabled(paymentSession.swipeRefresh());
+        }
     }
 
     private void handleOnDeleteClicked(final PaymentCard paymentCard) {
         PaymentDialogListener listener = new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
-                viewModel.deletePaymentCard(paymentCard);
+                listViewModel.deletePaymentCard(paymentCard);
             }
 
             @Override
@@ -193,13 +210,13 @@ public class CheckoutListFragment extends Fragment {
     private void handleOnSwipeRefresh() {
         swipeRefreshLayout.setRefreshing(false);
         if (!paymentList.hasUserInputData()) {
-            viewModel.loadPaymentSession();
+            listViewModel.loadPaymentSession();
             return;
         }
         PaymentDialogListener listener = new PaymentDialogFragment.PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
-                viewModel.loadPaymentSession();
+                listViewModel.loadPaymentSession();
             }
 
             @Override

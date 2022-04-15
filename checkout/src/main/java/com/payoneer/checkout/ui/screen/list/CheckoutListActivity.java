@@ -20,9 +20,8 @@ import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
-import com.payoneer.checkout.ui.screen.FinalizePaymentFragment;
+import com.payoneer.checkout.ui.screen.ProcessPaymentFragment;
 import com.payoneer.checkout.util.ContentEvent;
-import com.payoneer.checkout.util.Event;
 import com.payoneer.checkout.util.Resource;
 
 import android.annotation.SuppressLint;
@@ -173,9 +172,10 @@ public final class CheckoutListActivity extends AppCompatActivity {
             @Override
             public void onChanged(final ContentEvent contentEvent) {
                 PaymentDialogData data = (PaymentDialogData) contentEvent.getContentIfNotHandled();
-                if (data != null) {
-                    dialogHelper.showPaymentDialog(getSupportFragmentManager(), data);
+                if (data == null) {
+                    return;
                 }
+                dialogHelper.showPaymentDialog(getSupportFragmentManager(), data);
             }
         });
 
@@ -183,17 +183,24 @@ public final class CheckoutListActivity extends AppCompatActivity {
             @Override
             public void onChanged(final ContentEvent event) {
                 Fragment fragment = (Fragment) event.getContentIfNotHandled();
-                if (fragment != null) {
-                    showFragment(fragment);
+                if (fragment == null) {
+                    return;
                 }
+                showFragment(fragment);
             }
         });
 
-        serviceViewModel.finalizePayment.observe(this, new Observer<Event>() {
+        listViewModel.showProcessPayment.observe(this, new Observer<ContentEvent>() {
             @Override
-            public void onChanged(final Event event) {
-                if (event.getIfNotHandled() != null) {
-                    showFinalizePaymentFragment();
+            public void onChanged(final ContentEvent event) {
+                Boolean finalizePayment = (Boolean) event.getContentIfNotHandled();
+                if (finalizePayment == null) {
+                    return;
+                }
+                if (finalizePayment) {
+                    showProcessPaymentFragment();
+                } else {
+                    showCheckoutListFragment();
                 }
             }
         });
@@ -206,31 +213,29 @@ public final class CheckoutListActivity extends AppCompatActivity {
         close();
     }
 
-    private void showFinalizePaymentFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setReorderingAllowed(true);
+    private void showCheckoutListFragment() {
+        createFragmentTransaction()
+            .replace(R.id.fragment_container_view, CheckoutListFragment.class, null)
+            .commitNow();
+    }
 
-        transaction.replace(R.id.fragment_container_view, FinalizePaymentFragment.class, null);
-        transaction.commit();
+    private void showProcessPaymentFragment() {
+        createFragmentTransaction()
+            .replace(R.id.fragment_container_view, ProcessPaymentFragment.class, null)
+            .commitNow();
     }
 
     private void showFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setReorderingAllowed(true);
-
-        transaction.replace(R.id.fragment_container_view, fragment, null);
-        transaction.commit();
+        createFragmentTransaction()
+            .replace(R.id.fragment_container_view, fragment, null)
+            .commitNow();
     }
 
-    private void showCheckoutListFragment() {
+    private FragmentTransaction createFragmentTransaction() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setReorderingAllowed(true);
-
-        transaction.replace(R.id.fragment_container_view, CheckoutListFragment.class, null);
-        transaction.commit();
+        return transaction;
     }
 
     private void close() {

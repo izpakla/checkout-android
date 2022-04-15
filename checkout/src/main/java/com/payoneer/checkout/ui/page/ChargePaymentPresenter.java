@@ -97,13 +97,18 @@ final class ChargePaymentPresenter extends BasePaymentPresenter implements Payme
     }
 
     @Override
-    public void onPaymentSessionError(Throwable cause) {
-        handleLoadingError(cause);
+    public void onProcessPaymentActive(final RequestData requestData) {
+
     }
 
     @Override
-    public void finalizePayment() {
-        view.showProgress(true);
+    public void onDeleteAccountActive(final RequestData requestData) {
+
+    }
+
+    @Override
+    public void onPaymentSessionError(Throwable cause) {
+        handleLoadingError(cause);
     }
 
     @Override

@@ -94,10 +94,8 @@ public final class BasicPaymentService extends PaymentService {
     public void processPayment(final RequestData requestData) {
         this.requestData = requestData;
         this.redirectRequest = null;
+        presenter.onProcessPaymentActive(requestData);
 
-        if (CHARGE.equals(requestData.getOperationType())) {
-            presenter.finalizePayment();
-        }
         Operation operation = createOperation(requestData, PaymentLinkType.OPERATION);
         operationService.postOperation(operation, presenter.getApplicationContext());
     }
@@ -106,6 +104,7 @@ public final class BasicPaymentService extends PaymentService {
     public void deleteAccount(final RequestData requestData) {
         this.requestData = requestData;
         this.redirectRequest = null;
+        presenter.onDeleteAccountActive(requestData);
 
         DeleteAccount deleteAccount = createDeleteAccount(requestData);
         operationService.deleteAccount(deleteAccount, presenter.getApplicationContext());

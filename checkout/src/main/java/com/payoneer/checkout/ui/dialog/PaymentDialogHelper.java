@@ -17,7 +17,7 @@ import static com.payoneer.checkout.ui.dialog.PaymentDialogData.INTERACTION;
 
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
-import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
 
 import androidx.fragment.app.FragmentManager;
 

@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.screen.list;
+package com.payoneer.checkout.ui.screen.payment;
 
 import java.util.List;
 
@@ -19,16 +19,14 @@ import com.payoneer.checkout.payment.PaymentServiceViewModel;
 import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
-import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
-import com.payoneer.checkout.ui.screen.ProcessPaymentFragment;
+import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
 import com.payoneer.checkout.util.ContentEvent;
-import com.payoneer.checkout.util.Resource;
+import com.payoneer.checkout.util.Event;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -38,26 +36,26 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
- * The CheckoutListActivity showing available payment methods in a recyclerview and handling
+ * The CheckoutPaymentActivity showing available payment methods in a recyclerview and handling
  * payment requests.
  */
-public final class CheckoutListActivity extends AppCompatActivity {
+public final class ProcessPaymentActivity extends AppCompatActivity {
 
     final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
     private CheckoutConfiguration configuration;
-    private CheckoutListViewModel listViewModel;
+    private ProcessPaymentViewModel paymentViewModel;
     private PaymentServiceViewModel serviceViewModel;
     private PaymentIdlingResources idlingResources;
     private PaymentDialogHelper dialogHelper;
 
     /**
-     * Create the start intent for this CheckoutListActivity
+     * Create the start intent for this CheckoutPaymentActivity
      *
      * @param context Context to create the intent
      * @return newly created start intent
      */
     public static Intent createStartIntent(final Context context, final CheckoutConfiguration configuration) {
-        Intent intent = new Intent(context, CheckoutListActivity.class);
+        Intent intent = new Intent(context, ProcessPaymentActivity.class);
         intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, configuration);
         return intent;
     }
@@ -88,21 +86,21 @@ public final class CheckoutListActivity extends AppCompatActivity {
         if (theme != 0) {
             setTheme(theme);
         }
-        setContentView(R.layout.activity_checkoutlist);
+        setContentView(R.layout.activity_fragmentcontainer);
         initViewModels();
 
         idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
         dialogHelper = new PaymentDialogHelper(idlingResources);
-        showCheckoutListFragment();
+        showProcessPaymentFragment();
     }
 
     private void initViewModels() {
-        CheckoutListPresenter presenter = new CheckoutListPresenter(configuration);
-        CheckoutListObserver observer = new CheckoutListObserver(presenter);
+        ProcessPaymentPresenter presenter = new ProcessPaymentPresenter(configuration);
+        ProcessPaymentObserver observer = new ProcessPaymentObserver(presenter);
         getLifecycle().addObserver(observer);
 
-        ViewModelProvider.Factory listFactory = new CheckoutListViewModelFactory(getApplicationContext(), presenter);
-        listViewModel = new ViewModelProvider(this, listFactory).get(CheckoutListViewModel.class);
+        ViewModelProvider.Factory listFactory = new ProcessPaymentViewModelFactory(getApplicationContext(), presenter);
+        paymentViewModel = new ViewModelProvider(this, listFactory).get(ProcessPaymentViewModel.class);
 
         ViewModelProvider.Factory serviceFactory = new PaymentServiceViewModelFactory(getApplicationContext(), presenter);
         serviceViewModel = new ViewModelProvider(this, serviceFactory).get(PaymentServiceViewModel.class);
@@ -119,15 +117,6 @@ public final class CheckoutListActivity extends AppCompatActivity {
         if (this.configuration != null) {
             savedInstanceState.putParcelable(EXTRA_CHECKOUT_CONFIGURATION, this.configuration);
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            close();
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -151,7 +140,7 @@ public final class CheckoutListActivity extends AppCompatActivity {
     }
 
     private void initViewModelObservers() {
-        listViewModel.closeWithCheckoutResult.observe(this, new Observer<ContentEvent>() {
+        paymentViewModel.closeWithCheckoutResult.observe(this, new Observer<ContentEvent>() {
             @Override
             public void onChanged(final ContentEvent contentEvent) {
                 CheckoutResult checkoutResult = (CheckoutResult) contentEvent.getContentIfNotHandled();
@@ -161,14 +150,7 @@ public final class CheckoutListActivity extends AppCompatActivity {
             }
         });
 
-        listViewModel.showPaymentSession.observe(this, new Observer<Resource>() {
-            @Override
-            public void onChanged(final Resource resource) {
-                showCheckoutListFragment();
-            }
-        });
-
-        listViewModel.showPaymentDialog.observe(this, new Observer<ContentEvent>() {
+        paymentViewModel.showPaymentDialog.observe(this, new Observer<ContentEvent>() {
             @Override
             public void onChanged(final ContentEvent contentEvent) {
                 PaymentDialogData data = (PaymentDialogData) contentEvent.getContentIfNotHandled();
@@ -190,17 +172,11 @@ public final class CheckoutListActivity extends AppCompatActivity {
             }
         });
 
-        listViewModel.showProcessPayment.observe(this, new Observer<ContentEvent>() {
+        paymentViewModel.showProcessPayment.observe(this, new Observer<Event>() {
             @Override
-            public void onChanged(final ContentEvent event) {
-                Boolean finalizePayment = (Boolean) event.getContentIfNotHandled();
-                if (finalizePayment == null) {
-                    return;
-                }
-                if (finalizePayment) {
+            public void onChanged(final Event event) {
+                if (event.getIfNotHandled() != null) {
                     showProcessPaymentFragment();
-                } else {
-                    showCheckoutListFragment();
                 }
             }
         });
@@ -211,12 +187,6 @@ public final class CheckoutListActivity extends AppCompatActivity {
         CheckoutResultHelper.putIntoResultIntent(checkoutResult, intent);
         setResult(CheckoutActivityResult.getResultCode(checkoutResult), intent);
         close();
-    }
-
-    private void showCheckoutListFragment() {
-        createFragmentTransaction()
-            .replace(R.id.fragment_container_view, CheckoutListFragment.class, null)
-            .commitNow();
     }
 
     private void showProcessPaymentFragment() {

@@ -10,7 +10,7 @@ package com.payoneer.checkout.ui.dialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.payoneer.checkout.R;
-import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
 
 import android.app.Activity;
 import android.app.Dialog;

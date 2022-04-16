@@ -47,12 +47,12 @@ import androidx.fragment.app.Fragment;
 /**
  * The CheckoutListPresenter
  */
-final class CheckoutListPresenter implements PaymentSessionListener, PaymentServicePresenter {
+final class PaymentListPresenter implements PaymentSessionListener, PaymentServicePresenter {
 
     private final PaymentSessionService sessionService;
     private final CheckoutConfiguration configuration;
 
-    private CheckoutListViewModel listViewModel;
+    private PaymentListViewModel listViewModel;
     private PaymentServiceViewModel serviceViewModel;
 
     private PaymentSession paymentSession;
@@ -64,13 +64,13 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
      *
      * @param checkoutConfiguration containing the configuration e.g. listURL
      */
-    CheckoutListPresenter(CheckoutConfiguration checkoutConfiguration) {
+    PaymentListPresenter(CheckoutConfiguration checkoutConfiguration) {
         this.configuration = checkoutConfiguration;
         sessionService = new PaymentSessionService();
         sessionService.setListener(this);
     }
 
-    void setListViewModel(final CheckoutListViewModel listViewModel) {
+    void setListViewModel(final PaymentListViewModel listViewModel) {
         this.listViewModel = listViewModel;
     }
 
@@ -205,18 +205,17 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
     public void onProcessPaymentActive(final RequestData requestData) {
         boolean finalizePayment = CHARGE.equals(requestData.getListOperationType());
         listViewModel.showProcessPayment(finalizePayment);
-        serviceViewModel.processPaymentActive();
+        listViewModel.showProgress(true);
     }
 
     @Override
     public void onDeleteAccountActive(final RequestData requestData) {
-        serviceViewModel.deleteAccountActive();
-
+        listViewModel.showProgress(true);
     }
 
     @Override
     public void onProcessPaymentResult(final CheckoutResult result) {
-        serviceViewModel.processPaymentFinished();
+        listViewModel.showProgress(false);
 
         if (UPDATE.equals(paymentSession.getListOperationType())) {
             handleUpdateCheckoutResult(result);
@@ -227,7 +226,7 @@ final class CheckoutListPresenter implements PaymentSessionListener, PaymentServ
 
     @Override
     public void onDeleteAccountResult(final CheckoutResult result) {
-        serviceViewModel.deleteAccountFinished();
+        listViewModel.showProgress(false);
 
         if (result.isNetworkFailure()) {
             handleDeleteAccountNetworkFailure(result);

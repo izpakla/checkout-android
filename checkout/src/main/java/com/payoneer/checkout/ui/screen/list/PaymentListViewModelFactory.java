@@ -13,12 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-public class CheckoutListViewModelFactory implements ViewModelProvider.Factory {
+public class PaymentListViewModelFactory implements ViewModelProvider.Factory {
 
     private final Context applicationContext;
-    private final CheckoutListPresenter presenter;
+    private final PaymentListPresenter presenter;
 
-    public CheckoutListViewModelFactory(@NonNull final Context applicationContext, @NonNull final CheckoutListPresenter presenter) {
+    public PaymentListViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentListPresenter presenter) {
         this.applicationContext = applicationContext;
         this.presenter = presenter;
     }
@@ -26,6 +26,6 @@ public class CheckoutListViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull final Class<T> modelClass) {
-        return (T) new CheckoutListViewModel(applicationContext, presenter);
+        return (T) new PaymentListViewModel(applicationContext, presenter);
     }
 }

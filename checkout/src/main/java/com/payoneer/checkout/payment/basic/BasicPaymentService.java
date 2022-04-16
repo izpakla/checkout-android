@@ -10,7 +10,6 @@ package com.payoneer.checkout.payment.basic;
 
 import static com.payoneer.checkout.model.InteractionCode.ABORT;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
-import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
 
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;

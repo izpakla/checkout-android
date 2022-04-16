@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.page.idlingresource;
+package com.payoneer.checkout.ui.screen.idlingresource;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

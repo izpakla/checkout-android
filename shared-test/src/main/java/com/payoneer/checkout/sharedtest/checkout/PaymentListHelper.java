@@ -30,8 +30,6 @@ import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isCardWithTe
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isViewInPaymentCard;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isViewInWidget;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.linearLayoutWithChildCount;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 
 import java.util.Map;
 
@@ -40,7 +38,7 @@ import org.hamcrest.Matcher;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.sharedtest.view.ActivityHelper;
 import com.payoneer.checkout.ui.page.PaymentListActivity;
-import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
 
 import android.view.View;
 import androidx.test.espresso.IdlingRegistry;

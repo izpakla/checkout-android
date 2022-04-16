@@ -38,13 +38,11 @@ public interface PaymentServicePresenter {
     Context getApplicationContext();
 
     /**
-     *
      * @param requestData
      */
     void onProcessPaymentActive(final RequestData requestData);
 
     /**
-     *
      * @param requestData
      */
     void onDeleteAccountActive(final RequestData requestData);

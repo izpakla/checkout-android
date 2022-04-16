@@ -17,28 +17,29 @@ import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.util.AppContextViewModel;
 import com.payoneer.checkout.util.ContentEvent;
-import com.payoneer.checkout.util.Event;
 import com.payoneer.checkout.util.Resource;
 
 import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
-final class CheckoutListViewModel extends AppContextViewModel {
+final class PaymentListViewModel extends AppContextViewModel {
 
-    private final CheckoutListPresenter presenter;
+    private final PaymentListPresenter presenter;
     MutableLiveData<Resource> showPaymentSession;
     MutableLiveData<ContentEvent> closeWithCheckoutResult;
     MutableLiveData<ContentEvent> showPaymentDialog;
     MutableLiveData<ContentEvent> showProcessPayment;
+    MutableLiveData<ContentEvent> showProgress;
 
-    CheckoutListViewModel(final Context applicationContext, final CheckoutListPresenter presenter) {
+    PaymentListViewModel(final Context applicationContext, final PaymentListPresenter presenter) {
         super(applicationContext);
         this.presenter = presenter;
 
+        this.showProcessPayment = new MutableLiveData<>();
         this.showPaymentSession = new MutableLiveData<>();
         this.closeWithCheckoutResult = new MutableLiveData<>();
         this.showPaymentDialog = new MutableLiveData<>();
-        this.showProcessPayment = new MutableLiveData<>();
+        this.showProgress = new MutableLiveData<>();
 
         this.presenter.setListViewModel(this);
     }
@@ -82,7 +83,11 @@ final class CheckoutListViewModel extends AppContextViewModel {
         showPaymentDialog.setValue(new ContentEvent(data));
     }
 
-    void showProcessPayment(Boolean interruptible) {
-        showProcessPayment.setValue(new ContentEvent(interruptible));
+    void showProcessPayment(Boolean finalizePayment) {
+        showProcessPayment.setValue(new ContentEvent(finalizePayment));
+    }
+
+    void showProgress(Boolean visible) {
+        showProgress.setValue(new ContentEvent(visible));
     }
 }

@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.screen;
+package com.payoneer.checkout.ui.screen.list;
 
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
@@ -15,8 +15,8 @@ import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 import com.google.android.material.snackbar.Snackbar;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
-import com.payoneer.checkout.payment.PaymentServiceViewModel;
-import com.payoneer.checkout.util.Event;
+import com.payoneer.checkout.ui.screen.ProgressView;
+import com.payoneer.checkout.util.ContentEvent;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,12 +32,12 @@ import androidx.lifecycle.ViewModelProvider;
 /**
  * Fragment to show the full screen in progress animation
  */
-public class ProcessPaymentFragment extends Fragment {
+public class FinalizePaymentFragment extends Fragment {
 
-    private PaymentServiceViewModel serviceViewModel;
+    private PaymentListViewModel listViewModel;
     private ProgressView progressView;
 
-    public ProcessPaymentFragment() {
+    public FinalizePaymentFragment() {
     }
 
     @Override
@@ -60,21 +60,13 @@ public class ProcessPaymentFragment extends Fragment {
     }
 
     private void initObservers() {
-        serviceViewModel = new ViewModelProvider(requireActivity()).get(PaymentServiceViewModel.class);
-        serviceViewModel.processPaymentActive.observe(getViewLifecycleOwner(), new Observer<Event>() {
+        listViewModel = new ViewModelProvider(requireActivity()).get(PaymentListViewModel.class);
+        listViewModel.showProgress.observe(getViewLifecycleOwner(), new Observer<ContentEvent>() {
             @Override
-            public void onChanged(@Nullable Event event) {
-                if (event.getIfNotHandled() != null) {
-                    progressView.setVisible(true);
-                }
-            }
-        });
-
-        serviceViewModel.processPaymentFinished.observe(getViewLifecycleOwner(), new Observer<Event>() {
-            @Override
-            public void onChanged(@Nullable Event event) {
-                if (event.getIfNotHandled() != null) {
-                    progressView.setVisible(false);
+            public void onChanged(@Nullable ContentEvent event) {
+                Boolean visible = event != null ? (Boolean) event.getContentIfNotHandled() : null;
+                if (visible != null) {
+                    progressView.setVisible(visible);
                 }
             }
         });

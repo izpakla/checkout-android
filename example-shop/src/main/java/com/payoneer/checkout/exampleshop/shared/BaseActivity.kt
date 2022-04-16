@@ -18,7 +18,7 @@ import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.exampleshop.R
 import com.payoneer.checkout.ui.dialog.PaymentDialogFactory
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener
-import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
+import com.payoneer.checkout.ui.screen.idlingresource.SimpleIdlingResource
 
 /**
  * Base Activity for Activities used in this shop, it stores and retrieves the listUrl value.

@@ -30,11 +30,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
- * Fragment to show the full screen in progress animation
+ * Fragment to show the progress when a payment is being finalized, e.g. CHARGE flow
  */
-public class FinalizePaymentFragment extends Fragment {
-
-    private PaymentListViewModel listViewModel;
+public final class FinalizePaymentFragment extends Fragment {
     private ProgressView progressView;
 
     public FinalizePaymentFragment() {
@@ -60,8 +58,8 @@ public class FinalizePaymentFragment extends Fragment {
     }
 
     private void initObservers() {
-        listViewModel = new ViewModelProvider(requireActivity()).get(PaymentListViewModel.class);
-        listViewModel.showProgress.observe(getViewLifecycleOwner(), new Observer<ContentEvent>() {
+        PaymentListViewModel viewModel = new ViewModelProvider(requireActivity()).get(PaymentListViewModel.class);
+        viewModel.showProgress.observe(getViewLifecycleOwner(), new Observer<ContentEvent>() {
             @Override
             public void onChanged(@Nullable ContentEvent event) {
                 Boolean visible = event != null ? (Boolean) event.getContentIfNotHandled() : null;
@@ -75,7 +73,6 @@ public class FinalizePaymentFragment extends Fragment {
     private void initProgressView(final View view) {
         progressView = new ProgressView(view.findViewById(R.id.layout_progress));
         progressView.setLabels(Localization.translate(CHARGE_TITLE), Localization.translate(CHARGE_TEXT));
-        progressView.setVisible(true);
     }
 
     private void showWarningMessage() {

@@ -37,7 +37,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
- * The CheckoutListActivity showing available payment methods in a recyclerview and handling
+ * The PaymentListActivity showing available payment methods in a recyclerview and handling
  * payment requests.
  */
 public final class PaymentListActivity extends AppCompatActivity {
@@ -49,23 +49,12 @@ public final class PaymentListActivity extends AppCompatActivity {
     private PaymentIdlingResources idlingResources;
     private PaymentDialogHelper dialogHelper;
 
-    /**
-     * Create the start intent for this CheckoutListActivity
-     *
-     * @param context Context to create the intent
-     * @return newly created start intent
-     */
     public static Intent createStartIntent(final Context context, final CheckoutConfiguration configuration) {
         Intent intent = new Intent(context, PaymentListActivity.class);
         intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, configuration);
         return intent;
     }
 
-    /**
-     * Get the transition used when this Activity is being started
-     *
-     * @return the start transition of this activity
-     */
     public static int getStartTransition() {
         return R.anim.no_animation;
     }
@@ -109,9 +98,6 @@ public final class PaymentListActivity extends AppCompatActivity {
         initViewModelObservers();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);

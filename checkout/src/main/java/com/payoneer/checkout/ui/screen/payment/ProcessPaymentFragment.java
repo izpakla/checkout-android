@@ -8,7 +8,13 @@
 
 package com.payoneer.checkout.ui.screen.payment;
 
+import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
+import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
+import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.payoneer.checkout.R;
+import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.ui.screen.ProgressView;
 import com.payoneer.checkout.util.ContentEvent;
 
@@ -16,6 +22,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -23,11 +30,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
- * Fragment for displaying the progress indicator
+ * Fragment for displaying the progress indicator while processing the payment
  */
-public class ProcessPaymentFragment extends Fragment {
-
-    private ProcessPaymentViewModel paymentViewModel;
+public final class ProcessPaymentFragment extends Fragment {
     private ProgressView progressView;
 
     public ProcessPaymentFragment() {
@@ -42,18 +47,31 @@ public class ProcessPaymentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initProgressView(view);
         initObservers();
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showWarningMessage();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
     private void initProgressView(final View view) {
         progressView = new ProgressView(view.findViewById(R.id.layout_progress));
+        progressView.setLabels(Localization.translate(CHARGE_TITLE), Localization.translate(CHARGE_TEXT));
+    }
+
+    private void showWarningMessage() {
+        Snackbar.make(getView(), Localization.translate(CHARGE_INTERRUPTED), Snackbar.LENGTH_LONG).show();
     }
 
     private void initObservers() {
-        paymentViewModel = new ViewModelProvider(requireActivity()).get(ProcessPaymentViewModel.class);
-        paymentViewModel.showProgress.observe(getViewLifecycleOwner(), new Observer<ContentEvent>() {
+        ProcessPaymentViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProcessPaymentViewModel.class);
+        viewModel.showProgress.observe(getViewLifecycleOwner(), new Observer<ContentEvent>() {
             @Override
             public void onChanged(@Nullable ContentEvent contentEvent) {
-                Boolean visible = (Boolean) contentEvent.getContentIfNotHandled();
+                Boolean visible = (contentEvent != null) ? (Boolean) contentEvent.getContentIfNotHandled() : null;
                 if (visible != null) {
                     progressView.setVisible(visible);
                 }

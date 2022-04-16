@@ -45,7 +45,8 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 
 /**
- * The CheckoutListPresenter
+ * PaymentListPresenter contains the business logic to load the payment session, delete saved accounts
+ * and process payment requests.
  */
 final class PaymentListPresenter implements PaymentSessionListener, PaymentServicePresenter {
 
@@ -59,11 +60,6 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
     private PaymentService paymentService;
     private RequestData requestData;
 
-    /**
-     * Create a new CheckoutListPresenter
-     *
-     * @param checkoutConfiguration containing the configuration e.g. listURL
-     */
     PaymentListPresenter(CheckoutConfiguration checkoutConfiguration) {
         this.configuration = checkoutConfiguration;
         sessionService = new PaymentSessionService();

@@ -40,13 +40,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
- * Fragment for displaying the payment session with payment networks and saved accounts.
+ * Fragment for displaying the payment list containing payment networks and saved accounts.
  */
-public class PaymentListFragment extends Fragment {
+public final class PaymentListFragment extends Fragment {
 
     private Toolbar toolbar;
     private PaymentListViewModel listViewModel;
-    private PaymentServiceViewModel serviceViewModel;
     private PaymentList paymentList;
     private ProgressView progressView;
     private SwipeRefreshLayout swipeRefreshLayout;

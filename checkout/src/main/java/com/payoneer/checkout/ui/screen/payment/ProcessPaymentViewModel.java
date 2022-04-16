@@ -19,6 +19,10 @@ import com.payoneer.checkout.util.Event;
 import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
+/**
+ * ProcessPaymentViewModel provides LiveData for the ProcessPaymentActivity and ProcessPaymentPresenter.
+ * It operates within the lifecycle of the ProcessPaymentActivity.
+ */
 final class ProcessPaymentViewModel extends AppContextViewModel {
 
     private final ProcessPaymentPresenter presenter;

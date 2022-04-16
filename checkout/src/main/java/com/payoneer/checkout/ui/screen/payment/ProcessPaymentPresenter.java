@@ -38,7 +38,7 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 
 /**
- * The CheckoutListPresenter
+ * ProcessPaymentPresenter contains the business logic to process and finalize a PresetAccount.
  */
 final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentServicePresenter {
 
@@ -52,11 +52,6 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
     private PaymentService paymentService;
     private RequestData requestData;
 
-    /**
-     * Create a new CheckoutListPresenter
-     *
-     * @param checkoutConfiguration containing the configuration e.g. listURL
-     */
     ProcessPaymentPresenter(CheckoutConfiguration checkoutConfiguration) {
         this.configuration = checkoutConfiguration;
         sessionService = new PaymentSessionService();
@@ -215,7 +210,6 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
                 paymentViewModel.closeWithCheckoutResult(result);
         }
     }
-
 
     private void handleProcessNetworkFailure(final CheckoutResult result) {
         paymentViewModel.showConnectionErrorDialog(new PaymentDialogListener() {

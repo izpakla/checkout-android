@@ -13,12 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-public class PaymentListViewModelFactory implements ViewModelProvider.Factory {
+final class PaymentListViewModelFactory implements ViewModelProvider.Factory {
 
     private final Context applicationContext;
     private final PaymentListPresenter presenter;
 
-    public PaymentListViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentListPresenter presenter) {
+    PaymentListViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentListPresenter presenter) {
         this.applicationContext = applicationContext;
         this.presenter = presenter;
     }

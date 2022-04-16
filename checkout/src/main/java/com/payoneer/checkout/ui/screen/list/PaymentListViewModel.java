@@ -22,6 +22,10 @@ import com.payoneer.checkout.util.Resource;
 import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
+/**
+ * PaymentListViewModel provides LiveData between the PaymentListActivity and PaymentListPresenter.
+ * It operates within the lifecycle of the PaymentListActivity.
+ */
 final class PaymentListViewModel extends AppContextViewModel {
 
     private final PaymentListPresenter presenter;

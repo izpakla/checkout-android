@@ -17,7 +17,7 @@ import android.widget.TextView;
 /**
  * Class managing showing a ProgressBar with optional labels.
  */
-public class ProgressView {
+public final class ProgressView {
 
     private final TextView textHeader;
     private final TextView textInfo;

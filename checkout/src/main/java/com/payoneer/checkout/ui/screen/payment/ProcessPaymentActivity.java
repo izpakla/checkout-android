@@ -36,8 +36,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
- * The CheckoutPaymentActivity showing available payment methods in a recyclerview and handling
- * payment requests.
+ * The ProcessPaymentActivity is used for charging the PresetAccount.
  */
 public final class ProcessPaymentActivity extends AppCompatActivity {
 
@@ -48,29 +47,14 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
     private PaymentIdlingResources idlingResources;
     private PaymentDialogHelper dialogHelper;
 
-    /**
-     * Create the start intent for this CheckoutPaymentActivity
-     *
-     * @param context Context to create the intent
-     * @return newly created start intent
-     */
     public static Intent createStartIntent(final Context context, final CheckoutConfiguration configuration) {
         Intent intent = new Intent(context, ProcessPaymentActivity.class);
         intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, configuration);
         return intent;
     }
 
-    /**
-     * Get the transition used when this Activity is being started
-     *
-     * @return the start transition of this activity
-     */
     public static int getStartTransition() {
         return R.anim.no_animation;
-    }
-
-    public PaymentDialogHelper getPaymentDialogHelper() {
-        return dialogHelper;
     }
 
     @SuppressLint("WrongConstant")
@@ -108,9 +92,6 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         initViewModelObservers();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -161,6 +142,15 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
             }
         });
 
+        paymentViewModel.showProcessPayment.observe(this, new Observer<Event>() {
+            @Override
+            public void onChanged(final Event event) {
+                if (event.getIfNotHandled() != null) {
+                    showProcessPaymentFragment();
+                }
+            }
+        });
+
         serviceViewModel.showFragment.observe(this, new Observer<ContentEvent>() {
             @Override
             public void onChanged(final ContentEvent event) {
@@ -169,15 +159,6 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
                     return;
                 }
                 showFragment(fragment);
-            }
-        });
-
-        paymentViewModel.showProcessPayment.observe(this, new Observer<Event>() {
-            @Override
-            public void onChanged(final Event event) {
-                if (event.getIfNotHandled() != null) {
-                    showProcessPaymentFragment();
-                }
             }
         });
     }

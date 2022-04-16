@@ -31,86 +31,49 @@ import com.payoneer.checkout.redirect.RedirectService;
 import android.content.Context;
 
 /**
- * Interface for network services, a NetworkService is responsible for activating and
- * processing a payment through the supported payment network.
+ * Base class for payment services, a payment service is responsible for processing a payment through the supported payment network.
+ * It also supports deleting previously saved accounts.
  */
 public abstract class PaymentService {
 
     protected PaymentServicePresenter presenter;
 
-    /**
-     *
-     */
-    public abstract void onStop();
-
-    /**
-     * @return
-     */
-    public abstract boolean isPending();
-
-    /**
-     *
-     */
-    public abstract void resume();
-
-    /**
-     * @param requestData
-     */
-    public abstract void processPayment(final RequestData requestData);
-
-    /**
-     * @param requestData
-     */
-    public abstract void deleteAccount(final RequestData requestData);
-
-    /**
-     * @param presenter
-     */
     public void setPresenter(final PaymentServicePresenter presenter) {
         this.presenter = presenter;
     }
 
     /**
-     * @param requestData
-     * @param link
-     * @return
+     * Called when the presenter is stopped, e.g. the user clicked the back button
      */
-    protected Operation createOperation(final RequestData requestData, final String link) {
-        OperationData operationData = new OperationData();
-        operationData.setAccount(new AccountInputData());
-
-        requestData.getPaymentInputValues().copyInto(operationData);
-        return new Operation(requestData.getLink(link), operationData);
-    }
+    public abstract void onStop();
 
     /**
-     * @param requestData
-     * @return
-     */
-    protected DeleteAccount createDeleteAccount(final RequestData requestData) {
-        URL url = requestData.getLink(PaymentLinkType.SELF);
-        return new DeleteAccount(url);
-    }
-
-    /**
-     * @param operationResult
-     * @return
-     */
-    protected boolean requiresRedirect(final OperationResult operationResult) {
-        Redirect redirect = operationResult.getRedirect();
-        String type = redirect != null ? redirect.getType() : null;
-        return PROVIDER.equals(type) || HANDLER3DS2.equals(type);
-    }
-
-    /**
-     * Get the error interaction code.
+     * Is the service currently pending and waiting for input data, e.g. after a redirect request.
      *
-     * @param operationType
-     * @return
+     * @return true when pending, false otherwise
      */
-    protected String getErrorInteractionCode(final String operationType) {
-        return CHARGE.equals(operationType) || PAYOUT.equals(operationType) ? VERIFY : ABORT;
-    }
+    public abstract boolean isPending();
+
+    /**
+     * Resume the service, this should only be called if isPending returns true.
+     *
+     * @throws IllegalStateException when isPending() returns false
+     */
+    public abstract void resume();
+
+    /**
+     * Ask the payment service to process the payment.
+     *
+     * @param requestData containing the data to make the payment request
+     */
+    public abstract void processPayment(final RequestData requestData);
+
+    /**
+     * Ask the payment service to delete the account.
+     *
+     * @param requestData containing the account data that should be deleted
+     */
+    public abstract void deleteAccount(final RequestData requestData);
 
     /**
      * Create a redirect request and open a custom chrome tab to continue processing the request.
@@ -129,5 +92,28 @@ public abstract class PaymentService {
         }
         RedirectService.redirect(context, redirectRequest);
         return redirectRequest;
+    }
+
+    public static Operation createOperation(final RequestData requestData, final String link) {
+        OperationData operationData = new OperationData();
+        operationData.setAccount(new AccountInputData());
+
+        requestData.getPaymentInputValues().copyInto(operationData);
+        return new Operation(requestData.getLink(link), operationData);
+    }
+
+    public static DeleteAccount createDeleteAccount(final RequestData requestData) {
+        URL url = requestData.getLink(PaymentLinkType.SELF);
+        return new DeleteAccount(url);
+    }
+
+    public static boolean requiresRedirect(final OperationResult operationResult) {
+        Redirect redirect = operationResult.getRedirect();
+        String type = redirect != null ? redirect.getType() : null;
+        return PROVIDER.equals(type) || HANDLER3DS2.equals(type);
+    }
+
+    public static String getErrorInteractionCode(final String operationType) {
+        return CHARGE.equals(operationType) || PAYOUT.equals(operationType) ? VERIFY : ABORT;
     }
 }

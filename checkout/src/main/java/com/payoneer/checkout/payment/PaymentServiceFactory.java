@@ -9,7 +9,8 @@
 package com.payoneer.checkout.payment;
 
 /**
- * Interface for all payment network factories. A payment network factory is capable of creating a NetworkService instance for a specific PaymentNetwork type.
+ * Interface for all payment service factories.
+ * A payment service factory is capable of creating a PaymentService instance for a specific PaymentNetwork type.
  */
 public interface PaymentServiceFactory {
 
@@ -23,9 +24,9 @@ public interface PaymentServiceFactory {
     boolean supports(String code, String method);
 
     /**
-     * Create a service for this specific payment network
+     * Create a payment service for this specific payment network
      *
-     * @return the newly created service
+     * @return the newly created payment service
      */
     PaymentService createService();
 }

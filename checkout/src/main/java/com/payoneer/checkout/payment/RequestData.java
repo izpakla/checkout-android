@@ -16,7 +16,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Class holding payment request data
+ * Class holding request data for processing payments and deleting saved accounts.
  */
 public class RequestData implements Parcelable {
 

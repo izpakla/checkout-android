@@ -16,15 +16,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 /**
- * Class for looking up a NetworkService given the code and payment method.
- * This will later be implemented by a ServiceLoader.
+ * Class for looking up a Paymentervice given the code and payment method.
  */
 public class PaymentServiceLookup {
 
     private static final List<PaymentServiceFactory> factories = new CopyOnWriteArrayList<>();
 
     /**
-     * Check if there is a NetworkService that supports the network code and payment method
+     * Check if there is a PaymentService that supports the network code and payment method
      *
      * @param code to be checked if it is supported
      * @param method to be checked if it is supported
@@ -36,7 +35,7 @@ public class PaymentServiceLookup {
     }
 
     /**
-     * Lookup a NetworkService for the network code and payment method
+     * Lookup a PaymentService for the network code and payment method
      *
      * @param code to be used to lookup a NetworkService
      * @param method to be used to lookup a NetworkService

@@ -15,6 +15,10 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 
+/**
+ * PaymentServiceViewModel provides LiveData between the PaymentServicePresenter and the host activity.
+ * It operates within the lifecycle of the host activity.
+ */
 public final class PaymentServiceViewModel extends AppContextViewModel {
 
     private final PaymentServicePresenter presenter;

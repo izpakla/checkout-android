@@ -88,9 +88,7 @@ public final class PaymentListFragment extends Fragment {
     }
 
     private void initSwipeRefreshlayout() {
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            handleOnSwipeRefresh();
-        });
+        swipeRefreshLayout.setOnRefreshListener(this::handleOnSwipeRefresh);
     }
 
     private void initPaymentList(final View view) {
@@ -124,9 +122,11 @@ public final class PaymentListFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
 
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
     }
 
     private void setToolbarTitle(final String title) {
@@ -135,33 +135,27 @@ public final class PaymentListFragment extends Fragment {
 
     private void initObservers() {
         listViewModel = new ViewModelProvider(requireActivity()).get(PaymentListViewModel.class);
-        listViewModel.showPaymentSession.observe(getViewLifecycleOwner(), new Observer<Resource>() {
-            @Override
-            public void onChanged(@Nullable Resource resource) {
-                switch (resource.getStatus()) {
-                    case Resource.SUCCESS:
-                        progressView.setVisible(false);
-                        showPaymentSession((PaymentSession) resource.getData());
-                        break;
-                    case Resource.LOADING:
-                        progressView.setVisible(true);
-                        clearPaymentSession();
-                        break;
-                    case Resource.ERROR:
-                        progressView.setVisible(false);
-                        clearPaymentSession();
-                        // errors will be shown through the popup dialog observers
-                }
+        listViewModel.showPaymentSession.observe(getViewLifecycleOwner(), resource -> {
+            switch (resource.getStatus()) {
+                case Resource.SUCCESS:
+                    progressView.setVisible(false);
+                    showPaymentSession(resource.getData());
+                    break;
+                case Resource.LOADING:
+                    progressView.setVisible(true);
+                    clearPaymentSession();
+                    break;
+                case Resource.ERROR:
+                    progressView.setVisible(false);
+                    clearPaymentSession();
+                    // errors will be shown through the popup dialog observers
             }
         });
 
-        listViewModel.showProgress.observe(getViewLifecycleOwner(), new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(@Nullable ContentEvent event) {
-                Boolean visible = event != null ? (Boolean) event.getContentIfNotHandled() : null;
-                if (visible != null) {
-                    progressView.setVisible(visible);
-                }
+        listViewModel.showProgress.observe(getViewLifecycleOwner(), contentEvent -> {
+            Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
+            if (visible != null) {
+                progressView.setVisible(visible);
             }
         });
     }

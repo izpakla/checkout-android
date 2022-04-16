@@ -22,7 +22,7 @@ import androidx.lifecycle.MutableLiveData;
 public final class PaymentServiceViewModel extends AppContextViewModel {
 
     private final PaymentServicePresenter presenter;
-    public MutableLiveData<ContentEvent> showFragment;
+    public MutableLiveData<ContentEvent<Fragment>> showFragment;
 
     PaymentServiceViewModel(final Context applicationContext, final PaymentServicePresenter presenter) {
         super(applicationContext);
@@ -33,6 +33,6 @@ public final class PaymentServiceViewModel extends AppContextViewModel {
     }
 
     public void showFragment(final Fragment fragment) {
-        showFragment.setValue(new ContentEvent(fragment));
+        showFragment.setValue(new ContentEvent<>(fragment));
     }
 }

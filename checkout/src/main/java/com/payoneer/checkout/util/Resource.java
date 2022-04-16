@@ -27,15 +27,15 @@ public class Resource<T> {
     }
 
     public static <T> Resource<T> success(final T data) {
-        return new Resource(SUCCESS, data, null);
+        return new Resource<>(SUCCESS, data, null);
     }
 
-    public static Resource error(final String message) {
-        return new Resource(ERROR, null, message);
+    public static <T> Resource<T> error(final String message) {
+        return new Resource<>(ERROR, null, message);
     }
 
-    public static Resource loading() {
-        return new Resource(LOADING, null, null);
+    public static <T> Resource<T> loading() {
+        return new Resource<>(LOADING, null, null);
     }
 
     public int getStatus() {

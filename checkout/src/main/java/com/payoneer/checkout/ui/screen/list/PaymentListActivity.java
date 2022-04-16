@@ -20,8 +20,6 @@ import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
-import com.payoneer.checkout.util.ContentEvent;
-import com.payoneer.checkout.util.Resource;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -33,7 +31,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
@@ -76,7 +73,7 @@ public final class PaymentListActivity extends AppCompatActivity {
         if (theme != 0) {
             setTheme(theme);
         }
-        setContentView(R.layout.activity_fragmentcontainer);
+        setContentView(R.layout.activity_fragment_container);
         initViewModels();
 
         idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
@@ -136,52 +133,32 @@ public final class PaymentListActivity extends AppCompatActivity {
     }
 
     private void initViewModelObservers() {
-        listViewModel.closeWithCheckoutResult.observe(this, new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(final ContentEvent contentEvent) {
-                CheckoutResult checkoutResult = (CheckoutResult) contentEvent.getContentIfNotHandled();
-                if (checkoutResult != null) {
-                    closeWithCheckoutResult(checkoutResult);
-                }
+        listViewModel.closeWithCheckoutResult.observe(this, contentEvent -> {
+            CheckoutResult checkoutResult = (CheckoutResult) contentEvent.getContentIfNotHandled();
+            if (checkoutResult != null) {
+                closeWithCheckoutResult(checkoutResult);
             }
         });
 
-        listViewModel.showPaymentSession.observe(this, new Observer<Resource>() {
-            @Override
-            public void onChanged(final Resource resource) {
-                showPaymentListFragment();
-            }
-        });
+        listViewModel.showPaymentSession.observe(this, resource -> showPaymentListFragment());
 
-        listViewModel.showPaymentDialog.observe(this, new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(final ContentEvent contentEvent) {
-                PaymentDialogData data = (PaymentDialogData) contentEvent.getContentIfNotHandled();
-                if (data == null) {
-                    return;
-                }
+        listViewModel.showPaymentDialog.observe(this, contentEvent -> {
+            PaymentDialogData data = contentEvent.getContentIfNotHandled();
+            if (data != null) {
                 dialogHelper.showPaymentDialog(getSupportFragmentManager(), data);
             }
         });
 
-        serviceViewModel.showFragment.observe(this, new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(final ContentEvent event) {
-                Fragment fragment = (Fragment) event.getContentIfNotHandled();
-                if (fragment == null) {
-                    return;
-                }
+        serviceViewModel.showFragment.observe(this, contentEvent -> {
+            Fragment fragment = contentEvent.getContentIfNotHandled();
+            if (fragment != null) {
                 showFragment(fragment);
             }
         });
 
-        listViewModel.showProcessPayment.observe(this, new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(final ContentEvent event) {
-                Boolean finalizePayment = (Boolean) event.getContentIfNotHandled();
-                if (finalizePayment == null) {
-                    return;
-                }
+        listViewModel.showProcessPayment.observe(this, contentEvent -> {
+            Boolean finalizePayment = contentEvent.getContentIfNotHandled();
+            if (finalizePayment != null) {
                 if (finalizePayment) {
                     showFinalizePaymentFragment();
                 } else {

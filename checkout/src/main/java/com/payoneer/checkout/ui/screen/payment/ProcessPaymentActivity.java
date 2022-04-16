@@ -21,7 +21,6 @@ import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
 import com.payoneer.checkout.util.ContentEvent;
-import com.payoneer.checkout.util.Event;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -70,7 +69,7 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         if (theme != 0) {
             setTheme(theme);
         }
-        setContentView(R.layout.activity_fragmentcontainer);
+        setContentView(R.layout.activity_fragment_container);
         initViewModels();
 
         idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
@@ -121,43 +120,29 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
     }
 
     private void initViewModelObservers() {
-        paymentViewModel.closeWithCheckoutResult.observe(this, new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(final ContentEvent contentEvent) {
-                CheckoutResult checkoutResult = (CheckoutResult) contentEvent.getContentIfNotHandled();
-                if (checkoutResult != null) {
-                    closeWithCheckoutResult(checkoutResult);
-                }
+        paymentViewModel.closeWithCheckoutResult.observe(this, contentEvent -> {
+            CheckoutResult checkoutResult = contentEvent.getContentIfNotHandled();
+            if (checkoutResult != null) {
+                closeWithCheckoutResult(checkoutResult);
             }
         });
 
-        paymentViewModel.showPaymentDialog.observe(this, new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(final ContentEvent contentEvent) {
-                PaymentDialogData data = (PaymentDialogData) contentEvent.getContentIfNotHandled();
-                if (data == null) {
-                    return;
-                }
+        paymentViewModel.showPaymentDialog.observe(this, contentEvent -> {
+            PaymentDialogData data = contentEvent.getContentIfNotHandled();
+            if (data != null) {
                 dialogHelper.showPaymentDialog(getSupportFragmentManager(), data);
             }
         });
 
-        paymentViewModel.showProcessPayment.observe(this, new Observer<Event>() {
-            @Override
-            public void onChanged(final Event event) {
-                if (event.getIfNotHandled() != null) {
-                    showProcessPaymentFragment();
-                }
+        paymentViewModel.showProcessPayment.observe(this, event -> {
+            if (event.getIfNotHandled() != null) {
+                showProcessPaymentFragment();
             }
         });
 
-        serviceViewModel.showFragment.observe(this, new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(final ContentEvent event) {
-                Fragment fragment = (Fragment) event.getContentIfNotHandled();
-                if (fragment == null) {
-                    return;
-                }
+        serviceViewModel.showFragment.observe(this, contentEvent -> {
+            Fragment fragment = (Fragment) contentEvent.getContentIfNotHandled();
+            if (fragment != null) {
                 showFragment(fragment);
             }
         });

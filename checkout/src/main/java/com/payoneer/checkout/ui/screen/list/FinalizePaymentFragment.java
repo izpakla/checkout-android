@@ -59,13 +59,10 @@ public final class FinalizePaymentFragment extends Fragment {
 
     private void initObservers() {
         PaymentListViewModel viewModel = new ViewModelProvider(requireActivity()).get(PaymentListViewModel.class);
-        viewModel.showProgress.observe(getViewLifecycleOwner(), new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(@Nullable ContentEvent event) {
-                Boolean visible = event != null ? (Boolean) event.getContentIfNotHandled() : null;
-                if (visible != null) {
-                    progressView.setVisible(visible);
-                }
+        viewModel.showProgress.observe(getViewLifecycleOwner(), contentEvent -> {
+            Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
+            if (visible != null) {
+                progressView.setVisible(visible);
             }
         });
     }
@@ -76,6 +73,10 @@ public final class FinalizePaymentFragment extends Fragment {
     }
 
     private void showWarningMessage() {
-        Snackbar.make(getView(), Localization.translate(CHARGE_INTERRUPTED), Snackbar.LENGTH_LONG).show();
+        View view = getView();
+        String message = Localization.translate(CHARGE_INTERRUPTED);
+        if (view != null && message != null) {
+            Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+        }
     }
 }

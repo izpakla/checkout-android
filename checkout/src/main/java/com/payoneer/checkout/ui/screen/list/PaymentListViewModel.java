@@ -27,13 +27,12 @@ import androidx.lifecycle.MutableLiveData;
  * It operates within the lifecycle of the PaymentListActivity.
  */
 final class PaymentListViewModel extends AppContextViewModel {
-
     private final PaymentListPresenter presenter;
-    MutableLiveData<Resource> showPaymentSession;
-    MutableLiveData<ContentEvent> closeWithCheckoutResult;
-    MutableLiveData<ContentEvent> showPaymentDialog;
-    MutableLiveData<ContentEvent> showProcessPayment;
-    MutableLiveData<ContentEvent> showProgress;
+    MutableLiveData<Resource<PaymentSession>> showPaymentSession;
+    MutableLiveData<ContentEvent<CheckoutResult>> closeWithCheckoutResult;
+    MutableLiveData<ContentEvent<PaymentDialogData>> showPaymentDialog;
+    MutableLiveData<ContentEvent<Boolean>> showProcessPayment;
+    MutableLiveData<ContentEvent<Boolean>> showProgress;
 
     PaymentListViewModel(final Context applicationContext, final PaymentListPresenter presenter) {
         super(applicationContext);
@@ -61,7 +60,7 @@ final class PaymentListViewModel extends AppContextViewModel {
     }
 
     void closeWithCheckoutResult(final CheckoutResult checkoutResult) {
-        closeWithCheckoutResult.setValue(new ContentEvent(checkoutResult));
+        closeWithCheckoutResult.setValue(new ContentEvent<>(checkoutResult));
     }
 
     void showPaymentSession(final int status, final PaymentSession paymentSession, final String message) {
@@ -79,19 +78,19 @@ final class PaymentListViewModel extends AppContextViewModel {
 
     void showConnectionErrorDialog(final PaymentDialogListener listener) {
         PaymentDialogData data = PaymentDialogData.connectionErrorDialog(listener);
-        showPaymentDialog.setValue(new ContentEvent(data));
+        showPaymentDialog.setValue(new ContentEvent<>(data));
     }
 
     void showInteractionDialog(final PaymentDialogListener listener, final InteractionMessage interactionMessage) {
         PaymentDialogData data = PaymentDialogData.interactionDialog(listener, interactionMessage);
-        showPaymentDialog.setValue(new ContentEvent(data));
+        showPaymentDialog.setValue(new ContentEvent<>(data));
     }
 
     void showProcessPayment(Boolean finalizePayment) {
-        showProcessPayment.setValue(new ContentEvent(finalizePayment));
+        showProcessPayment.setValue(new ContentEvent<>(finalizePayment));
     }
 
     void showProgress(Boolean visible) {
-        showProgress.setValue(new ContentEvent(visible));
+        showProgress.setValue(new ContentEvent<>(visible));
     }
 }

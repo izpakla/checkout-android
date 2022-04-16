@@ -16,9 +16,11 @@ import com.google.android.material.snackbar.Snackbar;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.ui.screen.ProgressView;
+import com.payoneer.checkout.ui.widget.TextInputWidget;
 import com.payoneer.checkout.util.ContentEvent;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,18 +65,19 @@ public final class ProcessPaymentFragment extends Fragment {
     }
 
     private void showWarningMessage() {
-        Snackbar.make(getView(), Localization.translate(CHARGE_INTERRUPTED), Snackbar.LENGTH_LONG).show();
+        View view = getView();
+        String message = Localization.translate(CHARGE_INTERRUPTED);
+        if (view != null && message != null) {
+            Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void initObservers() {
         ProcessPaymentViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProcessPaymentViewModel.class);
-        viewModel.showProgress.observe(getViewLifecycleOwner(), new Observer<ContentEvent>() {
-            @Override
-            public void onChanged(@Nullable ContentEvent contentEvent) {
-                Boolean visible = (contentEvent != null) ? (Boolean) contentEvent.getContentIfNotHandled() : null;
-                if (visible != null) {
-                    progressView.setVisible(visible);
-                }
+        viewModel.showProgress.observe(getViewLifecycleOwner(), contentEvent -> {
+            Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
+            if (visible != null) {
+                progressView.setVisible(visible);
             }
         });
     }

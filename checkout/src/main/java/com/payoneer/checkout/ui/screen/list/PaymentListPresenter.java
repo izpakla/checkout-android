@@ -42,6 +42,7 @@ import com.payoneer.checkout.ui.session.PaymentSessionService;
 import com.payoneer.checkout.util.Resource;
 
 import android.content.Context;
+import android.util.Log;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -188,8 +189,8 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
     }
 
     @Override
-    public void showFragment(final Fragment fragment) {
-        serviceViewModel.showFragment(fragment);
+    public void showCustomFragment(final Fragment customFragment) {
+        serviceViewModel.showCustomFragment(customFragment);
     }
 
     @Override
@@ -198,20 +199,26 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
     }
 
     @Override
-    public void onProcessPaymentActive(final RequestData requestData) {
-        boolean finalizePayment = CHARGE.equals(requestData.getListOperationType());
-        listViewModel.showProcessPayment(finalizePayment);
-        listViewModel.showProgress(true);
+    public void onProcessPaymentActive(final RequestData requestData, final boolean interruptible) {
+        boolean transaction = CHARGE.equals(requestData.getListOperationType());
+        listViewModel.onProcessPayment(transaction);
+
+        if (transaction) {
+            listViewModel.showTransactionProgress(true);
+        } else {
+            listViewModel.showPaymentListProgress(true);
+        }
     }
 
     @Override
     public void onDeleteAccountActive(final RequestData requestData) {
-        listViewModel.showProgress(true);
+        listViewModel.showPaymentListProgress(true);
     }
 
     @Override
     public void onProcessPaymentResult(final CheckoutResult result) {
-        listViewModel.showProgress(false);
+        listViewModel.showTransactionProgress(false);
+        listViewModel.showPaymentListProgress(false);
 
         if (UPDATE.equals(paymentSession.getListOperationType())) {
             handleUpdateCheckoutResult(result);
@@ -222,7 +229,7 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
 
     @Override
     public void onDeleteAccountResult(final CheckoutResult result) {
-        listViewModel.showProgress(false);
+        listViewModel.showPaymentListProgress(false);
 
         if (result.isNetworkFailure()) {
             handleDeleteAccountNetworkFailure(result);
@@ -328,6 +335,7 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
                 showMessageAndReloadPaymentSession(interaction, false);
                 break;
             case RETRY:
+                Log.i("AAAA", "In here retry");
                 showMessageAndPaymentSession(interaction, false);
                 break;
             default:

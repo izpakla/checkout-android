@@ -31,18 +31,20 @@ final class PaymentListViewModel extends AppContextViewModel {
     MutableLiveData<Resource<PaymentSession>> showPaymentSession;
     MutableLiveData<ContentEvent<CheckoutResult>> closeWithCheckoutResult;
     MutableLiveData<ContentEvent<PaymentDialogData>> showPaymentDialog;
-    MutableLiveData<ContentEvent<Boolean>> showProcessPayment;
-    MutableLiveData<ContentEvent<Boolean>> showProgress;
+    MutableLiveData<ContentEvent<Boolean>> onProcessPayment;
+    MutableLiveData<ContentEvent<Boolean>> showPaymentListProgress;
+    MutableLiveData<ContentEvent<Boolean>> showTransactionProgress;
 
     PaymentListViewModel(final Context applicationContext, final PaymentListPresenter presenter) {
         super(applicationContext);
         this.presenter = presenter;
 
-        this.showProcessPayment = new MutableLiveData<>();
+        this.onProcessPayment = new MutableLiveData<>();
         this.showPaymentSession = new MutableLiveData<>();
         this.closeWithCheckoutResult = new MutableLiveData<>();
         this.showPaymentDialog = new MutableLiveData<>();
-        this.showProgress = new MutableLiveData<>();
+        this.showPaymentListProgress = new MutableLiveData<>();
+        this.showTransactionProgress = new MutableLiveData<>();
 
         this.presenter.setListViewModel(this);
     }
@@ -86,11 +88,15 @@ final class PaymentListViewModel extends AppContextViewModel {
         showPaymentDialog.setValue(new ContentEvent<>(data));
     }
 
-    void showProcessPayment(Boolean finalizePayment) {
-        showProcessPayment.setValue(new ContentEvent<>(finalizePayment));
+    void onProcessPayment(final Boolean transaction) {
+        onProcessPayment.setValue(new ContentEvent<>(transaction));
     }
 
-    void showProgress(Boolean visible) {
-        showProgress.setValue(new ContentEvent<>(visible));
+    void showPaymentListProgress(final Boolean visible) {
+        showPaymentListProgress.setValue(new ContentEvent<>(visible));
+    }
+
+    void showTransactionProgress(final Boolean visible) {
+        showTransactionProgress.setValue(new ContentEvent<>(visible));
     }
 }

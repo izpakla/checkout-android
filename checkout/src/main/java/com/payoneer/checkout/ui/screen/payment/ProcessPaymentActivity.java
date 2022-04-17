@@ -8,6 +8,10 @@
 
 package com.payoneer.checkout.ui.screen.payment;
 
+import static com.payoneer.checkout.util.FragmentUtils.hideFragment;
+import static com.payoneer.checkout.util.FragmentUtils.removeFragment;
+import static com.payoneer.checkout.util.FragmentUtils.showFragment;
+
 import java.util.List;
 
 import com.payoneer.checkout.CheckoutActivityResult;
@@ -20,7 +24,6 @@ import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
-import com.payoneer.checkout.util.ContentEvent;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -30,8 +33,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
@@ -39,7 +40,10 @@ import androidx.lifecycle.ViewModelProvider;
  */
 public final class ProcessPaymentActivity extends AppCompatActivity {
 
+    final static String FRAGMENT_CUSTOM = "fragment_custom";
+    final static String FRAGMENT_PAYMENT = "fragment_payment";
     final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
+
     private CheckoutConfiguration configuration;
     private ProcessPaymentViewModel paymentViewModel;
     private PaymentServiceViewModel serviceViewModel;
@@ -71,24 +75,11 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_fragment_container);
         initViewModels();
+        initObservers();
 
         idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
         dialogHelper = new PaymentDialogHelper(idlingResources);
         showProcessPaymentFragment();
-    }
-
-    private void initViewModels() {
-        ProcessPaymentPresenter presenter = new ProcessPaymentPresenter(configuration);
-        ProcessPaymentObserver observer = new ProcessPaymentObserver(presenter);
-        getLifecycle().addObserver(observer);
-
-        ViewModelProvider.Factory listFactory = new ProcessPaymentViewModelFactory(getApplicationContext(), presenter);
-        paymentViewModel = new ViewModelProvider(this, listFactory).get(ProcessPaymentViewModel.class);
-
-        ViewModelProvider.Factory serviceFactory = new PaymentServiceViewModelFactory(getApplicationContext(), presenter);
-        serviceViewModel = new ViewModelProvider(this, serviceFactory).get(PaymentServiceViewModel.class);
-
-        initViewModelObservers();
     }
 
     @Override
@@ -111,6 +102,10 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         passActivityResultToFragment(requestCode, resultCode, data);
     }
 
+    public PaymentIdlingResources getPaymentIdlingResources() {
+        return idlingResources;
+    }
+
     private void passActivityResultToFragment(int requestCode, int resultCode, Intent data) {
         FragmentManager fm = getSupportFragmentManager();
         List<Fragment> fragments = fm.getFragments();
@@ -119,7 +114,19 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         }
     }
 
-    private void initViewModelObservers() {
+    private void initViewModels() {
+        ProcessPaymentPresenter presenter = new ProcessPaymentPresenter(configuration);
+        ProcessPaymentObserver observer = new ProcessPaymentObserver(presenter);
+        getLifecycle().addObserver(observer);
+
+        ViewModelProvider.Factory listFactory = new ProcessPaymentViewModelFactory(getApplicationContext(), presenter);
+        paymentViewModel = new ViewModelProvider(this, listFactory).get(ProcessPaymentViewModel.class);
+
+        ViewModelProvider.Factory serviceFactory = new PaymentServiceViewModelFactory(getApplicationContext(), presenter);
+        serviceViewModel = new ViewModelProvider(this, serviceFactory).get(PaymentServiceViewModel.class);
+    }
+
+    private void initObservers() {
         paymentViewModel.closeWithCheckoutResult.observe(this, contentEvent -> {
             CheckoutResult checkoutResult = contentEvent.getContentIfNotHandled();
             if (checkoutResult != null) {
@@ -136,16 +143,24 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
 
         paymentViewModel.showProcessPayment.observe(this, event -> {
             if (event.getIfNotHandled() != null) {
+                removeFragment(getSupportFragmentManager(), FRAGMENT_CUSTOM);
                 showProcessPaymentFragment();
             }
         });
 
-        serviceViewModel.showFragment.observe(this, contentEvent -> {
-            Fragment fragment = (Fragment) contentEvent.getContentIfNotHandled();
-            if (fragment != null) {
-                showFragment(fragment);
+        serviceViewModel.showCustomFragment.observe(this, contentEvent -> {
+            Fragment customFragment = (Fragment) contentEvent.getContentIfNotHandled();
+            if (customFragment != null) {
+                FragmentManager manager = getSupportFragmentManager();
+                hideFragment(manager, FRAGMENT_PAYMENT);
+                showFragment(manager, R.id.fragment_container_view, customFragment, FRAGMENT_CUSTOM);
             }
         });
+    }
+
+    private void showProcessPaymentFragment() {
+        FragmentManager manager = getSupportFragmentManager();
+        showFragment(manager, R.id.fragment_container_view, ProcessPaymentFragment.class, FRAGMENT_PAYMENT);
     }
 
     private void closeWithCheckoutResult(final CheckoutResult checkoutResult) {
@@ -153,25 +168,6 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         CheckoutResultHelper.putIntoResultIntent(checkoutResult, intent);
         setResult(CheckoutActivityResult.getResultCode(checkoutResult), intent);
         close();
-    }
-
-    private void showProcessPaymentFragment() {
-        createFragmentTransaction()
-            .replace(R.id.fragment_container_view, ProcessPaymentFragment.class, null)
-            .commitNow();
-    }
-
-    private void showFragment(Fragment fragment) {
-        createFragmentTransaction()
-            .replace(R.id.fragment_container_view, fragment, null)
-            .commitNow();
-    }
-
-    private FragmentTransaction createFragmentTransaction() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setReorderingAllowed(true);
-        return transaction;
     }
 
     private void close() {

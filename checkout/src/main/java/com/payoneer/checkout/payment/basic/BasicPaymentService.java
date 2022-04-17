@@ -93,7 +93,7 @@ public final class BasicPaymentService extends PaymentService {
     public void processPayment(final RequestData requestData) {
         this.requestData = requestData;
         this.redirectRequest = null;
-        presenter.onProcessPaymentActive(requestData);
+        presenter.onProcessPaymentActive(requestData, false);
 
         Operation operation = createOperation(requestData, PaymentLinkType.OPERATION);
         operationService.postOperation(operation, presenter.getApplicationContext());

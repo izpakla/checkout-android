@@ -14,27 +14,29 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.sharedtest.view.ActivityHelper;
-import com.payoneer.checkout.ui.page.ChargePaymentActivity;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.ui.screen.payment.ProcessPaymentActivity;
 
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.matcher.ViewMatchers;
 
-public final class ChargePaymentHelper {
+public final class ProcessPaymentHelper {
 
-    public static void waitForChargePaymentDialog() {
-        intended(hasComponent(ChargePaymentActivity.class.getName()));
-        ChargePaymentActivity chargeActivity = (ChargePaymentActivity) ActivityHelper.getCurrentActivity();
-        PaymentIdlingResources idlingResources = chargeActivity.getPaymentIdlingResources();
+    public static void waitForProcessPaymentDialog() {
+        intended(hasComponent(ProcessPaymentActivity.class.getName()));
+        ProcessPaymentActivity paymentActivity = (ProcessPaymentActivity) ActivityHelper.getCurrentActivity();
+        PaymentIdlingResources idlingResources = paymentActivity.getPaymentIdlingResources();
         IdlingResource dialogIdlingResource = idlingResources.getDialogIdlingResource();
 
         IdlingRegistry.getInstance().register(dialogIdlingResource);
         onView(ViewMatchers.withId(R.id.alertTitle)).
-            inRoot(withDecorView(not(is(chargeActivity.getWindow().getDecorView())))).
+            inRoot(withDecorView(not(is(paymentActivity.getWindow().getDecorView())))).
             check(matches(isDisplayed()));
 
         idlingResources.resetDialogIdlingResource();

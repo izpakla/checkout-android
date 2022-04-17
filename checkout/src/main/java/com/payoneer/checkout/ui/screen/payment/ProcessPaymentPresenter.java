@@ -91,7 +91,6 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
 
     @Override
     public void onPaymentSessionSuccess(PaymentSession session) {
-        //paymentViewModel.showProgress(false);
         ListResult listResult = session.getListResult();
         Interaction interaction = listResult.getInteraction();
 
@@ -151,8 +150,8 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
     }
 
     @Override
-    public void showFragment(final Fragment fragment) {
-        serviceViewModel.showFragment(fragment);
+    public void showCustomFragment(final Fragment customFragment) {
+        serviceViewModel.showCustomFragment(customFragment);
     }
 
     @Override
@@ -161,7 +160,7 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
     }
 
     @Override
-    public void onProcessPaymentActive(final RequestData requestData) {
+    public void onProcessPaymentActive(final RequestData requestData, final boolean interruptible) {
         paymentViewModel.showProcessPayment();
         paymentViewModel.showProgress(true);
     }

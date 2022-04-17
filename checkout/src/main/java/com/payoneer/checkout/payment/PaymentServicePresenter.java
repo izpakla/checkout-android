@@ -20,11 +20,11 @@ public interface PaymentServicePresenter {
 
     void setPaymentServiceViewModel(final PaymentServiceViewModel serviceViewModel);
 
-    void showFragment(final Fragment fragment);
+    void showCustomFragment(final Fragment fragment);
 
     Context getApplicationContext();
 
-    void onProcessPaymentActive(final RequestData requestData);
+    void onProcessPaymentActive(final RequestData requestData, final boolean interruptible);
 
     void onDeleteAccountActive(final RequestData requestData);
 

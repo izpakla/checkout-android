@@ -16,7 +16,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.ui.screen.ProgressView;
-import com.payoneer.checkout.util.ContentEvent;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,16 +25,15 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
  * Fragment to show the progress when a payment is being finalized, e.g. CHARGE flow
  */
-public final class FinalizePaymentFragment extends Fragment {
+public final class TransactionFragment extends Fragment {
     private ProgressView progressView;
 
-    public FinalizePaymentFragment() {
+    public TransactionFragment() {
     }
 
     @Override
@@ -59,7 +57,7 @@ public final class FinalizePaymentFragment extends Fragment {
 
     private void initObservers() {
         PaymentListViewModel viewModel = new ViewModelProvider(requireActivity()).get(PaymentListViewModel.class);
-        viewModel.showProgress.observe(getViewLifecycleOwner(), contentEvent -> {
+        viewModel.showTransactionProgress.observe(getViewLifecycleOwner(), contentEvent -> {
             Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
             if (visible != null) {
                 progressView.setVisible(visible);

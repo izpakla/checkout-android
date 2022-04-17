@@ -13,7 +13,6 @@ import static com.payoneer.checkout.localization.LocalizationKey.LIST_TITLE;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.payment.PaymentInputValues;
-import com.payoneer.checkout.payment.PaymentServiceViewModel;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
@@ -22,7 +21,7 @@ import com.payoneer.checkout.ui.list.PaymentListListener;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.ui.screen.ProgressView;
-import com.payoneer.checkout.util.ContentEvent;
+import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
 import com.payoneer.checkout.util.Resource;
 
 import android.os.Bundle;
@@ -35,7 +34,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -50,23 +48,25 @@ public final class PaymentListFragment extends Fragment {
     private ProgressView progressView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private PaymentDialogHelper dialogHelper;
+    private PaymentIdlingResources idlingResources;
 
     public PaymentListFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_payment_list, container, false);
-        swipeRefreshLayout = view.findViewById(R.id.layout_swiperefresh);
-        toolbar = view.findViewById(R.id.toolbar);
-        return view;
+        return inflater.inflate(R.layout.fragment_payment_list, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initDialogHelper();
-        initProgressView(view);
-        initSwipeRefreshlayout();
+        idlingResources = ((PaymentListActivity) requireActivity()).getPaymentIdlingResources();
+        dialogHelper = new PaymentDialogHelper(idlingResources);
+        progressView = new ProgressView(view.findViewById(R.id.layout_progress));
+        toolbar = view.findViewById(R.id.toolbar);
+        swipeRefreshLayout = view.findViewById(R.id.layout_swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(this::handleOnSwipeRefresh);
+
         initToolbar();
         initPaymentList(view);
         initObservers();
@@ -76,19 +76,6 @@ public final class PaymentListFragment extends Fragment {
     public void onPause() {
         super.onPause();
         resetSwipeRefreshLayout();
-    }
-
-    private void initDialogHelper() {
-        PaymentListActivity activity = (PaymentListActivity) requireActivity();
-        dialogHelper = activity.getPaymentDialogHelper();
-    }
-
-    private void initProgressView(final View view) {
-        progressView = new ProgressView(view.findViewById(R.id.layout_progress));
-    }
-
-    private void initSwipeRefreshlayout() {
-        swipeRefreshLayout.setOnRefreshListener(this::handleOnSwipeRefresh);
     }
 
     private void initPaymentList(final View view) {
@@ -152,7 +139,7 @@ public final class PaymentListFragment extends Fragment {
             }
         });
 
-        listViewModel.showProgress.observe(getViewLifecycleOwner(), contentEvent -> {
+        listViewModel.showPaymentListProgress.observe(getViewLifecycleOwner(), contentEvent -> {
             Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
             if (visible != null) {
                 progressView.setVisible(visible);
@@ -168,9 +155,8 @@ public final class PaymentListFragment extends Fragment {
     private void showPaymentSession(final PaymentSession paymentSession) {
         setToolbarTitle(Localization.translate(LIST_TITLE));
         paymentList.showPaymentSession(paymentSession);
-        if (paymentSession != null) {
-            swipeRefreshLayout.setEnabled(paymentSession.swipeRefresh());
-        }
+        swipeRefreshLayout.setEnabled(paymentSession.swipeRefresh());
+        idlingResources.setLoadIdlingState(true);
     }
 
     private void handleOnDeleteClicked(final PaymentCard paymentCard) {

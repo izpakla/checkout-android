@@ -147,9 +147,8 @@ public class GooglePayAdyenPaymentService extends PaymentService {
     }
 
     private void handleProcessOnSelectSuccess(final OperationResult operationResult) {
-        Log.i("AAA", "showFragment");
         Fragment fragment = GooglePayAdyenFragment.newInstance();
-        presenter.showFragment(fragment);
+        presenter.showCustomFragment(fragment);
     }
 
     private void handleFinalizePaymentSuccess(final OperationResult operationResult) {

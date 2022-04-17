@@ -22,7 +22,7 @@ import androidx.fragment.app.FragmentManager;
  */
 public final class FragmentUtils {
 
-    public final static void showFragment(final FragmentManager manager, final int resourceId, final Class<? extends Fragment> clazz, final String tag) {
+    public static void showFragment(final FragmentManager manager, final int resourceId, final Class<? extends Fragment> clazz, final String tag) {
         Fragment fragment = manager.findFragmentByTag(tag);
         if (fragment == null) {
             manager.beginTransaction()
@@ -34,7 +34,7 @@ public final class FragmentUtils {
         }
     }
 
-    public final static void hideFragment(final FragmentManager manager, final String tag) {
+    public static void hideFragment(final FragmentManager manager, final String tag) {
         Fragment fragment = manager.findFragmentByTag(tag);
         if (fragment != null) {
             manager.beginTransaction()
@@ -44,7 +44,7 @@ public final class FragmentUtils {
         }
     }
 
-    public final static void removeFragment(final FragmentManager manager, final String tag) {
+    public static void removeFragment(final FragmentManager manager, final String tag) {
         Fragment fragment = manager.findFragmentByTag(tag);
         if (fragment != null) {
             manager.beginTransaction()
@@ -54,7 +54,7 @@ public final class FragmentUtils {
         }
     }
 
-    public final static void showFragment(final FragmentManager manager, final int resourceId, final Fragment fragment, final String tag) {
+    public static void showFragment(final FragmentManager manager, final int resourceId, final Fragment fragment, final String tag) {
         manager.beginTransaction()
             .setReorderingAllowed(true)
             .add(resourceId, fragment, tag)

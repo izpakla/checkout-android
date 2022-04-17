@@ -20,7 +20,7 @@ public interface PaymentServicePresenter {
 
     void setPaymentServiceViewModel(final PaymentServiceViewModel serviceViewModel);
 
-    void showCustomFragment(final Fragment fragment);
+    void showCustomFragment(final Fragment customFragment);
 
     Context getApplicationContext();
 

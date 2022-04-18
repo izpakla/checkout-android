@@ -80,7 +80,7 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
 
     void loadPaymentSession() {
         this.paymentSession = null;
-        paymentViewModel.showProgress(true);
+        paymentViewModel.showProcessPaymentProgress(true);
         sessionService.loadPaymentSession(configuration, paymentViewModel.getApplicationContext());
     }
 
@@ -104,7 +104,7 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
 
     @Override
     public void onPaymentSessionError(Throwable cause) {
-        paymentViewModel.showProgress(false);
+        paymentViewModel.showProcessPaymentProgress(false);
 
         CheckoutResult result = CheckoutResultHelper.fromThrowable(cause);
         if (result.isNetworkFailure()) {
@@ -161,8 +161,7 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
 
     @Override
     public void onProcessPaymentActive(final RequestData requestData, final boolean interruptible) {
-        paymentViewModel.showProcessPayment();
-        paymentViewModel.showProgress(true);
+        paymentViewModel.showProcessPaymentProgress(true);
     }
 
     @Override
@@ -171,7 +170,7 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
 
     @Override
     public void onProcessPaymentResult(final RequestData requestData, final CheckoutResult result) {
-        paymentViewModel.showProgress(false);
+        paymentViewModel.showProcessPaymentProgress(false);
         if (result.isProceed()) {
             paymentViewModel.closeWithCheckoutResult(result);
         } else {

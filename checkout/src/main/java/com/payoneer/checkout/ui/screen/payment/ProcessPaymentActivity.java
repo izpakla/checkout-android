@@ -40,9 +40,9 @@ import androidx.lifecycle.ViewModelProvider;
  */
 public final class ProcessPaymentActivity extends AppCompatActivity {
 
-    final static String FRAGMENT_CUSTOM = "fragment_custom";
-    final static String FRAGMENT_PAYMENT = "fragment_payment";
-    final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
+    private final static String FRAGMENT_CUSTOM = "fragment_custom";
+    private final static String FRAGMENT_PAYMENT = "fragment_payment";
+    private final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
 
     private CheckoutConfiguration configuration;
     private ProcessPaymentViewModel paymentViewModel;
@@ -141,7 +141,7 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
             }
         });
 
-        paymentViewModel.showProcessPayment.observe(this, event -> {
+        paymentViewModel.showProcessPaymentFragment.observe(this, event -> {
             if (event.getIfNotHandled() != null) {
                 removeFragment(getSupportFragmentManager(), FRAGMENT_CUSTOM);
                 showProcessPaymentFragment();

@@ -42,11 +42,11 @@ import androidx.lifecycle.ViewModelProvider;
  */
 public final class PaymentListActivity extends AppCompatActivity {
 
-    final static String FRAGMENT_TRANSACTION = "fragment_transaction";
-    final static String FRAGMENT_PAYMENTLIST = "fragment_paymentlist";
-    final static String FRAGMENT_CUSTOM = "fragment_custom";
+    private final static String FRAGMENT_TRANSACTION = "fragment_transaction";
+    private final static String FRAGMENT_PAYMENTLIST = "fragment_paymentlist";
+    private final static String FRAGMENT_CUSTOM = "fragment_custom";
+    private final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
 
-    final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
     private CheckoutConfiguration configuration;
     private PaymentListViewModel listViewModel;
     private PaymentServiceViewModel serviceViewModel;
@@ -164,7 +164,7 @@ public final class PaymentListActivity extends AppCompatActivity {
             }
         });
 
-        listViewModel.showPaymentList.observe(this, event -> {
+        listViewModel.showPaymentListFragment.observe(this, event -> {
             if (event.getIfNotHandled() != null) {
                 FragmentManager manager = getSupportFragmentManager();
                 removeFragment(manager, FRAGMENT_CUSTOM);
@@ -173,7 +173,7 @@ public final class PaymentListActivity extends AppCompatActivity {
             }
         });
 
-        listViewModel.showTransaction.observe(this, event -> {
+        listViewModel.showTransactionFragment.observe(this, event -> {
             if (event.getIfNotHandled() != null) {
                 FragmentManager manager = getSupportFragmentManager();
                 removeFragment(manager, FRAGMENT_CUSTOM);

@@ -24,17 +24,17 @@ import androidx.lifecycle.MutableLiveData;
  * It operates within the lifecycle of the ProcessPaymentActivity.
  */
 final class ProcessPaymentViewModel extends AppContextViewModel {
-    MutableLiveData<ContentEvent<Boolean>> showProgress;
+    MutableLiveData<ContentEvent<Boolean>> showProcessPaymentProgress;
     MutableLiveData<ContentEvent<CheckoutResult>> closeWithCheckoutResult;
     MutableLiveData<ContentEvent<PaymentDialogData>> showPaymentDialog;
-    MutableLiveData<Event> showProcessPayment;
+    MutableLiveData<Event> showProcessPaymentFragment;
 
     ProcessPaymentViewModel(final Context applicationContext, final ProcessPaymentPresenter presenter) {
         super(applicationContext);
-        this.showProgress = new MutableLiveData<>();
+        this.showProcessPaymentProgress = new MutableLiveData<>();
         this.closeWithCheckoutResult = new MutableLiveData<>();
         this.showPaymentDialog = new MutableLiveData<>();
-        this.showProcessPayment = new MutableLiveData<>();
+        this.showProcessPaymentFragment = new MutableLiveData<>();
 
         presenter.setPaymentViewModel(this);
     }
@@ -43,12 +43,9 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
         closeWithCheckoutResult.setValue(new ContentEvent<>(checkoutResult));
     }
 
-    void showProcessPayment() {
-        showProcessPayment.setValue(new Event());
-    }
-
-    void showProgress(final Boolean visible) {
-        showProgress.setValue(new ContentEvent<>(visible));
+    void showProcessPaymentProgress(final Boolean visible) {
+        showProcessPaymentFragment.setValue(new Event());
+        showProcessPaymentProgress.setValue(new ContentEvent<>(visible));
     }
 
     void showConnectionErrorDialog(final PaymentDialogListener listener) {
@@ -60,6 +57,4 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
         PaymentDialogData data = PaymentDialogData.interactionDialog(listener, interactionMessage);
         showPaymentDialog.setValue(new ContentEvent<>(data));
     }
-
-
 }

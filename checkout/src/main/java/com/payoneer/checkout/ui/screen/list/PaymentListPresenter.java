@@ -88,7 +88,7 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
 
     void loadPaymentSession() {
         this.paymentSession = null;
-        listViewModel.showPaymentSession(Resource.LOADING, null, null);
+        listViewModel.showPaymentSession(Resource.LOADING, null);
         sessionService.loadPaymentSession(configuration, listViewModel.getApplicationContext());
     }
 
@@ -144,7 +144,7 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
 
     @Override
     public void onPaymentSessionError(Throwable cause) {
-        listViewModel.showPaymentSession(Resource.ERROR, null, null);
+        listViewModel.showPaymentSession(Resource.ERROR, null);
 
         CheckoutResult result = CheckoutResultHelper.fromThrowable(cause);
         if (result.isNetworkFailure()) {
@@ -184,7 +184,7 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
             return;
         }
         this.paymentSession = paymentSession;
-        listViewModel.showPaymentSession(Resource.SUCCESS, paymentSession, null);
+        listViewModel.showPaymentSession(Resource.SUCCESS, paymentSession);
     }
 
     @Override
@@ -356,7 +356,7 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
     private void showMessageAndResetPaymentSession(final Interaction interaction, final boolean deleteFlow) {
         InteractionMessage message = createInteractionMessage(interaction, deleteFlow);
         listViewModel.showInteractionDialog(null, message);
-        listViewModel.showPaymentSession(Resource.SUCCESS, paymentSession, null);
+        listViewModel.showPaymentSession(Resource.SUCCESS, paymentSession);
     }
 
     private void showMessageAndReloadPaymentSession(final Interaction interaction, final boolean deleteFlow) {
@@ -384,7 +384,7 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
     private void showMessageAndPaymentSession(final Interaction interaction, final boolean deleteFlow) {
         InteractionMessage message = createInteractionMessage(interaction, deleteFlow);
         listViewModel.showInteractionDialog(null, message);
-        listViewModel.showPaymentSession(Resource.SUCCESS, paymentSession, null);
+        listViewModel.showPaymentSession(Resource.SUCCESS, paymentSession);
     }
 
     private PaymentService loadPaymentService(final String code, final String paymentMethod) throws PaymentException {

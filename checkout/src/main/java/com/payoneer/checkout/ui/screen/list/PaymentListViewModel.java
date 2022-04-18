@@ -35,8 +35,8 @@ final class PaymentListViewModel extends AppContextViewModel {
     MutableLiveData<Resource<PaymentSession>> showPaymentSession;
     MutableLiveData<ContentEvent<CheckoutResult>> closeWithCheckoutResult;
     MutableLiveData<ContentEvent<PaymentDialogData>> showPaymentDialog;
-    MutableLiveData<Event> showPaymentList;
-    MutableLiveData<Event> showTransaction;
+    MutableLiveData<Event> showPaymentListFragment;
+    MutableLiveData<Event> showTransactionFragment;
     MutableLiveData<ContentEvent<Boolean>> showPaymentListProgress;
     MutableLiveData<ContentEvent<Boolean>> showTransactionProgress;
 
@@ -44,8 +44,8 @@ final class PaymentListViewModel extends AppContextViewModel {
         super(applicationContext);
         this.presenter = presenter;
 
-        this.showPaymentList = new MutableLiveData<>();
-        this.showTransaction = new MutableLiveData<>();
+        this.showPaymentListFragment = new MutableLiveData<>();
+        this.showTransactionFragment = new MutableLiveData<>();
         this.showPaymentSession = new MutableLiveData<>();
         this.closeWithCheckoutResult = new MutableLiveData<>();
         this.showPaymentDialog = new MutableLiveData<>();
@@ -71,8 +71,8 @@ final class PaymentListViewModel extends AppContextViewModel {
         closeWithCheckoutResult.setValue(new ContentEvent<>(checkoutResult));
     }
 
-    void showPaymentSession(final int status, final PaymentSession paymentSession, final String message) {
-        showPaymentList.setValue(new Event());
+    void showPaymentSession(final int status, final PaymentSession paymentSession) {
+        showPaymentListFragment.setValue(new Event());
         switch (status) {
             case Resource.SUCCESS:
                 showPaymentSession.setValue(Resource.success(paymentSession));
@@ -81,7 +81,7 @@ final class PaymentListViewModel extends AppContextViewModel {
                 showPaymentSession.setValue(Resource.loading());
                 break;
             case Resource.ERROR:
-                showPaymentSession.setValue(Resource.error(message));
+                showPaymentSession.setValue(Resource.error(null));
         }
     }
 
@@ -98,16 +98,16 @@ final class PaymentListViewModel extends AppContextViewModel {
     void showProcessPaymentProgress(final String operationType, final boolean visible) {
         boolean transaction = CHARGE.equals(operationType);
         if (transaction) {
-            showTransaction.setValue(new Event());
+            showTransactionFragment.setValue(new Event());
             showTransactionProgress.setValue(new ContentEvent<>(visible));
         } else {
-            showPaymentList.setValue(new Event());
+            showPaymentListFragment.setValue(new Event());
             showPaymentListProgress.setValue(new ContentEvent<>(visible));
         }
     }
 
     void showDeleteAccountProgress(final boolean visible) {
-        showPaymentList.setValue(new Event());
+        showPaymentListFragment.setValue(new Event());
         showPaymentListProgress.setValue(new ContentEvent<>(visible));
     }
 }

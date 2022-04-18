@@ -15,7 +15,6 @@ import static com.payoneer.checkout.model.InteractionCode.TRY_OTHER_ACCOUNT;
 import static com.payoneer.checkout.model.InteractionCode.TRY_OTHER_NETWORK;
 import static com.payoneer.checkout.model.InteractionReason.OK;
 import static com.payoneer.checkout.model.InteractionReason.PENDING;
-import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
 import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 
 import java.util.Objects;

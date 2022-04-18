@@ -141,7 +141,7 @@ public final class PaymentListActivity extends AppCompatActivity {
 
     private void initObservers() {
         listViewModel.closeWithCheckoutResult.observe(this, contentEvent -> {
-            CheckoutResult checkoutResult = (CheckoutResult) contentEvent.getContentIfNotHandled();
+            CheckoutResult checkoutResult = contentEvent.getContentIfNotHandled();
             if (checkoutResult != null) {
                 closeWithCheckoutResult(checkoutResult);
             }

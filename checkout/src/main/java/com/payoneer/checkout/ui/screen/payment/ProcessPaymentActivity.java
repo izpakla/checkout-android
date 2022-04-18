@@ -149,7 +149,7 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         });
 
         serviceViewModel.showCustomFragment.observe(this, contentEvent -> {
-            Fragment customFragment = (Fragment) contentEvent.getContentIfNotHandled();
+            Fragment customFragment = contentEvent.getContentIfNotHandled();
             if (customFragment != null) {
                 FragmentManager manager = getSupportFragmentManager();
                 hideFragment(manager, FRAGMENT_PAYMENT);

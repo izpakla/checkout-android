@@ -147,10 +147,6 @@ public final class PaymentListActivity extends AppCompatActivity {
             }
         });
 
-        listViewModel.showPaymentSession.observe(this, resource -> {
-            showPaymentListFragment();
-        });
-
         listViewModel.showPaymentDialog.observe(this, contentEvent -> {
             PaymentDialogData data = contentEvent.getContentIfNotHandled();
             if (data != null) {

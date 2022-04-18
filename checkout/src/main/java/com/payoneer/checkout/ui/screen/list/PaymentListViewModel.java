@@ -72,6 +72,7 @@ final class PaymentListViewModel extends AppContextViewModel {
     }
 
     void showPaymentSession(final int status, final PaymentSession paymentSession, final String message) {
+        showPaymentList.setValue(new Event());
         switch (status) {
             case Resource.SUCCESS:
                 showPaymentSession.setValue(Resource.success(paymentSession));

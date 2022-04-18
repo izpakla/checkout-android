@@ -98,15 +98,15 @@ final class PaymentListViewModel extends AppContextViewModel {
         boolean transaction = CHARGE.equals(operationType);
         if (transaction) {
             showTransaction.setValue(new Event());
-            showTransactionProgress.setValue(new ContentEvent(visible));
+            showTransactionProgress.setValue(new ContentEvent<>(visible));
         } else {
             showPaymentList.setValue(new Event());
-            showPaymentListProgress.setValue(new ContentEvent(visible));
+            showPaymentListProgress.setValue(new ContentEvent<>(visible));
         }
     }
 
     void showDeleteAccountProgress(final boolean visible) {
         showPaymentList.setValue(new Event());
-        showPaymentListProgress.setValue(new ContentEvent(visible));
+        showPaymentListProgress.setValue(new ContentEvent<>(visible));
     }
 }

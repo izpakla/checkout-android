@@ -183,7 +183,6 @@ public final class PaymentListActivity extends AppCompatActivity {
                 removeFragment(manager, FRAGMENT_CUSTOM);
                 hideFragment(manager, FRAGMENT_PAYMENTLIST);
                 showFragment(manager, R.id.fragment_container_view, TransactionFragment.class, FRAGMENT_TRANSACTION);
-
             }
         });
     }

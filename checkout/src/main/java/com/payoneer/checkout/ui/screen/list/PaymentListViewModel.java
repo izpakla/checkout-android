@@ -71,6 +71,16 @@ final class PaymentListViewModel extends AppContextViewModel {
         closeWithCheckoutResult.setValue(new ContentEvent<>(checkoutResult));
     }
 
+    void showConnectionErrorDialog(final PaymentDialogListener listener) {
+        PaymentDialogData data = PaymentDialogData.connectionErrorDialog(listener);
+        showPaymentDialog.setValue(new ContentEvent<>(data));
+    }
+
+    void showInteractionDialog(final PaymentDialogListener listener, final InteractionMessage interactionMessage) {
+        PaymentDialogData data = PaymentDialogData.interactionDialog(listener, interactionMessage);
+        showPaymentDialog.setValue(new ContentEvent<>(data));
+    }
+
     void showPaymentSession(final int status, final PaymentSession paymentSession) {
         showPaymentListFragment.setValue(new Event());
         switch (status) {
@@ -83,16 +93,6 @@ final class PaymentListViewModel extends AppContextViewModel {
             case Resource.ERROR:
                 showPaymentSession.setValue(Resource.error(null));
         }
-    }
-
-    void showConnectionErrorDialog(final PaymentDialogListener listener) {
-        PaymentDialogData data = PaymentDialogData.connectionErrorDialog(listener);
-        showPaymentDialog.setValue(new ContentEvent<>(data));
-    }
-
-    void showInteractionDialog(final PaymentDialogListener listener, final InteractionMessage interactionMessage) {
-        PaymentDialogData data = PaymentDialogData.interactionDialog(listener, interactionMessage);
-        showPaymentDialog.setValue(new ContentEvent<>(data));
     }
 
     void showProcessPaymentProgress(final String operationType, final boolean visible) {

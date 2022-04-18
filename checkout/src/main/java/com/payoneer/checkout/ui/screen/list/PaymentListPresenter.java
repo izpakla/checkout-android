@@ -16,7 +16,10 @@ import static com.payoneer.checkout.model.InteractionCode.TRY_OTHER_NETWORK;
 import static com.payoneer.checkout.model.InteractionReason.OK;
 import static com.payoneer.checkout.model.InteractionReason.PENDING;
 import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
+import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_CODE;
+import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_REASON;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.payoneer.checkout.CheckoutConfiguration;
@@ -27,6 +30,9 @@ import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.ListResult;
+import com.payoneer.checkout.model.OperationResult;
+import com.payoneer.checkout.model.Parameter;
+import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceLookup;
@@ -36,12 +42,14 @@ import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
+import com.payoneer.checkout.ui.model.PresetCard;
 import com.payoneer.checkout.ui.session.PaymentSessionListener;
 import com.payoneer.checkout.ui.session.PaymentSessionService;
+import com.payoneer.checkout.util.PaymentUtils;
 import com.payoneer.checkout.util.Resource;
 
 import android.content.Context;
-import android.util.Log;
+import android.text.TextUtils;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -110,6 +118,10 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
     }
 
     void processPaymentCard(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
+        if (paymentCard instanceof PresetCard) {
+            processPresetCard((PresetCard) paymentCard);
+            return;
+        }
         try {
             paymentService = loadPaymentService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
             paymentService.setPresenter(this);
@@ -326,7 +338,6 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
                 showMessageAndReloadPaymentSession(interaction, false);
                 break;
             case RETRY:
-                Log.i("AAAA", "In here retry");
                 showMessageAndPaymentSession(interaction, false);
                 break;
             default:
@@ -393,6 +404,23 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
             throw new PaymentException("Missing PaymentService for: " + code + ", " + paymentMethod);
         }
         return service;
+    }
+
+    private void processPresetCard(final PresetCard card) {
+        Redirect redirect = card.getPresetAccount().getRedirect();
+        List<Parameter> parameters = redirect.getParameters();
+
+        String code = PaymentUtils.getParameterValue(INTERACTION_CODE, parameters);
+        String reason = PaymentUtils.getParameterValue(INTERACTION_REASON, parameters);
+        if (TextUtils.isEmpty(code) || TextUtils.isEmpty(reason)) {
+            closeWithErrorMessage("Missing Interaction code and reason inside PresetAccount.redirect");
+            return;
+        }
+        OperationResult result = new OperationResult();
+        result.setResultInfo("PresetAccount selected");
+        result.setInteraction(new Interaction(code, reason));
+        result.setRedirect(redirect);
+        listViewModel.closeWithCheckoutResult(new CheckoutResult(result));
     }
 
     private InteractionMessage createInteractionMessage(final Interaction interaction, final boolean deleteFlow) {

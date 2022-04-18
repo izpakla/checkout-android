@@ -170,7 +170,7 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
     }
 
     @Override
-    public void onProcessPaymentResult(final CheckoutResult result) {
+    public void onProcessPaymentResult(final RequestData requestData, final CheckoutResult result) {
         paymentViewModel.showProgress(false);
         if (result.isProceed()) {
             paymentViewModel.closeWithCheckoutResult(result);
@@ -180,7 +180,7 @@ final class ProcessPaymentPresenter implements PaymentSessionListener, PaymentSe
     }
 
     @Override
-    public void onDeleteAccountResult(final CheckoutResult result) {
+    public void onDeleteAccountResult(final RequestData requestData, final CheckoutResult result) {
     }
 
     private void processPayment() {

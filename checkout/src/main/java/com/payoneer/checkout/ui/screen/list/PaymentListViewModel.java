@@ -8,6 +8,8 @@
 
 package com.payoneer.checkout.ui.screen.list;
 
+import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
+
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.payment.PaymentInputValues;
@@ -17,6 +19,7 @@ import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.util.AppContextViewModel;
 import com.payoneer.checkout.util.ContentEvent;
+import com.payoneer.checkout.util.Event;
 import com.payoneer.checkout.util.Resource;
 
 import android.content.Context;
@@ -27,11 +30,13 @@ import androidx.lifecycle.MutableLiveData;
  * It operates within the lifecycle of the PaymentListActivity.
  */
 final class PaymentListViewModel extends AppContextViewModel {
+
     private final PaymentListPresenter presenter;
     MutableLiveData<Resource<PaymentSession>> showPaymentSession;
     MutableLiveData<ContentEvent<CheckoutResult>> closeWithCheckoutResult;
     MutableLiveData<ContentEvent<PaymentDialogData>> showPaymentDialog;
-    MutableLiveData<ContentEvent<Boolean>> onProcessPayment;
+    MutableLiveData<Event> showPaymentList;
+    MutableLiveData<Event> showTransaction;
     MutableLiveData<ContentEvent<Boolean>> showPaymentListProgress;
     MutableLiveData<ContentEvent<Boolean>> showTransactionProgress;
 
@@ -39,7 +44,8 @@ final class PaymentListViewModel extends AppContextViewModel {
         super(applicationContext);
         this.presenter = presenter;
 
-        this.onProcessPayment = new MutableLiveData<>();
+        this.showPaymentList = new MutableLiveData<>();
+        this.showTransaction = new MutableLiveData<>();
         this.showPaymentSession = new MutableLiveData<>();
         this.closeWithCheckoutResult = new MutableLiveData<>();
         this.showPaymentDialog = new MutableLiveData<>();
@@ -88,15 +94,19 @@ final class PaymentListViewModel extends AppContextViewModel {
         showPaymentDialog.setValue(new ContentEvent<>(data));
     }
 
-    void onProcessPayment(final Boolean transaction) {
-        onProcessPayment.setValue(new ContentEvent<>(transaction));
+    void showProcessPaymentProgress(final String operationType, final boolean visible) {
+        boolean transaction = CHARGE.equals(operationType);
+        if (transaction) {
+            showTransaction.setValue(new Event());
+            showTransactionProgress.setValue(new ContentEvent(visible));
+        } else {
+            showPaymentList.setValue(new Event());
+            showPaymentListProgress.setValue(new ContentEvent(visible));
+        }
     }
 
-    void showPaymentListProgress(final Boolean visible) {
-        showPaymentListProgress.setValue(new ContentEvent<>(visible));
-    }
-
-    void showTransactionProgress(final Boolean visible) {
-        showTransactionProgress.setValue(new ContentEvent<>(visible));
+    void showDeleteAccountProgress(final boolean visible) {
+        showPaymentList.setValue(new Event());
+        showPaymentListProgress.setValue(new ContentEvent(visible));
     }
 }

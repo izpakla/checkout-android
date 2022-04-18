@@ -200,25 +200,17 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
 
     @Override
     public void onProcessPaymentActive(final RequestData requestData, final boolean interruptible) {
-        boolean transaction = CHARGE.equals(requestData.getListOperationType());
-        listViewModel.onProcessPayment(transaction);
-
-        if (transaction) {
-            listViewModel.showTransactionProgress(true);
-        } else {
-            listViewModel.showPaymentListProgress(true);
-        }
+        listViewModel.showProcessPaymentProgress(requestData.getOperationType(), true);
     }
 
     @Override
     public void onDeleteAccountActive(final RequestData requestData) {
-        listViewModel.showPaymentListProgress(true);
+        listViewModel.showDeleteAccountProgress(true);
     }
 
     @Override
-    public void onProcessPaymentResult(final CheckoutResult result) {
-        listViewModel.showTransactionProgress(false);
-        listViewModel.showPaymentListProgress(false);
+    public void onProcessPaymentResult(final RequestData requestData, final CheckoutResult result) {
+        listViewModel.showProcessPaymentProgress(requestData.getOperationType(), false);
 
         if (UPDATE.equals(paymentSession.getListOperationType())) {
             handleUpdateCheckoutResult(result);
@@ -228,8 +220,8 @@ final class PaymentListPresenter implements PaymentSessionListener, PaymentServi
     }
 
     @Override
-    public void onDeleteAccountResult(final CheckoutResult result) {
-        listViewModel.showPaymentListProgress(false);
+    public void onDeleteAccountResult(final RequestData requestData, final CheckoutResult result) {
+        listViewModel.showDeleteAccountProgress(false);
 
         if (result.isNetworkFailure()) {
             handleDeleteAccountNetworkFailure(result);

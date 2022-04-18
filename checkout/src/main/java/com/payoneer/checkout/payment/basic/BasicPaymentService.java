@@ -124,9 +124,9 @@ public final class BasicPaymentService extends PaymentService {
         Log.i("checkout-sdk", "onRedirectResult: " + checkoutResult);
 
         if (request.getRequestCode() == PROCESSPAYMENT_REQUEST_CODE) {
-            presenter.onProcessPaymentResult(checkoutResult);
+            presenter.onProcessPaymentResult(requestData, checkoutResult);
         } else {
-            presenter.onDeleteAccountResult(checkoutResult);
+            presenter.onDeleteAccountResult(requestData, checkoutResult);
         }
     }
 
@@ -136,11 +136,11 @@ public final class BasicPaymentService extends PaymentService {
         Log.i("checkout-sdk", "handleProcessPaymentSuccess: " + checkoutResult);
 
         if (!PROCEED.equals(interaction.getCode())) {
-            presenter.onProcessPaymentResult(checkoutResult);
+            presenter.onProcessPaymentResult(requestData, checkoutResult);
             return;
         }
         if (!requiresRedirect(operationResult)) {
-            presenter.onProcessPaymentResult(checkoutResult);
+            presenter.onProcessPaymentResult(requestData, checkoutResult);
             return;
         }
         try {
@@ -154,7 +154,7 @@ public final class BasicPaymentService extends PaymentService {
         String code = getErrorInteractionCode(requestData.getOperationType());
         CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(code, cause);
         Log.i("checkout-sdk", "handleProcessPaymentError: " + checkoutResult);
-        presenter.onProcessPaymentResult(checkoutResult);
+        presenter.onProcessPaymentResult(requestData, checkoutResult);
     }
 
     private void handleDeleteAccountSuccess(OperationResult operationResult) {
@@ -163,11 +163,11 @@ public final class BasicPaymentService extends PaymentService {
         Log.i("checkout-sdk", "handleDeleteAccountSuccess: " + checkoutResult);
 
         if (!PROCEED.equals(interaction.getCode())) {
-            presenter.onDeleteAccountResult(checkoutResult);
+            presenter.onDeleteAccountResult(requestData, checkoutResult);
             return;
         }
         if (!requiresRedirect(operationResult)) {
-            presenter.onDeleteAccountResult(checkoutResult);
+            presenter.onDeleteAccountResult(requestData, checkoutResult);
             return;
         }
         try {
@@ -180,6 +180,6 @@ public final class BasicPaymentService extends PaymentService {
     private void handleDeleteAccountError(Throwable cause) {
         CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(ABORT, cause);
         Log.i("checkout-sdk", "handleDeleteAccountError: " + checkoutResult);
-        presenter.onDeleteAccountResult(checkoutResult);
+        presenter.onDeleteAccountResult(requestData, checkoutResult);
     }
 }

@@ -28,7 +28,7 @@ public final class FragmentUtils {
             manager.beginTransaction()
                 .setReorderingAllowed(true)
                 .add(resourceId, clazz, null, tag)
-                .commit();
+                .commitNow();
         } else {
             manager.beginTransaction().show(fragment).commitNow();
         }
@@ -40,7 +40,7 @@ public final class FragmentUtils {
             manager.beginTransaction()
                 .setReorderingAllowed(true)
                 .hide(fragment)
-                .commit();
+                .commitNow();
         }
     }
 
@@ -50,7 +50,7 @@ public final class FragmentUtils {
             manager.beginTransaction()
                 .setReorderingAllowed(true)
                 .remove(fragment)
-                .commit();
+                .commitNow();
         }
     }
 
@@ -58,7 +58,7 @@ public final class FragmentUtils {
         manager.beginTransaction()
             .setReorderingAllowed(true)
             .add(resourceId, fragment, tag)
-            .commit();
+            .commitNow();
     }
 }
 

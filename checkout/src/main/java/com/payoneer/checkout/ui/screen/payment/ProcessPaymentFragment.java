@@ -57,7 +57,6 @@ public final class ProcessPaymentFragment extends Fragment {
 
     private void initProgressView(final View view) {
         progressView = new ProgressView(view.findViewById(R.id.layout_progress));
-        progressView.setLabels(Localization.translate(CHARGE_TITLE), Localization.translate(CHARGE_TEXT));
     }
 
     private void showWarningMessage() {
@@ -73,6 +72,7 @@ public final class ProcessPaymentFragment extends Fragment {
         viewModel.showProgress.observe(getViewLifecycleOwner(), contentEvent -> {
             Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
             if (visible != null) {
+                progressView.setLabels(Localization.translate(CHARGE_TITLE), Localization.translate(CHARGE_TEXT));
                 progressView.setVisible(visible);
             }
         });

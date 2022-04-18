@@ -63,10 +63,6 @@ public final class PaymentListActivity extends AppCompatActivity {
         return R.anim.no_animation;
     }
 
-    public PaymentDialogHelper getPaymentDialogHelper() {
-        return dialogHelper;
-    }
-
     @SuppressLint("WrongConstant")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,19 +168,22 @@ public final class PaymentListActivity extends AppCompatActivity {
             }
         });
 
-        listViewModel.onProcessPayment.observe(this, contentEvent -> {
-            Boolean transaction = contentEvent.getContentIfNotHandled();
-            if (transaction != null) {
+        listViewModel.showPaymentList.observe(this, event -> {
+            if (event.getIfNotHandled() != null) {
                 FragmentManager manager = getSupportFragmentManager();
                 removeFragment(manager, FRAGMENT_CUSTOM);
+                hideFragment(manager, FRAGMENT_TRANSACTION);
+                showPaymentListFragment();
+            }
+        });
 
-                if (transaction) {
-                    hideFragment(manager, FRAGMENT_PAYMENTLIST);
-                    showFragment(manager, R.id.fragment_container_view, TransactionFragment.class, FRAGMENT_TRANSACTION);
-                } else {
-                    hideFragment(manager, FRAGMENT_TRANSACTION);
-                    showPaymentListFragment();
-                }
+        listViewModel.showTransaction.observe(this, event -> {
+            if (event.getIfNotHandled() != null) {
+                FragmentManager manager = getSupportFragmentManager();
+                removeFragment(manager, FRAGMENT_CUSTOM);
+                hideFragment(manager, FRAGMENT_PAYMENTLIST);
+                showFragment(manager, R.id.fragment_container_view, TransactionFragment.class, FRAGMENT_TRANSACTION);
+
             }
         });
     }

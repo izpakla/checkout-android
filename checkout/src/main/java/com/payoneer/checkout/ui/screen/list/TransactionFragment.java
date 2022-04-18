@@ -60,6 +60,7 @@ public final class TransactionFragment extends Fragment {
         viewModel.showTransactionProgress.observe(getViewLifecycleOwner(), contentEvent -> {
             Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
             if (visible != null) {
+                progressView.setLabels(Localization.translate(CHARGE_TITLE), Localization.translate(CHARGE_TEXT));
                 progressView.setVisible(visible);
             }
         });
@@ -67,7 +68,6 @@ public final class TransactionFragment extends Fragment {
 
     private void initProgressView(final View view) {
         progressView = new ProgressView(view.findViewById(R.id.layout_progress));
-        progressView.setLabels(Localization.translate(CHARGE_TITLE), Localization.translate(CHARGE_TEXT));
     }
 
     private void showWarningMessage() {

@@ -28,7 +28,7 @@ public interface PaymentServicePresenter {
 
     void onDeleteAccountActive(final RequestData requestData);
 
-    void onProcessPaymentResult(final CheckoutResult checkoutResult);
+    void onProcessPaymentResult(final RequestData requestData, final CheckoutResult checkoutResult);
 
-    void onDeleteAccountResult(final CheckoutResult checkoutResult);
+    void onDeleteAccountResult(final RequestData requestData, final CheckoutResult checkoutResult);
 }

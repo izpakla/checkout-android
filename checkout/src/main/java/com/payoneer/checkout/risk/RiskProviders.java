@@ -123,10 +123,8 @@ public final class RiskProviders {
 
         List<Parameter> parameters = new ArrayList<>();
         request.setParameters(parameters);
-
-        RiskProviderError riskProviderError = controller.getRiskErrors();
         RiskProviderResult result = controller.getRiskProviderResult(context);
-        result.copyInto(parameters, riskProviderError.getRiskProviderErrorParameters());
+        result.copyInto(parameters);
         return request;
     }
 }

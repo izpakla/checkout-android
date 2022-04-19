@@ -25,6 +25,10 @@ public final class RiskProviderResult {
         this.riskData = new HashMap<>();
     }
 
+    public RiskProviderResult(final Map<String, String> riskData) {
+        this.riskData = riskData;
+    }
+
     public void put(final String key, final String value) {
         riskData.put(key, value);
     }
@@ -33,19 +37,19 @@ public final class RiskProviderResult {
         return riskData;
     }
 
+    public static RiskProviderResult from(final RiskProviderErrors riskProviderErrors) {
+        return new RiskProviderResult(new HashMap<>(riskProviderErrors.getErrors()));
+    }
+
     /**
      * Copy the risk result data into the list or parameters
      *
      * @param parameters list of parameters into which the risk result data should be copied to
      */
-    public void copyInto(final List<Parameter> parameters, List<Parameter> errorParameters) {
+    public void copyInto(final List<Parameter> parameters) {
         if (parameters == null) {
             throw new IllegalArgumentException("Parameters cannot be null");
         }
-        if (!errorParameters.isEmpty()) {
-            parameters.addAll(errorParameters);
-        }
-
         Set<Map.Entry<String, String>> riskEntries = riskData.entrySet();
         if (!riskEntries.isEmpty()) {
             for (Map.Entry<String, String> entry : riskEntries) {

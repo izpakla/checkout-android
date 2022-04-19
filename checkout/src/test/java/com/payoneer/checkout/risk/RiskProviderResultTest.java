@@ -8,9 +8,7 @@
 
 package com.payoneer.checkout.risk;
 
-import static com.payoneer.checkout.risk.RiskProviderControllerTest.contains;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +19,9 @@ import org.junit.Test;
 import com.payoneer.checkout.model.Parameter;
 
 public class RiskProviderResultTest {
+
+    private final String RESULTKEY_INTERNAL_ERROR = "riskPluginInternalError";
+    private final String RESULTKEY_EXTERNAL_ERROR = "riskPluginExternalError";
 
     @Test
     public void put() {
@@ -36,7 +37,7 @@ public class RiskProviderResultTest {
         result.put("NAME", "VALUE");
 
         List<Parameter> parameters = new ArrayList<>();
-        result.copyInto(parameters, new ArrayList<>());
+        result.copyInto(parameters);
 
         Parameter param = parameters.get(0);
         assertEquals("NAME", param.getName());
@@ -44,20 +45,16 @@ public class RiskProviderResultTest {
     }
 
     @Test
-    public void copyIntoWithErrorParameters() {
-        RiskProviderResult result = new RiskProviderResult();
-        result.put("NAME", "VALUE");
-        List<Parameter> errorParams = new ArrayList<>();
-        Parameter parameter = new Parameter();
-        parameter.setName("NEW_NAME");
-        parameter.setValue("NEW_VALUE");
-        errorParams.add(parameter);
+    public void from() {
+        RiskProviderErrors errors = new RiskProviderErrors();
+        errors.putExternalError("external error");
+        errors.putInternalError("internal error");
 
-        List<Parameter> parameters = new ArrayList<>();
-        result.copyInto(parameters, errorParams);
+        RiskProviderResult result = RiskProviderResult.from(errors);
+        Map<String, String> riskData = result.getRiskData();
 
-        assertEquals(2, parameters.size());
-        assertTrue(contains(parameters, parameter.getValue(), parameter.getName()));
-        assertTrue(contains(parameters, "VALUE", "NAME"));
+        assertEquals(2, riskData.size());
+        assertEquals("external error", riskData.get(RESULTKEY_EXTERNAL_ERROR));
+        assertEquals("internal error", riskData.get(RESULTKEY_INTERNAL_ERROR));
     }
 }

@@ -20,11 +20,12 @@ import android.util.Log;
 public final class RiskProviderController {
 
     private final RiskProviderInfo info;
-    private final RiskProviderError riskProviderErrors = new RiskProviderError();
+    private final RiskProviderErrors riskProviderErrors;
     private RiskProvider riskProvider;
 
     public RiskProviderController(final RiskProviderInfo info) {
         this.info = info;
+        this.riskProviderErrors = new RiskProviderErrors();
     }
 
     public RiskProviderInfo getRiskProviderInfo() {
@@ -63,7 +64,7 @@ public final class RiskProviderController {
 
         if (riskProvider == null) {
             String message = "RiskProviderController(" + code + ", " + type + ") could not find RiskProvider";
-            riskProviderErrors.addInternalErrorParameter(message);
+            riskProviderErrors.putInternalError(message);
             Log.w("checkout-sdk", message);
             return;
         }
@@ -72,37 +73,32 @@ public final class RiskProviderController {
             riskProvider.initialize(info, applicationContext);
         } catch (RiskException e) {
             String message = "RiskProviderController(" + code + ", " + type + ") failed to initialize RiskProvider " + e.getMessage();
-            riskProviderErrors.addExternalErrorParameter(message);
+            riskProviderErrors.putExternalError(message);
             Log.w("checkout-sdk", message, e);
         }
     }
 
     /**
      * Get the RiskProviderResult from the RiskProvider.
-     * If an error occurred while obtaining the RiskProviderResult from the RiskProvider, then return an empty RiskProviderResult.
+     * If an error occurred while obtaining the RiskProviderResult from the RiskProvider, then return a RiskProviderResult with
+     * the internal and/or external plugin error message.
      *
      * @param context contains information about the application environment
      * @return RiskProviderResult obtained from the RiskProvider
      */
     public RiskProviderResult getRiskProviderResult(final Context context) {
-        RiskProviderResult result = null;
         if (riskProvider != null) {
             String code = info.getRiskProviderCode();
             String type = info.getRiskProviderType();
-
             try {
                 Context applicationContext = context.getApplicationContext();
-                result = riskProvider.getRiskProviderResult(applicationContext);
+                return riskProvider.getRiskProviderResult(applicationContext);
             } catch (RiskException e) {
                 String message = "RiskProviderController(" + code + ", " + type + ") could not obtain result " + e.getMessage();
-                riskProviderErrors.addExternalErrorParameter(message);
+                riskProviderErrors.putExternalError(message);
                 Log.w("checkout-sdk", message, e);
             }
         }
-        return (result != null) ? result : new RiskProviderResult();
-    }
-
-    public RiskProviderError getRiskErrors() {
-        return riskProviderErrors;
+        return RiskProviderResult.from(riskProviderErrors);
     }
 }

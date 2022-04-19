@@ -11,13 +11,12 @@
 package com.payoneer.checkout.risk;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
-
-import com.payoneer.checkout.model.Parameter;
 
 public class RiskProviderErrorTest {
 
@@ -26,46 +25,42 @@ public class RiskProviderErrorTest {
 
     @Test
     public void putShouldReturnCorrectValuesForInternalErrors() {
-        RiskProviderError errors = new RiskProviderError();
-        errors.addInternalErrorParameter("INTERNAL_VALUE");
-        List<Parameter> parameters = errors.getRiskProviderErrorParameters();
-        Parameter firstParam = parameters.get(0);
-        assertEquals(RESULTKEY_INTERNAL_ERROR, firstParam.getName());
-        assertEquals("INTERNAL_VALUE", firstParam.getValue());
-        assertEquals(1, parameters.size());
+        RiskProviderErrors riskProviderErrors = new RiskProviderErrors();
+        riskProviderErrors.putInternalError("INTERNAL_VALUE");
+        Map<String, String> errors = riskProviderErrors.getErrors();
+        assertTrue(errors.containsKey(RESULTKEY_INTERNAL_ERROR));
+        assertEquals("INTERNAL_VALUE", errors.get(RESULTKEY_INTERNAL_ERROR));
+        assertEquals(1, errors.size());
     }
 
     @Test
     public void putShouldReturnCorrectValuesForExternalErrors() {
-        RiskProviderError errors = new RiskProviderError();
-        errors.addExternalErrorParameter("EXTERNAL_VALUE");
-        List<Parameter> parameters = errors.getRiskProviderErrorParameters();
-        Parameter firstParam = parameters.get(0);
-        assertEquals(RESULTKEY_EXTERNAL_ERROR, firstParam.getName());
-        assertEquals("EXTERNAL_VALUE", firstParam.getValue());
-        assertEquals(1, parameters.size());
+        RiskProviderErrors riskProviderErrors = new RiskProviderErrors();
+        riskProviderErrors.putExternalError("EXTERNAL_VALUE");
+        Map<String, String> errors = riskProviderErrors.getErrors();
+        assertTrue(errors.containsKey(RESULTKEY_EXTERNAL_ERROR));
+        assertEquals("EXTERNAL_VALUE", errors.get(RESULTKEY_EXTERNAL_ERROR));
+        assertEquals(1, errors.size());
     }
 
     @Test
     public void putWithLongMessageForInternalErrorsShouldTrim() {
-        RiskProviderError errors = new RiskProviderError();
-        errors.addInternalErrorParameter(generateString(89709890));
-        List<Parameter> parameters = errors.getRiskProviderErrorParameters();
-        Parameter firstParam = parameters.get(0);
-        assertEquals(RESULTKEY_INTERNAL_ERROR, firstParam.getName());
-        assertEquals(generateString(2000), firstParam.getValue());
-        assertEquals(1, parameters.size());
+        RiskProviderErrors riskProviderErrors = new RiskProviderErrors();
+        riskProviderErrors.putInternalError(generateString(9890));
+        Map<String, String> errors = riskProviderErrors.getErrors();
+        assertTrue(errors.containsKey(RESULTKEY_INTERNAL_ERROR));
+        assertEquals(generateString(2000), errors.get(RESULTKEY_INTERNAL_ERROR));
+        assertEquals(1, errors.size());
     }
 
     @Test
     public void putWithLongMessageForExternalErrorsShouldTrim() {
-        RiskProviderError errors = new RiskProviderError();
-        errors.addExternalErrorParameter(generateString(89709890));
-        List<Parameter> parameters = errors.getRiskProviderErrorParameters();
-        Parameter firstParam = parameters.get(0);
-        assertEquals(RESULTKEY_EXTERNAL_ERROR, firstParam.getName());
-        assertEquals(generateString(2000), firstParam.getValue());
-        assertEquals(1, parameters.size());
+        RiskProviderErrors riskProviderErrors = new RiskProviderErrors();
+        riskProviderErrors.putExternalError(generateString(9890));
+        Map<String, String> errors = riskProviderErrors.getErrors();
+        assertTrue(errors.containsKey(RESULTKEY_EXTERNAL_ERROR));
+        assertEquals(generateString(2000), errors.get(RESULTKEY_EXTERNAL_ERROR));
+        assertEquals(1, errors.size());
     }
 
     private String generateString(int length) {

@@ -50,7 +50,7 @@ public class RiskProviderResultTest {
         errors.putExternalError("external error");
         errors.putInternalError("internal error");
 
-        RiskProviderResult result = RiskProviderResult.from(errors);
+        RiskProviderResult result = RiskProviderResult.of(errors);
         Map<String, String> riskData = result.getRiskData();
 
         assertEquals(2, riskData.size());

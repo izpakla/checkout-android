@@ -15,7 +15,7 @@ import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 import com.google.android.material.snackbar.Snackbar;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
-import com.payoneer.checkout.ui.screen.ProgressView;
+import com.payoneer.checkout.ui.screen.shared.ProgressView;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

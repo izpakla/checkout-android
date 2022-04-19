@@ -19,7 +19,6 @@ import com.google.android.gms.wallet.PaymentDataRequest;
 import com.google.android.gms.wallet.PaymentsClient;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
-import com.payoneer.checkout.ui.screen.ProgressView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -63,7 +62,6 @@ public class GooglePayAdyenFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initProgressView(view);
         Wallet.WalletOptions walletOptions = new Wallet.WalletOptions.Builder().setEnvironment(WalletConstants.ENVIRONMENT_TEST).build();
         paymentsClient = Wallet.getPaymentsClient(requireActivity(), walletOptions);
     }
@@ -106,12 +104,5 @@ public class GooglePayAdyenFragment extends Fragment {
         // AutoResolveHelper to wait for the user interacting with it. Once completed,
         // onActivityResult will be called with the result.
         AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(request), requireActivity(), GOOGLEPAY_REQUEST_CODE);
-    }
-
-
-    private void initProgressView(final View view) {
-        ProgressView progressView = new ProgressView(view.findViewById(R.id.layout_progress));
-        progressView.setLabels("GooglePay", "Adyen");
-        progressView.setVisible(true);
     }
 }

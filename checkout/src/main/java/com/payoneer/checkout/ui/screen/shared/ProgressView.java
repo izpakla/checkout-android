@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.ui.screen;
+package com.payoneer.checkout.ui.screen.shared;
 
 import com.payoneer.checkout.R;
 

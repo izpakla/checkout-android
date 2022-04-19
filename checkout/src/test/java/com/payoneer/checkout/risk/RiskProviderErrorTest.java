@@ -19,16 +19,16 @@ import org.junit.Test;
 
 import com.payoneer.checkout.model.Parameter;
 
-public class RiskErrorsTest {
+public class RiskProviderErrorTest {
 
     private final String RESULTKEY_INTERNAL_ERROR = "riskPluginInternalError";
     private final String RESULTKEY_EXTERNAL_ERROR = "riskPluginExternalError";
 
     @Test
     public void putShouldReturnCorrectValuesForInternalErrors() {
-        RiskErrors errors = new RiskErrors();
+        RiskProviderError errors = new RiskProviderError();
         errors.addInternalErrorParameter("INTERNAL_VALUE");
-        List<Parameter> parameters = errors.getRiskErrorParameters();
+        List<Parameter> parameters = errors.getRiskProviderErrorParameters();
         Parameter firstParam = parameters.get(0);
         assertEquals(RESULTKEY_INTERNAL_ERROR, firstParam.getName());
         assertEquals("INTERNAL_VALUE", firstParam.getValue());
@@ -37,9 +37,9 @@ public class RiskErrorsTest {
 
     @Test
     public void putShouldReturnCorrectValuesForExternalErrors() {
-        RiskErrors errors = new RiskErrors();
+        RiskProviderError errors = new RiskProviderError();
         errors.addExternalErrorParameter("EXTERNAL_VALUE");
-        List<Parameter> parameters = errors.getRiskErrorParameters();
+        List<Parameter> parameters = errors.getRiskProviderErrorParameters();
         Parameter firstParam = parameters.get(0);
         assertEquals(RESULTKEY_EXTERNAL_ERROR, firstParam.getName());
         assertEquals("EXTERNAL_VALUE", firstParam.getValue());
@@ -48,9 +48,9 @@ public class RiskErrorsTest {
 
     @Test
     public void putWithLongMessageForInternalErrorsShouldTrim() {
-        RiskErrors errors = new RiskErrors();
+        RiskProviderError errors = new RiskProviderError();
         errors.addInternalErrorParameter(generateString(89709890));
-        List<Parameter> parameters = errors.getRiskErrorParameters();
+        List<Parameter> parameters = errors.getRiskProviderErrorParameters();
         Parameter firstParam = parameters.get(0);
         assertEquals(RESULTKEY_INTERNAL_ERROR, firstParam.getName());
         assertEquals(generateString(2000), firstParam.getValue());
@@ -59,9 +59,9 @@ public class RiskErrorsTest {
 
     @Test
     public void putWithLongMessageForExternalErrorsShouldTrim() {
-        RiskErrors errors = new RiskErrors();
+        RiskProviderError errors = new RiskProviderError();
         errors.addExternalErrorParameter(generateString(89709890));
-        List<Parameter> parameters = errors.getRiskErrorParameters();
+        List<Parameter> parameters = errors.getRiskProviderErrorParameters();
         Parameter firstParam = parameters.get(0);
         assertEquals(RESULTKEY_EXTERNAL_ERROR, firstParam.getName());
         assertEquals(generateString(2000), firstParam.getValue());

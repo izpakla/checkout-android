@@ -16,31 +16,31 @@ import java.util.List;
 import com.payoneer.checkout.model.Parameter;
 
 /**
- * This class is basically an extension of {@link com.payoneer.checkout.risk.RiskProviderResult} with a map
+ * This class is basically an extension of {@link com.payoneer.checkout.risk.RiskProviderResult} with a list
  * of the external and internal errors to send back to OPG as part of the result object
  */
-public class RiskErrors {
+public class RiskProviderError {
 
     private static final String RESULTKEY_EXTERNAL_ERROR = "riskPluginExternalError";
     private static final String RESULTKEY_INTERNAL_ERROR = "riskPluginInternalError";
-    private final List<Parameter> riskErrorParameters = new ArrayList<>();
+    private final List<Parameter> riskProviderErrorParameters = new ArrayList<>();
 
     public void addInternalErrorParameter(String value) {
         Parameter copyParam = new Parameter();
         copyParam.setName(RESULTKEY_INTERNAL_ERROR);
         copyParam.setValue(trimValue(value));
-        riskErrorParameters.add(copyParam);
+        riskProviderErrorParameters.add(copyParam);
     }
 
     public void addExternalErrorParameter(String value) {
         Parameter copyParam = new Parameter();
         copyParam.setName(RESULTKEY_EXTERNAL_ERROR);
         copyParam.setValue(trimValue(value));
-        riskErrorParameters.add(copyParam);
+        riskProviderErrorParameters.add(copyParam);
     }
 
-    public List<Parameter> getRiskErrorParameters() {
-        return riskErrorParameters;
+    public List<Parameter> getRiskProviderErrorParameters() {
+        return riskProviderErrorParameters;
     }
 
     private String trimValue(String message) {

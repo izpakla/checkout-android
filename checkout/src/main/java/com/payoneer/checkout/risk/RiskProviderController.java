@@ -20,7 +20,7 @@ import android.util.Log;
 public final class RiskProviderController {
 
     private final RiskProviderInfo info;
-    private final RiskErrors riskErrors = new RiskErrors();
+    private final RiskProviderError riskProviderErrors = new RiskProviderError();
     private RiskProvider riskProvider;
 
     public RiskProviderController(final RiskProviderInfo info) {
@@ -63,7 +63,7 @@ public final class RiskProviderController {
 
         if (riskProvider == null) {
             String message = "RiskProviderController(" + code + ", " + type + ") could not find RiskProvider";
-            riskErrors.addInternalErrorParameter(message);
+            riskProviderErrors.addInternalErrorParameter(message);
             Log.w("checkout-sdk", message);
             return;
         }
@@ -72,7 +72,7 @@ public final class RiskProviderController {
             riskProvider.initialize(info, applicationContext);
         } catch (RiskException e) {
             String message = "RiskProviderController(" + code + ", " + type + ") failed to initialize RiskProvider " + e.getMessage();
-            riskErrors.addExternalErrorParameter(message);
+            riskProviderErrors.addExternalErrorParameter(message);
             Log.w("checkout-sdk", message, e);
         }
     }
@@ -95,14 +95,14 @@ public final class RiskProviderController {
                 result = riskProvider.getRiskProviderResult(applicationContext);
             } catch (RiskException e) {
                 String message = "RiskProviderController(" + code + ", " + type + ") could not obtain result " + e.getMessage();
-                riskErrors.addExternalErrorParameter(message);
+                riskProviderErrors.addExternalErrorParameter(message);
                 Log.w("checkout-sdk", message, e);
             }
         }
         return (result != null) ? result : new RiskProviderResult();
     }
 
-    public RiskErrors getRiskErrors() {
-        return riskErrors;
+    public RiskProviderError getRiskErrors() {
+        return riskProviderErrors;
     }
 }

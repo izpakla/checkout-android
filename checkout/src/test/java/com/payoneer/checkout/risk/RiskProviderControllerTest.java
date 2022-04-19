@@ -90,7 +90,7 @@ public class RiskProviderControllerTest {
         RiskProviderResult result = controller.getRiskProviderResult(ApplicationProvider.getApplicationContext());
         assertNotNull(result);
         assertTrue(
-            contains(controller.getRiskErrors().getRiskErrorParameters(), internalErrorParam.getValue(), internalErrorParam.getName())
+            contains(controller.getRiskErrors().getRiskProviderErrorParameters(), internalErrorParam.getValue(), internalErrorParam.getName())
         );
     }
 

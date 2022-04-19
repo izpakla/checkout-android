@@ -124,9 +124,9 @@ public final class RiskProviders {
         List<Parameter> parameters = new ArrayList<>();
         request.setParameters(parameters);
 
-        RiskErrors errors = controller.getRiskErrors();
+        RiskProviderError errors = controller.getRiskErrors();
         RiskProviderResult result = controller.getRiskProviderResult(context);
-        result.copyInto(parameters, errors.getRiskErrorParameters());
+        result.copyInto(parameters, errors.getRiskProviderErrorParameters());
         return request;
     }
 }

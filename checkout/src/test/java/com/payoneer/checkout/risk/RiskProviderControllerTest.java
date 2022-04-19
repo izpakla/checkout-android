@@ -28,6 +28,17 @@ import androidx.test.core.app.ApplicationProvider;
 @RunWith(RobolectricTestRunner.class)
 public class RiskProviderControllerTest {
 
+    private final String RESULTKEY_INTERNAL_ERROR = "riskPluginInternalError";
+
+    public static boolean contains(Collection<Parameter> parameters, String value, String name) {
+        for (Parameter parameter : parameters) {
+            if (parameter != null && parameter.getValue().equals(value) && parameter.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Test
     public void getRiskProviderInfo() {
         RiskProviderInfo info = createRiskProviderInfo("CODE", "TYPE");
@@ -73,7 +84,7 @@ public class RiskProviderControllerTest {
         RiskProviderController controller = new RiskProviderController(info);
         controller.initialize(null);
         Parameter internalErrorParam = new Parameter();
-        internalErrorParam.setName(RiskErrors.RESULTKEY_INTERNAL_ERROR);
+        internalErrorParam.setName(RESULTKEY_INTERNAL_ERROR);
         internalErrorParam.setValue("RiskProviderController(CODE, TYPE) could not find RiskProvider");
 
         RiskProviderResult result = controller.getRiskProviderResult(ApplicationProvider.getApplicationContext());
@@ -86,14 +97,5 @@ public class RiskProviderControllerTest {
     private RiskProviderInfo createRiskProviderInfo(final String code, final String type) {
         Map<String, String> parameters = new HashMap<>();
         return new RiskProviderInfo(code, type, parameters);
-    }
-
-    public static boolean contains(Collection<Parameter> parameters, String value, String name) {
-        for (Parameter parameter : parameters) {
-            if (parameter != null && parameter.getValue().equals(value) && parameter.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

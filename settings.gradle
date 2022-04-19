@@ -3,7 +3,6 @@ include ':checkout',
         ':example-shop',
         ':shared-test',
         ':riskprovider:iovation',
-        ':paymentservice:googlepay-adyen',
         ':paymentservice:googlepay-braintree'
 
 

@@ -88,7 +88,6 @@ dependencies {
     // implementation project(":riskprovider:iovation")
     // implementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
 
-    implementation project(":paymentservice:googlepay-adyen")
     implementation project(":paymentservice:googlepay-braintree")
     androidTestImplementation project(":shared-test")
     androidTestImplementation "androidx.test:runner:${rootProject.androidxTestRunnerVersion}"

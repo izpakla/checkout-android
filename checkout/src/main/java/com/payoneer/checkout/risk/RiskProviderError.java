@@ -26,15 +26,16 @@ public class RiskProviderError {
     private final List<Parameter> riskProviderErrorParameters = new ArrayList<>();
 
     public void addInternalErrorParameter(String value) {
-        Parameter copyParam = new Parameter();
-        copyParam.setName(RESULTKEY_INTERNAL_ERROR);
-        copyParam.setValue(trimValue(value));
-        riskProviderErrorParameters.add(copyParam);
+        addErrorParameter(RESULTKEY_INTERNAL_ERROR, value);
     }
 
     public void addExternalErrorParameter(String value) {
+        addErrorParameter(RESULTKEY_EXTERNAL_ERROR, value);
+    }
+
+    private void addErrorParameter(final String key, final String value) {
         Parameter copyParam = new Parameter();
-        copyParam.setName(RESULTKEY_EXTERNAL_ERROR);
+        copyParam.setName(key);
         copyParam.setValue(trimValue(value));
         riskProviderErrorParameters.add(copyParam);
     }

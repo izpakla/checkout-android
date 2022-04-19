@@ -8,12 +8,7 @@
 
 package com.payoneer.checkout.risk;
 
-import static com.payoneer.checkout.risk.RiskErrors.RESULTKEY_EXTERNAL_ERROR;
-import static com.payoneer.checkout.risk.RiskErrors.RESULTKEY_INTERNAL_ERROR;
-
 import java.util.Objects;
-
-import com.payoneer.checkout.model.Parameter;
 
 import android.content.Context;
 import android.util.Log;
@@ -68,10 +63,7 @@ public final class RiskProviderController {
 
         if (riskProvider == null) {
             String message = "RiskProviderController(" + code + ", " + type + ") could not find RiskProvider";
-            Parameter parameter = new Parameter();
-            parameter.setName(RESULTKEY_INTERNAL_ERROR);
-            parameter.setValue(message);
-            riskErrors.addErrorParameter(parameter);
+            riskErrors.addInternalErrorParameter(message);
             Log.w("checkout-sdk", message);
             return;
         }
@@ -80,10 +72,7 @@ public final class RiskProviderController {
             riskProvider.initialize(info, applicationContext);
         } catch (RiskException e) {
             String message = "RiskProviderController(" + code + ", " + type + ") failed to initialize RiskProvider " + e.getMessage();
-            Parameter parameter = new Parameter();
-            parameter.setName(RESULTKEY_EXTERNAL_ERROR);
-            parameter.setValue(message);
-            riskErrors.addErrorParameter(parameter);
+            riskErrors.addExternalErrorParameter(message);
             Log.w("checkout-sdk", message, e);
         }
     }
@@ -106,10 +95,7 @@ public final class RiskProviderController {
                 result = riskProvider.getRiskProviderResult(applicationContext);
             } catch (RiskException e) {
                 String message = "RiskProviderController(" + code + ", " + type + ") could not obtain result " + e.getMessage();
-                Parameter parameter = new Parameter();
-                parameter.setName(RESULTKEY_EXTERNAL_ERROR);
-                parameter.setValue(message);
-                riskErrors.addErrorParameter(parameter);
+                riskErrors.addExternalErrorParameter(message);
                 Log.w("checkout-sdk", message, e);
             }
         }

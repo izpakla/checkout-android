@@ -21,14 +21,21 @@ import com.payoneer.checkout.model.Parameter;
  */
 public class RiskErrors {
 
-    public static final String RESULTKEY_EXTERNAL_ERROR = "riskPluginExternalError";
-    public static final String RESULTKEY_INTERNAL_ERROR = "riskPluginInternalError";
+    private static final String RESULTKEY_EXTERNAL_ERROR = "riskPluginExternalError";
+    private static final String RESULTKEY_INTERNAL_ERROR = "riskPluginInternalError";
     private final List<Parameter> riskErrorParameters = new ArrayList<>();
 
-    public void addErrorParameter(Parameter parameter) {
+    public void addInternalErrorParameter(String value) {
         Parameter copyParam = new Parameter();
-        copyParam.setName(parameter.getName());
-        copyParam.setValue(trimValue(parameter.getValue()));
+        copyParam.setName(RESULTKEY_INTERNAL_ERROR);
+        copyParam.setValue(trimValue(value));
+        riskErrorParameters.add(copyParam);
+    }
+
+    public void addExternalErrorParameter(String value) {
+        Parameter copyParam = new Parameter();
+        copyParam.setName(RESULTKEY_EXTERNAL_ERROR);
+        copyParam.setValue(trimValue(value));
         riskErrorParameters.add(copyParam);
     }
 

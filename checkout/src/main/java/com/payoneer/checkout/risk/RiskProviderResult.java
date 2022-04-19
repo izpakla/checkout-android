@@ -11,6 +11,7 @@ package com.payoneer.checkout.risk;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.payoneer.checkout.model.Parameter;
 
@@ -41,15 +42,18 @@ public final class RiskProviderResult {
         if (parameters == null) {
             throw new IllegalArgumentException("Parameters cannot be null");
         }
-        if (errorParameters.size() != 0) {
+        if (!errorParameters.isEmpty()) {
             parameters.addAll(errorParameters);
         }
 
-        for (Map.Entry<String, String> entry : riskData.entrySet()) {
-            Parameter param = new Parameter();
-            param.setName(entry.getKey());
-            param.setValue(entry.getValue());
-            parameters.add(param);
+        Set<Map.Entry<String, String>> riskEntries = riskData.entrySet();
+        if (!riskEntries.isEmpty()) {
+            for (Map.Entry<String, String> entry : riskEntries) {
+                Parameter param = new Parameter();
+                param.setName(entry.getKey());
+                param.setValue(entry.getValue());
+                parameters.add(param);
+            }
         }
     }
 }

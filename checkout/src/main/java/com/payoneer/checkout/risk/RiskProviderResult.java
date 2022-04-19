@@ -37,7 +37,7 @@ public final class RiskProviderResult {
         return riskData;
     }
 
-    public static RiskProviderResult from(final RiskProviderErrors riskProviderErrors) {
+    public static RiskProviderResult of(final RiskProviderErrors riskProviderErrors) {
         return new RiskProviderResult(new HashMap<>(riskProviderErrors.getErrors()));
     }
 

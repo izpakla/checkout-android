@@ -99,6 +99,6 @@ public final class RiskProviderController {
                 Log.w("checkout-sdk", message, e);
             }
         }
-        return RiskProviderResult.from(riskProviderErrors);
+        return RiskProviderResult.of(riskProviderErrors);
     }
 }

@@ -8,6 +8,7 @@
 
 package com.payoneer.checkout.risk;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,10 @@ public final class RiskProviderResult {
         this.riskData = new HashMap<>();
     }
 
+    public RiskProviderResult(final Map<String, String> riskData) {
+        this.riskData = riskData;
+    }
+
     public void put(final String key, final String value) {
         riskData.put(key, value);
     }
@@ -33,27 +38,23 @@ public final class RiskProviderResult {
         return riskData;
     }
 
-    /**
-     * Copy the risk result data into the list or parameters
-     *
-     * @param parameters list of parameters into which the risk result data should be copied to
-     */
-    public void copyInto(final List<Parameter> parameters, List<Parameter> errorParameters) {
-        if (parameters == null) {
-            throw new IllegalArgumentException("Parameters cannot be null");
-        }
-        if (!errorParameters.isEmpty()) {
-            parameters.addAll(errorParameters);
-        }
+    public static RiskProviderResult of(final RiskProviderErrors riskProviderErrors) {
+        return new RiskProviderResult(new HashMap<>(riskProviderErrors.getErrors()));
+    }
 
-        Set<Map.Entry<String, String>> riskEntries = riskData.entrySet();
-        if (!riskEntries.isEmpty()) {
-            for (Map.Entry<String, String> entry : riskEntries) {
-                Parameter param = new Parameter();
-                param.setName(entry.getKey());
-                param.setValue(entry.getValue());
-                parameters.add(param);
-            }
+    /**
+     * Get the risk provider result as a list of parameters.
+     *
+     * @return list of parameters containing the provider result
+     */
+    public List<Parameter> getProviderResultParameters() {
+        List<Parameter> parameters = new ArrayList<>();
+        for (Map.Entry<String, String> entry : riskData.entrySet()) {
+            Parameter param = new Parameter();
+            param.setName(entry.getKey());
+            param.setValue(entry.getValue());
+            parameters.add(param);
         }
+        return parameters;
     }
 }

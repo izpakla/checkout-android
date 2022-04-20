@@ -79,19 +79,18 @@ public class RiskProviderControllerTest {
     }
 
     @Test
-    public void getRiskProviderResultWithInternalErrors() {
+    public void getRiskProviderResultWithInternalError() {
         RiskProviderInfo info = createRiskProviderInfo("CODE", "TYPE");
         RiskProviderController controller = new RiskProviderController(info);
         controller.initialize(null);
-        Parameter internalErrorParam = new Parameter();
-        internalErrorParam.setName(RESULTKEY_INTERNAL_ERROR);
-        internalErrorParam.setValue("RiskProviderController(CODE, TYPE) could not find RiskProvider");
 
+        String errorMessage = "Could not find RiskProvider[CODE, TYPE]";
         RiskProviderResult result = controller.getRiskProviderResult(ApplicationProvider.getApplicationContext());
+        Map<String, String> riskData = result.getRiskData();
+
         assertNotNull(result);
-        assertTrue(
-            contains(controller.getRiskErrors().getRiskProviderErrorParameters(), internalErrorParam.getValue(), internalErrorParam.getName())
-        );
+        assertTrue(riskData.containsKey(RESULTKEY_INTERNAL_ERROR));
+        assertEquals(errorMessage, riskData.get(RESULTKEY_INTERNAL_ERROR));
     }
 
     private RiskProviderInfo createRiskProviderInfo(final String code, final String type) {

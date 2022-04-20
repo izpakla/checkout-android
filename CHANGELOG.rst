@@ -1,7 +1,28 @@
 Changelog - Payoneer Checkout SDK for Android-based devices
 -----------------------
 
-Version checkout-android **0.81.0**
+**Version checkout-android 0.90.0**
+This is a major version update with a breaking change of the public classes to initiate and use the
+Android Checkout SDK.
+
+**Bug**
+
+* [PCX-2993] - Unit tests for Checkout classes are in incorrect package
+* [PCX-2974] - Remove recurrence as forced for Visa card testing
+* [PCX-2927] - Example Shop app does not compile
+
+**Feature**
+
+* [PCX-2888] - Optimize caching for localization files
+* [PCX-2872] - Move risk providers in sub folder riskprovider
+* [PCX-2738] - Rewrite Android Example Shop app in Kotlin
+* [PCX-2637] - Create Risk Provider framework inside the Android Checkout SDK
+* [PCX-2615] - Invoke Iovation SDK and submit collected information with operation calls
+* [PCX-2555] - Android Checkout SDK has similar public API as iOS Checkout SDK
+* [PCX-2998] - Report risk errors
+* [PCX-3040] - Change list self Url in Android SDK to URL Object instead of String
+
+**Version checkout-android 0.81.0**
 
 **Bug**
 

@@ -20,10 +20,12 @@ import android.util.Log;
 public final class RiskProviderController {
 
     private final RiskProviderInfo info;
+    private final RiskProviderErrors riskProviderErrors;
     private RiskProvider riskProvider;
 
     public RiskProviderController(final RiskProviderInfo info) {
         this.info = info;
+        this.riskProviderErrors = new RiskProviderErrors();
     }
 
     public RiskProviderInfo getRiskProviderInfo() {
@@ -61,7 +63,8 @@ public final class RiskProviderController {
         riskProvider = RiskProviderLookup.getRiskProvider(code, type);
 
         if (riskProvider == null) {
-            String message = "RiskProviderController(" + code + ", " + type + ") could not find RiskProvider";
+            String message = "Could not find RiskProvider[" + code + ", " + type + "]";
+            riskProviderErrors.putInternalError(message);
             Log.w("checkout-sdk", message);
             return;
         }
@@ -69,32 +72,33 @@ public final class RiskProviderController {
             Context applicationContext = context.getApplicationContext();
             riskProvider.initialize(info, applicationContext);
         } catch (RiskException e) {
-            String message = "RiskProviderController(" + code + ", " + type + ") failed to initialize RiskProvider";
+            String message = "Error initializing RiskProvider[" + code + ", " + type + "]";
+            riskProviderErrors.putExternalError(message, e);
             Log.w("checkout-sdk", message, e);
         }
     }
 
     /**
      * Get the RiskProviderResult from the RiskProvider.
-     * If an error occurred while obtaining the RiskProviderResult from the RiskProvider, then return an empty RiskProviderResult.
+     * If an error occurred while obtaining the RiskProviderResult from the RiskProvider,
+     * then the RiskProviderResult will contain the internal/external error messages.
      *
      * @param context contains information about the application environment
      * @return RiskProviderResult obtained from the RiskProvider
      */
     public RiskProviderResult getRiskProviderResult(final Context context) {
-        RiskProviderResult result = null;
-        if (riskProvider != null) {
+        if (riskProviderErrors.getErrors().isEmpty()) {
             String code = info.getRiskProviderCode();
             String type = info.getRiskProviderType();
-
             try {
                 Context applicationContext = context.getApplicationContext();
-                result = riskProvider.getRiskProviderResult(applicationContext);
+                return riskProvider.getRiskProviderResult(applicationContext);
             } catch (RiskException e) {
-                String message = "RiskProviderController(" + code + ", " + type + ") could not obtain result";
+                String message = "Error obtaining result for RiskProvider[" + code + ", " + type + "]";
+                riskProviderErrors.putExternalError(message, e);
                 Log.w("checkout-sdk", message, e);
             }
         }
-        return (result != null) ? result : new RiskProviderResult();
+        return RiskProviderResult.of(riskProviderErrors);
     }
 }

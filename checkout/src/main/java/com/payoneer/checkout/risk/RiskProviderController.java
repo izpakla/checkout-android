@@ -63,7 +63,7 @@ public final class RiskProviderController {
         riskProvider = RiskProviderLookup.getRiskProvider(code, type);
 
         if (riskProvider == null) {
-            String message = "RiskProviderController(" + code + ", " + type + ") could not find RiskProvider";
+            String message = "Could not find RiskProvider[" + code + ", " + type + "]";
             riskProviderErrors.putInternalError(message);
             Log.w("checkout-sdk", message);
             return;
@@ -72,7 +72,7 @@ public final class RiskProviderController {
             Context applicationContext = context.getApplicationContext();
             riskProvider.initialize(info, applicationContext);
         } catch (RiskException e) {
-            String message = "RiskProviderController(" + code + ", " + type + ") failed to initialize RiskProvider " + e.getMessage();
+            String message = "Error initializing RiskProvider[" + code + ", " + type + "] - " + e.getMessage();
             riskProviderErrors.putExternalError(message);
             Log.w("checkout-sdk", message, e);
         }
@@ -94,7 +94,7 @@ public final class RiskProviderController {
                 Context applicationContext = context.getApplicationContext();
                 return riskProvider.getRiskProviderResult(applicationContext);
             } catch (RiskException e) {
-                String message = "RiskProviderController(" + code + ", " + type + ") could not obtain result " + e.getMessage();
+                String message = "Error obtaining result for RiskProvider[" + code + ", " + type + "] - " + e.getMessage();
                 riskProviderErrors.putExternalError(message);
                 Log.w("checkout-sdk", message, e);
             }

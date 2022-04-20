@@ -84,7 +84,7 @@ public class RiskProviderControllerTest {
         RiskProviderController controller = new RiskProviderController(info);
         controller.initialize(null);
 
-        String errorMessage = "RiskProviderController(CODE, TYPE) could not find RiskProvider";
+        String errorMessage = "Could not find RiskProvider[CODE, TYPE]";
         RiskProviderResult result = controller.getRiskProviderResult(ApplicationProvider.getApplicationContext());
         Map<String, String> riskData = result.getRiskData();
 

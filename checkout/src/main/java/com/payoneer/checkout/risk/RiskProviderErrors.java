@@ -32,10 +32,6 @@ public final class RiskProviderErrors {
         return errors;
     }
 
-    public boolean isEmpty() {
-        return errors.isEmpty();
-    }
-
     public void putInternalError(final String error) {
         errors.put(RESULTKEY_INTERNAL_ERROR, trimError(error));
     }

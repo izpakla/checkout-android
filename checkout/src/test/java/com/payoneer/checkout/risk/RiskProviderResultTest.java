@@ -36,8 +36,8 @@ public class RiskProviderResultTest {
         RiskProviderResult result = new RiskProviderResult();
         result.put("NAME", "VALUE");
 
-        List<Parameter> parameters = new ArrayList<>();
-        result.copyInto(parameters);
+        List<Parameter> parameters = result.getProviderResultParameters();
+        assertEquals(1, parameters.size());
 
         Parameter param = parameters.get(0);
         assertEquals("NAME", param.getName());

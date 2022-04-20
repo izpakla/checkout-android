@@ -8,6 +8,7 @@
 
 package com.payoneer.checkout.risk;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,22 +43,18 @@ public final class RiskProviderResult {
     }
 
     /**
-     * Copy the risk result data into the list or parameters
+     * Get the risk provider result as a list of parameters.
      *
-     * @param parameters list of parameters into which the risk result data should be copied to
+     * @return list of parameters containing the provider result
      */
-    public void copyInto(final List<Parameter> parameters) {
-        if (parameters == null) {
-            throw new IllegalArgumentException("Parameters cannot be null");
+    public List<Parameter> getProviderResultParameters() {
+        List<Parameter> parameters = new ArrayList<>();
+        for (Map.Entry<String, String> entry : riskData.entrySet()) {
+            Parameter param = new Parameter();
+            param.setName(entry.getKey());
+            param.setValue(entry.getValue());
+            parameters.add(param);
         }
-        Set<Map.Entry<String, String>> riskEntries = riskData.entrySet();
-        if (!riskEntries.isEmpty()) {
-            for (Map.Entry<String, String> entry : riskEntries) {
-                Parameter param = new Parameter();
-                param.setName(entry.getKey());
-                param.setValue(entry.getValue());
-                parameters.add(param);
-            }
-        }
+        return parameters;
     }
 }

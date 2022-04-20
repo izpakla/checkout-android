@@ -117,14 +117,13 @@ public final class RiskProviders {
     }
 
     private ProviderParameters getRiskProviderRequest(final RiskProviderController controller, final Context context) {
+        RiskProviderResult result = controller.getRiskProviderResult(context);
+        List<Parameter> parameters = result.getProviderResultParameters();
+
         ProviderParameters request = new ProviderParameters();
+        request.setParameters(parameters);
         request.setProviderCode(controller.getRiskProviderCode());
         request.setProviderType(controller.getRiskProviderType());
-
-        List<Parameter> parameters = new ArrayList<>();
-        request.setParameters(parameters);
-        RiskProviderResult result = controller.getRiskProviderResult(context);
-        result.copyInto(parameters);
         return request;
     }
 }

@@ -80,8 +80,8 @@ public final class RiskProviderController {
 
     /**
      * Get the RiskProviderResult from the RiskProvider.
-     * If an error occurred while obtaining the RiskProviderResult from the RiskProvider, then return a RiskProviderResult with
-     * the internal and/or external plugin error message.
+     * If an error occurred while obtaining the RiskProviderResult from the RiskProvider,
+     * then the RiskProviderResult will contain the internal/external error messages.
      *
      * @param context contains information about the application environment
      * @return RiskProviderResult obtained from the RiskProvider

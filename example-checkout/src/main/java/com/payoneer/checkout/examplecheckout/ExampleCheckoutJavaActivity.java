@@ -7,13 +7,17 @@
  */
 package com.payoneer.checkout.examplecheckout;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.payoneer.checkout.Checkout;
+import com.payoneer.checkout.CheckoutActivityResult;
+import com.payoneer.checkout.CheckoutConfiguration;
+import com.payoneer.checkout.CheckoutResult;
+import com.payoneer.checkout.CheckoutTheme;
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding;
 import com.payoneer.checkout.model.Interaction;
-import com.payoneer.checkout.ui.PaymentActivityResult;
-import com.payoneer.checkout.ui.PaymentResult;
-import com.payoneer.checkout.ui.PaymentTheme;
-import com.payoneer.checkout.ui.PaymentUI;
 import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
 
 import android.content.Context;
@@ -21,7 +25,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.util.Patterns;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -36,11 +40,11 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
 
     private final static int PAYMENT_REQUEST_CODE = 1;
     private final static int CHARGE_PRESET_ACCOUNT_REQUEST_CODE = 2;
+    private final String TAG = ExampleCheckoutJavaActivity.class.getSimpleName();
     private ActivityExamplecheckoutBinding binding;
-    private PaymentActivityResult activityResult;
+    private CheckoutActivityResult activityResult;
     private SimpleIdlingResource resultHandledIdlingResource;
     private boolean resultHandled;
-    private final PaymentUI paymentUI = PaymentUI.getInstance();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -48,7 +52,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         binding = ActivityExamplecheckoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.buttonShowPaymentList.setOnClickListener(v -> openPaymentPage());
+        binding.buttonShowPaymentList.setOnClickListener(v -> showPaymentList());
         binding.buttonChargePresetAcount.setOnClickListener(v -> chargePresetAccount());
     }
 
@@ -57,7 +61,7 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         super.onResume();
         resultHandled = false;
         if (activityResult != null) {
-            showPaymentActivityResult(activityResult);
+            showCheckoutActivityResult(activityResult);
             setResultHandledIdleState(true);
         }
     }
@@ -66,35 +70,35 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PAYMENT_REQUEST_CODE || requestCode == CHARGE_PRESET_ACCOUNT_REQUEST_CODE) {
-            activityResult = PaymentActivityResult.fromActivityResult(requestCode, resultCode, data);
+            activityResult = CheckoutActivityResult.fromActivityResult(requestCode, resultCode, data);
         }
     }
 
-    private void clearPaymentResult() {
+    private void clearCheckoutResult() {
         setResultHandledIdleState(false);
         binding.labelResultheader.setVisibility(View.GONE);
         binding.layoutResult.setVisibility(View.GONE);
         this.activityResult = null;
     }
 
-    private void showPaymentActivityResult(PaymentActivityResult sdkResult) {
+    private void showCheckoutActivityResult(CheckoutActivityResult sdkResult) {
         int resultCode = sdkResult.getResultCode();
         binding.labelResultheader.setVisibility(View.VISIBLE);
         binding.layoutResult.setVisibility(View.VISIBLE);
-        setText(binding.textResultcode, PaymentActivityResult.resultCodeToString(resultCode));
+        setText(binding.textResultcode, CheckoutActivityResult.resultCodeToString(resultCode));
 
         String info = null;
         String code = null;
         String reason = null;
         String error = null;
-        PaymentResult paymentResult = sdkResult.getPaymentResult();
+        CheckoutResult checkoutResult = sdkResult.getCheckoutResult();
 
-        if (paymentResult != null) {
-            info = paymentResult.getResultInfo();
-            Interaction interaction = paymentResult.getInteraction();
+        if (checkoutResult != null) {
+            info = checkoutResult.getResultInfo();
+            Interaction interaction = checkoutResult.getInteraction();
             code = interaction.getCode();
             reason = interaction.getReason();
-            Throwable cause = paymentResult.getCause();
+            Throwable cause = checkoutResult.getCause();
             error = cause != null ? cause.getMessage() : null;
         }
         setText(binding.textResultinfo, info);
@@ -118,52 +122,61 @@ public final class ExampleCheckoutJavaActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    private void openPaymentPage() {
-        if (!setListUrl()) {
+    private void showPaymentList() {
+        CheckoutConfiguration configuration = createCheckoutConfiguration();
+        if (configuration == null) {
             return;
         }
         closeKeyboard();
-        clearPaymentResult();
-        paymentUI.setPaymentTheme(createPaymentTheme());
+        clearCheckoutResult();
 
-        // Uncomment if you like to fix e.g. the orientation to landscape mode
-        // paymentUI.setOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-        paymentUI.showPaymentPage(this, PAYMENT_REQUEST_CODE);
+        Checkout checkout = Checkout.of(configuration);
+        checkout.showPaymentList(this, PAYMENT_REQUEST_CODE);
     }
 
     private void chargePresetAccount() {
-        if (!setListUrl()) {
+        CheckoutConfiguration configuration = createCheckoutConfiguration();
+        if (configuration == null) {
             return;
         }
         closeKeyboard();
-        clearPaymentResult();
-        paymentUI.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE);
+        clearCheckoutResult();
+
+        Checkout checkout = Checkout.of(configuration);
+        checkout.chargePresetAccount(this, CHARGE_PRESET_ACCOUNT_REQUEST_CODE);
     }
 
-    private boolean setListUrl() {
-        String listUrl = binding.inputListurl.getText().toString().trim();
-        if (TextUtils.isEmpty(listUrl) || !Patterns.WEB_URL.matcher(listUrl).matches()) {
+    private CheckoutConfiguration createCheckoutConfiguration() {
+        try {
+            String stringUrl = binding.inputListurl.getText().toString().trim();
+
+            URL listUrl = new URL(stringUrl);
+
+            return CheckoutConfiguration.createBuilder(listUrl)
+                .theme(createCheckoutTheme())
+                // Uncomment to set screens to landscape orientation
+                //.orientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                .build();
+        } catch (MalformedURLException exception) {
+            Log.e(TAG, "createCheckoutConfigurationJava - Error creating URL", exception);
             showErrorDialog(getString(R.string.dialog_error_listurl_invalid));
-            return false;
+            return null;
         }
-        paymentUI.setListUrl(listUrl);
-        return true;
     }
 
-    private PaymentTheme createPaymentTheme() {
+    private CheckoutTheme createCheckoutTheme() {
         if (binding.switchTheme.isChecked()) {
-            return PaymentTheme.createBuilder().
-                setPaymentListTheme(R.style.CustomTheme_Toolbar).
-                setChargePaymentTheme(R.style.CustomTheme_NoToolbar).
+            return CheckoutTheme.createBuilder().
+                setToolbarTheme(R.style.CustomTheme_Toolbar).
+                setNoToolbarTheme(R.style.CustomTheme_NoToolbar).
                 build();
         } else {
-            return PaymentTheme.createDefault();
+            return CheckoutTheme.createDefault();
         }
     }
 
     /**
-     * Only called from test, creates and returns a new paymentResult handled IdlingResource
+     * Only called from test, creates and returns a new result handled IdlingResource
      */
     @VisibleForTesting
     public IdlingResource getResultHandledIdlingResource() {

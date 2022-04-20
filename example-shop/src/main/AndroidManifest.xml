@@ -3,6 +3,7 @@
     package="com.payoneer.checkout.exampleshop">
 
     <application
+        android:name=".ExampleShopApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,7 +13,7 @@
         <activity
             android:name=".settings.SettingsActivity"
             android:exported="true"
-            android:theme="@style/PaymentTheme.Toolbar"
+            android:theme="@style/CheckoutTheme.Toolbar"
             android:windowSoftInputMode="stateHidden">
 
             <intent-filter>
@@ -24,25 +25,25 @@
         <activity
             android:name=".checkout.CheckoutActivity"
             android:exported="true"
-            android:theme="@style/PaymentTheme.CollapsingToolbar"
+            android:theme="@style/CheckoutTheme.CollapsingToolbar"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
             android:name=".summary.SummaryActivity"
             android:exported="true"
-            android:theme="@style/PaymentTheme.CollapsingToolbar" />
+            android:theme="@style/CheckoutTheme.CollapsingToolbar" />
 
         <activity
             android:name=".confirm.ConfirmActivity"
             android:exported="true"
             android:noHistory="true"
-            android:theme="@style/PaymentTheme.NoToolbar" />
+            android:theme="@style/CheckoutTheme.NoToolbar" />
 
         <activity
             android:name="com.payoneer.checkout.redirect.PaymentRedirectActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/PaymentTheme.NoToolbar">
+            android:theme="@style/CheckoutTheme.NoToolbar">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

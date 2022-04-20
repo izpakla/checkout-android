@@ -8,6 +8,7 @@
 
 package com.payoneer.checkout.ui.page;
 
+import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.ui.model.PaymentSession;
 
@@ -26,8 +27,9 @@ interface PaymentListView extends BasePaymentView {
      *
      * @param requestCode the code identifying the request
      * @param operation to be handled by the charge payment screen
+     * @param configuration is the config object
      */
-    void showChargePaymentScreen(int requestCode, Operation operation);
+    void showChargePaymentScreen(int requestCode, Operation operation, CheckoutConfiguration configuration);
 
     /**
      * Stop loading and show the PaymentSession

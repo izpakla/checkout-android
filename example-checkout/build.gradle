@@ -6,11 +6,6 @@ assemble.dependsOn('lint')
 
 android {
 
-    lintOptions {
-        abortOnError true
-        checkDependencies true
-        ignoreWarnings true
-    }
 
     compileOptions {
         sourceCompatibility rootProject.javaCompatVersion
@@ -75,14 +70,23 @@ android {
     buildFeatures {
         viewBinding true
     }
+    lint {
+        abortOnError true
+        checkDependencies true
+        ignoreWarnings true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.google.android.material:material:${rootProject.androidMaterialVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${rootProject.androidxTestEspressoVersion}@aar"
-    implementation "androidx.core:core-ktx:${rootProject.coreKtx}"
+    implementation "androidx.core:core-ktx:${rootProject.coreKtxVersion}"
     implementation project(":checkout")
+
+    // Uncomment the following two lines for enabling the Iovation FraudForce risk provider
+    // implementation project(":riskprovider:iovation")
+    // implementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
 
     androidTestImplementation project(":shared-test")
     androidTestImplementation "androidx.test:runner:${rootProject.androidxTestRunnerVersion}"

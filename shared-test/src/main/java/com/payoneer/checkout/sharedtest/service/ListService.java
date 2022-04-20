@@ -23,41 +23,38 @@ import com.payoneer.checkout.network.ListConnection;
 import com.payoneer.checkout.network.PaymentConnection;
 import com.payoneer.checkout.util.PaymentUtils;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 /**
  * Class for creating a new ListUrl
  */
 public final class ListService {
 
-    private final String listUrl;
+    private final URL listURL;
     private final String merchantCode;
     private final String merchantPaymentToken;
     private final ListConnection listConnection;
     private final PaymentConnection paymentConnection;
 
-    private ListService(final Context context, final String listUrl, final String merchantCode, final String merchantPaymentToken) {
-        this.listUrl = listUrl;
+    private ListService(final URL listURL, final String merchantCode, final String merchantPaymentToken) {
+        this.listURL = listURL;
         this.merchantCode = merchantCode;
         this.merchantPaymentToken = merchantPaymentToken;
-        this.listConnection = new ListConnection(context);
-        this.paymentConnection = new PaymentConnection(context);
+        this.listConnection = new ListConnection();
+        this.paymentConnection = new PaymentConnection();
     }
 
     /**
      * Create a new instance of the ListService
      *
-     * @param listUrl base url to create a list
+     * @param listURL base url to create a list
      * @param merchantCode code of the test mechant
      * @param merchantPaymentToken secret payment token
      * @return new instance of the ListService
      */
-    public static ListService createInstance(String listUrl, String merchantCode, String merchantPaymentToken) {
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        return new ListService(context, listUrl, merchantCode, merchantPaymentToken);
+    public static ListService createInstance(URL listURL, String merchantCode, String merchantPaymentToken) {
+        return new ListService(listURL, merchantCode, merchantPaymentToken);
     }
 
     /**
@@ -125,7 +122,7 @@ public final class ListService {
         try {
             String listRequestBody = ListRequestBuilder.createFromListSettings(settings);
             String authHeader = createAuthHeader();
-            return listConnection.createPaymentSession(listUrl, authHeader, listRequestBody);
+            return listConnection.createPaymentSession(listURL, authHeader, listRequestBody);
         } catch (PaymentException e) {
             throw new ListServiceException("Error creating payment session", e);
         }

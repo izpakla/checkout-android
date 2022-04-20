@@ -16,8 +16,8 @@ import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
+import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.WorkerSubscriber;
@@ -33,6 +33,7 @@ import com.payoneer.checkout.network.ListConnection;
 import com.payoneer.checkout.network.LocalizationConnection;
 import com.payoneer.checkout.resource.PaymentGroup;
 import com.payoneer.checkout.resource.ResourceLoader;
+import com.payoneer.checkout.risk.RiskProviders;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.validation.Validator;
 
@@ -44,23 +45,21 @@ import android.content.Context;
  */
 public final class PaymentSessionService {
 
+    /**
+     * Memory cache of localizations
+     */
+    private static final LocalizationCache cache = new LocalizationCache();
     private final ListConnection listConnection;
     private final LocalizationConnection locConnection;
-
     private PaymentSessionListener listener;
     private WorkerTask<PaymentSession> sessionTask;
 
-    /** Memory cache of localizations */
-    private static final LocalizationCache cache = new LocalizationCache();
-
     /**
      * Create a new PaymentSessionService, this service is used to load the PaymentSession.
-     *
-     * @param context context in which this service will run
      */
-    public PaymentSessionService(Context context) {
-        this.listConnection = new ListConnection(context);
-        this.locConnection = new LocalizationConnection(context);
+    public PaymentSessionService() {
+        this.listConnection = new ListConnection();
+        this.locConnection = new LocalizationConnection();
     }
 
     /**
@@ -94,20 +93,15 @@ public final class PaymentSessionService {
     /**
      * Load the PaymentSession with the given listUrl, this will load the list result, languages and validator.
      *
-     * @param listUrl URL pointing to the list on the Payment API
+     * @param configuration is the object containing URL pointing to the list on the Payment API
      * @param context Android context in which this service is used
      */
-    public void loadPaymentSession(final String listUrl, final Context context) {
+    public void loadPaymentSession(final CheckoutConfiguration configuration, final Context context) {
 
         if (sessionTask != null) {
             throw new IllegalStateException("Already loading payment session, stop first");
         }
-        sessionTask = WorkerTask.fromCallable(new Callable<PaymentSession>() {
-            @Override
-            public PaymentSession call() throws PaymentException {
-                return asyncLoadPaymentSession(listUrl, context);
-            }
-        });
+        sessionTask = WorkerTask.fromCallable(() -> asyncLoadPaymentSession(configuration.getListURL(), context));
         sessionTask.subscribe(new WorkerSubscriber<PaymentSession>() {
             @Override
             public void onSuccess(PaymentSession paymentSession) {
@@ -150,8 +144,11 @@ public final class PaymentSessionService {
         }
     }
 
-    private PaymentSession asyncLoadPaymentSession(String listUrl, Context context) throws PaymentException {
-        ListResult listResult = listConnection.getListResult(listUrl);
+    private PaymentSession asyncLoadPaymentSession(URL listURL, Context context) throws PaymentException {
+        listConnection.initialize(context);
+        locConnection.initialize(context);
+
+        ListResult listResult = listConnection.getListResult(listURL);
 
         String integrationType = listResult.getIntegrationType();
         if (!MOBILE_NATIVE.equals(integrationType)) {
@@ -167,7 +164,8 @@ public final class PaymentSessionService {
             .build();
 
         loadValidator(context);
-        loadLocalizations(context, session);
+        loadLocalizations(session, context);
+        loadRiskProviders(session, context);
         return session;
     }
 
@@ -182,12 +180,7 @@ public final class PaymentSessionService {
         }
     }
 
-    private void loadLocalizations(Context context, PaymentSession session) throws PaymentException {
-        String listUrl = session.getListSelfUrl();
-        if (!listUrl.equals(cache.getCacheId())) {
-            cache.clear();
-            cache.setCacheId(listUrl);
-        }
+    private void loadLocalizations(final PaymentSession session, final Context context) throws PaymentException {
         LocalizationHolder localHolder = new LocalLocalizationHolder(context);
         LocalizationHolder sharedHolder = loadLocalizationHolder(session.getListLanguageLink(), localHolder);
 
@@ -208,5 +201,17 @@ public final class PaymentSessionService {
             cache.put(langUrl, holder);
         }
         return holder;
+    }
+
+    private void loadRiskProviders(final PaymentSession session, final Context context) {
+        String listUrl = session.getListSelfUrl();
+        RiskProviders riskProviders = RiskProviders.getInstance();
+
+        if (riskProviders != null && riskProviders.containsRiskProvidersId(listUrl)) {
+            return;
+        }
+        riskProviders = new RiskProviders(listUrl);
+        riskProviders.initializeRiskProviders(session.getRiskProviders(), context);
+        RiskProviders.setInstance(riskProviders);
     }
 }

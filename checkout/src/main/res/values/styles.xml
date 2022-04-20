@@ -1,52 +1,52 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="TextAppearance.Payment.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+    <style name="TextAppearance.Checkout.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="fontFamily">@font/roboto_medium</item>
     </style>
 
-    <style name="TextAppearance.Payment.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+    <style name="TextAppearance.Checkout.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
         <item name="fontFamily">@font/roboto_medium</item>
     </style>
 
-    <style name="TextAppearance.Payment.Body1" parent="TextAppearance.MaterialComponents.Body1">
+    <style name="TextAppearance.Checkout.Body1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="fontFamily">@font/roboto_light</item>
     </style>
 
-    <style name="TextAppearance.Payment.Body2" parent="TextAppearance.MaterialComponents.Body2">
+    <style name="TextAppearance.Checkout.Body2" parent="TextAppearance.MaterialComponents.Body2">
         <item name="fontFamily">@font/roboto_light</item>
     </style>
 
-    <style name="TextAppearance.Payment.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+    <style name="TextAppearance.Checkout.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="fontFamily">@font/roboto_medium</item>
     </style>
 
-    <style name="TextAppearance.Payment.Button" parent="TextAppearance.MaterialComponents.Button">
+    <style name="TextAppearance.Checkout.Button" parent="TextAppearance.MaterialComponents.Button">
         <item name="fontFamily">@font/roboto_medium</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="TextAppearance.Payment.Caption" parent="TextAppearance.MaterialComponents.Caption">
+    <style name="TextAppearance.Checkout.Caption" parent="TextAppearance.MaterialComponents.Caption">
         <item name="fontFamily">@font/roboto_light</item>
     </style>
 
-    <style name="Widget.Payment.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Payment.Toolbar</item>
-        <item name="titleTextAppearance">@style/TextAppearance.Payment.Headline6</item>
+    <style name="Widget.Checkout.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Checkout.Toolbar</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Checkout.Headline6</item>
         <item name="titleTextColor">?attr/colorOnBackground</item>
         <item name="android:elevation" tools:targetApi="21">@dimen/pmtoolbar_elevation</item>
     </style>
 
-    <style name="ThemeOverlay.Payment.Toolbar" parent="">
+    <style name="ThemeOverlay.Checkout.Toolbar" parent="">
         <item name="colorPrimary">?android:attr/colorBackground</item>
     </style>
 
-    <style name="Widget.Payment.Button.UnelevatedButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <style name="Widget.Checkout.Button.UnelevatedButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:minHeight">@dimen/pmbutton_height</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Payment.SmallComponent</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Checkout.SmallComponent</item>
     </style>
 
-    <style name="Widget.Payment.CardView" parent="Widget.MaterialComponents.CardView">
-        <item name="shapeAppearance">@style/ShapeAppearance.Payment.MediumComponent</item>
+    <style name="Widget.Checkout.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="shapeAppearance">@style/ShapeAppearance.Checkout.MediumComponent</item>
         <item name="cardElevation">@dimen/pmcard_elevation</item>
         <item name="strokeWidth">@dimen/pmcard_stroke</item>
         <item name="cardForegroundColor">@color/pm_transparent</item>
@@ -54,9 +54,9 @@
         <item name="strokeColor">@color/payment_card_stroke_color</item>
     </style>
 
-    <style name="Widget.Payment.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Payment.TextInputLayout</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Payment.SmallComponent</item>
+    <style name="Widget.Checkout.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Checkout.TextInputLayout</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Checkout.SmallComponent</item>
         <item name="errorIconDrawable">@null</item>
         <item name="boxBackgroundColor">@color/pm_gray100</item>
         <item name="android:textColorHint">@color/pm_gray_dark</item>
@@ -65,42 +65,42 @@
         <item name="boxStrokeColor">@color/payment_textinputlayout_stroke_color</item>
     </style>
 
-    <style name="ThemeOverlay.Payment.TextInputLayout" parent="">
-        <item name="textAppearanceSubtitle1">@style/TextAppearance.Payment.Body1</item>
+    <style name="ThemeOverlay.Checkout.TextInputLayout" parent="">
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Checkout.Body1</item>
         <item name="android:textColorPrimary">?attr/colorOnBackground</item>
         <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.FilledBox</item>
     </style>
 
-    <style name="Widget.Payment.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+    <style name="Widget.Checkout.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
         <item name="trackTint">@color/payment_switch_track_tint</item>
     </style>
 
-    <style name="Widget.Payment.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+    <style name="Widget.Checkout.Snackbar" parent="Widget.MaterialComponents.Snackbar">
         <item name="backgroundTint">?attr/colorOnSurface</item>
     </style>
 
-    <style name="MaterialAlertDialog.Payment" parent="MaterialAlertDialog.MaterialComponents">
-        <item name="shapeAppearance">@style/ShapeAppearance.Payment.MediumComponent</item>
+    <style name="MaterialAlertDialog.Checkout" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="shapeAppearance">@style/ShapeAppearance.Checkout.MediumComponent</item>
     </style>
 
-    <style name="MaterialAlertDialog.Payment.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+    <style name="MaterialAlertDialog.Checkout.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="MaterialAlertDialog.Payment.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+    <style name="MaterialAlertDialog.Checkout.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="Widget.Payment.Button.TextButton.Dialog" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="shapeAppearance">@style/ShapeAppearance.Payment.SmallComponent</item>
+    <style name="Widget.Checkout.Button.TextButton.Dialog" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="shapeAppearance">@style/ShapeAppearance.Checkout.SmallComponent</item>
     </style>
 
-    <style name="ShapeAppearance.Payment.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+    <style name="ShapeAppearance.Checkout.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
         <item name="cornerSize">@dimen/pmradius</item>
     </style>
     ​
 
-    <style name="ShapeAppearance.Payment.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+    <style name="ShapeAppearance.Checkout.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
         <item name="cornerSize">@dimen/pmradius</item>
     </style>
 

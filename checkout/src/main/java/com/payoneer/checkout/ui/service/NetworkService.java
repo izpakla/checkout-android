@@ -13,6 +13,8 @@ import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.redirect.RedirectRequest;
 
+import android.content.Context;
+
 /**
  * Interface for network services, a NetworkService is responsible for activating and
  * processing a payment through the supported payment network.
@@ -40,16 +42,18 @@ public abstract class NetworkService {
      * Process the payment through this NetworkService.
      *
      * @param operation that should be processed
+     * @param context in which this payment will be processed
      */
-    public void processPayment(Operation operation) {
+    public void processPayment(Operation operation, Context context) {
     }
 
     /**
      * Delete the AccountRegistration through this NetworkService.
      *
      * @param account to be deleted from this network
+     * @param context in which this account will be deleted
      */
-    public void deleteAccount(DeleteAccount account) {
+    public void deleteAccount(DeleteAccount account, Context context) {
     }
 
     /**

@@ -11,10 +11,12 @@ package com.payoneer.checkout.ui.page;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 
+import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.localization.Localization;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,13 +28,10 @@ import androidx.annotation.NonNull;
  */
 public final class ChargePaymentActivity extends BasePaymentActivity implements BasePaymentView {
 
-    private final static String EXTRA_OPERATION = "operation";
-    private final static String EXTRA_CHARGE_TYPE = "charge_type";
-    public final static int TYPE_CHARGE_OPERATION = 1;
-    public final static int TYPE_CHARGE_PRESET_ACCOUNT = 2;
     private int chargeType;
     private ChargePaymentPresenter presenter;
     private Operation operation;
+    private CheckoutConfiguration configuration;
 
     /**
      * Create the start intent for this ChargePaymentActivity
@@ -40,7 +39,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
      * @param context Context to create the intent
      * @return newly created start intent
      */
-    public static Intent createStartIntent(Context context, Operation operation) {
+    public static Intent createStartIntent(Context context, CheckoutConfiguration checkoutConfiguration, Operation operation) {
         if (context == null) {
             throw new IllegalArgumentException("context may not be null");
         }
@@ -50,6 +49,7 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
         Intent intent = new Intent(context, ChargePaymentActivity.class);
         intent.putExtra(EXTRA_CHARGE_TYPE, TYPE_CHARGE_OPERATION);
         intent.putExtra(EXTRA_OPERATION, operation);
+        intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, checkoutConfiguration);
         return intent;
     }
 
@@ -59,12 +59,13 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
      * @param context Context to create the intent
      * @return newly created start intent
      */
-    public static Intent createStartIntent(Context context) {
+    public static Intent createStartIntent(Context context, CheckoutConfiguration checkoutConfiguration) {
         if (context == null) {
             throw new IllegalArgumentException("context may not be null");
         }
         Intent intent = new Intent(context, ChargePaymentActivity.class);
         intent.putExtra(EXTRA_CHARGE_TYPE, TYPE_CHARGE_PRESET_ACCOUNT);
+        intent.putExtra(EXTRA_CHECKOUT_CONFIGURATION, checkoutConfiguration);
         return intent;
     }
 
@@ -80,22 +81,25 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
     /**
      * {@inheritDoc}
      */
+    @SuppressLint("WrongConstant")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int theme = getPaymentTheme().getChargePaymentTheme();
-        if (theme != 0) {
-            setTheme(theme);
-        }
         Bundle bundle = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
         if (bundle != null) {
             this.operation = bundle.getParcelable(EXTRA_OPERATION);
             this.chargeType = bundle.getInt(EXTRA_CHARGE_TYPE);
+            this.configuration = bundle.getParcelable(EXTRA_CHECKOUT_CONFIGURATION);
+        }
+        setRequestedOrientation(configuration.getOrientation());
+        int theme = configuration.getCheckoutTheme().getNoToolbarTheme();
+        if (theme != 0) {
+            setTheme(theme);
         }
         setContentView(R.layout.activity_chargepayment);
 
         progressView = new ProgressView(findViewById(R.id.layout_progress));
-        this.presenter = new ChargePaymentPresenter(this);
+        this.presenter = new ChargePaymentPresenter(configuration, this);
     }
 
     /**
@@ -106,6 +110,9 @@ public final class ChargePaymentActivity extends BasePaymentActivity implements 
         super.onSaveInstanceState(savedInstanceState);
         if (this.operation != null) {
             savedInstanceState.putParcelable(EXTRA_OPERATION, this.operation);
+        }
+        if (this.configuration != null) {
+            savedInstanceState.putParcelable(EXTRA_CHECKOUT_CONFIGURATION, this.configuration);
         }
     }
 

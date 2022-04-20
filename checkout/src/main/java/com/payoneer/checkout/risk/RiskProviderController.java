@@ -87,7 +87,7 @@ public final class RiskProviderController {
      * @return RiskProviderResult obtained from the RiskProvider
      */
     public RiskProviderResult getRiskProviderResult(final Context context) {
-        if (riskProvider != null) {
+        if (riskProviderErrors.isEmpty()) {
             String code = info.getRiskProviderCode();
             String type = info.getRiskProviderType();
             try {

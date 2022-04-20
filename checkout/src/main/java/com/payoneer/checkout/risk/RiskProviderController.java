@@ -72,8 +72,8 @@ public final class RiskProviderController {
             Context applicationContext = context.getApplicationContext();
             riskProvider.initialize(info, applicationContext);
         } catch (RiskException e) {
-            String message = "Error initializing RiskProvider[" + code + ", " + type + "] - " + e.getMessage();
-            riskProviderErrors.putExternalError(message);
+            String message = "Error initializing RiskProvider[" + code + ", " + type + "]";
+            riskProviderErrors.putExternalError(message, e);
             Log.w("checkout-sdk", message, e);
         }
     }
@@ -94,8 +94,8 @@ public final class RiskProviderController {
                 Context applicationContext = context.getApplicationContext();
                 return riskProvider.getRiskProviderResult(applicationContext);
             } catch (RiskException e) {
-                String message = "Error obtaining result for RiskProvider[" + code + ", " + type + "] - " + e.getMessage();
-                riskProviderErrors.putExternalError(message);
+                String message = "Error obtaining result for RiskProvider[" + code + ", " + type + "]";
+                riskProviderErrors.putExternalError(message, e);
                 Log.w("checkout-sdk", message, e);
             }
         }

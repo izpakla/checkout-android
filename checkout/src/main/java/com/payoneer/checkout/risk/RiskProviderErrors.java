@@ -36,8 +36,25 @@ public final class RiskProviderErrors {
         errors.put(RESULTKEY_INTERNAL_ERROR, trimError(error));
     }
 
+    public void putInternalError(final String error, final RiskException exception) {
+        errors.put(RESULTKEY_INTERNAL_ERROR, createErrorMessage(error, exception));
+    }
+
     public void putExternalError(final String error) {
         errors.put(RESULTKEY_EXTERNAL_ERROR, trimError(error));
+    }
+
+    public void putExternalError(final String error, final RiskException exception) {
+        errors.put(RESULTKEY_EXTERNAL_ERROR, createErrorMessage(error, exception));
+    }
+
+    private String createErrorMessage(final String error, final RiskException exception) {
+        String message = error + " - " + exception.getMessage();
+        Throwable cause = exception.getCause();
+        if (cause != null) {
+            message += " - " + cause.toString();
+        }
+        return trimError(message);
     }
 
     private String trimError(final String error) {

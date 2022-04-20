@@ -20,8 +20,8 @@ import android.content.Context;
  * The RiskProviders class contains the list of RiskProviderControllers each handling a third-party risk provider service.
  */
 public final class RiskProviders {
-    private final List<RiskProviderController> controllers;
     private static RiskProviders instance;
+    private final List<RiskProviderController> controllers;
     private final String riskProvidersId;
 
     public RiskProviders(final String riskProvidersId) {
@@ -117,15 +117,13 @@ public final class RiskProviders {
     }
 
     private ProviderParameters getRiskProviderRequest(final RiskProviderController controller, final Context context) {
+        RiskProviderResult result = controller.getRiskProviderResult(context);
+        List<Parameter> parameters = result.getProviderResultParameters();
+
         ProviderParameters request = new ProviderParameters();
+        request.setParameters(parameters);
         request.setProviderCode(controller.getRiskProviderCode());
         request.setProviderType(controller.getRiskProviderType());
-
-        List<Parameter> parameters = new ArrayList<>();
-        request.setParameters(parameters);
-
-        RiskProviderResult result = controller.getRiskProviderResult(context);
-        result.copyInto(parameters);
         return request;
     }
 }

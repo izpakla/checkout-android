@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,11 +20,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import com.payoneer.checkout.model.Parameter;
+
 import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 
 @RunWith(RobolectricTestRunner.class)
 public class RiskProviderControllerTest {
+
+    private final String RESULTKEY_INTERNAL_ERROR = "riskPluginInternalError";
+
+    public static boolean contains(Collection<Parameter> parameters, String value, String name) {
+        for (Parameter parameter : parameters) {
+            if (parameter != null && parameter.getValue().equals(value) && parameter.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Test
     public void getRiskProviderInfo() {
@@ -62,6 +76,21 @@ public class RiskProviderControllerTest {
 
         RiskProviderResult result = controller.getRiskProviderResult(context);
         assertNotNull(result);
+    }
+
+    @Test
+    public void getRiskProviderResultWithInternalError() {
+        RiskProviderInfo info = createRiskProviderInfo("CODE", "TYPE");
+        RiskProviderController controller = new RiskProviderController(info);
+        controller.initialize(null);
+
+        String errorMessage = "Could not find RiskProvider[CODE, TYPE]";
+        RiskProviderResult result = controller.getRiskProviderResult(ApplicationProvider.getApplicationContext());
+        Map<String, String> riskData = result.getRiskData();
+
+        assertNotNull(result);
+        assertTrue(riskData.containsKey(RESULTKEY_INTERNAL_ERROR));
+        assertEquals(errorMessage, riskData.get(RESULTKEY_INTERNAL_ERROR));
     }
 
     private RiskProviderInfo createRiskProviderInfo(final String code, final String type) {

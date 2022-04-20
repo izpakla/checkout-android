@@ -16,6 +16,7 @@ import com.payoneer.checkout.risk.RiskProviderInfo;
 import com.payoneer.checkout.risk.RiskProviderResult;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * Iovation Risk provider implementation
@@ -54,7 +55,7 @@ public final class IovationRiskProvider implements RiskProvider {
             result.put(RESULTKEY_BLACKBOX, blackBox);
             return result;
         } catch (Exception e) {
-            throw new RiskException("Unexpected Exception caught while getting risk result", e);
+            throw new RiskException("IovationRiskProvider - Unexpected Exception caught while getting risk result", e);
         }
     }
 

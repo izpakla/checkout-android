@@ -27,25 +27,30 @@ import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 import com.payoneer.checkout.util.PaymentUtils;
 
+import android.text.TextUtils;
 import android.util.Log;
 import androidx.fragment.app.Fragment;
 
 /**
- * Create a new BasicNetworkService, this service is a basic implementation
- * of the payment service that handles credit/debit cards and redirect networks.
+ * Create a new GooglePayBraintreePaymentService, this service handles payment requests
+ * for GooglePay networks routed through Braintree provider.
  */
 public class GooglePayBraintreePaymentService extends PaymentService {
 
-    private final int STOPPED = 0x00;
-    private final int DELETE_ACCOUNT = 0x01;
-    private final int PROCESS_ONSELECT = 0x02;
-    private final int PROCESS_GETTOKEN = 0x03;
-    private final int PROCESS_FINALIZE = 0x04;
+    private final String TAG = "GooglePayBraintree";
+    private final String BRAINTREE_AUTHORIZATION = "braintreeJsAuthorisation";
+
+    private final int IDLE = 0x00;
+    private final int DELETEACCOUNT_ACTIVE = 0x11;
+    private final int DELETEACCOUNT_REDIRECT = 0x12;
+
+    private final int PROCESSPAYMENT_ONSELECT = 0x20;
+    private final int PROCESSPAYMENT_GETTOKEN = 0x21;
+    private final int PROCESSPAYMENT_FINALIZE = 0x22;
+    private final int PROCESSPAYMENT_REDIRECT = 0x23;
 
     private final OperationService operationService;
     private RequestData requestData;
-    private RedirectRequest redirectRequest;
-
     private int state;
 
     /**
@@ -85,38 +90,41 @@ public class GooglePayBraintreePaymentService extends PaymentService {
 
     @Override
     public void resume() {
-        if (redirectRequest != null) {
-            handleRedirectResult(redirectRequest);
-            redirectRequest = null;
+        if (isPending()) {
+            handleRedirectResult();
+        } else {
+            throw new IllegalStateException("resume must not be called when PaymentService when isPending() returns false");
         }
     }
 
     @Override
     public boolean isPending() {
-        return redirectRequest != null;
+        return (state == PROCESSPAYMENT_REDIRECT) || (state == DELETEACCOUNT_REDIRECT);
     }
 
     @Override
     public void processPayment(final RequestData requestData) {
+        resetPaymentService();
         this.requestData = requestData;
-        this.redirectRequest = null;
-        this.state = PROCESS_ONSELECT;
+        this.state = PROCESSPAYMENT_ONSELECT;
 
+        presenter.onProcessPaymentActive(requestData, false);
         Operation operation = createOperation(requestData, PaymentLinkType.ONSELECT);
         operationService.postOperation(operation, presenter.getApplicationContext());
     }
 
     @Override
     public void deleteAccount(final RequestData requestData) {
+        resetPaymentService();
         this.requestData = requestData;
-        this.redirectRequest = null;
-        this.state = DELETE_ACCOUNT;
+        this.state = DELETEACCOUNT_ACTIVE;
 
+        presenter.onDeleteAccountActive(requestData);
         DeleteAccount deleteAccount = createDeleteAccount(requestData);
         operationService.deleteAccount(deleteAccount, presenter.getApplicationContext());
     }
 
-    private void handleRedirectResult(RedirectRequest request) {
+    private void handleRedirectResult() {
         CheckoutResult checkoutResult;
         OperationResult operationResult = RedirectService.getRedirectResult();
 
@@ -124,31 +132,33 @@ public class GooglePayBraintreePaymentService extends PaymentService {
             checkoutResult = new CheckoutResult(operationResult);
         } else {
             String message = "Missing OperationResult after client-side redirect";
-            String interactionCode = getErrorInteractionCode(requestData.getOperationType());
-            checkoutResult = CheckoutResultHelper.fromErrorMessage(interactionCode, message);
+            checkoutResult = createFromErrorMessage(message);
         }
-        Log.i("checkout-sdk", "onRedirectResult: " + checkoutResult);
-
-        if (state == DELETE_ACCOUNT) {
-            presenter.onDeleteAccountResult(requestData, checkoutResult);
+        if (state == DELETEACCOUNT_REDIRECT) {
+            closeWithDeleteAccountResult(requestData, checkoutResult);
         } else {
-            presenter.onProcessPaymentResult(requestData, checkoutResult);
+            closeWithProcessPaymentResult(requestData, checkoutResult);
         }
     }
 
-    private void handleProcessPaymentSuccess(OperationResult operationResult) {
+    private void handleProcessPaymentSuccess(final OperationResult operationResult) {
         switch (state) {
-            case PROCESS_ONSELECT:
+            case PROCESSPAYMENT_ONSELECT:
                 handleProcessOnSelectSuccess(operationResult);
                 break;
-            case PROCESS_FINALIZE:
+            case PROCESSPAYMENT_FINALIZE:
                 handleFinalizePaymentSuccess(operationResult);
         }
     }
 
     private void handleProcessOnSelectSuccess(final OperationResult operationResult) {
-        PaymentUtils.getProviderParameterValue("", operationResult);
-        state = PROCESS_GETTOKEN;
+        state = PROCESSPAYMENT_GETTOKEN;
+        String auth = PaymentUtils.getProviderParameterValue(BRAINTREE_AUTHORIZATION, operationResult);
+        if (TextUtils.isEmpty((auth))) {
+            CheckoutResult checkoutResult = createFromErrorMessage("Braintree authorization key missing from OperationResult");
+            closeWithProcessPaymentResult(requestData, checkoutResult);
+            return;
+        }
         Fragment fragment = GooglePayBraintreeFragment.newInstance();
         presenter.showCustomFragment(fragment);
     }
@@ -156,18 +166,14 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     private void handleFinalizePaymentSuccess(final OperationResult operationResult) {
         Interaction interaction = operationResult.getInteraction();
         CheckoutResult checkoutResult = new CheckoutResult(operationResult);
-        Log.i("checkout-sdk", "handleProcessPaymentSuccess: " + checkoutResult);
 
-        if (!PROCEED.equals(interaction.getCode())) {
-            presenter.onProcessPaymentResult(requestData, checkoutResult);
-            return;
-        }
-        if (!requiresRedirect(operationResult)) {
-            presenter.onProcessPaymentResult(requestData, checkoutResult);
+        if (!(PROCEED.equals(interaction.getCode()) || requiresRedirect(operationResult))) {
+            closeWithProcessPaymentResult(requestData, checkoutResult);
             return;
         }
         try {
-            redirectRequest = redirect(PROCESSPAYMENT_REQUEST_CODE, operationResult);
+            state = PROCESSPAYMENT_REDIRECT;
+            redirect(state, operationResult);
         } catch (PaymentException e) {
             handleProcessPaymentError(e);
         }
@@ -176,40 +182,49 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     private void handleProcessPaymentError(Throwable cause) {
         String code = getErrorInteractionCode(requestData.getOperationType());
         CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(code, cause);
-        Log.i("checkout-sdk", "handleProcessPaymentError: " + checkoutResult);
-        presenter.onProcessPaymentResult(requestData, checkoutResult);
+        closeWithProcessPaymentResult(requestData, checkoutResult);
     }
 
     private void handleDeleteAccountSuccess(OperationResult operationResult) {
         Interaction interaction = operationResult.getInteraction();
         CheckoutResult checkoutResult = new CheckoutResult(operationResult);
-        Log.i("checkout-sdk", "handleDeleteAccountSuccess: " + checkoutResult);
 
-        if (!PROCEED.equals(interaction.getCode())) {
-            presenter.onDeleteAccountResult(requestData, checkoutResult);
-            return;
-        }
-        if (!requiresRedirect(operationResult)) {
-            presenter.onDeleteAccountResult(requestData, checkoutResult);
+        if (!(PROCEED.equals(interaction.getCode()) || requiresRedirect(operationResult))) {
+            closeWithDeleteAccountResult(requestData, checkoutResult);
             return;
         }
         try {
-            redirectRequest = redirect(DELETEACCOUNT_REQUEST_CODE, operationResult);
+            state = DELETEACCOUNT_REDIRECT;
+            redirect(state, operationResult);
         } catch (PaymentException e) {
             handleDeleteAccountError(e);
         }
     }
 
-    private void handleDeleteAccountError(Throwable cause) {
+    private void handleDeleteAccountError(final Throwable cause) {
         CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(ABORT, cause);
-        Log.i("checkout-sdk", "handleDeleteAccountError: " + checkoutResult);
+        closeWithDeleteAccountResult(requestData, checkoutResult);
+    }
+
+    private void closeWithProcessPaymentResult(final RequestData requestData, final CheckoutResult checkoutResult) {
+        resetPaymentService();
+        Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
+        presenter.onProcessPaymentResult(requestData, checkoutResult);
+    }
+
+    private void closeWithDeleteAccountResult(final RequestData requestData, final CheckoutResult checkoutResult) {
+        resetPaymentService();
+        Log.i(TAG, "closeWithDeleteAccountResult: " + checkoutResult);
         presenter.onDeleteAccountResult(requestData, checkoutResult);
     }
 
-    private void closeWithDeleteAccountResult(CheckoutResult checkoutResult) {
-        RequestData data = this.requestData;
+    private CheckoutResult createFromErrorMessage(final String message) {
+        String interactionCode = getErrorInteractionCode(requestData.getOperationType());
+        return CheckoutResultHelper.fromErrorMessage(interactionCode, message);
+    }
+
+    private void resetPaymentService() {
+        this.state = IDLE;
         this.requestData = null;
-        this.state = STOPPED;
-        presenter.onDeleteAccountResult(requestData, checkoutResult);
     }
 }

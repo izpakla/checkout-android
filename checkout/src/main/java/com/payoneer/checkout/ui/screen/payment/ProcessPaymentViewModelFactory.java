@@ -16,6 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+/**
+ * Factory class for creating the ProcessPaymentViewModel
+ */
 final class ProcessPaymentViewModelFactory implements ViewModelProvider.Factory {
 
     private final Context applicationContext;

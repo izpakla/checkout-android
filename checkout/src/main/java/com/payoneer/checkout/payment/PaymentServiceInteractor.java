@@ -14,13 +14,13 @@ import com.payoneer.checkout.core.PaymentException;
 import android.content.Context;
 import androidx.fragment.app.Fragment;
 
-public class PaymentServiceInteractor {
+/**
+ * Class for handling the interaction between the PaymentService and e.g. a ViewModel.
+ */
+public final class PaymentServiceInteractor {
 
     private Observer observer;
     private PaymentService paymentService;
-
-    public PaymentServiceInteractor() {
-    }
 
     public void loadPaymentService(final String code, final String paymentMethod) throws PaymentException {
         paymentService = PaymentServiceLookup.createService(code, paymentMethod);
@@ -30,9 +30,9 @@ public class PaymentServiceInteractor {
         paymentService.setListener(new PaymentServiceListener() {
 
             @Override
-            public void showCustomFragment(final Fragment customFragment) {
+            public void showFragment(final Fragment fragment) {
                 if (observer != null) {
-                    observer.showCustomFragment(customFragment);
+                    observer.showFragment(fragment);
                 }
             }
 
@@ -66,6 +66,12 @@ public class PaymentServiceInteractor {
         });
     }
 
+    /**
+     * Ask the PaymentService if it needs to be resumed, e.g. if the PaymentService is waiting
+     * for a redirect result.
+     *
+     * @return true when resumed, false otherwise
+     */
     public boolean onResume() {
         if (paymentService != null && paymentService.isPending()) {
             paymentService.resume();
@@ -74,6 +80,9 @@ public class PaymentServiceInteractor {
         return false;
     }
 
+    /**
+     * Notify PaymentService that it will be stopped. For example if the Activity is paused.
+     */
     public void onStop() {
         if (paymentService != null) {
             paymentService.onStop();
@@ -100,7 +109,7 @@ public class PaymentServiceInteractor {
 
     public interface Observer {
 
-        void showCustomFragment(final Fragment customFragment);
+        void showFragment(final Fragment fragment);
 
         void onProcessPaymentActive();
 

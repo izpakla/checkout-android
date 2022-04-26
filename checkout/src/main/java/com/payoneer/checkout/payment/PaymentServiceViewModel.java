@@ -13,7 +13,7 @@ import com.payoneer.checkout.util.AppContextViewModel;
 import android.content.Context;
 
 /**
- * PaymentServiceViewModel provides communication between the view and the payment service through the controller.
+ * PaymentServiceViewModel provides communication between the view and the payment service.
  */
 public final class PaymentServiceViewModel extends AppContextViewModel {
 

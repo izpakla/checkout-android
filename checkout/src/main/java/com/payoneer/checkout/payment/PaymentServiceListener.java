@@ -13,11 +13,12 @@ import com.payoneer.checkout.CheckoutResult;
 import androidx.fragment.app.Fragment;
 
 /**
- * Controller handling the communication between the UI and the payment service.
+ * PaymentService listeners should implement this interface in order to receive events from the
+ * PaymentService.
  */
 public interface PaymentServiceListener {
 
-    void showCustomFragment(final Fragment customFragment);
+    void showFragment(final Fragment fragment);
 
     void onProcessPaymentActive();
 

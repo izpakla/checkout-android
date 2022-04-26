@@ -55,7 +55,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 /**
- * PaymentListViewModel provides LiveData between the PaymentListActivity and PaymentListPresenter.
+ * PaymentListViewModel provides LiveData for the views and communicates with the interactors.
  * It operates within the lifecycle of the PaymentListActivity.
  */
 final class PaymentListViewModel extends AppContextViewModel {
@@ -65,9 +65,9 @@ final class PaymentListViewModel extends AppContextViewModel {
     private final MutableLiveData<ContentEvent<PaymentDialogData>> showPaymentDialog = new MutableLiveData<>();
     private final MutableLiveData<Event> showPaymentListFragment = new MutableLiveData<>();
     private final MutableLiveData<Event> showTransactionFragment = new MutableLiveData<>();
+    private final MutableLiveData<ContentEvent<Fragment>> showCustomFragment = new MutableLiveData<>();
     private final MutableLiveData<ContentEvent<Boolean>> showPaymentListProgress = new MutableLiveData<>();
     private final MutableLiveData<ContentEvent<Boolean>> showTransactionProgress = new MutableLiveData<>();
-    private final MutableLiveData<ContentEvent<Fragment>> showCustomFragment = new MutableLiveData<>();
 
     private final PaymentSessionInteractor sessionInteractor;
     private final PaymentServiceInteractor serviceInteractor;
@@ -78,9 +78,9 @@ final class PaymentListViewModel extends AppContextViewModel {
     /**
      * Construct a new ProcessPaymentViewModel
      *
-     * @param applicationContext context of the application running this SDK
-     * @param sessionInteractor interacts with the PaymentSessionService
-     * @param serviceInteractor interacts with the PaymentService
+     * @param applicationContext context of the application
+     * @param sessionInteractor provides interaction with the PaymentSessionService
+     * @param serviceInteractor provides interaction with the PaymentService
      */
     PaymentListViewModel(final Context applicationContext, final PaymentSessionInteractor sessionInteractor,
         final PaymentServiceInteractor serviceInteractor) {
@@ -190,8 +190,8 @@ final class PaymentListViewModel extends AppContextViewModel {
     private void initPaymentServiceObserver(final PaymentServiceInteractor interactor) {
         interactor.setObserver(new PaymentServiceInteractor.Observer() {
             @Override
-            public void showCustomFragment(final Fragment customFragment) {
-                setShowCustomFragment(customFragment);
+            public void showFragment(final Fragment fragment) {
+                setShowCustomFragment(fragment);
             }
 
             @Override

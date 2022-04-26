@@ -59,9 +59,9 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
     /**
      * Construct a new ProcessPaymentViewModel
      *
-     * @param applicationContext context of the application running this SDK
-     * @param sessionInteractor interacts with the PaymentSessionService
-     * @param serviceInteractor interacts with the PaymentService
+     * @param applicationContext context of the application
+     * @param sessionInteractor provides interaction with the PaymentSessionService
+     * @param serviceInteractor provides interaction with the PaymentService
      */
     ProcessPaymentViewModel(final Context applicationContext, final PaymentSessionInteractor sessionInteractor,
         final PaymentServiceInteractor serviceInteractor) {
@@ -111,8 +111,8 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
     private void initPaymentServiceObserver(final PaymentServiceInteractor interactor) {
         interactor.setObserver(new PaymentServiceInteractor.Observer() {
             @Override
-            public void showCustomFragment(final Fragment customFragment) {
-                showCustomFragment.setValue(new ContentEvent<>(customFragment));
+            public void showFragment(final Fragment fragment) {
+                setShowCustomFragment(fragment);
             }
 
             @Override
@@ -135,6 +135,10 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
                 // delete account is not implemented by this viewmodel
             }
         });
+    }
+
+    private void setShowCustomFragment(final Fragment customFragment) {
+        showCustomFragment.setValue(new ContentEvent<>(customFragment));
     }
 
     private void setCloseWithCheckoutResult(final CheckoutResult checkoutResult) {

@@ -8,24 +8,33 @@
 
 package com.payoneer.checkout.ui.screen.list;
 
+import com.payoneer.checkout.payment.PaymentServiceInteractor;
+import com.payoneer.checkout.ui.session.PaymentSessionInteractor;
+
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+/**
+ * Factory for creating a new PaymentListViewModel
+ */
 final class PaymentListViewModelFactory implements ViewModelProvider.Factory {
 
     private final Context applicationContext;
-    private final PaymentListPresenter presenter;
+    private final PaymentServiceInteractor serviceInteractor;
+    private final PaymentSessionInteractor sessionInteractor;
 
-    PaymentListViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentListPresenter presenter) {
+    PaymentListViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentSessionInteractor sessionInteractor,
+        @NonNull PaymentServiceInteractor serviceInteractor) {
         this.applicationContext = applicationContext;
-        this.presenter = presenter;
+        this.sessionInteractor = sessionInteractor;
+        this.serviceInteractor = serviceInteractor;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull final Class<T> modelClass) {
-        return (T) new PaymentListViewModel(applicationContext, presenter);
+        return (T) new PaymentListViewModel(applicationContext, sessionInteractor, serviceInteractor);
     }
 }

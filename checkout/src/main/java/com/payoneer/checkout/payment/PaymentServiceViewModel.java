@@ -9,30 +9,18 @@
 package com.payoneer.checkout.payment;
 
 import com.payoneer.checkout.util.AppContextViewModel;
-import com.payoneer.checkout.util.ContentEvent;
 
 import android.content.Context;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 
 /**
- * PaymentServiceViewModel provides LiveData between the PaymentServicePresenter and the host activity.
- * It operates within the lifecycle of the host activity.
+ * PaymentServiceViewModel provides communication between the view and the payment service.
  */
 public final class PaymentServiceViewModel extends AppContextViewModel {
 
-    private final PaymentServicePresenter presenter;
-    public MutableLiveData<ContentEvent<Fragment>> showCustomFragment;
+    private final PaymentServiceInteractor serviceInteractor;
 
-    PaymentServiceViewModel(final Context applicationContext, final PaymentServicePresenter presenter) {
+    PaymentServiceViewModel(final Context applicationContext, final PaymentServiceInteractor serviceInteractor) {
         super(applicationContext);
-        this.presenter = presenter;
-
-        showCustomFragment = new MutableLiveData<>();
-        presenter.setPaymentServiceViewModel(this);
-    }
-
-    public void showCustomFragment(final Fragment customFragment) {
-        showCustomFragment.setValue(new ContentEvent<>(customFragment));
+        this.serviceInteractor = serviceInteractor;
     }
 }

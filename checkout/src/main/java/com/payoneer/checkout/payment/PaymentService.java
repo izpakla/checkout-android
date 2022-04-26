@@ -36,14 +36,14 @@ import android.content.Context;
  */
 public abstract class PaymentService {
 
-    protected PaymentServicePresenter presenter;
+    protected PaymentServiceListener listener;
 
-    public void setPresenter(final PaymentServicePresenter presenter) {
-        this.presenter = presenter;
+    public void setListener(final PaymentServiceListener listener) {
+        this.listener = listener;
     }
 
     /**
-     * Called when the presenter is stopped, e.g. the user clicked the back button
+     * Called when the payment service will be stopped, e.g. the user clicked the back button
      */
     public abstract void onStop();
 
@@ -66,25 +66,26 @@ public abstract class PaymentService {
      *
      * @param requestData containing the data to make the payment request
      */
-    public abstract void processPayment(final RequestData requestData);
+    public abstract void processPayment(final RequestData requestData, final Context applicationContext);
 
     /**
      * Ask the payment service to delete the account.
      *
      * @param requestData containing the account data that should be deleted
      */
-    public abstract void deleteAccount(final RequestData requestData);
+    public abstract void deleteAccount(final RequestData requestData, final Context applicationContext);
 
     /**
      * Create a redirect request and open a custom chrome tab to continue processing the request.
      *
+     * @param context to be used to make the redirect call
      * @param requestCode code to identify the origin request
      * @param operationResult containing the redirect details like redirect URL
      * @return newly created RedirectRequest
      * @throws PaymentException when an error occurred while redirecting
      */
-    protected RedirectRequest redirect(final int requestCode, final OperationResult operationResult) throws PaymentException {
-        Context context = presenter.getApplicationContext();
+    protected RedirectRequest redirect(final Context context, final int requestCode, final OperationResult operationResult)
+        throws PaymentException {
         RedirectRequest redirectRequest = RedirectRequest.fromOperationResult(requestCode, operationResult);
 
         if (!RedirectService.supports(context, redirectRequest)) {

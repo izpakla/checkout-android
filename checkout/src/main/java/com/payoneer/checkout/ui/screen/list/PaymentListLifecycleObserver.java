@@ -15,25 +15,25 @@ import androidx.lifecycle.LifecycleOwner;
 
 /**
  * Class for observing the lifecycle of the PaymentListActivity.
- * Once the PaymentListActivity is resumed, the presenter is informed that it could
+ * Once the PaymentListActivity is resumed, the view model is informed that it could
  * resume processing of a pending payment e.g. after a redirect.
  */
-final class PaymentListObserver implements LifecycleEventObserver {
+final class PaymentListLifecycleObserver implements LifecycleEventObserver {
 
-    private final PaymentListPresenter presenter;
+    private final PaymentListViewModel viewModel;
 
-    PaymentListObserver(final PaymentListPresenter presenter) {
-        this.presenter = presenter;
+    PaymentListLifecycleObserver(final PaymentListViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
     @Override
     public void onStateChanged(@NonNull final LifecycleOwner source, @NonNull final Lifecycle.Event event) {
         switch (event) {
             case ON_RESUME:
-                presenter.onCheckoutListResume();
+                viewModel.onPaymentListResume();
                 break;
             case ON_PAUSE:
-                presenter.onCheckoutListPause();
+                viewModel.onPaymentListPause();
                 break;
         }
     }

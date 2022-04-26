@@ -8,12 +8,6 @@
 
 package com.payoneer.checkout.util;
 
-import java.util.Calendar;
-
-import com.payoneer.checkout.R;
-import com.payoneer.checkout.model.AccountMask;
-
-import android.text.TextUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -22,7 +16,8 @@ import androidx.fragment.app.FragmentManager;
  */
 public final class FragmentUtils {
 
-    public static void showFragment(final FragmentManager manager, final int resourceId, final Class<? extends Fragment> clazz, final String tag) {
+    public static void showFragment(final FragmentManager manager, final int resourceId, final Class<? extends Fragment> clazz,
+        final String tag) {
         Fragment fragment = manager.findFragmentByTag(tag);
         if (fragment == null) {
             manager.beginTransaction()

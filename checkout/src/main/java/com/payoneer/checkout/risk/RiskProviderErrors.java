@@ -52,7 +52,7 @@ public final class RiskProviderErrors {
         String message = error + " - " + exception.getMessage();
         Throwable cause = exception.getCause();
         if (cause != null) {
-            message += " - " + cause.toString();
+            message += " - " + cause;
         }
         return trimError(message);
     }

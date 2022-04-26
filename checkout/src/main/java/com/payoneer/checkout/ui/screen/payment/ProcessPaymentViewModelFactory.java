@@ -8,24 +8,34 @@
 
 package com.payoneer.checkout.ui.screen.payment;
 
+import com.payoneer.checkout.payment.PaymentServiceInteractor;
+import com.payoneer.checkout.ui.session.PaymentSessionInteractor;
+
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+/**
+ * Factory class for creating the ProcessPaymentViewModel
+ */
 final class ProcessPaymentViewModelFactory implements ViewModelProvider.Factory {
 
     private final Context applicationContext;
-    private final ProcessPaymentPresenter presenter;
+    private final PaymentServiceInteractor serviceInteractor;
+    private final PaymentSessionInteractor sessionInteractor;
 
-    ProcessPaymentViewModelFactory(@NonNull final Context applicationContext, @NonNull final ProcessPaymentPresenter presenter) {
+    ProcessPaymentViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentSessionInteractor sessionInteractor,
+        @NonNull
+            PaymentServiceInteractor serviceInteractor) {
         this.applicationContext = applicationContext;
-        this.presenter = presenter;
+        this.sessionInteractor = sessionInteractor;
+        this.serviceInteractor = serviceInteractor;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull final Class<T> modelClass) {
-        return (T) new ProcessPaymentViewModel(applicationContext, presenter);
+        return (T) new ProcessPaymentViewModel(applicationContext, sessionInteractor, serviceInteractor);
     }
 }

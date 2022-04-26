@@ -26,6 +26,7 @@ import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 
+import android.content.Context;
 import android.util.Log;
 
 /**
@@ -34,11 +35,13 @@ import android.util.Log;
  */
 public final class BasicPaymentService extends PaymentService {
 
+    private final static String TAG = "BasicPaymentService";
     private final static int PROCESSPAYMENT_REQUEST_CODE = 0;
     private final static int DELETEACCOUNT_REQUEST_CODE = 1;
 
     private final OperationService operationService;
     private RequestData requestData;
+    private Context applicationContext;
     private RedirectRequest redirectRequest;
 
     /**
@@ -81,6 +84,8 @@ public final class BasicPaymentService extends PaymentService {
         if (redirectRequest != null) {
             handleRedirectResult(redirectRequest);
             redirectRequest = null;
+        } else {
+            throw new IllegalStateException("Cannot call resume when PaymentService is not pending");
         }
     }
 
@@ -90,23 +95,25 @@ public final class BasicPaymentService extends PaymentService {
     }
 
     @Override
-    public void processPayment(final RequestData requestData) {
+    public void processPayment(final RequestData requestData, final Context applicationContext) {
+        resetPaymentService();
+        this.applicationContext = applicationContext;
         this.requestData = requestData;
-        this.redirectRequest = null;
-        presenter.onProcessPaymentActive(requestData, false);
 
+        listener.onProcessPaymentActive();
         Operation operation = createOperation(requestData, PaymentLinkType.OPERATION);
-        operationService.postOperation(operation, presenter.getApplicationContext());
+        operationService.postOperation(operation, applicationContext);
     }
 
     @Override
-    public void deleteAccount(final RequestData requestData) {
+    public void deleteAccount(final RequestData requestData, final Context applicationContext) {
+        resetPaymentService();
+        this.applicationContext = applicationContext;
         this.requestData = requestData;
-        this.redirectRequest = null;
-        presenter.onDeleteAccountActive(requestData);
 
+        listener.onDeleteAccountActive();
         DeleteAccount deleteAccount = createDeleteAccount(requestData);
-        operationService.deleteAccount(deleteAccount, presenter.getApplicationContext());
+        operationService.deleteAccount(deleteAccount, applicationContext);
     }
 
     private void handleRedirectResult(RedirectRequest request) {
@@ -114,37 +121,29 @@ public final class BasicPaymentService extends PaymentService {
         OperationResult operationResult = RedirectService.getRedirectResult();
 
         if (operationResult != null) {
-            Interaction interaction = operationResult.getInteraction();
             checkoutResult = new CheckoutResult(operationResult);
         } else {
             String message = "Missing OperationResult after client-side redirect";
             String interactionCode = getErrorInteractionCode(requestData.getOperationType());
             checkoutResult = CheckoutResultHelper.fromErrorMessage(interactionCode, message);
         }
-        Log.i("checkout-sdk", "onRedirectResult: " + checkoutResult);
-
         if (request.getRequestCode() == PROCESSPAYMENT_REQUEST_CODE) {
-            presenter.onProcessPaymentResult(requestData, checkoutResult);
+            closeWithProcessPaymentResult(checkoutResult);
         } else {
-            presenter.onDeleteAccountResult(requestData, checkoutResult);
+            closeWithDeleteAccountResult(checkoutResult);
         }
     }
 
-    private void handleProcessPaymentSuccess(OperationResult operationResult) {
+    private void handleProcessPaymentSuccess(final OperationResult operationResult) {
         Interaction interaction = operationResult.getInteraction();
         CheckoutResult checkoutResult = new CheckoutResult(operationResult);
-        Log.i("checkout-sdk", "handleProcessPaymentSuccess: " + checkoutResult);
 
-        if (!PROCEED.equals(interaction.getCode())) {
-            presenter.onProcessPaymentResult(requestData, checkoutResult);
-            return;
-        }
-        if (!requiresRedirect(operationResult)) {
-            presenter.onProcessPaymentResult(requestData, checkoutResult);
+        if (!(PROCEED.equals(interaction.getCode()) && requiresRedirect(operationResult))) {
+            closeWithProcessPaymentResult(checkoutResult);
             return;
         }
         try {
-            redirectRequest = redirect(PROCESSPAYMENT_REQUEST_CODE, operationResult);
+            redirectRequest = redirect(applicationContext, PROCESSPAYMENT_REQUEST_CODE, operationResult);
         } catch (PaymentException e) {
             handleProcessPaymentError(e);
         }
@@ -153,25 +152,19 @@ public final class BasicPaymentService extends PaymentService {
     private void handleProcessPaymentError(Throwable cause) {
         String code = getErrorInteractionCode(requestData.getOperationType());
         CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(code, cause);
-        Log.i("checkout-sdk", "handleProcessPaymentError: " + checkoutResult);
-        presenter.onProcessPaymentResult(requestData, checkoutResult);
+        closeWithProcessPaymentResult(checkoutResult);
     }
 
-    private void handleDeleteAccountSuccess(OperationResult operationResult) {
+    private void handleDeleteAccountSuccess(final OperationResult operationResult) {
         Interaction interaction = operationResult.getInteraction();
         CheckoutResult checkoutResult = new CheckoutResult(operationResult);
-        Log.i("checkout-sdk", "handleDeleteAccountSuccess: " + checkoutResult);
 
-        if (!PROCEED.equals(interaction.getCode())) {
-            presenter.onDeleteAccountResult(requestData, checkoutResult);
-            return;
-        }
-        if (!requiresRedirect(operationResult)) {
-            presenter.onDeleteAccountResult(requestData, checkoutResult);
+        if (!(PROCEED.equals(interaction.getCode()) && requiresRedirect(operationResult))) {
+            closeWithDeleteAccountResult(checkoutResult);
             return;
         }
         try {
-            redirectRequest = redirect(DELETEACCOUNT_REQUEST_CODE, operationResult);
+            redirectRequest = redirect(applicationContext, DELETEACCOUNT_REQUEST_CODE, operationResult);
         } catch (PaymentException e) {
             handleDeleteAccountError(e);
         }
@@ -179,7 +172,24 @@ public final class BasicPaymentService extends PaymentService {
 
     private void handleDeleteAccountError(Throwable cause) {
         CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(ABORT, cause);
-        Log.i("checkout-sdk", "handleDeleteAccountError: " + checkoutResult);
-        presenter.onDeleteAccountResult(requestData, checkoutResult);
+        closeWithDeleteAccountResult(checkoutResult);
+    }
+
+    private void closeWithProcessPaymentResult(final CheckoutResult checkoutResult) {
+        resetPaymentService();
+        Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
+        listener.onProcessPaymentResult(checkoutResult);
+    }
+
+    private void closeWithDeleteAccountResult(final CheckoutResult checkoutResult) {
+        resetPaymentService();
+        Log.i(TAG, "closeWithDeleteAccountResult: " + checkoutResult);
+        listener.onDeleteAccountResult(checkoutResult);
+    }
+
+    private void resetPaymentService() {
+        this.applicationContext = null;
+        this.redirectRequest = null;
+        this.requestData = null;
     }
 }

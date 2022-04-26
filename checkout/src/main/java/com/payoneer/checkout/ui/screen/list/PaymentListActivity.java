@@ -19,11 +19,13 @@ import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.R;
+import com.payoneer.checkout.payment.PaymentServiceInteractor;
 import com.payoneer.checkout.payment.PaymentServiceViewModel;
 import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.ui.session.PaymentSessionInteractor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -48,8 +50,6 @@ public final class PaymentListActivity extends AppCompatActivity {
     private final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
 
     private CheckoutConfiguration configuration;
-    private PaymentListViewModel listViewModel;
-    private PaymentServiceViewModel serviceViewModel;
     private PaymentIdlingResources idlingResources;
     private PaymentDialogHelper dialogHelper;
 
@@ -77,25 +77,12 @@ public final class PaymentListActivity extends AppCompatActivity {
             setTheme(theme);
         }
         setContentView(R.layout.activity_fragment_container);
-        initViewModels();
-        initObservers();
 
         idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
         dialogHelper = new PaymentDialogHelper(idlingResources);
 
+        initViewModels();
         showPaymentListFragment();
-    }
-
-    private void initViewModels() {
-        PaymentListPresenter presenter = new PaymentListPresenter(configuration);
-        PaymentListObserver observer = new PaymentListObserver(presenter);
-        getLifecycle().addObserver(observer);
-
-        ViewModelProvider.Factory listFactory = new PaymentListViewModelFactory(getApplicationContext(), presenter);
-        listViewModel = new ViewModelProvider(this, listFactory).get(PaymentListViewModel.class);
-
-        ViewModelProvider.Factory serviceFactory = new PaymentServiceViewModelFactory(getApplicationContext(), presenter);
-        serviceViewModel = new ViewModelProvider(this, serviceFactory).get(PaymentServiceViewModel.class);
     }
 
     @Override
@@ -122,7 +109,7 @@ public final class PaymentListActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         passActivityResultToFragment(requestCode, resultCode, data);
     }
@@ -131,7 +118,7 @@ public final class PaymentListActivity extends AppCompatActivity {
         return idlingResources;
     }
 
-    private void passActivityResultToFragment(int requestCode, int resultCode, Intent data) {
+    private void passActivityResultToFragment(final int requestCode, final int resultCode, final Intent data) {
         FragmentManager fm = getSupportFragmentManager();
         List<Fragment> fragments = fm.getFragments();
         for (Fragment fragment : fragments) {
@@ -139,22 +126,39 @@ public final class PaymentListActivity extends AppCompatActivity {
         }
     }
 
-    private void initObservers() {
-        listViewModel.closeWithCheckoutResult.observe(this, contentEvent -> {
+    private void initViewModels() {
+        PaymentServiceInteractor serviceInteractor = new PaymentServiceInteractor();
+        PaymentSessionInteractor sessionInteractor = new PaymentSessionInteractor(configuration);
+
+        ViewModelProvider.Factory listFactory =
+            new PaymentListViewModelFactory(getApplicationContext(), sessionInteractor, serviceInteractor);
+        PaymentListViewModel listViewModel = new ViewModelProvider(this, listFactory).get(PaymentListViewModel.class);
+
+        PaymentListLifecycleObserver observer = new PaymentListLifecycleObserver(listViewModel);
+        getLifecycle().addObserver(observer);
+
+        ViewModelProvider.Factory serviceFactory = new PaymentServiceViewModelFactory(getApplicationContext(), serviceInteractor);
+        new ViewModelProvider(this, serviceFactory).get(PaymentServiceViewModel.class);
+
+        initObservers(listViewModel);
+    }
+
+    private void initObservers(final PaymentListViewModel listViewModel) {
+        listViewModel.closeWithCheckoutResult().observe(this, contentEvent -> {
             CheckoutResult checkoutResult = contentEvent.getContentIfNotHandled();
             if (checkoutResult != null) {
                 closeWithCheckoutResult(checkoutResult);
             }
         });
 
-        listViewModel.showPaymentDialog.observe(this, contentEvent -> {
+        listViewModel.showPaymentDialog().observe(this, contentEvent -> {
             PaymentDialogData data = contentEvent.getContentIfNotHandled();
             if (data != null) {
                 dialogHelper.showPaymentDialog(getSupportFragmentManager(), data);
             }
         });
 
-        serviceViewModel.showCustomFragment.observe(this, contentEvent -> {
+        listViewModel.showCustomFragment().observe(this, contentEvent -> {
             Fragment fragment = contentEvent.getContentIfNotHandled();
             if (fragment != null) {
                 FragmentManager manager = getSupportFragmentManager();
@@ -164,7 +168,7 @@ public final class PaymentListActivity extends AppCompatActivity {
             }
         });
 
-        listViewModel.showPaymentListFragment.observe(this, event -> {
+        listViewModel.showPaymentListFragment().observe(this, event -> {
             if (event.getIfNotHandled() != null) {
                 FragmentManager manager = getSupportFragmentManager();
                 removeFragment(manager, FRAGMENT_CUSTOM);
@@ -173,7 +177,7 @@ public final class PaymentListActivity extends AppCompatActivity {
             }
         });
 
-        listViewModel.showTransactionFragment.observe(this, event -> {
+        listViewModel.showTransactionFragment().observe(this, event -> {
             if (event.getIfNotHandled() != null) {
                 FragmentManager manager = getSupportFragmentManager();
                 removeFragment(manager, FRAGMENT_CUSTOM);

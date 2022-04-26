@@ -91,6 +91,7 @@ public abstract class BaseTest {
         String paymentApiListUrl = BuildConfig.paymentApiListUrl;
         String merchantCode = BuildConfig.merchantCode;
         String merchantPaymentToken = BuildConfig.merchantPaymentToken;
+        Log.i("AAA", "paymentApiListUrl: " + paymentApiListUrl);
         ListService service = ListService.createInstance(createListURL(paymentApiListUrl), merchantCode, merchantPaymentToken);
         return service.newListSelfUrl(settings);
     }

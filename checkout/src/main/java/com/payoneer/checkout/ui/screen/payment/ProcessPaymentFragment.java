@@ -44,7 +44,7 @@ public final class ProcessPaymentFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initProgressView(view);
-        initObservers();
+        initViewModels();
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -67,9 +67,9 @@ public final class ProcessPaymentFragment extends Fragment {
         }
     }
 
-    private void initObservers() {
+    private void initViewModels() {
         ProcessPaymentViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProcessPaymentViewModel.class);
-        viewModel.showProcessPaymentProgress.observe(getViewLifecycleOwner(), contentEvent -> {
+        viewModel.showProcessPaymentProgress().observe(getViewLifecycleOwner(), contentEvent -> {
             Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
             if (visible != null) {
                 progressView.setLabels(Localization.translate(CHARGE_TITLE), Localization.translate(CHARGE_TEXT));

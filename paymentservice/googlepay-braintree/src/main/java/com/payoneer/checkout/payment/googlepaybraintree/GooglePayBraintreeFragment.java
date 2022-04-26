@@ -32,7 +32,6 @@ import androidx.lifecycle.ViewModelProvider;
  */
 public class GooglePayBraintreeFragment extends Fragment {
 
-    private String braintreeAuthentication;
     private GooglePayClient googlePayClient;
     private PaymentServiceViewModel viewModel;
 
@@ -77,13 +76,11 @@ public class GooglePayBraintreeFragment extends Fragment {
     }
 
     private void handleOnGooglePaySuccess(final PaymentMethodNonce paymentMethodNonce) {
-        //Log.i(TAG, "handleGooglepaySuccess: " + paymentMethodNonce);
         viewModel.onFragmentResult(new Bundle());
 
     }
 
     private void handleOnGooglePayFailure(final Exception exception) {
-        //Log.i(TAG, "handleGooglepayFailure", exception);
         viewModel.onFragmentResult(new Bundle());
     }
 }

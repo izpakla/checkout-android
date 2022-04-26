@@ -23,6 +23,12 @@ public final class PaymentServiceInteractor {
     private Observer observer;
     private PaymentService paymentService;
 
+    /**
+     * Load the PaymentService using the lookup class given the code and paymentMethod.
+     * @param code that the payment service should support
+     * @param paymentMethod that the payment service should support
+     * @throws PaymentException when the PaymentService could not be loaded
+     */
     public void loadPaymentService(final String code, final String paymentMethod) throws PaymentException {
         paymentService = PaymentServiceLookup.createService(code, paymentMethod);
         if (paymentService == null) {
@@ -78,7 +84,8 @@ public final class PaymentServiceInteractor {
     }
 
     /**
-     * Notify PaymentService that it will be stopped. For example if the Activity is paused.
+     * Notify PaymentService that it will be stopped.
+     * For example if the LifeCycleOwner is paused.
      */
     public void onStop() {
         if (paymentService != null) {

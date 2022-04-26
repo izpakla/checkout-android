@@ -18,7 +18,8 @@ public class PaymentServiceViewModelFactory implements ViewModelProvider.Factory
     private final Context applicationContext;
     private final PaymentServiceInteractor serviceInteractor;
 
-    public PaymentServiceViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentServiceInteractor serviceInteractor) {
+    public PaymentServiceViewModelFactory(@NonNull final Context applicationContext,
+        @NonNull final PaymentServiceInteractor serviceInteractor) {
         this.applicationContext = applicationContext;
         this.serviceInteractor = serviceInteractor;
     }

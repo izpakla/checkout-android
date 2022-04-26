@@ -10,7 +10,6 @@ package com.payoneer.checkout.payment;
 
 import com.payoneer.checkout.CheckoutResult;
 
-import android.content.Context;
 import androidx.fragment.app.Fragment;
 
 /**

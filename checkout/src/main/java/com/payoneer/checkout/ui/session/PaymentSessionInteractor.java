@@ -14,7 +14,6 @@ import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.ui.model.PaymentSession;
 
 import android.content.Context;
-import android.util.Log;
 
 public class PaymentSessionInteractor {
 

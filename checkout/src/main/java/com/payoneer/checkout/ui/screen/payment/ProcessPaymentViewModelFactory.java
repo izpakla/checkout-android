@@ -22,8 +22,9 @@ final class ProcessPaymentViewModelFactory implements ViewModelProvider.Factory 
     private final PaymentServiceInteractor serviceInteractor;
     private final PaymentSessionInteractor sessionInteractor;
 
-    ProcessPaymentViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentSessionInteractor sessionInteractor, @NonNull
-        PaymentServiceInteractor serviceInteractor) {
+    ProcessPaymentViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentSessionInteractor sessionInteractor,
+        @NonNull
+            PaymentServiceInteractor serviceInteractor) {
         this.applicationContext = applicationContext;
         this.sessionInteractor = sessionInteractor;
         this.serviceInteractor = serviceInteractor;

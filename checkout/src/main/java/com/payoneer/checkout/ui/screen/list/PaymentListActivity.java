@@ -19,12 +19,12 @@ import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.R;
+import com.payoneer.checkout.payment.PaymentServiceInteractor;
 import com.payoneer.checkout.payment.PaymentServiceViewModel;
 import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
-import com.payoneer.checkout.payment.PaymentServiceInteractor;
 import com.payoneer.checkout.ui.session.PaymentSessionInteractor;
 
 import android.annotation.SuppressLint;
@@ -130,7 +130,8 @@ public final class PaymentListActivity extends AppCompatActivity {
         PaymentServiceInteractor serviceInteractor = new PaymentServiceInteractor();
         PaymentSessionInteractor sessionInteractor = new PaymentSessionInteractor(configuration);
 
-        ViewModelProvider.Factory listFactory = new PaymentListViewModelFactory(getApplicationContext(), sessionInteractor, serviceInteractor);
+        ViewModelProvider.Factory listFactory =
+            new PaymentListViewModelFactory(getApplicationContext(), sessionInteractor, serviceInteractor);
         PaymentListViewModel listViewModel = new ViewModelProvider(this, listFactory).get(PaymentListViewModel.class);
 
         PaymentListLifecycleObserver observer = new PaymentListLifecycleObserver(listViewModel);

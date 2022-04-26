@@ -84,7 +84,8 @@ public abstract class PaymentService {
      * @return newly created RedirectRequest
      * @throws PaymentException when an error occurred while redirecting
      */
-    protected RedirectRequest redirect(final Context context, final int requestCode, final OperationResult operationResult) throws PaymentException {
+    protected RedirectRequest redirect(final Context context, final int requestCode, final OperationResult operationResult)
+        throws PaymentException {
         RedirectRequest redirectRequest = RedirectRequest.fromOperationResult(requestCode, operationResult);
 
         if (!RedirectService.supports(context, redirectRequest)) {

@@ -20,8 +20,8 @@ import com.payoneer.checkout.ui.list.PaymentList;
 import com.payoneer.checkout.ui.list.PaymentListListener;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.ui.screen.shared.ProgressView;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.ui.screen.shared.ProgressView;
 import com.payoneer.checkout.util.Resource;
 
 import android.os.Bundle;

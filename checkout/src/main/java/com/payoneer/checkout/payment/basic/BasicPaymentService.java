@@ -143,7 +143,7 @@ public final class BasicPaymentService extends PaymentService {
             return;
         }
         try {
-            redirectRequest = redirect(applicationContext, PROCESSPAYMENT_REQUEST_CODE, operationResult);
+            redirectRequest = redirect(PROCESSPAYMENT_REQUEST_CODE, operationResult, applicationContext);
         } catch (PaymentException e) {
             handleProcessPaymentError(e);
         }
@@ -164,7 +164,7 @@ public final class BasicPaymentService extends PaymentService {
             return;
         }
         try {
-            redirectRequest = redirect(applicationContext, DELETEACCOUNT_REQUEST_CODE, operationResult);
+            redirectRequest = redirect(DELETEACCOUNT_REQUEST_CODE, operationResult, applicationContext);
         } catch (PaymentException e) {
             handleDeleteAccountError(e);
         }

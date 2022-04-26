@@ -8,9 +8,8 @@
 
 package com.payoneer.checkout.payment.googlepaybraintree;
 
-import java.util.Optional;
-
-import org.json.JSONObject;
+import static com.payoneer.checkout.payment.googlepaybraintree.GooglePayBraintreePaymentService.BRAINTREE_AUTHORIZATION;
+import static com.payoneer.checkout.payment.googlepaybraintree.GooglePayBraintreePaymentService.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,16 +22,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 /**
- * Fragment to show the Payment Session
+ * Fragment to show the GooglePay bottomsheet from Braintree
  */
 public class GooglePayBraintreeFragment extends Fragment {
 
     public GooglePayBraintreeFragment() {
     }
 
-    public static GooglePayBraintreeFragment newInstance() {
+    public static GooglePayBraintreeFragment newInstance(final String braintreeAuthorization) {
         GooglePayBraintreeFragment fragment = new GooglePayBraintreeFragment();
         Bundle args = new Bundle();
+        args.putString(BRAINTREE_AUTHORIZATION, braintreeAuthorization);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,12 +44,13 @@ public class GooglePayBraintreeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_googlepaybraintree, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_googlepaybraintree, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        String braintreeAuthKey = requireArguments().getString(BRAINTREE_AUTHORIZATION);
+        Log.i(TAG, "braintree: " + braintreeAuthKey);
     }
 
     @Override

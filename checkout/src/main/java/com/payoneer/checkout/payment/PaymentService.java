@@ -78,20 +78,20 @@ public abstract class PaymentService {
     /**
      * Create a redirect request and open a custom chrome tab to continue processing the request.
      *
-     * @param context to be used to make the redirect call
      * @param requestCode code to identify the origin request
      * @param operationResult containing the redirect details like redirect URL
+     * @param applicationContext to be used to make the redirect call
      * @return newly created RedirectRequest
      * @throws PaymentException when an error occurred while redirecting
      */
-    protected RedirectRequest redirect(final Context context, final int requestCode, final OperationResult operationResult)
+    protected RedirectRequest redirect(final int requestCode, final OperationResult operationResult, final Context applicationContext)
         throws PaymentException {
         RedirectRequest redirectRequest = RedirectRequest.fromOperationResult(requestCode, operationResult);
 
-        if (!RedirectService.supports(context, redirectRequest)) {
+        if (!RedirectService.supports(applicationContext, redirectRequest)) {
             throw new PaymentException("The Redirect payment method is not supported by the Android-SDK");
         }
-        RedirectService.redirect(context, redirectRequest);
+        RedirectService.redirect(applicationContext, redirectRequest);
         return redirectRequest;
     }
 

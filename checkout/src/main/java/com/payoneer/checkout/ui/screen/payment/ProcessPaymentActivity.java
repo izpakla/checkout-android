@@ -19,11 +19,13 @@ import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.R;
+import com.payoneer.checkout.payment.PaymentServiceInteractor;
 import com.payoneer.checkout.payment.PaymentServiceViewModel;
 import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogHelper;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.ui.session.PaymentSessionInteractor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -45,8 +47,6 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
     private final static String EXTRA_CHECKOUT_CONFIGURATION = "checkout_configuration";
 
     private CheckoutConfiguration configuration;
-    private ProcessPaymentViewModel paymentViewModel;
-    private PaymentServiceViewModel serviceViewModel;
     private PaymentIdlingResources idlingResources;
     private PaymentDialogHelper dialogHelper;
 
@@ -75,7 +75,6 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_fragment_container);
         initViewModels();
-        initObservers();
 
         idlingResources = new PaymentIdlingResources(getClass().getSimpleName());
         dialogHelper = new PaymentDialogHelper(idlingResources);
@@ -115,40 +114,45 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
     }
 
     private void initViewModels() {
-        ProcessPaymentPresenter presenter = new ProcessPaymentPresenter(configuration);
-        ProcessPaymentObserver observer = new ProcessPaymentObserver(presenter);
+
+        PaymentSessionInteractor sessionInteractor = new PaymentSessionInteractor(configuration);
+        PaymentServiceInteractor serviceInteractor = new PaymentServiceInteractor();
+
+        ViewModelProvider.Factory paymentFactory = new ProcessPaymentViewModelFactory(getApplicationContext(), sessionInteractor, serviceInteractor);
+        ProcessPaymentViewModel paymentViewModel = new ViewModelProvider(this, paymentFactory).get(ProcessPaymentViewModel.class);
+
+        ProcessPaymentLifecycleObserver observer = new ProcessPaymentLifecycleObserver(paymentViewModel);
         getLifecycle().addObserver(observer);
 
-        ViewModelProvider.Factory listFactory = new ProcessPaymentViewModelFactory(getApplicationContext(), presenter);
-        paymentViewModel = new ViewModelProvider(this, listFactory).get(ProcessPaymentViewModel.class);
+        ViewModelProvider.Factory serviceFactory = new PaymentServiceViewModelFactory(getApplicationContext(), serviceInteractor);
+        new ViewModelProvider(this, serviceFactory).get(PaymentServiceViewModel.class);
 
-        ViewModelProvider.Factory serviceFactory = new PaymentServiceViewModelFactory(getApplicationContext(), presenter);
-        serviceViewModel = new ViewModelProvider(this, serviceFactory).get(PaymentServiceViewModel.class);
+        initObservers(paymentViewModel);
     }
 
-    private void initObservers() {
-        paymentViewModel.closeWithCheckoutResult.observe(this, contentEvent -> {
+    private void initObservers(final ProcessPaymentViewModel paymentViewModel) {
+        paymentViewModel.closeWithCheckoutResult().observe(this, contentEvent -> {
             CheckoutResult checkoutResult = contentEvent.getContentIfNotHandled();
             if (checkoutResult != null) {
                 closeWithCheckoutResult(checkoutResult);
             }
         });
 
-        paymentViewModel.showPaymentDialog.observe(this, contentEvent -> {
+        paymentViewModel.showPaymentDialog().observe(this, contentEvent -> {
             PaymentDialogData data = contentEvent.getContentIfNotHandled();
             if (data != null) {
                 dialogHelper.showPaymentDialog(getSupportFragmentManager(), data);
             }
         });
 
-        paymentViewModel.showProcessPaymentFragment.observe(this, event -> {
+        paymentViewModel.showProcessPaymentFragment().observe(this, event -> {
             if (event.getIfNotHandled() != null) {
                 removeFragment(getSupportFragmentManager(), FRAGMENT_CUSTOM);
                 showProcessPaymentFragment();
             }
         });
 
-        serviceViewModel.showCustomFragment.observe(this, contentEvent -> {
+        paymentViewModel.showCustomFragment().observe(this, contentEvent -> {
             Fragment customFragment = contentEvent.getContentIfNotHandled();
             if (customFragment != null) {
                 FragmentManager manager = getSupportFragmentManager();

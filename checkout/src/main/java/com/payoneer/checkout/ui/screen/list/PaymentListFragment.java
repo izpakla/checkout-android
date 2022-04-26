@@ -69,7 +69,7 @@ public final class PaymentListFragment extends Fragment {
 
         initToolbar();
         initPaymentList(view);
-        initObservers();
+        initViewModels();
     }
 
     @Override
@@ -120,9 +120,9 @@ public final class PaymentListFragment extends Fragment {
         toolbar.setTitle(title);
     }
 
-    private void initObservers() {
+    private void initViewModels() {
         listViewModel = new ViewModelProvider(requireActivity()).get(PaymentListViewModel.class);
-        listViewModel.showPaymentSession.observe(getViewLifecycleOwner(), resource -> {
+        listViewModel.showPaymentSession().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.getStatus()) {
                 case Resource.SUCCESS:
                     progressView.setVisible(false);
@@ -139,7 +139,7 @@ public final class PaymentListFragment extends Fragment {
             }
         });
 
-        listViewModel.showPaymentListProgress.observe(getViewLifecycleOwner(), contentEvent -> {
+        listViewModel.showPaymentListProgress().observe(getViewLifecycleOwner(), contentEvent -> {
             Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
             if (visible != null) {
                 progressView.setVisible(visible);

@@ -16,16 +16,16 @@ import androidx.lifecycle.ViewModelProvider;
 public class PaymentServiceViewModelFactory implements ViewModelProvider.Factory {
 
     private final Context applicationContext;
-    private final PaymentServicePresenter presenter;
+    private final PaymentServiceInteractor serviceInteractor;
 
-    public PaymentServiceViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentServicePresenter presenter) {
+    public PaymentServiceViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentServiceInteractor serviceInteractor) {
         this.applicationContext = applicationContext;
-        this.presenter = presenter;
+        this.serviceInteractor = serviceInteractor;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull final Class<T> modelClass) {
-        return (T) new PaymentServiceViewModel(applicationContext, presenter);
+        return (T) new PaymentServiceViewModel(applicationContext, serviceInteractor);
     }
 }

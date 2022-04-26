@@ -12,6 +12,7 @@ import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.core.PaymentException;
 
 import android.content.Context;
+import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -73,10 +74,7 @@ public final class PaymentServiceInteractor {
      * @return true when resumed, false otherwise
      */
     public boolean onResume() {
-        if (paymentService != null && paymentService.onResume()) {
-            return true;
-        }
-        return false;
+        return paymentService != null && paymentService.onResume();
     }
 
     /**
@@ -85,6 +83,12 @@ public final class PaymentServiceInteractor {
     public void onStop() {
         if (paymentService != null) {
             paymentService.onStop();
+        }
+    }
+
+    public void onFragmentResult(final Bundle fragmentResult) {
+        if (paymentService != null) {
+            paymentService.onFragmentResult(fragmentResult);
         }
     }
 

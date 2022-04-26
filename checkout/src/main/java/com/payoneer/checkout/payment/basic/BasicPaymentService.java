@@ -27,6 +27,7 @@ import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
 /**
@@ -87,6 +88,10 @@ public final class BasicPaymentService extends PaymentService {
         handleRedirectResult(redirectRequest);
         redirectRequest = null;
         return true;
+    }
+
+    @Override
+    public void onFragmentResult(final Bundle fragmentResult) {
     }
 
     @Override

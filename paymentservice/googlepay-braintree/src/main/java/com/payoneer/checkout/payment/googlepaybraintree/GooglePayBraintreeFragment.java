@@ -10,22 +10,22 @@ package com.payoneer.checkout.payment.googlepaybraintree;
 
 import static com.payoneer.checkout.payment.googlepaybraintree.GooglePayBraintreePaymentService.BRAINTREE_AUTHORIZATION;
 import static com.payoneer.checkout.payment.googlepaybraintree.GooglePayBraintreePaymentService.GOOGLEPAY_REQUEST;
-import static com.payoneer.checkout.payment.googlepaybraintree.GooglePayBraintreePaymentService.TAG;
 
 import com.braintreepayments.api.BraintreeClient;
 import com.braintreepayments.api.GooglePayClient;
 import com.braintreepayments.api.GooglePayListener;
 import com.braintreepayments.api.GooglePayRequest;
 import com.braintreepayments.api.PaymentMethodNonce;
+import com.payoneer.checkout.payment.PaymentServiceViewModel;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 /**
  * Fragment to show the GooglePay bottomsheet from Braintree
@@ -34,6 +34,7 @@ public class GooglePayBraintreeFragment extends Fragment {
 
     private String braintreeAuthentication;
     private GooglePayClient googlePayClient;
+    private PaymentServiceViewModel viewModel;
 
     public GooglePayBraintreeFragment() {
     }
@@ -51,12 +52,8 @@ public class GooglePayBraintreeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        viewModel = new ViewModelProvider(requireActivity()).get(PaymentServiceViewModel.class);
         showGooglePay();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     private void showGooglePay() {
@@ -80,10 +77,13 @@ public class GooglePayBraintreeFragment extends Fragment {
     }
 
     private void handleOnGooglePaySuccess(final PaymentMethodNonce paymentMethodNonce) {
-        Log.i(TAG, "handleGooglepaySuccess: " + paymentMethodNonce);
+        //Log.i(TAG, "handleGooglepaySuccess: " + paymentMethodNonce);
+        viewModel.onFragmentResult(new Bundle());
+
     }
 
     private void handleOnGooglePayFailure(final Exception exception) {
-        Log.i(TAG, "handleGooglepayFailure", exception);
+        //Log.i(TAG, "handleGooglepayFailure", exception);
+        viewModel.onFragmentResult(new Bundle());
     }
 }

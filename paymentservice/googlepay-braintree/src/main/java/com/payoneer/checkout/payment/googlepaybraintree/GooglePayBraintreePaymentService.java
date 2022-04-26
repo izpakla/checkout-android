@@ -12,8 +12,6 @@ import static com.payoneer.checkout.model.InteractionCode.ABORT;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
 
 import com.braintreepayments.api.GooglePayRequest;
-import com.google.android.gms.wallet.TransactionInfo;
-import com.google.android.gms.wallet.WalletConstants;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
@@ -33,7 +31,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import androidx.fragment.app.Fragment;
 
 /**
  * Create a new GooglePayBraintreePaymentService, this service handles payment requests
@@ -44,13 +41,11 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     final static String TAG = "GooglePayBraintree";
     final static String GOOGLEPAY_REQUEST = "googlepayrequest";
     final static String BRAINTREE_AUTHORIZATION = "braintreeJsAuthorisation";
-    final static String AMOUNT_IN_MAJOR_UNITS = "amountInMajorUnits";
-    final static String CURRENCY_CODE = "currencyCode";
-    final static String ENVIRONMENT = "environment";
 
     private final static int IDLE = 0x00;
     private final static int DELETEACCOUNT_ACTIVE = 0x11;
     private final static int DELETEACCOUNT_REDIRECT = 0x12;
+
     private final static int PROCESSPAYMENT_ONSELECT = 0x20;
     private final static int PROCESSPAYMENT_GETTOKEN = 0x21;
     private final static int PROCESSPAYMENT_FINALIZE = 0x22;
@@ -59,6 +54,7 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     private final OperationService operationService;
     private Context applicationContext;
     private RequestData requestData;
+    private Bundle fragmentResult;
     private int state;
 
     /**
@@ -93,7 +89,6 @@ public class GooglePayBraintreePaymentService extends PaymentService {
 
     @Override
     public void onStop() {
-        Log.i(TAG, "stop call in PaymentService");
         operationService.stop();
     }
 
@@ -110,6 +105,11 @@ public class GooglePayBraintreePaymentService extends PaymentService {
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void onFragmentResult(final Bundle fragmentResult) {
+        this.fragmentResult = fragmentResult;
     }
 
     @Override
@@ -138,6 +138,10 @@ public class GooglePayBraintreePaymentService extends PaymentService {
 
     private void handleGetTokenResult() {
         listener.onProcessPaymentActive();
+        if (fragmentResult == null) {
+            closeWithProcessErrorMessage("Missing GooglePayBraintree fragment result after onResume");
+            return;
+        }
     }
 
     private void handleRedirectResult() {
@@ -169,50 +173,21 @@ public class GooglePayBraintreePaymentService extends PaymentService {
 
     private void handleProcessOnSelectSuccess(final OperationResult operationResult) {
         state = PROCESSPAYMENT_GETTOKEN;
-        Bundle bundle = createGooglePayArguments(operationResult);
-        if (bundle != null) {
-            listener.showFragment(GooglePayBraintreeFragment.newInstance(bundle));
-        }
-    }
 
-    private Bundle createGooglePayArguments(final OperationResult operationResult) {
         String braintreeAuthorization = PaymentUtils.getProviderParameterValue(BRAINTREE_AUTHORIZATION, operationResult);
         if (TextUtils.isEmpty((braintreeAuthorization))) {
-            handleMissingProcessParameterError(BRAINTREE_AUTHORIZATION);
-            return null;
+            closeWithProcessErrorMessage("Missing GooglePayBraintree [" + BRAINTREE_AUTHORIZATION + "] parameter");
+            return;
         }
-        String environment = PaymentUtils.getProviderParameterValue(ENVIRONMENT, operationResult);
-        if (TextUtils.isEmpty((environment))) {
-            handleMissingProcessParameterError(ENVIRONMENT);
-            return null;
+        try {
+            GooglePayRequest request = GooglePayRequestBuilder.of(operationResult);
+            Bundle arguments = new Bundle();
+            arguments.putString(BRAINTREE_AUTHORIZATION, braintreeAuthorization);
+            arguments.putParcelable(GOOGLEPAY_REQUEST, request);
+            listener.showFragment(GooglePayBraintreeFragment.newInstance(arguments));
+        } catch (PaymentException e) {
+            handleProcessPaymentError(e);
         }
-        String amountInMajorUnits = PaymentUtils.getProviderParameterValue(AMOUNT_IN_MAJOR_UNITS, operationResult);
-        if (TextUtils.isEmpty((amountInMajorUnits))) {
-            handleMissingProcessParameterError(AMOUNT_IN_MAJOR_UNITS);
-            return null;
-        }
-        String currencyCode = PaymentUtils.getProviderParameterValue(CURRENCY_CODE, operationResult);
-        if (TextUtils.isEmpty((currencyCode))) {
-            handleMissingProcessParameterError(CURRENCY_CODE);
-            return null;
-        }
-        GooglePayRequest googlePayRequest = new GooglePayRequest();
-        googlePayRequest.setTransactionInfo(TransactionInfo.newBuilder()
-            .setTotalPrice(amountInMajorUnits)
-            .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
-            .setCurrencyCode(currencyCode)
-            .build());
-        googlePayRequest.setBillingAddressRequired(true);
-        googlePayRequest.setEnvironment(environment);
-        Bundle arguments = new Bundle();
-        arguments.putString(BRAINTREE_AUTHORIZATION, braintreeAuthorization);
-        arguments.putParcelable(GOOGLEPAY_REQUEST, googlePayRequest);
-        return arguments;
-    }
-
-    private void handleMissingProcessParameterError(final String parameter) {
-        CheckoutResult checkoutResult = createFromErrorMessage("Value [" + parameter + "] missing from OperationResult");
-        closeWithProcessPaymentResult(checkoutResult);
     }
 
     private void handleFinalizePaymentSuccess(final OperationResult operationResult) {
@@ -257,6 +232,11 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         closeWithDeleteAccountResult(checkoutResult);
     }
 
+    private void closeWithProcessErrorMessage(final String message) {
+        CheckoutResult result = createFromErrorMessage(message);
+        closeWithProcessPaymentResult(result);
+    }
+
     private void closeWithProcessPaymentResult(final CheckoutResult checkoutResult) {
         resetPaymentService();
         Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
@@ -278,5 +258,6 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         this.state = IDLE;
         this.requestData = null;
         this.applicationContext = null;
+        this.fragmentResult = null;
     }
 }

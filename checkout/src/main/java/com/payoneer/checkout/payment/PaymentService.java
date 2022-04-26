@@ -29,6 +29,7 @@ import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 
 import android.content.Context;
+import android.os.Bundle;
 
 /**
  * Base class for payment services, a payment service is responsible for processing a payment through the supported payment network.
@@ -50,9 +51,16 @@ public abstract class PaymentService {
     /**
      * Resume this PaymentService.
      *
-     * @return true when this PaymentService will resume, false otherwise
+     * @return true when this PaymentService resumed, false otherwise
      */
     public abstract boolean onResume();
+
+    /**
+     * After the fragment is finished, it may handover result to the PaymentService
+     *
+     * @param fragmentResult result provided by the fragment
+     */
+    public abstract void onFragmentResult(final Bundle fragmentResult);
 
     /**
      * Ask the payment service to process the payment.

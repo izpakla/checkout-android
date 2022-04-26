@@ -14,17 +14,11 @@ import com.payoneer.checkout.payment.PaymentServiceFactory;
 
 public class GooglePayBraintreePaymentServiceFactory implements PaymentServiceFactory {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean supports(String code, String method) {
         return PaymentNetworkCodes.GOOGLEPAY.equals(code);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public PaymentService createService() {
         return new GooglePayBraintreePaymentService();

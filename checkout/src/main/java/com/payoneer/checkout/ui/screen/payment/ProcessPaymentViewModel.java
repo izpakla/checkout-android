@@ -63,7 +63,8 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
      * @param sessionInteractor interacts with the PaymentSessionService
      * @param serviceInteractor interacts with the PaymentService
      */
-    ProcessPaymentViewModel(final Context applicationContext, final PaymentSessionInteractor sessionInteractor, final PaymentServiceInteractor serviceInteractor) {
+    ProcessPaymentViewModel(final Context applicationContext, final PaymentSessionInteractor sessionInteractor,
+        final PaymentServiceInteractor serviceInteractor) {
         super(applicationContext);
 
         this.sessionInteractor = sessionInteractor;

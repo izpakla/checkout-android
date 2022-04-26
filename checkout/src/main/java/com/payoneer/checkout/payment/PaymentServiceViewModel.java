@@ -9,11 +9,8 @@
 package com.payoneer.checkout.payment;
 
 import com.payoneer.checkout.util.AppContextViewModel;
-import com.payoneer.checkout.util.ContentEvent;
 
 import android.content.Context;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 
 /**
  * PaymentServiceViewModel provides communication between the view and the payment service through the controller.

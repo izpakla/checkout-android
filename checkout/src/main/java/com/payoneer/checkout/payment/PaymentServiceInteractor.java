@@ -100,14 +100,14 @@ public class PaymentServiceInteractor {
 
     public interface Observer {
 
-        public void showCustomFragment(final Fragment customFragment);
+        void showCustomFragment(final Fragment customFragment);
 
-        public void onProcessPaymentActive();
+        void onProcessPaymentActive();
 
-        public void onDeleteAccountActive();
+        void onDeleteAccountActive();
 
-        public void onProcessPaymentResult(final CheckoutResult checkoutResult);
+        void onProcessPaymentResult(final CheckoutResult checkoutResult);
 
-        public void onDeleteAccountResult(final CheckoutResult checkoutResult);
+        void onDeleteAccountResult(final CheckoutResult checkoutResult);
     }
 }

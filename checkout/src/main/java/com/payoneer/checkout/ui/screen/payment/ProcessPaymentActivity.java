@@ -118,7 +118,8 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         PaymentSessionInteractor sessionInteractor = new PaymentSessionInteractor(configuration);
         PaymentServiceInteractor serviceInteractor = new PaymentServiceInteractor();
 
-        ViewModelProvider.Factory paymentFactory = new ProcessPaymentViewModelFactory(getApplicationContext(), sessionInteractor, serviceInteractor);
+        ViewModelProvider.Factory paymentFactory =
+            new ProcessPaymentViewModelFactory(getApplicationContext(), sessionInteractor, serviceInteractor);
         ProcessPaymentViewModel paymentViewModel = new ViewModelProvider(this, paymentFactory).get(ProcessPaymentViewModel.class);
 
         ProcessPaymentLifecycleObserver observer = new ProcessPaymentLifecycleObserver(paymentViewModel);

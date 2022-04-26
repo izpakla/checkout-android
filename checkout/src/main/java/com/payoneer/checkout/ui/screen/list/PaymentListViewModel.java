@@ -27,7 +27,6 @@ import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.localization.InteractionMessage;
-import com.payoneer.checkout.localization.MultiLocalizationHolder;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.ListResult;
@@ -35,14 +34,13 @@ import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.payment.PaymentInputValues;
-import com.payoneer.checkout.payment.PaymentService;
+import com.payoneer.checkout.payment.PaymentServiceInteractor;
 import com.payoneer.checkout.payment.RequestData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.ui.model.PresetCard;
-import com.payoneer.checkout.payment.PaymentServiceInteractor;
 import com.payoneer.checkout.ui.session.PaymentSessionInteractor;
 import com.payoneer.checkout.util.AppContextViewModel;
 import com.payoneer.checkout.util.ContentEvent;
@@ -73,7 +71,6 @@ final class PaymentListViewModel extends AppContextViewModel {
 
     private final PaymentSessionInteractor sessionInteractor;
     private final PaymentServiceInteractor serviceInteractor;
-    private final PaymentServiceFlowController serviceController;
 
     private PaymentSession paymentSession;
     private RequestData requestData;
@@ -85,7 +82,8 @@ final class PaymentListViewModel extends AppContextViewModel {
      * @param sessionInteractor interacts with the PaymentSessionService
      * @param serviceInteractor interacts with the PaymentService
      */
-    PaymentListViewModel(final Context applicationContext, final PaymentSessionInteractor sessionInteractor, final PaymentServiceInteractor serviceInteractor) {
+    PaymentListViewModel(final Context applicationContext, final PaymentSessionInteractor sessionInteractor,
+        final PaymentServiceInteractor serviceInteractor) {
         super(applicationContext);
 
         this.sessionInteractor = sessionInteractor;
@@ -93,8 +91,6 @@ final class PaymentListViewModel extends AppContextViewModel {
 
         this.serviceInteractor = serviceInteractor;
         initPaymentServiceObserver(serviceInteractor);
-
-        this.serviceController = new PaymentServiceFlowController(this, serviceInteractor);
     }
 
     LiveData<Resource<PaymentSession>> showPaymentSession() {
@@ -146,6 +142,23 @@ final class PaymentListViewModel extends AppContextViewModel {
         sessionInteractor.loadPaymentSession(getApplicationContext());
     }
 
+    void processPaymentCard(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
+        if (paymentCard instanceof PresetCard) {
+            processPresetCard((PresetCard) paymentCard);
+            return;
+        }
+        String networkCode = paymentCard.getNetworkCode();
+        String paymentMethod = paymentCard.getPaymentMethod();
+        try {
+            serviceInteractor.loadPaymentService(networkCode, paymentMethod);
+            requestData = new RequestData(paymentSession.getListOperationType(), networkCode, paymentMethod, paymentCard.getOperationType(),
+                paymentCard.getLinks(), inputValues);
+            serviceInteractor.processPayment(requestData, getApplicationContext());
+        } catch (PaymentException e) {
+            setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
+        }
+    }
+
     void deletePaymentCard(final PaymentCard paymentCard) {
         String networkCode = paymentCard.getNetworkCode();
         String paymentMethod = paymentCard.getPaymentMethod();
@@ -155,25 +168,6 @@ final class PaymentListViewModel extends AppContextViewModel {
             requestData = new RequestData(paymentSession.getListOperationType(), networkCode, paymentMethod,
                 paymentCard.getOperationType(), paymentCard.getLinks(), new PaymentInputValues());
             serviceInteractor.deleteAccount(requestData, getApplicationContext());
-        } catch (PaymentException e) {
-            setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
-        }
-    }
-
-    void processPaymentCard(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
-        if (paymentCard instanceof PresetCard) {
-            processPresetCard((PresetCard) paymentCard);
-            return;
-        }
-
-        try {
-            serviceInteractor.loadPaymentService(paymentCard.getNetworkCode(), paymentCard.getPaymentMethod());
-            requestData = new RequestData(paymentSession.getListOperationType(), paymentCard.getNetworkCode(),
-                paymentCard.getPaymentMethod(), paymentCard.getOperationType(),
-                paymentCard.getLinks(), inputValues);
-            serviceController.processPayment(requestData, getApplicationContext());
-
-            serviceInteractor.processPayment(requestData, getApplicationContext());
         } catch (PaymentException e) {
             setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
         }
@@ -222,25 +216,25 @@ final class PaymentListViewModel extends AppContextViewModel {
         });
     }
 
-    void setShowCustomFragment(final Fragment customFragment) {
+    private void setShowCustomFragment(final Fragment customFragment) {
         showCustomFragment.setValue(new ContentEvent<>(customFragment));
     }
 
-    void setCloseWithCheckoutResult(final CheckoutResult checkoutResult) {
+    private void setCloseWithCheckoutResult(final CheckoutResult checkoutResult) {
         closeWithCheckoutResult.setValue(new ContentEvent<>(checkoutResult));
     }
 
-    void setShowConnectionErrorDialog(final PaymentDialogListener listener) {
+    private void setShowConnectionErrorDialog(final PaymentDialogListener listener) {
         PaymentDialogData data = PaymentDialogData.connectionErrorDialog(listener);
         showPaymentDialog.setValue(new ContentEvent<>(data));
     }
 
-    void setShowInteractionDialog(final PaymentDialogListener listener, final InteractionMessage interactionMessage) {
+    private void setShowInteractionDialog(final PaymentDialogListener listener, final InteractionMessage interactionMessage) {
         PaymentDialogData data = PaymentDialogData.interactionDialog(listener, interactionMessage);
         showPaymentDialog.setValue(new ContentEvent<>(data));
     }
 
-    void setShowPaymentSession(final int status, final PaymentSession paymentSession) {
+    private void setShowPaymentSession(final int status, final PaymentSession paymentSession) {
         showPaymentListFragment.setValue(new Event());
         switch (status) {
             case Resource.SUCCESS:
@@ -254,7 +248,7 @@ final class PaymentListViewModel extends AppContextViewModel {
         }
     }
 
-    void setShowProcessPaymentProgress(final boolean visible) {
+    private void setShowProcessPaymentProgress(final boolean visible) {
         boolean transaction = CHARGE.equals(paymentSession.getListOperationType());
 
         if (transaction) {
@@ -266,14 +260,11 @@ final class PaymentListViewModel extends AppContextViewModel {
         }
     }
 
-    void setShowDeleteAccountProgress(final boolean visible) {
+    private void setShowDeleteAccountProgress(final boolean visible) {
         showPaymentListFragment.setValue(new Event());
         showPaymentListProgress.setValue(new ContentEvent<>(visible));
     }
 
-    RequestData getRequestData() {
-        return requestData;
-    }
 
     private void handlePaymentSessionSuccess(final PaymentSession session) {
         ListResult listResult = session.getListResult();

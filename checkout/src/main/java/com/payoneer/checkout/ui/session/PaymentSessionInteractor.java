@@ -14,16 +14,33 @@ import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.ui.model.PaymentSession;
 
 import android.content.Context;
+import android.util.Log;
 
-public class PaymentSessionInteractor implements PaymentSessionListener {
+public class PaymentSessionInteractor {
 
     private final PaymentSessionService sessionService;
     private final CheckoutConfiguration configuration;
     private Observer observer;
 
     public PaymentSessionInteractor(final CheckoutConfiguration configuration) {
-        this.sessionService = new PaymentSessionService();
         this.configuration = configuration;
+        sessionService = new PaymentSessionService();
+        sessionService.setListener(new PaymentSessionListener() {
+            @Override
+            public void onPaymentSessionSuccess(final PaymentSession paymentSession) {
+                if (observer != null) {
+                    observer.onPaymentSessionSuccess(paymentSession);
+                }
+            }
+
+            @Override
+            public void onPaymentSessionError(final Throwable cause) {
+                CheckoutResult result = CheckoutResultHelper.fromThrowable(cause);
+                if (observer != null) {
+                    observer.onPaymentSessionError(result);
+                }
+            }
+        });
     }
 
     public void onStop() {
@@ -36,21 +53,6 @@ public class PaymentSessionInteractor implements PaymentSessionListener {
 
     public void loadPaymentSession(final Context applicationContext) {
         sessionService.loadPaymentSession(configuration, applicationContext);
-    }
-
-    @Override
-    public void onPaymentSessionSuccess(final PaymentSession paymentSession) {
-        if (observer != null) {
-            observer.onPaymentSessionSuccess(paymentSession);
-        }
-    }
-
-    @Override
-    public void onPaymentSessionError(final Throwable cause) {
-        CheckoutResult result = CheckoutResultHelper.fromThrowable(cause);
-        if (observer != null) {
-            observer.onPaymentSessionError(result);
-        }
     }
 
     public interface Observer {

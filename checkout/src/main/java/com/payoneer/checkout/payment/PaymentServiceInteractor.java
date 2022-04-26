@@ -46,21 +46,21 @@ public class PaymentServiceInteractor {
             @Override
             public void onDeleteAccountActive() {
                 if (observer != null) {
-                    onDeleteAccountActive();
+                    observer.onDeleteAccountActive();
                 }
             }
 
             @Override
             public void onProcessPaymentResult(final CheckoutResult checkoutResult) {
                 if (observer != null) {
-                    onProcessPaymentResult(checkoutResult);
+                    observer.onProcessPaymentResult(checkoutResult);
                 }
             }
 
             @Override
             public void onDeleteAccountResult(final CheckoutResult checkoutResult) {
                 if (observer != null) {
-                    onDeleteAccountResult(checkoutResult);
+                    observer.onDeleteAccountResult(checkoutResult);
                 }
             }
         });
@@ -95,7 +95,7 @@ public class PaymentServiceInteractor {
         if (paymentService == null) {
             throw new IllegalStateException("PaymentService must first be set before deleting an account");
         }
-        paymentService.deleteAccount(requestData, applicationContext);
+        paymentService.processPayment(requestData, applicationContext);
     }
 
     public interface Observer {

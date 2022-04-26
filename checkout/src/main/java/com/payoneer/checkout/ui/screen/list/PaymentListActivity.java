@@ -31,6 +31,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -82,7 +83,6 @@ public final class PaymentListActivity extends AppCompatActivity {
         dialogHelper = new PaymentDialogHelper(idlingResources);
 
         initViewModels();
-        showPaymentListFragment();
     }
 
     @Override

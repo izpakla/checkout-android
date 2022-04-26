@@ -67,14 +67,13 @@ public final class PaymentServiceInteractor {
     }
 
     /**
-     * Ask the PaymentService if it needs to be resumed, e.g. if the PaymentService is waiting
+     * Ask the PaymentService to resume, e.g. if the PaymentService is waiting
      * for a redirect result.
      *
      * @return true when resumed, false otherwise
      */
     public boolean onResume() {
-        if (paymentService != null && paymentService.isPending()) {
-            paymentService.resume();
+        if (paymentService != null && paymentService.onResume()) {
             return true;
         }
         return false;

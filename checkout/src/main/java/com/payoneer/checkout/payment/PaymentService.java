@@ -48,18 +48,11 @@ public abstract class PaymentService {
     public abstract void onStop();
 
     /**
-     * Is the service currently pending and waiting for input data, e.g. after a redirect request.
+     * Resume this PaymentService.
      *
-     * @return true when pending, false otherwise
+     * @return true when this PaymentService will resume, false otherwise
      */
-    public abstract boolean isPending();
-
-    /**
-     * Resume the service, this should only be called if isPending returns true.
-     *
-     * @throws IllegalStateException when isPending() returns false
-     */
-    public abstract void resume();
+    public abstract boolean onResume();
 
     /**
      * Ask the payment service to process the payment.

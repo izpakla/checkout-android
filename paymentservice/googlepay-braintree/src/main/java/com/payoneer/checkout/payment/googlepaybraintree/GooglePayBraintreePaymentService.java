@@ -93,21 +93,23 @@ public class GooglePayBraintreePaymentService extends PaymentService {
 
     @Override
     public void onStop() {
+        Log.i(TAG, "stop call in PaymentService");
         operationService.stop();
     }
 
     @Override
-    public void resume() {
-        if (isPending()) {
-            handleRedirectResult();
-        } else {
-            throw new IllegalStateException("Calling resume while PaymentService is not pending");
+    public boolean onResume() {
+        switch (state) {
+            case PROCESSPAYMENT_REDIRECT:
+            case DELETEACCOUNT_REDIRECT:
+                handleRedirectResult();
+                return true;
+            case PROCESSPAYMENT_GETTOKEN:
+                handleGetTokenResult();
+                return true;
+            default:
+                return false;
         }
-    }
-
-    @Override
-    public boolean isPending() {
-        return (state == PROCESSPAYMENT_REDIRECT) || (state == DELETEACCOUNT_REDIRECT);
     }
 
     @Override
@@ -132,6 +134,10 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         listener.onDeleteAccountActive();
         DeleteAccount deleteAccount = createDeleteAccount(requestData);
         operationService.deleteAccount(deleteAccount, applicationContext);
+    }
+
+    private void handleGetTokenResult() {
+        listener.onProcessPaymentActive();
     }
 
     private void handleRedirectResult() {

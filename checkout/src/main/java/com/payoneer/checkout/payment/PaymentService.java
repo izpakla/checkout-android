@@ -33,7 +33,7 @@ import android.os.Bundle;
 
 /**
  * Base class for payment services, a payment service is responsible for processing a payment through the supported payment network.
- * It also supports deleting previously saved accounts.
+ * It also supports deletion of previously saved accounts for the network that this payment service is supports.
  */
 public abstract class PaymentService {
 

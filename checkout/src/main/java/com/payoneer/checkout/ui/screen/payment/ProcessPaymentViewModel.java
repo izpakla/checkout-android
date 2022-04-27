@@ -39,7 +39,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 /**
- * ProcessPaymentViewModel provides LiveData for the ProcessPaymentActivity and ProcessPaymentPresenter.
+ * ProcessPaymentViewModel provides LiveData for the views and communicates with the interactors.
  * It operates within the lifecycle of the ProcessPaymentActivity.
  */
 final class ProcessPaymentViewModel extends AppContextViewModel {

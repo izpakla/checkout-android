@@ -1,6 +1,13 @@
 Changelog - Payoneer Checkout SDK for Android-based devices
 -----------------------
 
+**Version checkout-android 0.91.0**
+
+**Bug**
+
+* [PCX-3191] - Risk Provider libraries not released to nexus and packagecloud
+
+
 **Version checkout-android 0.90.0**
 This is a major version update with a breaking change of the public classes to initiate and use the
 Android Checkout SDK.

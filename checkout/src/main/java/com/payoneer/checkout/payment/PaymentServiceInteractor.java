@@ -80,10 +80,7 @@ public final class PaymentServiceInteractor {
      * @return true when resumed, false otherwise
      */
     public boolean onResume() {
-        if (paymentService != null && paymentService.onResume()) {
-            return true;
-        }
-        return false;
+        return (paymentService != null) && paymentService.onResume();
     }
 
     /**

@@ -22,10 +22,17 @@ public final class PaymentServiceInteractor {
     private Observer observer;
     private PaymentService paymentService;
 
-    public void loadPaymentService(final String code, final String paymentMethod) throws PaymentException {
-        paymentService = PaymentServiceLookup.createService(code, paymentMethod);
+    /**
+     * Load the PaymentService given the code and paymentMethod. This will use the PaymentServiceLookup
+     *
+     * @param networkCode code of the network e.g. VISA
+     * @param paymentMethod method of the payment e.g. CREDIT_CARD
+     * @throws PaymentException when the PaymentService could not be found or loaded
+     */
+    public void loadPaymentService(final String networkCode, final String paymentMethod) throws PaymentException {
+        paymentService = PaymentServiceLookup.createService(networkCode, paymentMethod);
         if (paymentService == null) {
-            throw new PaymentException("Missing PaymentService for: " + code + ", " + paymentMethod);
+            throw new PaymentException("Missing PaymentService for: " + networkCode + ", " + paymentMethod);
         }
         paymentService.setListener(new PaymentServiceListener() {
 
@@ -73,8 +80,7 @@ public final class PaymentServiceInteractor {
      * @return true when resumed, false otherwise
      */
     public boolean onResume() {
-        if (paymentService != null && paymentService.isPending()) {
-            paymentService.resume();
+        if (paymentService != null && paymentService.onResume()) {
             return true;
         }
         return false;
@@ -107,6 +113,9 @@ public final class PaymentServiceInteractor {
         paymentService.processPayment(requestData, applicationContext);
     }
 
+    /**
+     * Observer interface for listening to events from this PaymentService interactor.
+     */
     public interface Observer {
 
         void showFragment(final Fragment fragment);

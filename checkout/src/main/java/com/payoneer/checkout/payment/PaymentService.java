@@ -32,7 +32,7 @@ import android.content.Context;
 
 /**
  * Base class for payment services, a payment service is responsible for processing a payment through the supported payment network.
- * It also supports deleting previously saved accounts.
+ * It also supports deletion of previously saved accounts for the network that this payment service is supports.
  */
 public abstract class PaymentService {
 
@@ -48,18 +48,11 @@ public abstract class PaymentService {
     public abstract void onStop();
 
     /**
-     * Is the service currently pending and waiting for input data, e.g. after a redirect request.
-     *
-     * @return true when pending, false otherwise
-     */
-    public abstract boolean isPending();
-
-    /**
      * Resume the service, this should only be called if isPending returns true.
      *
-     * @throws IllegalStateException when isPending() returns false
+     * @return true when the PaymentService is resumed, false otherwise
      */
-    public abstract void resume();
+    public abstract boolean onResume();
 
     /**
      * Ask the payment service to process the payment.

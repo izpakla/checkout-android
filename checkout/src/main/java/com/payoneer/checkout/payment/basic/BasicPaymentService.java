@@ -80,18 +80,13 @@ public final class BasicPaymentService extends PaymentService {
     }
 
     @Override
-    public void resume() {
-        if (redirectRequest != null) {
-            handleRedirectResult(redirectRequest);
-            redirectRequest = null;
-        } else {
-            throw new IllegalStateException("Cannot call resume when PaymentService is not pending");
+    public boolean onResume() {
+        if (redirectRequest == null) {
+            return false;
         }
-    }
-
-    @Override
-    public boolean isPending() {
-        return redirectRequest != null;
+        handleRedirectResult(redirectRequest);
+        redirectRequest = null;
+        return true;
     }
 
     @Override

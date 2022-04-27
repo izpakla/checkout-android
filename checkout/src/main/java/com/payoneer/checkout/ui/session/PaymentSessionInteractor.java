@@ -15,6 +15,9 @@ import com.payoneer.checkout.ui.model.PaymentSession;
 
 import android.content.Context;
 
+/**
+ * Class for handling the interaction between the PaymentSessionService and e.g. a ViewModel.
+ */
 public class PaymentSessionInteractor {
 
     private final PaymentSessionService sessionService;
@@ -54,6 +57,9 @@ public class PaymentSessionInteractor {
         sessionService.loadPaymentSession(configuration, applicationContext);
     }
 
+    /**
+     * Observer interface for listening to events from this PaymentSession interactor.
+     */
     public interface Observer {
 
         void onPaymentSessionSuccess(final PaymentSession paymentSession);

@@ -87,10 +87,12 @@ public abstract class PaymentService {
 
     /**
      * Helper method to notify the listener of the process payment active state.
+     *
+     * @param finalizing the processing of the payment is in its final state.
      */
-    protected void notifyOnProcessPaymentActive() {
+    protected void notifyOnProcessPaymentActive(final boolean finalizing) {
         if (listener != null) {
-            listener.onProcessPaymentActive();
+            listener.onProcessPaymentActive(finalizing);
         }
     }
 

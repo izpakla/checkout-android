@@ -100,7 +100,7 @@ public final class BasicPaymentService extends PaymentService {
         this.applicationContext = applicationContext;
         this.processPaymentData = processPaymentData;
 
-        notifyOnProcessPaymentActive();
+        notifyOnProcessPaymentActive(true);
         Operation operation = createOperation(processPaymentData, PaymentLinkType.OPERATION);
         operationService.postOperation(operation, applicationContext);
     }

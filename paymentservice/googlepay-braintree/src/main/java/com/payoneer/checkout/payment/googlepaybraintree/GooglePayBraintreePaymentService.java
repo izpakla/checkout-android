@@ -11,6 +11,7 @@ package com.payoneer.checkout.payment.googlepaybraintree;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
 
 import com.braintreepayments.api.GooglePayRequest;
+import com.braintreepayments.api.PaymentMethodNonce;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
@@ -39,10 +40,12 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     final static String TAG = "GooglePayBraintree";
     final static String GOOGLEPAY_REQUEST = "googlepayrequest";
     final static String BRAINTREE_AUTHORIZATION = "braintreeJsAuthorisation";
+    final static String BRAINTREE_NONCE = "paymentmethodnonce";
+    final static String BRAINTREE_ERROR = "braintreeerror";
 
     private final static int IDLE = 0x00;
     private final static int ONSELECT = 0x01;
-    private final static int GETTOKEN = 0x02;
+    private final static int GETNONCE = 0x02;
     private final static int FINALIZE = 0x03;
     private final static int REDIRECT = 0x04;
 
@@ -93,8 +96,8 @@ public class GooglePayBraintreePaymentService extends PaymentService {
             case REDIRECT:
                 handleRedirectResult();
                 return true;
-            case GETTOKEN:
-                handleGetTokenResult();
+            case GETNONCE:
+                handleGetNonceResult();
                 return true;
             default:
                 return false;
@@ -118,16 +121,23 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         this.applicationContext = applicationContext;
         this.fragmentResult = null;
 
-        notifyOnProcessPaymentActive();
+        notifyOnProcessPaymentActive(false);
         Operation operation = createOperation(processPaymentData, PaymentLinkType.ONSELECT);
         operationService.postOperation(operation, applicationContext);
     }
 
-    private void handleGetTokenResult() {
-        notifyOnProcessPaymentActive();
+    private void handleGetNonceResult() {
+        notifyOnProcessPaymentActive(true);
         if (fragmentResult == null) {
             closeWithProcessErrorMessage("Missing GooglePayBraintree fragment result after onResume");
             return;
+        }
+        if (fragmentResult.containsKey(BRAINTREE_NONCE)) {
+            state = FINALIZE;
+            PaymentMethodNonce nonce = fragmentResult.getParcelable(BRAINTREE_NONCE);
+            Operation operation = createOperation(processPaymentData, PaymentLinkType.ONSELECT);
+        } else {
+
         }
     }
 
@@ -155,7 +165,7 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     }
 
     private void handleProcessOnSelectSuccess(final OperationResult operationResult) {
-        state = GETTOKEN;
+        state = GETNONCE;
         String braintreeAuthorization = PaymentUtils.getProviderParameterValue(BRAINTREE_AUTHORIZATION, operationResult);
         if (TextUtils.isEmpty((braintreeAuthorization))) {
             closeWithProcessErrorMessage("Missing GooglePayBraintree [" + BRAINTREE_AUTHORIZATION + "] parameter");

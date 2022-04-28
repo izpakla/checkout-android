@@ -33,8 +33,7 @@ public final class PaymentServiceInteractor {
      */
     public void loadPaymentService(final String networkCode, final String paymentMethod) throws PaymentException {
         if (paymentService != null) {
-            paymentService.setListener(null);
-            paymentService.stop();
+            paymentService.reset();
         }
         paymentService = PaymentServiceLookup.createService(networkCode, paymentMethod);
         if (paymentService == null) {
@@ -50,9 +49,9 @@ public final class PaymentServiceInteractor {
             }
 
             @Override
-            public void onProcessPaymentActive() {
+            public void onProcessPaymentActive(final boolean finalizing) {
                 if (observer != null) {
-                    observer.onProcessPaymentActive();
+                    observer.onProcessPaymentActive(finalizing);
                 }
             }
 
@@ -111,7 +110,7 @@ public final class PaymentServiceInteractor {
 
         void showFragment(final Fragment fragment);
 
-        void onProcessPaymentActive();
+        void onProcessPaymentActive(final boolean finalizing);
 
         void onProcessPaymentResult(final CheckoutResult checkoutResult);
     }

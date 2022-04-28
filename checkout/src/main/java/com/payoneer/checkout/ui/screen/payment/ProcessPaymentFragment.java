@@ -9,12 +9,11 @@
 package com.payoneer.checkout.ui.screen.payment;
 
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
-import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
-import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
+import com.payoneer.checkout.ui.screen.shared.ProgressSettings;
 import com.payoneer.checkout.ui.screen.shared.ProgressView;
 
 import android.os.Bundle;
@@ -43,7 +42,7 @@ public final class ProcessPaymentFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initProgressView(view);
+        progressView = new ProgressView(view.findViewById(R.id.layout_progress));
         initViewModels();
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -53,10 +52,6 @@ public final class ProcessPaymentFragment extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-    }
-
-    private void initProgressView(final View view) {
-        progressView = new ProgressView(view.findViewById(R.id.layout_progress));
     }
 
     private void showWarningMessage() {
@@ -70,10 +65,9 @@ public final class ProcessPaymentFragment extends Fragment {
     private void initViewModels() {
         ProcessPaymentViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProcessPaymentViewModel.class);
         viewModel.showProcessPaymentProgress().observe(getViewLifecycleOwner(), contentEvent -> {
-            Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
-            if (visible != null) {
-                progressView.setLabels(Localization.translate(CHARGE_TITLE), Localization.translate(CHARGE_TEXT));
-                progressView.setVisible(visible);
+            ProgressSettings settings = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
+            if (settings != null) {
+                progressView.setProgressSettings(settings);
             }
         });
     }

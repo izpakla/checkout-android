@@ -37,7 +37,8 @@ public class ProcessPaymentData implements Parcelable {
         }
     };
 
-    public ProcessPaymentData(final String listOperationType, final String networkCode, final String paymentMethod, final String operationType,
+    public ProcessPaymentData(final String listOperationType, final String networkCode, final String paymentMethod,
+        final String operationType,
         final Map<String, URL> links, final PaymentInputValues inputValues) {
         this.listOperationType = listOperationType;
         this.networkCode = networkCode;

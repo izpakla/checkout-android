@@ -8,6 +8,8 @@
 
 package com.payoneer.checkout.ui.screen.list;
 
+import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
+import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
 import static com.payoneer.checkout.model.InteractionCode.RELOAD;
 import static com.payoneer.checkout.model.InteractionCode.RETRY;
@@ -31,6 +33,7 @@ import com.payoneer.checkout.account.PaymentAccountInteractor;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.localization.InteractionMessage;
+import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.ListResult;
@@ -45,6 +48,7 @@ import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListen
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.ui.model.PresetCard;
+import com.payoneer.checkout.ui.screen.shared.ProgressSettings;
 import com.payoneer.checkout.ui.session.PaymentSessionInteractor;
 import com.payoneer.checkout.util.AppContextViewModel;
 import com.payoneer.checkout.util.ContentEvent;
@@ -70,8 +74,8 @@ final class PaymentListViewModel extends AppContextViewModel {
     private final MutableLiveData<Event> showPaymentListFragment = new MutableLiveData<>();
     private final MutableLiveData<Event> showTransactionFragment = new MutableLiveData<>();
     private final MutableLiveData<ContentEvent<Fragment>> showCustomFragment = new MutableLiveData<>();
-    private final MutableLiveData<ContentEvent<Boolean>> showPaymentListProgress = new MutableLiveData<>();
-    private final MutableLiveData<ContentEvent<Boolean>> showTransactionProgress = new MutableLiveData<>();
+    private final MutableLiveData<ContentEvent<ProgressSettings>> showPaymentListProgress = new MutableLiveData<>();
+    private final MutableLiveData<ContentEvent<ProgressSettings>> showTransactionProgress = new MutableLiveData<>();
 
     private final PaymentSessionInteractor sessionInteractor;
     private final PaymentServiceInteractor serviceInteractor;
@@ -124,11 +128,11 @@ final class PaymentListViewModel extends AppContextViewModel {
         return showTransactionFragment;
     }
 
-    LiveData<ContentEvent<Boolean>> showPaymentListProgress() {
+    LiveData<ContentEvent<ProgressSettings>> showPaymentListProgress() {
         return showPaymentListProgress;
     }
 
-    LiveData<ContentEvent<Boolean>> showTransactionProgress() {
+    LiveData<ContentEvent<ProgressSettings>> showTransactionProgress() {
         return showTransactionProgress;
     }
 
@@ -228,8 +232,8 @@ final class PaymentListViewModel extends AppContextViewModel {
             }
 
             @Override
-            public void onProcessPaymentActive() {
-                setShowProcessPaymentProgress(true);
+            public void onProcessPaymentActive(final boolean interruptible) {
+                setShowProcessPaymentProgress(true, interruptible);
             }
 
             @Override
@@ -271,23 +275,27 @@ final class PaymentListViewModel extends AppContextViewModel {
         }
     }
 
-    private void setShowProcessPaymentProgress(final boolean visible) {
+    private void setShowProcessPaymentProgress(final boolean visible, final boolean finalizing) {
         boolean transaction = CHARGE.equals(paymentSession.getListOperationType());
 
         if (transaction) {
+            String header = finalizing ? Localization.translate(CHARGE_TITLE) : null;
+            String info = finalizing ? Localization.translate(CHARGE_TEXT) : null;
+            ProgressSettings settings = new ProgressSettings(visible, header, info);
             showTransactionFragment.setValue(new Event());
-            showTransactionProgress.setValue(new ContentEvent<>(visible));
+            showTransactionProgress.setValue(new ContentEvent<>(settings));
         } else {
+            ProgressSettings settings = new ProgressSettings(visible);
             showPaymentListFragment.setValue(new Event());
-            showPaymentListProgress.setValue(new ContentEvent<>(visible));
+            showPaymentListProgress.setValue(new ContentEvent<>(settings));
         }
     }
 
     private void setShowDeleteAccountProgress(final boolean visible) {
+        ProgressSettings settings = new ProgressSettings(visible);
         showPaymentListFragment.setValue(new Event());
-        showPaymentListProgress.setValue(new ContentEvent<>(visible));
+        showPaymentListProgress.setValue(new ContentEvent<>(settings));
     }
-
 
     private void handlePaymentSessionSuccess(final PaymentSession session) {
         ListResult listResult = session.getListResult();
@@ -345,7 +353,7 @@ final class PaymentListViewModel extends AppContextViewModel {
     }
 
     private void handleOnProcessPaymentResult(final CheckoutResult result) {
-        setShowProcessPaymentProgress(false);
+        setShowProcessPaymentProgress(false, true);
 
         if (UPDATE.equals(processPaymentData.getListOperationType())) {
             handleUpdateCheckoutResult(result);

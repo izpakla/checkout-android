@@ -40,14 +40,18 @@ public final class ProgressView {
      * @param header label
      * @param info label
      */
-    public void setLabels(String header, String info) {
+    public void setLabels(final String header, final String info) {
         if (!TextUtils.isEmpty(header)) {
             textHeader.setText(header);
             textHeader.setVisibility(View.VISIBLE);
+        } else {
+            textHeader.setVisibility(View.GONE);
         }
-        if (!TextUtils.isEmpty(header)) {
+        if (!TextUtils.isEmpty(info)) {
             textInfo.setText(info);
             textInfo.setVisibility(View.VISIBLE);
+        } else {
+            textInfo.setVisibility(View.GONE);
         }
     }
 
@@ -58,5 +62,10 @@ public final class ProgressView {
      */
     public void setVisible(boolean visible) {
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    public void setProgressSettings(final ProgressSettings settings) {
+        setVisible(settings.visible);
+        setLabels(settings.header, settings.info);
     }
 }

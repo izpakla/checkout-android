@@ -17,6 +17,7 @@ import com.braintreepayments.api.GooglePayListener;
 import com.braintreepayments.api.GooglePayRequest;
 import com.braintreepayments.api.PaymentMethodNonce;
 import com.payoneer.checkout.payment.PaymentServiceViewModel;
+import com.payoneer.checkout.ui.screen.shared.ProgressView;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ public class GooglePayBraintreeFragment extends Fragment {
 
     private GooglePayClient googlePayClient;
     private PaymentServiceViewModel viewModel;
+    private ProgressView progressView;
 
     public GooglePayBraintreeFragment() {
     }
@@ -50,7 +52,20 @@ public class GooglePayBraintreeFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        progressView.setVisible(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        progressView.setVisible(false);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        progressView = new ProgressView(view.findViewById(com.payoneer.checkout.R.id.layout_progress));
         viewModel = new ViewModelProvider(requireActivity()).get(PaymentServiceViewModel.class);
         showGooglePay();
     }

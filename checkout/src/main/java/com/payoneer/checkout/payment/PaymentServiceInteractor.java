@@ -32,6 +32,10 @@ public final class PaymentServiceInteractor {
      * @throws PaymentException when the PaymentService could not be found or loaded
      */
     public void loadPaymentService(final String networkCode, final String paymentMethod) throws PaymentException {
+        if (paymentService != null) {
+            paymentService.setListener(null);
+            paymentService.stop();
+        }
         paymentService = PaymentServiceLookup.createService(networkCode, paymentMethod);
         if (paymentService == null) {
             throw new PaymentException("Missing PaymentService for: " + networkCode + ", " + paymentMethod);
@@ -53,23 +57,9 @@ public final class PaymentServiceInteractor {
             }
 
             @Override
-            public void onDeleteAccountActive() {
-                if (observer != null) {
-                    observer.onDeleteAccountActive();
-                }
-            }
-
-            @Override
             public void onProcessPaymentResult(final CheckoutResult checkoutResult) {
                 if (observer != null) {
                     observer.onProcessPaymentResult(checkoutResult);
-                }
-            }
-
-            @Override
-            public void onDeleteAccountResult(final CheckoutResult checkoutResult) {
-                if (observer != null) {
-                    observer.onDeleteAccountResult(checkoutResult);
                 }
             }
         });
@@ -82,7 +72,7 @@ public final class PaymentServiceInteractor {
      * @return true when resumed, false otherwise
      */
     public boolean onResume() {
-        return (paymentService != null) && paymentService.onResume();
+        return (paymentService != null) && paymentService.resume();
     }
 
     /**
@@ -91,7 +81,7 @@ public final class PaymentServiceInteractor {
      */
     public void onStop() {
         if (paymentService != null) {
-            paymentService.onStop();
+            paymentService.stop();
         }
     }
 
@@ -105,18 +95,13 @@ public final class PaymentServiceInteractor {
         this.observer = observer;
     }
 
-    public void deleteAccount(final RequestData requestData, final Context applicationContext) {
+    public void processPayment(final processPaymentData processPaymentData, final Context applicationContext) {
         if (paymentService == null) {
-            throw new IllegalStateException("PaymentService must first be set before deleting an account");
+            throw new IllegalStateException("PaymentService must first be loaded by this interactor");
         }
-        paymentService.deleteAccount(requestData, applicationContext);
-    }
-
-    public void processPayment(final RequestData requestData, final Context applicationContext) {
-        if (paymentService == null) {
-            throw new IllegalStateException("PaymentService must first be set before deleting an account");
+        if (!paymentService.isActive()) {
+            paymentService.processPayment(processPaymentData, applicationContext);
         }
-        paymentService.processPayment(requestData, applicationContext);
     }
 
     /**
@@ -128,10 +113,6 @@ public final class PaymentServiceInteractor {
 
         void onProcessPaymentActive();
 
-        void onDeleteAccountActive();
-
         void onProcessPaymentResult(final CheckoutResult checkoutResult);
-
-        void onDeleteAccountResult(final CheckoutResult checkoutResult);
     }
 }

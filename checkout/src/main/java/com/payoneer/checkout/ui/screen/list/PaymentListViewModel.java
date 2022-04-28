@@ -20,12 +20,16 @@ import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_CODE;
 import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_REASON;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
+import com.payoneer.checkout.account.DeleteAccount;
+import com.payoneer.checkout.account.PaymentAccountInteractor;
 import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.localization.InteractionMessage;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
@@ -35,7 +39,7 @@ import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentServiceInteractor;
-import com.payoneer.checkout.payment.RequestData;
+import com.payoneer.checkout.payment.processPaymentData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentCard;
@@ -50,6 +54,7 @@ import com.payoneer.checkout.util.Resource;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -71,9 +76,12 @@ final class PaymentListViewModel extends AppContextViewModel {
 
     private final PaymentSessionInteractor sessionInteractor;
     private final PaymentServiceInteractor serviceInteractor;
+    private final PaymentAccountInteractor accountInteractor;
 
     private PaymentSession paymentSession;
-    private RequestData requestData;
+    private processPaymentData processPaymentData;
+    private DeleteAccount deleteAccount;
+    private boolean paymentCardActionLocked;
 
     /**
      * Construct a new ProcessPaymentViewModel
@@ -81,9 +89,10 @@ final class PaymentListViewModel extends AppContextViewModel {
      * @param applicationContext context of the application
      * @param sessionInteractor provides interaction with the PaymentSessionService
      * @param serviceInteractor provides interaction with the PaymentService
+     * @param accountInteractor provides interaction with the AccountService
      */
     PaymentListViewModel(final Context applicationContext, final PaymentSessionInteractor sessionInteractor,
-        final PaymentServiceInteractor serviceInteractor) {
+        final PaymentServiceInteractor serviceInteractor, final PaymentAccountInteractor accountInteractor) {
         super(applicationContext);
 
         this.sessionInteractor = sessionInteractor;
@@ -91,6 +100,9 @@ final class PaymentListViewModel extends AppContextViewModel {
 
         this.serviceInteractor = serviceInteractor;
         initPaymentServiceObserver(serviceInteractor);
+
+        this.accountInteractor = accountInteractor;
+        initPaymentAccountObserver(accountInteractor);
     }
 
     LiveData<Resource<PaymentSession>> showPaymentSession() {
@@ -134,6 +146,7 @@ final class PaymentListViewModel extends AppContextViewModel {
     void onPaymentListPause() {
         sessionInteractor.onStop();
         serviceInteractor.onStop();
+        accountInteractor.onStop();
     }
 
     void loadPaymentSession() {
@@ -143,34 +156,45 @@ final class PaymentListViewModel extends AppContextViewModel {
     }
 
     void processPaymentCard(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
+        // ignore multiple click events
+        if (!lockPaymentCardAction()) {
+            return;
+        }
         if (paymentCard instanceof PresetCard) {
             processPresetCard((PresetCard) paymentCard);
+        } else {
+            String networkCode = paymentCard.getNetworkCode();
+            String paymentMethod = paymentCard.getPaymentMethod();
+            try {
+                serviceInteractor.loadPaymentService(networkCode, paymentMethod);
+                processPaymentData = new processPaymentData(paymentSession.getListOperationType(), networkCode, paymentMethod,
+                    paymentCard.getOperationType(),
+                    paymentCard.getLinks(), inputValues);
+                serviceInteractor.processPayment(processPaymentData, getApplicationContext());
+            } catch (PaymentException e) {
+                setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
+            }
+        }
+        unlockPaymentCardAction();
+    }
+
+    void deletePaymentCard(final PaymentCard paymentCard) {
+        // ignore multiple click events
+        if (!lockPaymentCardAction()) {
             return;
         }
         String networkCode = paymentCard.getNetworkCode();
         String paymentMethod = paymentCard.getPaymentMethod();
-        try {
-            serviceInteractor.loadPaymentService(networkCode, paymentMethod);
-            requestData = new RequestData(paymentSession.getListOperationType(), networkCode, paymentMethod, paymentCard.getOperationType(),
-                paymentCard.getLinks(), inputValues);
-            serviceInteractor.processPayment(requestData, getApplicationContext());
-        } catch (PaymentException e) {
-            setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
-        }
-    }
-
-    void deletePaymentCard(final PaymentCard paymentCard) {
-        String networkCode = paymentCard.getNetworkCode();
-        String paymentMethod = paymentCard.getPaymentMethod();
 
         try {
             serviceInteractor.loadPaymentService(networkCode, paymentMethod);
-            requestData = new RequestData(paymentSession.getListOperationType(), networkCode, paymentMethod,
-                paymentCard.getOperationType(), paymentCard.getLinks(), new PaymentInputValues());
-            serviceInteractor.deleteAccount(requestData, getApplicationContext());
+            URL url = paymentCard.getLink(PaymentLinkType.SELF);
+            deleteAccount = new DeleteAccount(url);
+            accountInteractor.deleteAccount(deleteAccount, getApplicationContext());
         } catch (PaymentException e) {
             setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
         }
+        unlockPaymentCardAction();
     }
 
     private void initPaymentSessionObserver(final PaymentSessionInteractor interactor) {
@@ -183,6 +207,16 @@ final class PaymentListViewModel extends AppContextViewModel {
             @Override
             public void onPaymentSessionError(final CheckoutResult checkoutResult) {
                 handlePaymentSessionError(checkoutResult);
+            }
+        });
+    }
+
+    private void initPaymentAccountObserver(final PaymentAccountInteractor interactor) {
+        interactor.setObserver(new PaymentAccountInteractor.Observer() {
+
+            @Override
+            public void onDeleteAccountResult(final CheckoutResult checkoutResult) {
+                handleOnDeleteAccountResult(checkoutResult);
             }
         });
     }
@@ -200,18 +234,8 @@ final class PaymentListViewModel extends AppContextViewModel {
             }
 
             @Override
-            public void onDeleteAccountActive() {
-                setShowDeleteAccountProgress(true);
-            }
-
-            @Override
             public void onProcessPaymentResult(final CheckoutResult checkoutResult) {
                 handleOnProcessPaymentResult(checkoutResult);
-            }
-
-            @Override
-            public void onDeleteAccountResult(final CheckoutResult checkoutResult) {
-                handleOnDeleteAccountResult(checkoutResult);
             }
         });
     }
@@ -324,7 +348,7 @@ final class PaymentListViewModel extends AppContextViewModel {
     private void handleOnProcessPaymentResult(final CheckoutResult result) {
         setShowProcessPaymentProgress(false);
 
-        if (UPDATE.equals(requestData.getListOperationType())) {
+        if (UPDATE.equals(processPaymentData.getListOperationType())) {
             handleUpdateCheckoutResult(result);
         } else {
             handleProcessPaymentResult(result);
@@ -360,7 +384,7 @@ final class PaymentListViewModel extends AppContextViewModel {
         setShowConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
-                serviceInteractor.deleteAccount(requestData, getApplicationContext());
+                accountInteractor.deleteAccount(deleteAccount, getApplicationContext());
             }
 
             @Override
@@ -449,7 +473,7 @@ final class PaymentListViewModel extends AppContextViewModel {
         setShowConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
-                serviceInteractor.processPayment(requestData, getApplicationContext());
+                serviceInteractor.processPayment(processPaymentData, getApplicationContext());
             }
 
             @Override
@@ -522,5 +546,13 @@ final class PaymentListViewModel extends AppContextViewModel {
             return InteractionMessage.fromInteraction(interaction);
         }
         return InteractionMessage.fromOperationFlow(interaction, paymentSession.getListOperationType());
+    }
+
+    private boolean lockPaymentCardAction() {
+        return !paymentCardActionLocked && (paymentCardActionLocked = true);
+    }
+
+    private void unlockPaymentCardAction() {
+        this.paymentCardActionLocked = false;
     }
 }

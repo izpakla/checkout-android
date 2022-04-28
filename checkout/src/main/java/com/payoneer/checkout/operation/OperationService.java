@@ -67,45 +67,6 @@ public final class OperationService {
     }
 
     /**
-     * Delete a saved account
-     *
-     * @param account to be deleted
-     * @param context in which this account will be deleted
-     */
-    public void deleteAccount(final DeleteAccount account, final Context context) {
-
-        if (isActive()) {
-            throw new IllegalStateException("OperationService is already active, stop first");
-        }
-        task = WorkerTask.fromCallable(new Callable<OperationResult>() {
-            @Override
-            public OperationResult call() throws PaymentException {
-                return asyncDeleteAccount(account, context);
-            }
-        });
-        task.subscribe(new WorkerSubscriber<OperationResult>() {
-            @Override
-            public void onSuccess(OperationResult result) {
-                task = null;
-
-                if (listener != null) {
-                    listener.onDeleteAccountSuccess(result);
-                }
-            }
-
-            @Override
-            public void onError(Throwable cause) {
-                task = null;
-
-                if (listener != null) {
-                    listener.onDeleteAccountError(cause);
-                }
-            }
-        });
-        Workers.getInstance().forNetworkTasks().execute(task);
-    }
-
-    /**
      * Post an operation to the Payment API
      *
      * @param operation to be posted to the Payment API
@@ -149,11 +110,6 @@ public final class OperationService {
         addBrowserData(operation, context);
         addRiskProviderRequests(operation, context);
         return paymentConnection.postOperation(operation);
-    }
-
-    private OperationResult asyncDeleteAccount(final DeleteAccount account, final Context context) throws PaymentException {
-        paymentConnection.initialize(context);
-        return paymentConnection.deleteAccount(account);
     }
 
     private void addRiskProviderRequests(final Operation operation, final Context context) {

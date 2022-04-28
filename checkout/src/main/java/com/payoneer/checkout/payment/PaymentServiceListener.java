@@ -22,9 +22,5 @@ public interface PaymentServiceListener {
 
     void onProcessPaymentActive();
 
-    void onDeleteAccountActive();
-
     void onProcessPaymentResult(final CheckoutResult checkoutResult);
-
-    void onDeleteAccountResult(final CheckoutResult checkoutResult);
 }

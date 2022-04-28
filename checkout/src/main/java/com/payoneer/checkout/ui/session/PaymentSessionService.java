@@ -75,11 +75,9 @@ public final class PaymentSessionService {
     /**
      * Notify that the processing should be stopped
      */
-    public void onStop() {
-        if (sessionTask != null) {
-            sessionTask.unsubscribe();
-            sessionTask = null;
-        }
+    public void stop() {
+        WorkerTask.unsubscribe(sessionTask);
+        sessionTask = null;
     }
 
     /**
@@ -88,7 +86,7 @@ public final class PaymentSessionService {
      * @return true when active, false otherwise
      */
     public boolean isActive() {
-        return sessionTask != null && sessionTask.isSubscribed();
+        return WorkerTask.isSubscribed(sessionTask);
     }
 
     /**

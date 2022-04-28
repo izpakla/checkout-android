@@ -240,6 +240,11 @@ final class PaymentListViewModel extends AppContextViewModel {
             public void onProcessPaymentResult(final CheckoutResult checkoutResult) {
                 handleOnProcessPaymentResult(checkoutResult);
             }
+
+            @Override
+            public void onProcessPaymentInterrupted(final Exception exception) {
+                loadPaymentSession();
+            }
         });
     }
 

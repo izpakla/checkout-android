@@ -86,6 +86,16 @@ public abstract class PaymentService {
     }
 
     /**
+     * Helper method to notify the listener that the payment process has been interrupted.
+     * Interruption should not have an affect on the state of the list.
+     */
+    protected void notifyOnProcessPaymentInterrupted(final Exception exception) {
+        if (listener != null) {
+            listener.onProcessPaymentInterrupted(exception);
+        }
+    }
+
+    /**
      * Helper method to notify the listener of the process payment active state.
      *
      * @param finalizing the processing of the payment is in its final state.

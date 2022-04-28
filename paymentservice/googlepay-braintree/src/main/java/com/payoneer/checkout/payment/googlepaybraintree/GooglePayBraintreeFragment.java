@@ -9,6 +9,8 @@
 package com.payoneer.checkout.payment.googlepaybraintree;
 
 import static com.payoneer.checkout.payment.googlepaybraintree.GooglePayBraintreePaymentService.BRAINTREE_AUTHORIZATION;
+import static com.payoneer.checkout.payment.googlepaybraintree.GooglePayBraintreePaymentService.BRAINTREE_ERROR;
+import static com.payoneer.checkout.payment.googlepaybraintree.GooglePayBraintreePaymentService.BRAINTREE_NONCE;
 import static com.payoneer.checkout.payment.googlepaybraintree.GooglePayBraintreePaymentService.GOOGLEPAY_REQUEST;
 
 import com.braintreepayments.api.BraintreeClient;
@@ -91,11 +93,14 @@ public class GooglePayBraintreeFragment extends Fragment {
     }
 
     private void handleOnGooglePaySuccess(final PaymentMethodNonce paymentMethodNonce) {
-        viewModel.onFragmentResult(new Bundle());
-
+        Bundle attributes = new Bundle();
+        attributes.putParcelable(BRAINTREE_NONCE, paymentMethodNonce);
+        viewModel.onFragmentResult(attributes);
     }
 
     private void handleOnGooglePayFailure(final Exception exception) {
-        viewModel.onFragmentResult(new Bundle());
+        Bundle attributes = new Bundle();
+        attributes.putSerializable(BRAINTREE_ERROR, exception);
+        viewModel.onFragmentResult(attributes);
     }
 }

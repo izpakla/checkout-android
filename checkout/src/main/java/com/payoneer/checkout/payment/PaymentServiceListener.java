@@ -23,4 +23,6 @@ public interface PaymentServiceListener {
     void onProcessPaymentActive(final boolean finalizing);
 
     void onProcessPaymentResult(final CheckoutResult checkoutResult);
+
+    void onProcessPaymentInterrupted(final Exception exception);
 }

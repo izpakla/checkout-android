@@ -33,6 +33,7 @@ public final class PaymentServiceInteractor {
      */
     public void loadPaymentService(final String networkCode, final String paymentMethod) throws PaymentException {
         if (paymentService != null) {
+            paymentService.setListener(null);
             paymentService.reset();
         }
         paymentService = PaymentServiceLookup.createService(networkCode, paymentMethod);
@@ -59,6 +60,13 @@ public final class PaymentServiceInteractor {
             public void onProcessPaymentResult(final CheckoutResult checkoutResult) {
                 if (observer != null) {
                     observer.onProcessPaymentResult(checkoutResult);
+                }
+            }
+
+            @Override
+            public void onProcessPaymentInterrupted(final Exception exception) {
+                if (observer != null) {
+                    observer.onProcessPaymentInterrupted(exception);
                 }
             }
         });
@@ -113,5 +121,7 @@ public final class PaymentServiceInteractor {
         void onProcessPaymentActive(final boolean finalizing);
 
         void onProcessPaymentResult(final CheckoutResult checkoutResult);
+
+        void onProcessPaymentInterrupted(final Exception exception);
     }
 }

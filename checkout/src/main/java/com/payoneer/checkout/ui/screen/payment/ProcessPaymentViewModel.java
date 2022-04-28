@@ -11,6 +11,7 @@ package com.payoneer.checkout.ui.screen.payment;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
+import static com.payoneer.checkout.model.InteractionCode.VERIFY;
 
 import java.util.Objects;
 
@@ -128,6 +129,11 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
             public void onProcessPaymentResult(final CheckoutResult checkoutResult) {
                 handleOnProcessPaymentResult(checkoutResult);
             }
+
+            @Override
+            public void onProcessPaymentInterrupted(final Exception exception) {
+                handleOnProcessPaymentInterrupted(exception);
+            }
         });
     }
 
@@ -174,6 +180,17 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
         sessionInteractor.loadPaymentSession(getApplicationContext());
     }
 
+    private void handleOnProcessPaymentInterrupted(final Exception exception) {
+        CheckoutResult checkoutResult;
+        if (exception == null) {
+            String message = "Payment processing of network[" + processPaymentData.getNetworkCode() + "] has been interrupted";
+            checkoutResult = CheckoutResultHelper.fromErrorMessage(message);
+        } else {
+            checkoutResult = CheckoutResultHelper.fromThrowable(exception);
+        }
+        setCloseWithCheckoutResult(checkoutResult);
+    }
+
     private void handleOnPaymentSessionSuccess(PaymentSession session) {
         ListResult listResult = session.getListResult();
         Interaction interaction = listResult.getInteraction();
@@ -194,11 +211,6 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
         } else {
             setCloseWithCheckoutResult(result);
         }
-    }
-
-    private void closeWithErrorMessage(final String message) {
-        CheckoutResult result = CheckoutResultHelper.fromErrorMessage(message);
-        setCloseWithCheckoutResult(result);
     }
 
     private void handleLoadPaymentSessionNetworkFailure(final CheckoutResult checkoutResult) {
@@ -223,7 +235,8 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
     private void handleLoadPaymentSessionProceed(PaymentSession paymentSession) {
         PresetAccount account = paymentSession.getListResult().getPresetAccount();
         if (account == null) {
-            closeWithErrorMessage("PresetAccount not found in ListResult");
+            CheckoutResult checkoutResult = CheckoutResultHelper.fromErrorMessage("PresetAccount not found in ListResult");
+            setCloseWithCheckoutResult(checkoutResult);
             return;
         }
         this.paymentSession = paymentSession;

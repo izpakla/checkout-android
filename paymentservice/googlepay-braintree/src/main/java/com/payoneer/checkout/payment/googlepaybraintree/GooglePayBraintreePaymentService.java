@@ -9,6 +9,10 @@
 package com.payoneer.checkout.payment.googlepaybraintree;
 
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
+import static com.payoneer.checkout.model.NetworkOperationType.PRESET;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.braintreepayments.api.GooglePayRequest;
 import com.braintreepayments.api.PaymentMethodNonce;
@@ -18,6 +22,8 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.OperationResult;
+import com.payoneer.checkout.model.Parameter;
+import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.operation.Operation;
 import com.payoneer.checkout.operation.OperationListener;
 import com.payoneer.checkout.operation.OperationService;
@@ -38,10 +44,11 @@ import android.util.Log;
 public class GooglePayBraintreePaymentService extends PaymentService {
 
     final static String TAG = "GooglePayBraintree";
-    final static String GOOGLEPAY_REQUEST = "googlepayrequest";
+    final static String GOOGLEPAY_REQUEST = "googlepayRequest";
+    final static String BRAINTREE_NONCE = "braintreeNonce";
+    final static String BRAINTREE_ERROR = "braintreeError";
     final static String BRAINTREE_AUTHORIZATION = "braintreeJsAuthorisation";
-    final static String BRAINTREE_NONCE = "paymentmethodnonce";
-    final static String BRAINTREE_ERROR = "braintreeerror";
+    final static String NONCE_PARAMETER = "nonce";
 
     private final static int IDLE = 0x00;
     private final static int ONSELECT = 0x01;
@@ -83,7 +90,6 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     @Override
     public void reset() {
         this.state = IDLE;
-        this.listener = null;
         this.processPaymentData = null;
         this.applicationContext = null;
         this.fragmentResult = null;
@@ -127,18 +133,27 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     }
 
     private void handleGetNonceResult() {
-        notifyOnProcessPaymentActive(true);
         if (fragmentResult == null) {
             closeWithProcessErrorMessage("Missing GooglePayBraintree fragment result after onResume");
             return;
         }
-        if (fragmentResult.containsKey(BRAINTREE_NONCE)) {
-            state = FINALIZE;
-            PaymentMethodNonce nonce = fragmentResult.getParcelable(BRAINTREE_NONCE);
-            Operation operation = createOperation(processPaymentData, PaymentLinkType.ONSELECT);
-        } else {
-
+        if (!(fragmentResult.containsKey(BRAINTREE_NONCE))) {
+            Exception exception = (Exception) fragmentResult.getSerializable(BRAINTREE_ERROR);
+            closeWithProcessPaymentInterrupted(exception);
+            return;
         }
+        PaymentMethodNonce nonce = fragmentResult.getParcelable(BRAINTREE_NONCE);
+        ProviderParameters providerRequest = new ProviderParameters();
+        providerRequest.setProviderCode(processPaymentData.getNetworkCode());
+
+        List<Parameter> params = new ArrayList<>();
+        Parameter param = new Parameter();
+        param.setName(NONCE_PARAMETER);
+        param.setValue(nonce.getString());
+        params.add(param);
+        providerRequest.setParameters(params);
+
+        finalizePayment(providerRequest);
     }
 
     private void handleRedirectResult() {
@@ -154,6 +169,17 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         closeWithProcessPaymentResult(checkoutResult);
     }
 
+    private void finalizePayment(final ProviderParameters providerRequest) {
+        state = FINALIZE;
+        notifyOnProcessPaymentActive(true);
+
+        Operation operation = createOperation(processPaymentData, PaymentLinkType.OPERATION);
+        if (providerRequest != null) {
+            operation.setProviderRequest(providerRequest);
+        }
+        operationService.postOperation(operation, applicationContext);
+    }
+
     private void handleProcessPaymentSuccess(final OperationResult operationResult) {
         switch (state) {
             case ONSELECT:
@@ -165,6 +191,11 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     }
 
     private void handleProcessOnSelectSuccess(final OperationResult operationResult) {
+        // for presetting the method, the nonce is not required to finalize it.
+        if (PRESET.equals(processPaymentData.getOperationType())) {
+            finalizePayment(null);
+            return;
+        }
         state = GETNONCE;
         String braintreeAuthorization = PaymentUtils.getProviderParameterValue(BRAINTREE_AUTHORIZATION, operationResult);
         if (TextUtils.isEmpty((braintreeAuthorization))) {
@@ -186,7 +217,7 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         Interaction interaction = operationResult.getInteraction();
         CheckoutResult checkoutResult = new CheckoutResult(operationResult);
 
-        if (!(PROCEED.equals(interaction.getCode()) || requiresRedirect(operationResult))) {
+        if (!(PROCEED.equals(interaction.getCode()) && requiresRedirect(operationResult))) {
             closeWithProcessPaymentResult(checkoutResult);
             return;
         }
@@ -213,12 +244,14 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         return CheckoutResultHelper.fromErrorMessage(interactionCode, message);
     }
 
-    private void closeWithProcessPaymentResult(final CheckoutResult checkoutResult) {
-        this.state = IDLE;
-        this.processPaymentData = null;
-        this.applicationContext = null;
-        this.fragmentResult = null;
+    private void closeWithProcessPaymentInterrupted(final Exception exception) {
+        reset();
+        Log.w(TAG, "closeWithProcessPaymentInterrupted", exception);
+        notifyOnProcessPaymentInterrupted(exception);
+    }
 
+    private void closeWithProcessPaymentResult(final CheckoutResult checkoutResult) {
+        reset();
         Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
         notifyOnProcessPaymentResult(checkoutResult);
     }

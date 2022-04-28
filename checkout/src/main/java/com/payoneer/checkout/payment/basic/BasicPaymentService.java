@@ -71,7 +71,6 @@ public final class BasicPaymentService extends PaymentService {
     @Override
     public void reset() {
         this.state = IDLE;
-        this.listener = null;
         this.applicationContext = null;
         this.processPaymentData = null;
         operationService.stop();
@@ -142,10 +141,7 @@ public final class BasicPaymentService extends PaymentService {
     }
 
     private void closeWithProcessPaymentResult(final CheckoutResult checkoutResult) {
-        this.state = IDLE;
-        this.applicationContext = null;
-        this.processPaymentData = null;
-
+        reset();
         Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
         notifyOnProcessPaymentResult(checkoutResult);
     }

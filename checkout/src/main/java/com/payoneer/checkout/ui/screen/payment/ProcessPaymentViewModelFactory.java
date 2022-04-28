@@ -35,6 +35,7 @@ final class ProcessPaymentViewModelFactory implements ViewModelProvider.Factory 
 
     @NonNull
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull final Class<T> modelClass) {
         return (T) new ProcessPaymentViewModel(applicationContext, sessionInteractor, serviceInteractor);
     }

@@ -87,7 +87,7 @@ public final class PaymentServiceInteractor {
         this.observer = observer;
     }
 
-    public void processPayment(final processPaymentData processPaymentData, final Context applicationContext) {
+    public void processPayment(final ProcessPaymentData processPaymentData, final Context applicationContext) {
         if (paymentService == null) {
             throw new IllegalStateException("PaymentService must first be loaded by this interactor");
         }

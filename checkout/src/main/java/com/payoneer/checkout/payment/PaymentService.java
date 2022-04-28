@@ -59,7 +59,7 @@ public abstract class PaymentService {
      *
      * @param processPaymentData containing the data to make the payment request
      */
-    public abstract void processPayment(final processPaymentData processPaymentData, final Context applicationContext);
+    public abstract void processPayment(final ProcessPaymentData processPaymentData, final Context applicationContext);
 
     /**
      * Create a redirect request and open a custom chrome tab to continue processing the request.
@@ -81,7 +81,7 @@ public abstract class PaymentService {
         return redirectRequest;
     }
 
-    public static Operation createOperation(final processPaymentData processPaymentData, final String link) {
+    public static Operation createOperation(final ProcessPaymentData processPaymentData, final String link) {
         OperationData operationData = new OperationData();
         operationData.setAccount(new AccountInputData());
 

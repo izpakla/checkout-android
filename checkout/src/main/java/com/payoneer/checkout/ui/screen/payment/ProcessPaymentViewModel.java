@@ -23,7 +23,7 @@ import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentServiceInteractor;
-import com.payoneer.checkout.payment.processPaymentData;
+import com.payoneer.checkout.payment.ProcessPaymentData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
@@ -54,7 +54,7 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
     private final PaymentServiceInteractor serviceInteractor;
 
     private PaymentSession paymentSession;
-    private processPaymentData processPaymentData;
+    private ProcessPaymentData processPaymentData;
 
     /**
      * Construct a new ProcessPaymentViewModel
@@ -299,8 +299,8 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
         setShowInteractionDialog(listener, createInteractionMessage(interaction));
     }
 
-    private processPaymentData createRequestData(final PresetAccount presetAccount) {
-        return new processPaymentData(paymentSession.getListOperationType(),
+    private ProcessPaymentData createRequestData(final PresetAccount presetAccount) {
+        return new ProcessPaymentData(paymentSession.getListOperationType(),
             presetAccount.getCode(),
             presetAccount.getMethod(),
             presetAccount.getOperationType(),

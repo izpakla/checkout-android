@@ -23,7 +23,7 @@ import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentServiceInteractor;
-import com.payoneer.checkout.payment.RequestData;
+import com.payoneer.checkout.payment.processPaymentData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
@@ -54,7 +54,7 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
     private final PaymentServiceInteractor serviceInteractor;
 
     private PaymentSession paymentSession;
-    private RequestData requestData;
+    private processPaymentData processPaymentData;
 
     /**
      * Construct a new ProcessPaymentViewModel
@@ -121,18 +121,8 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
             }
 
             @Override
-            public void onDeleteAccountActive() {
-                // delete account is not implemented by this viewmodel
-            }
-
-            @Override
             public void onProcessPaymentResult(final CheckoutResult checkoutResult) {
                 handleOnProcessPaymentResult(checkoutResult);
-            }
-
-            @Override
-            public void onDeleteAccountResult(final CheckoutResult checkoutResult) {
-                // delete account is not implemented by this viewmodel
             }
         });
     }
@@ -230,7 +220,7 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
             return;
         }
         this.paymentSession = paymentSession;
-        this.requestData = createRequestData(account);
+        this.processPaymentData = createRequestData(account);
         processPayment();
     }
 
@@ -245,8 +235,8 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
 
     private void processPayment() {
         try {
-            serviceInteractor.loadPaymentService(requestData.getNetworkCode(), requestData.getPaymentMethod());
-            serviceInteractor.processPayment(requestData, getApplicationContext());
+            serviceInteractor.loadPaymentService(processPaymentData.getNetworkCode(), processPaymentData.getPaymentMethod());
+            serviceInteractor.processPayment(processPaymentData, getApplicationContext());
         } catch (PaymentException e) {
             setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
         }
@@ -273,7 +263,7 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
         setShowConnectionErrorDialog(new PaymentDialogListener() {
             @Override
             public void onPositiveButtonClicked() {
-                serviceInteractor.processPayment(requestData, getApplicationContext());
+                serviceInteractor.processPayment(processPaymentData, getApplicationContext());
             }
 
             @Override
@@ -309,8 +299,8 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
         setShowInteractionDialog(listener, createInteractionMessage(interaction));
     }
 
-    private RequestData createRequestData(final PresetAccount presetAccount) {
-        return new RequestData(paymentSession.getListOperationType(),
+    private processPaymentData createRequestData(final PresetAccount presetAccount) {
+        return new processPaymentData(paymentSession.getListOperationType(),
             presetAccount.getCode(),
             presetAccount.getMethod(),
             presetAccount.getOperationType(),

@@ -51,23 +51,9 @@ public final class PaymentServiceInteractor {
             }
 
             @Override
-            public void onDeleteAccountActive() {
-                if (observer != null) {
-                    observer.onDeleteAccountActive();
-                }
-            }
-
-            @Override
             public void onProcessPaymentResult(final CheckoutResult checkoutResult) {
                 if (observer != null) {
                     observer.onProcessPaymentResult(checkoutResult);
-                }
-            }
-
-            @Override
-            public void onDeleteAccountResult(final CheckoutResult checkoutResult) {
-                if (observer != null) {
-                    observer.onDeleteAccountResult(checkoutResult);
                 }
             }
         });
@@ -96,18 +82,11 @@ public final class PaymentServiceInteractor {
         this.observer = observer;
     }
 
-    public void deleteAccount(final RequestData requestData, final Context applicationContext) {
+    public void processPayment(final processPaymentData processPaymentData, final Context applicationContext) {
         if (paymentService == null) {
             throw new IllegalStateException("PaymentService must first be set before deleting an account");
         }
-        paymentService.deleteAccount(requestData, applicationContext);
-    }
-
-    public void processPayment(final RequestData requestData, final Context applicationContext) {
-        if (paymentService == null) {
-            throw new IllegalStateException("PaymentService must first be set before deleting an account");
-        }
-        paymentService.processPayment(requestData, applicationContext);
+        paymentService.processPayment(processPaymentData, applicationContext);
     }
 
     /**
@@ -119,10 +98,6 @@ public final class PaymentServiceInteractor {
 
         void onProcessPaymentActive();
 
-        void onDeleteAccountActive();
-
         void onProcessPaymentResult(final CheckoutResult checkoutResult);
-
-        void onDeleteAccountResult(final CheckoutResult checkoutResult);
     }
 }

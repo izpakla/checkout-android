@@ -46,7 +46,7 @@ public class PaymentSessionInteractor {
     }
 
     public void onStop() {
-        sessionService.onStop();
+        sessionService.stop();
     }
 
     public void setObserver(final PaymentSessionInteractor.Observer observer) {
@@ -54,7 +54,9 @@ public class PaymentSessionInteractor {
     }
 
     public void loadPaymentSession(final Context applicationContext) {
-        sessionService.loadPaymentSession(configuration, applicationContext);
+        if (!sessionService.isActive()) {
+            sessionService.loadPaymentSession(configuration, applicationContext);
+        }
     }
 
     /**
@@ -65,6 +67,5 @@ public class PaymentSessionInteractor {
         void onPaymentSessionSuccess(final PaymentSession paymentSession);
 
         void onPaymentSessionError(final CheckoutResult checkoutResult);
-
     }
 }

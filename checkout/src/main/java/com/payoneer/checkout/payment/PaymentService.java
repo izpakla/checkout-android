@@ -15,15 +15,11 @@ import static com.payoneer.checkout.model.NetworkOperationType.PAYOUT;
 import static com.payoneer.checkout.model.RedirectType.HANDLER3DS2;
 import static com.payoneer.checkout.model.RedirectType.PROVIDER;
 
-import java.net.URL;
-
 import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.model.AccountInputData;
 import com.payoneer.checkout.model.OperationData;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Redirect;
-import com.payoneer.checkout.operation.DeleteAccount;
 import com.payoneer.checkout.operation.Operation;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
@@ -32,7 +28,6 @@ import android.content.Context;
 
 /**
  * Base class for payment services, a payment service is responsible for processing a payment through the supported payment network.
- * It also supports deletion of previously saved accounts for the network that this payment service is supports.
  */
 public abstract class PaymentService {
 
@@ -57,16 +52,9 @@ public abstract class PaymentService {
     /**
      * Ask the payment service to process the payment.
      *
-     * @param requestData containing the data to make the payment request
+     * @param processPaymentData containing the data to make the payment request
      */
-    public abstract void processPayment(final RequestData requestData, final Context applicationContext);
-
-    /**
-     * Ask the payment service to delete the account.
-     *
-     * @param requestData containing the account data that should be deleted
-     */
-    public abstract void deleteAccount(final RequestData requestData, final Context applicationContext);
+    public abstract void processPayment(final processPaymentData processPaymentData, final Context applicationContext);
 
     /**
      * Create a redirect request and open a custom chrome tab to continue processing the request.
@@ -88,17 +76,12 @@ public abstract class PaymentService {
         return redirectRequest;
     }
 
-    public static Operation createOperation(final RequestData requestData, final String link) {
+    public static Operation createOperation(final processPaymentData processPaymentData, final String link) {
         OperationData operationData = new OperationData();
         operationData.setAccount(new AccountInputData());
 
-        requestData.getPaymentInputValues().copyInto(operationData);
-        return new Operation(requestData.getLink(link), operationData);
-    }
-
-    public static DeleteAccount createDeleteAccount(final RequestData requestData) {
-        URL url = requestData.getLink(PaymentLinkType.SELF);
-        return new DeleteAccount(url);
+        processPaymentData.getPaymentInputValues().copyInto(operationData);
+        return new Operation(processPaymentData.getLink(link), operationData);
     }
 
     public static boolean requiresRedirect(final OperationResult operationResult) {

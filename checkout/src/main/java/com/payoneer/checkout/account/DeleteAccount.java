@@ -6,7 +6,7 @@
  * See the LICENSE file for more information.
  */
 
-package com.payoneer.checkout.operation;
+package com.payoneer.checkout.account;
 
 import java.net.URL;
 
@@ -22,7 +22,7 @@ import android.os.Parcelable;
  */
 public class DeleteAccount implements Parcelable {
 
-    public final static Parcelable.Creator<DeleteAccount> CREATOR = new Parcelable.Creator<DeleteAccount>() {
+    public final static Creator<DeleteAccount> CREATOR = new Creator<DeleteAccount>() {
         public DeleteAccount createFromParcel(Parcel in) {
             return new DeleteAccount(in);
         }

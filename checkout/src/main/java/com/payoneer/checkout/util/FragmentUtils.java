@@ -50,6 +50,9 @@ public final class FragmentUtils {
     }
 
     public static void showFragment(final FragmentManager manager, final int resourceId, final Fragment fragment, final String tag) {
+        if (manager.findFragmentByTag(tag) != null) {
+            removeFragment(manager, tag);
+        }
         manager.beginTransaction()
             .setReorderingAllowed(true)
             .add(resourceId, fragment, tag)

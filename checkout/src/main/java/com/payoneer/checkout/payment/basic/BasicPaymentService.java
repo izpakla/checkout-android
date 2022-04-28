@@ -21,7 +21,6 @@ import com.payoneer.checkout.operation.OperationListener;
 import com.payoneer.checkout.operation.OperationService;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.ProcessPaymentData;
-import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 
 import android.content.Context;
@@ -35,10 +34,14 @@ import android.util.Log;
 public final class BasicPaymentService extends PaymentService {
 
     private final static String TAG = "BasicPaymentService";
+    private final static int IDLE = 0x00;
+    private final static int PROCESS = 0x01;
+    private final static int REDIRECT = 0x02;
+
     private final OperationService operationService;
     private ProcessPaymentData processPaymentData;
     private Context applicationContext;
-    private RedirectRequest redirectRequest;
+    private int state;
 
     /**
      * Create a new BasicNetworkService, this service is a basic implementation
@@ -66,8 +69,17 @@ public final class BasicPaymentService extends PaymentService {
     }
 
     @Override
+    public void reset() {
+        this.state = IDLE;
+        this.listener = null;
+        this.applicationContext = null;
+        this.processPaymentData = null;
+        operationService.stop();
+    }
+
+    @Override
     public boolean resume() {
-        if (redirectRequest != null) {
+        if (state == REDIRECT) {
             handleRedirectResult();
             return true;
         }
@@ -79,14 +91,14 @@ public final class BasicPaymentService extends PaymentService {
     }
 
     public boolean isActive() {
-        return operationService.isActive();
+        return (state != IDLE);
     }
 
     @Override
     public void processPayment(final ProcessPaymentData processPaymentData, final Context applicationContext) {
+        this.state = PROCESS;
         this.applicationContext = applicationContext;
         this.processPaymentData = processPaymentData;
-        this.redirectRequest = null;
 
         notifyOnProcessPaymentActive();
         Operation operation = createOperation(processPaymentData, PaymentLinkType.OPERATION);
@@ -116,7 +128,8 @@ public final class BasicPaymentService extends PaymentService {
             return;
         }
         try {
-            redirectRequest = redirect(0, operationResult, applicationContext);
+            this.state = REDIRECT;
+            redirect(0, operationResult, applicationContext);
         } catch (PaymentException e) {
             handleProcessPaymentError(e);
         }
@@ -129,11 +142,11 @@ public final class BasicPaymentService extends PaymentService {
     }
 
     private void closeWithProcessPaymentResult(final CheckoutResult checkoutResult) {
-        Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
+        this.state = IDLE;
         this.applicationContext = null;
-        this.redirectRequest = null;
         this.processPaymentData = null;
 
+        Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
         notifyOnProcessPaymentResult(checkoutResult);
     }
 }

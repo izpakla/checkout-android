@@ -41,9 +41,14 @@ public abstract class PaymentService {
     }
 
     /**
-     * Called when the payment service will be stopped, e.g. the user clicked the back button
+     * Called to stop this payment service, e.g. the user navigated to the browser window
      */
     public abstract void stop();
+
+    /**
+     * The payment service should reset itself and remove all cached data
+     */
+    public abstract void reset();
 
     /**
      * Resume this PaymentService.

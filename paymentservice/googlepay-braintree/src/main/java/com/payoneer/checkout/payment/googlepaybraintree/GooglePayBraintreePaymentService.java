@@ -78,6 +78,16 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     }
 
     @Override
+    public void reset() {
+        this.state = IDLE;
+        this.listener = null;
+        this.processPaymentData = null;
+        this.applicationContext = null;
+        this.fragmentResult = null;
+        operationService.stop();
+    }
+
+    @Override
     public boolean resume() {
         switch (state) {
             case REDIRECT:

@@ -20,27 +20,27 @@ import com.payoneer.checkout.network.PaymentConnection;
 import android.content.Context;
 
 /**
- * The PaymentAccountService providing asynchronous deletion of saved payment accounts.
+ * The DeleteAccountService providing asynchronous deletion of saved payment accounts.
  * This service makes callbacks in the payment account listener to notify of request completions.
  */
-public final class PaymentAccountService {
+public final class DeleteAccountService {
     private final PaymentConnection paymentConnection;
-    private PaymentAccountListener listener;
+    private DeleteAccountListener listener;
     private WorkerTask<OperationResult> task;
 
     /**
-     * Create a new PaymentAccountService
+     * Create a new DeleteAccountService
      */
-    public PaymentAccountService() {
+    public DeleteAccountService() {
         paymentConnection = new PaymentConnection();
     }
 
     /**
-     * Set the payment account listener which will be informed about the state of a request.
+     * Set the DeleteAccountListener which will be informed about the progress of a deletion.
      *
      * @param listener to be informed about the delete request.
      */
-    public void setListener(PaymentAccountListener listener) {
+    public void setListener(DeleteAccountListener listener) {
         this.listener = listener;
     }
 

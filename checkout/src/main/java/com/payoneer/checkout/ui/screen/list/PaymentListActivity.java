@@ -19,7 +19,7 @@ import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.R;
-import com.payoneer.checkout.account.PaymentAccountInteractor;
+import com.payoneer.checkout.account.DeleteAccountInteractor;
 import com.payoneer.checkout.payment.PaymentServiceInteractor;
 import com.payoneer.checkout.payment.PaymentServiceViewModel;
 import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
@@ -130,7 +130,7 @@ public final class PaymentListActivity extends AppCompatActivity {
     private void initViewModels() {
         PaymentServiceInteractor serviceInteractor = new PaymentServiceInteractor();
         PaymentSessionInteractor sessionInteractor = new PaymentSessionInteractor(configuration);
-        PaymentAccountInteractor accountInteractor = new PaymentAccountInteractor();
+        DeleteAccountInteractor accountInteractor = new DeleteAccountInteractor();
 
         ViewModelProvider.Factory listFactory =
             new PaymentListViewModelFactory(getApplicationContext(), sessionInteractor, serviceInteractor, accountInteractor);

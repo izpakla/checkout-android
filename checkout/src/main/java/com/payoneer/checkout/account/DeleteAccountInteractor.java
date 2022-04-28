@@ -15,16 +15,16 @@ import com.payoneer.checkout.model.OperationResult;
 import android.content.Context;
 
 /**
- * Class for handling the interaction between the PaymentService and e.g. a ViewModel.
+ * Class for handling the interaction between the DeleteAccountService and e.g. a ViewModel.
  */
-public final class PaymentAccountInteractor {
+public final class DeleteAccountInteractor {
 
-    private final PaymentAccountService accountService;
+    private final DeleteAccountService accountService;
     private Observer observer;
 
-    public PaymentAccountInteractor() {
-        accountService = new PaymentAccountService();
-        accountService.setListener(new PaymentAccountListener() {
+    public DeleteAccountInteractor() {
+        accountService = new DeleteAccountService();
+        accountService.setListener(new DeleteAccountListener() {
             @Override
             public void onDeleteAccountSuccess(final OperationResult operationResult) {
                 if (observer != null) {
@@ -45,7 +45,7 @@ public final class PaymentAccountInteractor {
         accountService.stop();
     }
 
-    public void setObserver(final PaymentAccountInteractor.Observer observer) {
+    public void setObserver(final DeleteAccountInteractor.Observer observer) {
         this.observer = observer;
     }
 
@@ -56,7 +56,7 @@ public final class PaymentAccountInteractor {
     }
 
     /**
-     * Observer interface for listening to events from this PaymentAccount interactor.
+     * Observer interface for listening to events from this DeleteAccountInteractor.
      */
     public interface Observer {
         void onDeleteAccountResult(final CheckoutResult checkoutResult);

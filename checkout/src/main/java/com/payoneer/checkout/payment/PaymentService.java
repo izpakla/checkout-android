@@ -15,6 +15,7 @@ import static com.payoneer.checkout.model.NetworkOperationType.PAYOUT;
 import static com.payoneer.checkout.model.RedirectType.HANDLER3DS2;
 import static com.payoneer.checkout.model.RedirectType.PROVIDER;
 
+import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.model.AccountInputData;
 import com.payoneer.checkout.model.OperationData;
@@ -26,6 +27,7 @@ import com.payoneer.checkout.redirect.RedirectService;
 
 import android.content.Context;
 import android.os.Bundle;
+import androidx.fragment.app.Fragment;
 
 /**
  * Base class for payment services, a payment service is responsible for processing a payment through the supported payment network.
@@ -67,7 +69,36 @@ public abstract class PaymentService {
      *
      * @param processPaymentData containing the data to make the payment request
      */
-    public abstract void processPayment(final processPaymentData processPaymentData, final Context applicationContext);
+    public abstract void processPayment(final ProcessPaymentData processPaymentData, final Context applicationContext);
+
+    /**
+     * Helper method to notify the listener of the process payment result.
+     */
+    protected void notifyOnProcessPaymentResult(final CheckoutResult checkoutResult) {
+        if (listener != null) {
+            listener.onProcessPaymentResult(checkoutResult);
+        }
+    }
+
+    /**
+     * Helper method to notify the listener of the process payment active state.
+     */
+    protected void notifyOnProcessPaymentActive() {
+        if (listener != null) {
+            listener.onProcessPaymentActive();
+        }
+    }
+
+    /**
+     * Helper method to notify the listener that the fragment should be shown.
+     *
+     * @param fragment to be shown to the user
+     */
+    protected void notifyShowFragment(final Fragment fragment) {
+        if (listener != null) {
+            listener.showFragment(fragment);
+        }
+    }
 
     /**
      * Create a redirect request and open a custom chrome tab to continue processing the request.
@@ -89,7 +120,7 @@ public abstract class PaymentService {
         return redirectRequest;
     }
 
-    public static Operation createOperation(final processPaymentData processPaymentData, final String link) {
+    public static Operation createOperation(final ProcessPaymentData processPaymentData, final String link) {
         OperationData operationData = new OperationData();
         operationData.setAccount(new AccountInputData());
 

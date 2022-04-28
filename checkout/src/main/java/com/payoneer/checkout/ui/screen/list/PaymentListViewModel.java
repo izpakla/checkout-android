@@ -39,7 +39,7 @@ import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.payment.PaymentServiceInteractor;
-import com.payoneer.checkout.payment.processPaymentData;
+import com.payoneer.checkout.payment.ProcessPaymentData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentCard;
@@ -54,7 +54,6 @@ import com.payoneer.checkout.util.Resource;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -79,7 +78,7 @@ final class PaymentListViewModel extends AppContextViewModel {
     private final PaymentAccountInteractor accountInteractor;
 
     private PaymentSession paymentSession;
-    private processPaymentData processPaymentData;
+    private ProcessPaymentData processPaymentData;
     private DeleteAccount deleteAccount;
     private boolean paymentCardActionLocked;
 
@@ -167,7 +166,7 @@ final class PaymentListViewModel extends AppContextViewModel {
             String paymentMethod = paymentCard.getPaymentMethod();
             try {
                 serviceInteractor.loadPaymentService(networkCode, paymentMethod);
-                processPaymentData = new processPaymentData(paymentSession.getListOperationType(), networkCode, paymentMethod,
+                processPaymentData = new ProcessPaymentData(paymentSession.getListOperationType(), networkCode, paymentMethod,
                     paymentCard.getOperationType(),
                     paymentCard.getLinks(), inputValues);
                 serviceInteractor.processPayment(processPaymentData, getApplicationContext());

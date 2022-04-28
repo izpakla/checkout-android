@@ -8,7 +8,6 @@
 
 package com.payoneer.checkout.payment.googlepaybraintree;
 
-import static com.payoneer.checkout.model.InteractionCode.ABORT;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
 
 import com.braintreepayments.api.GooglePayRequest;
@@ -18,12 +17,11 @@ import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.OperationResult;
-import com.payoneer.checkout.operation.DeleteAccount;
 import com.payoneer.checkout.operation.Operation;
 import com.payoneer.checkout.operation.OperationListener;
 import com.payoneer.checkout.operation.OperationService;
 import com.payoneer.checkout.payment.PaymentService;
-import com.payoneer.checkout.payment.RequestData;
+import com.payoneer.checkout.payment.ProcessPaymentData;
 import com.payoneer.checkout.redirect.RedirectService;
 import com.payoneer.checkout.util.PaymentUtils;
 
@@ -43,17 +41,14 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     final static String BRAINTREE_AUTHORIZATION = "braintreeJsAuthorisation";
 
     private final static int IDLE = 0x00;
-    private final static int DELETEACCOUNT_ACTIVE = 0x11;
-    private final static int DELETEACCOUNT_REDIRECT = 0x12;
-
-    private final static int PROCESSPAYMENT_ONSELECT = 0x20;
-    private final static int PROCESSPAYMENT_GETTOKEN = 0x21;
-    private final static int PROCESSPAYMENT_FINALIZE = 0x22;
-    private final static int PROCESSPAYMENT_REDIRECT = 0x23;
+    private final static int ONSELECT = 0x01;
+    private final static int GETTOKEN = 0x02;
+    private final static int FINALIZE = 0x03;
+    private final static int REDIRECT = 0x04;
 
     private final OperationService operationService;
     private Context applicationContext;
-    private RequestData requestData;
+    private ProcessPaymentData processPaymentData;
     private Bundle fragmentResult;
     private int state;
 
@@ -64,16 +59,6 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     public GooglePayBraintreePaymentService() {
         operationService = new OperationService();
         operationService.setListener(new OperationListener() {
-
-            @Override
-            public void onDeleteAccountSuccess(OperationResult operationResult) {
-                handleDeleteAccountSuccess(operationResult);
-            }
-
-            @Override
-            public void onDeleteAccountError(Throwable cause) {
-                handleDeleteAccountError(cause);
-            }
 
             @Override
             public void onOperationSuccess(OperationResult operationResult) {
@@ -88,18 +73,17 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     }
 
     @Override
-    public void onStop() {
+    public void stop() {
         operationService.stop();
     }
 
     @Override
-    public boolean onResume() {
+    public boolean resume() {
         switch (state) {
-            case PROCESSPAYMENT_REDIRECT:
-            case DELETEACCOUNT_REDIRECT:
+            case REDIRECT:
                 handleRedirectResult();
                 return true;
-            case PROCESSPAYMENT_GETTOKEN:
+            case GETTOKEN:
                 handleGetTokenResult();
                 return true;
             default:
@@ -108,36 +92,29 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     }
 
     @Override
+    public boolean isActive() {
+        return (state != IDLE);
+    }
+
+    @Override
     public void onFragmentResult(final Bundle fragmentResult) {
         this.fragmentResult = fragmentResult;
     }
 
     @Override
-    public void processPayment(final RequestData requestData, final Context applicationContext) {
-        resetPaymentService();
-        this.requestData = requestData;
+    public void processPayment(final ProcessPaymentData processPaymentData, final Context applicationContext) {
+        this.state = ONSELECT;
+        this.processPaymentData = processPaymentData;
         this.applicationContext = applicationContext;
-        this.state = PROCESSPAYMENT_ONSELECT;
+        this.fragmentResult = null;
 
-        listener.onProcessPaymentActive();
-        Operation operation = createOperation(requestData, PaymentLinkType.ONSELECT);
+        notifyOnProcessPaymentActive();
+        Operation operation = createOperation(processPaymentData, PaymentLinkType.ONSELECT);
         operationService.postOperation(operation, applicationContext);
     }
 
-    @Override
-    public void deleteAccount(final RequestData requestData, final Context applicationContext) {
-        resetPaymentService();
-        this.requestData = requestData;
-        this.applicationContext = applicationContext;
-        this.state = DELETEACCOUNT_ACTIVE;
-
-        listener.onDeleteAccountActive();
-        DeleteAccount deleteAccount = createDeleteAccount(requestData);
-        operationService.deleteAccount(deleteAccount, applicationContext);
-    }
-
     private void handleGetTokenResult() {
-        listener.onProcessPaymentActive();
+        notifyOnProcessPaymentActive();
         if (fragmentResult == null) {
             closeWithProcessErrorMessage("Missing GooglePayBraintree fragment result after onResume");
             return;
@@ -154,26 +131,21 @@ public class GooglePayBraintreePaymentService extends PaymentService {
             String message = "Missing OperationResult after client-side redirect";
             checkoutResult = createFromErrorMessage(message);
         }
-        if (state == DELETEACCOUNT_REDIRECT) {
-            closeWithDeleteAccountResult(checkoutResult);
-        } else {
-            closeWithProcessPaymentResult(checkoutResult);
-        }
+        closeWithProcessPaymentResult(checkoutResult);
     }
 
     private void handleProcessPaymentSuccess(final OperationResult operationResult) {
         switch (state) {
-            case PROCESSPAYMENT_ONSELECT:
+            case ONSELECT:
                 handleProcessOnSelectSuccess(operationResult);
                 break;
-            case PROCESSPAYMENT_FINALIZE:
+            case FINALIZE:
                 handleFinalizePaymentSuccess(operationResult);
         }
     }
 
     private void handleProcessOnSelectSuccess(final OperationResult operationResult) {
-        state = PROCESSPAYMENT_GETTOKEN;
-
+        state = GETTOKEN;
         String braintreeAuthorization = PaymentUtils.getProviderParameterValue(BRAINTREE_AUTHORIZATION, operationResult);
         if (TextUtils.isEmpty((braintreeAuthorization))) {
             closeWithProcessErrorMessage("Missing GooglePayBraintree [" + BRAINTREE_AUTHORIZATION + "] parameter");
@@ -184,7 +156,7 @@ public class GooglePayBraintreePaymentService extends PaymentService {
             Bundle arguments = new Bundle();
             arguments.putString(BRAINTREE_AUTHORIZATION, braintreeAuthorization);
             arguments.putParcelable(GOOGLEPAY_REQUEST, request);
-            listener.showFragment(GooglePayBraintreeFragment.newInstance(arguments));
+            notifyShowFragment(GooglePayBraintreeFragment.newInstance(arguments));
         } catch (PaymentException e) {
             handleProcessPaymentError(e);
         }
@@ -199,7 +171,7 @@ public class GooglePayBraintreePaymentService extends PaymentService {
             return;
         }
         try {
-            state = PROCESSPAYMENT_REDIRECT;
+            state = REDIRECT;
             redirect(state, operationResult, applicationContext);
         } catch (PaymentException e) {
             handleProcessPaymentError(e);
@@ -207,29 +179,8 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     }
 
     private void handleProcessPaymentError(Throwable cause) {
-        String code = getErrorInteractionCode(requestData.getOperationType());
+        String code = getErrorInteractionCode(processPaymentData.getOperationType());
         closeWithProcessPaymentResult(CheckoutResultHelper.fromThrowable(code, cause));
-    }
-
-    private void handleDeleteAccountSuccess(OperationResult operationResult) {
-        Interaction interaction = operationResult.getInteraction();
-        CheckoutResult checkoutResult = new CheckoutResult(operationResult);
-
-        if (!(PROCEED.equals(interaction.getCode()) || requiresRedirect(operationResult))) {
-            closeWithDeleteAccountResult(checkoutResult);
-            return;
-        }
-        try {
-            state = DELETEACCOUNT_REDIRECT;
-            redirect(state, operationResult, applicationContext);
-        } catch (PaymentException e) {
-            handleDeleteAccountError(e);
-        }
-    }
-
-    private void handleDeleteAccountError(final Throwable cause) {
-        CheckoutResult checkoutResult = CheckoutResultHelper.fromThrowable(ABORT, cause);
-        closeWithDeleteAccountResult(checkoutResult);
     }
 
     private void closeWithProcessErrorMessage(final String message) {
@@ -237,27 +188,18 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         closeWithProcessPaymentResult(result);
     }
 
-    private void closeWithProcessPaymentResult(final CheckoutResult checkoutResult) {
-        resetPaymentService();
-        Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
-        listener.onProcessPaymentResult(checkoutResult);
-    }
-
-    private void closeWithDeleteAccountResult(final CheckoutResult checkoutResult) {
-        resetPaymentService();
-        Log.i(TAG, "closeWithDeleteAccountResult: " + checkoutResult);
-        listener.onDeleteAccountResult(checkoutResult);
-    }
-
     private CheckoutResult createFromErrorMessage(final String message) {
-        String interactionCode = getErrorInteractionCode(requestData.getOperationType());
+        String interactionCode = getErrorInteractionCode(processPaymentData.getOperationType());
         return CheckoutResultHelper.fromErrorMessage(interactionCode, message);
     }
 
-    private void resetPaymentService() {
+    private void closeWithProcessPaymentResult(final CheckoutResult checkoutResult) {
         this.state = IDLE;
-        this.requestData = null;
+        this.processPaymentData = null;
         this.applicationContext = null;
         this.fragmentResult = null;
+
+        Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
+        notifyOnProcessPaymentResult(checkoutResult);
     }
 }

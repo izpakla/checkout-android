@@ -20,7 +20,7 @@ import com.payoneer.checkout.operation.Operation;
 import com.payoneer.checkout.operation.OperationListener;
 import com.payoneer.checkout.operation.OperationService;
 import com.payoneer.checkout.payment.PaymentService;
-import com.payoneer.checkout.payment.processPaymentData;
+import com.payoneer.checkout.payment.ProcessPaymentData;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
 
@@ -36,7 +36,7 @@ public final class BasicPaymentService extends PaymentService {
 
     private final static String TAG = "BasicPaymentService";
     private final OperationService operationService;
-    private processPaymentData processPaymentData;
+    private ProcessPaymentData processPaymentData;
     private Context applicationContext;
     private RedirectRequest redirectRequest;
 
@@ -83,12 +83,12 @@ public final class BasicPaymentService extends PaymentService {
     }
 
     @Override
-    public void processPayment(final processPaymentData processPaymentData, final Context applicationContext) {
+    public void processPayment(final ProcessPaymentData processPaymentData, final Context applicationContext) {
         this.applicationContext = applicationContext;
         this.processPaymentData = processPaymentData;
         this.redirectRequest = null;
 
-        notifyProcessPaymentActive();
+        notifyOnProcessPaymentActive();
         Operation operation = createOperation(processPaymentData, PaymentLinkType.OPERATION);
         operationService.postOperation(operation, applicationContext);
     }
@@ -128,19 +128,12 @@ public final class BasicPaymentService extends PaymentService {
         closeWithProcessPaymentResult(checkoutResult);
     }
 
-    private void notifyProcessPaymentActive() {
-            if (listener != null) {
-                listener.onProcessPaymentActive();
-            }
-        }
-
     private void closeWithProcessPaymentResult(final CheckoutResult checkoutResult) {
         Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
-        if (listener != null) {
-            listener.onProcessPaymentResult(checkoutResult);
-        }
         this.applicationContext = null;
         this.redirectRequest = null;
         this.processPaymentData = null;
+
+        notifyOnProcessPaymentResult(checkoutResult);
     }
 }

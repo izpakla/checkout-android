@@ -18,7 +18,7 @@ import android.os.Parcelable;
 /**
  * Class holding request data for processing payments.
  */
-public class processPaymentData implements Parcelable {
+public class ProcessPaymentData implements Parcelable {
 
     private final String listOperationType;
     private final String networkCode;
@@ -27,17 +27,17 @@ public class processPaymentData implements Parcelable {
     private final Map<String, URL> links;
     private final PaymentInputValues inputValues;
 
-    public final static Creator<processPaymentData> CREATOR = new Creator<processPaymentData>() {
-        public processPaymentData createFromParcel(Parcel in) {
-            return new processPaymentData(in);
+    public final static Creator<ProcessPaymentData> CREATOR = new Creator<ProcessPaymentData>() {
+        public ProcessPaymentData createFromParcel(Parcel in) {
+            return new ProcessPaymentData(in);
         }
 
-        public processPaymentData[] newArray(int size) {
-            return new processPaymentData[size];
+        public ProcessPaymentData[] newArray(int size) {
+            return new ProcessPaymentData[size];
         }
     };
 
-    public processPaymentData(final String listOperationType, final String networkCode, final String paymentMethod, final String operationType,
+    public ProcessPaymentData(final String listOperationType, final String networkCode, final String paymentMethod, final String operationType,
         final Map<String, URL> links, final PaymentInputValues inputValues) {
         this.listOperationType = listOperationType;
         this.networkCode = networkCode;
@@ -47,7 +47,7 @@ public class processPaymentData implements Parcelable {
         this.inputValues = inputValues;
     }
 
-    private processPaymentData(Parcel in) {
+    private ProcessPaymentData(Parcel in) {
         this.listOperationType = in.readString();
         this.networkCode = in.readString();
         this.paymentMethod = in.readString();

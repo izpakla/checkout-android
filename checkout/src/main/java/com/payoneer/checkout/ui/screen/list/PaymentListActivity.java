@@ -99,28 +99,8 @@ public final class PaymentListActivity extends AppCompatActivity {
         return false;
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.no_animation, R.anim.no_animation);
-    }
-
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        passActivityResultToFragment(requestCode, resultCode, data);
-    }
-
     public PaymentIdlingResources getPaymentIdlingResources() {
         return idlingResources;
-    }
-
-    private void passActivityResultToFragment(final int requestCode, final int resultCode, final Intent data) {
-        FragmentManager fm = getSupportFragmentManager();
-        List<Fragment> fragments = fm.getFragments();
-        for (Fragment fragment : fragments) {
-            fragment.onActivityResult(requestCode, resultCode, data);
-        }
     }
 
     private void initViewModels() {

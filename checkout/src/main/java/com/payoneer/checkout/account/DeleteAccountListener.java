@@ -11,9 +11,9 @@ package com.payoneer.checkout.account;
 import com.payoneer.checkout.model.OperationResult;
 
 /**
- * Listener to be called by the PaymentAccountService to inform about delete updates.
+ * Listener to be called by the DeleteAccountService to inform about delete updates.
  */
-public interface PaymentAccountListener {
+public interface DeleteAccountListener {
 
     /**
      * Called when the account was successfully deleted.

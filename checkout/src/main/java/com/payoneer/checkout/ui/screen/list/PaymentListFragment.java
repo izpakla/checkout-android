@@ -52,11 +52,8 @@ public final class PaymentListFragment extends Fragment {
     private PaymentIdlingResources idlingResources;
 
     public PaymentListFragment() {
-    }
+        super(R.layout.fragment_payment_list);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_payment_list, container, false);
     }
 
     @Override

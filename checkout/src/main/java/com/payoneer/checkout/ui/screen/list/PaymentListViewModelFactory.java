@@ -8,7 +8,7 @@
 
 package com.payoneer.checkout.ui.screen.list;
 
-import com.payoneer.checkout.account.PaymentAccountInteractor;
+import com.payoneer.checkout.account.DeleteAccountInteractor;
 import com.payoneer.checkout.payment.PaymentServiceInteractor;
 import com.payoneer.checkout.ui.session.PaymentSessionInteractor;
 
@@ -25,10 +25,10 @@ final class PaymentListViewModelFactory implements ViewModelProvider.Factory {
     private final Context applicationContext;
     private final PaymentServiceInteractor serviceInteractor;
     private final PaymentSessionInteractor sessionInteractor;
-    private final PaymentAccountInteractor accountInteractor;
+    private final DeleteAccountInteractor accountInteractor;
 
     PaymentListViewModelFactory(@NonNull final Context applicationContext, @NonNull final PaymentSessionInteractor sessionInteractor,
-        @NonNull PaymentServiceInteractor serviceInteractor, @NonNull final PaymentAccountInteractor accountInteractor) {
+        @NonNull PaymentServiceInteractor serviceInteractor, @NonNull final DeleteAccountInteractor accountInteractor) {
         this.applicationContext = applicationContext;
         this.sessionInteractor = sessionInteractor;
         this.serviceInteractor = serviceInteractor;

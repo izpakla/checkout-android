@@ -56,10 +56,6 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         return intent;
     }
 
-    public static int getStartTransition() {
-        return R.anim.no_animation;
-    }
-
     @SuppressLint("WrongConstant")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,32 +85,11 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.no_animation, R.anim.no_animation);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        passActivityResultToFragment(requestCode, resultCode, data);
-    }
-
     public PaymentIdlingResources getPaymentIdlingResources() {
         return idlingResources;
     }
 
-    private void passActivityResultToFragment(int requestCode, int resultCode, Intent data) {
-        FragmentManager fm = getSupportFragmentManager();
-        List<Fragment> fragments = fm.getFragments();
-        for (Fragment fragment : fragments) {
-            fragment.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
     private void initViewModels() {
-
         PaymentSessionInteractor sessionInteractor = new PaymentSessionInteractor(configuration);
         PaymentServiceInteractor serviceInteractor = new PaymentServiceInteractor();
 
@@ -177,11 +152,6 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
 
     private void close() {
         supportFinishAfterTransition();
-        setOverridePendingTransition();
         idlingResources.setCloseIdlingState(true);
-    }
-
-    private void setOverridePendingTransition() {
-        overridePendingTransition(R.anim.no_animation, R.anim.no_animation);
     }
 }

@@ -29,7 +29,7 @@ import java.util.Objects;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.account.DeleteAccount;
-import com.payoneer.checkout.account.PaymentAccountInteractor;
+import com.payoneer.checkout.account.DeleteAccountInteractor;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.localization.InteractionMessage;
@@ -79,7 +79,7 @@ final class PaymentListViewModel extends AppContextViewModel {
 
     private final PaymentSessionInteractor sessionInteractor;
     private final PaymentServiceInteractor serviceInteractor;
-    private final PaymentAccountInteractor accountInteractor;
+    private final DeleteAccountInteractor accountInteractor;
 
     private PaymentSession paymentSession;
     private ProcessPaymentData processPaymentData;
@@ -95,7 +95,7 @@ final class PaymentListViewModel extends AppContextViewModel {
      * @param accountInteractor provides interaction with the AccountService
      */
     PaymentListViewModel(final Context applicationContext, final PaymentSessionInteractor sessionInteractor,
-        final PaymentServiceInteractor serviceInteractor, final PaymentAccountInteractor accountInteractor) {
+        final PaymentServiceInteractor serviceInteractor, final DeleteAccountInteractor accountInteractor) {
         super(applicationContext);
 
         this.sessionInteractor = sessionInteractor;
@@ -214,8 +214,8 @@ final class PaymentListViewModel extends AppContextViewModel {
         });
     }
 
-    private void initPaymentAccountObserver(final PaymentAccountInteractor interactor) {
-        interactor.setObserver(new PaymentAccountInteractor.Observer() {
+    private void initPaymentAccountObserver(final DeleteAccountInteractor interactor) {
+        interactor.setObserver(new DeleteAccountInteractor.Observer() {
 
             @Override
             public void onDeleteAccountResult(final CheckoutResult checkoutResult) {

@@ -19,7 +19,7 @@ import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.R;
-import com.payoneer.checkout.account.PaymentAccountInteractor;
+import com.payoneer.checkout.account.DeleteAccountInteractor;
 import com.payoneer.checkout.payment.PaymentServiceInteractor;
 import com.payoneer.checkout.payment.PaymentServiceViewModel;
 import com.payoneer.checkout.payment.PaymentServiceViewModelFactory;
@@ -60,10 +60,6 @@ public final class PaymentListActivity extends AppCompatActivity {
         return intent;
     }
 
-    public static int getStartTransition() {
-        return R.anim.no_animation;
-    }
-
     @SuppressLint("WrongConstant")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,34 +98,14 @@ public final class PaymentListActivity extends AppCompatActivity {
         return false;
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.no_animation, R.anim.no_animation);
-    }
-
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        passActivityResultToFragment(requestCode, resultCode, data);
-    }
-
     public PaymentIdlingResources getPaymentIdlingResources() {
         return idlingResources;
-    }
-
-    private void passActivityResultToFragment(final int requestCode, final int resultCode, final Intent data) {
-        FragmentManager fm = getSupportFragmentManager();
-        List<Fragment> fragments = fm.getFragments();
-        for (Fragment fragment : fragments) {
-            fragment.onActivityResult(requestCode, resultCode, data);
-        }
     }
 
     private void initViewModels() {
         PaymentServiceInteractor serviceInteractor = new PaymentServiceInteractor();
         PaymentSessionInteractor sessionInteractor = new PaymentSessionInteractor(configuration);
-        PaymentAccountInteractor accountInteractor = new PaymentAccountInteractor();
+        DeleteAccountInteractor accountInteractor = new DeleteAccountInteractor();
 
         ViewModelProvider.Factory listFactory =
             new PaymentListViewModelFactory(getApplicationContext(), sessionInteractor, serviceInteractor, accountInteractor);
@@ -202,11 +178,6 @@ public final class PaymentListActivity extends AppCompatActivity {
 
     private void close() {
         supportFinishAfterTransition();
-        setOverridePendingTransition();
         idlingResources.setCloseIdlingState(true);
-    }
-
-    private void setOverridePendingTransition() {
-        overridePendingTransition(R.anim.no_animation, R.anim.no_animation);
     }
 }

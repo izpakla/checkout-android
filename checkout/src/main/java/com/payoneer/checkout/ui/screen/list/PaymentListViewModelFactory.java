@@ -37,6 +37,7 @@ final class PaymentListViewModelFactory implements ViewModelProvider.Factory {
 
     @NonNull
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull final Class<T> modelClass) {
         return (T) new PaymentListViewModel(applicationContext, sessionInteractor, serviceInteractor, accountInteractor);
     }

@@ -60,12 +60,12 @@ public final class BasicPaymentService extends PaymentService {
     }
 
     @Override
-    public void onStop() {
+    public void stop() {
         operationService.stop();
     }
 
     @Override
-    public boolean onResume() {
+    public boolean resume() {
         if (redirectRequest != null) {
             handleRedirectResult();
             return true;
@@ -74,12 +74,17 @@ public final class BasicPaymentService extends PaymentService {
     }
 
     @Override
+    public boolean isActive() {
+        return operationService.isActive();
+    }
+
+    @Override
     public void processPayment(final processPaymentData processPaymentData, final Context applicationContext) {
         this.applicationContext = applicationContext;
         this.processPaymentData = processPaymentData;
         this.redirectRequest = null;
 
-        listener.onProcessPaymentActive();
+        notifyProcessPaymentActive();
         Operation operation = createOperation(processPaymentData, PaymentLinkType.OPERATION);
         operationService.postOperation(operation, applicationContext);
     }
@@ -119,12 +124,19 @@ public final class BasicPaymentService extends PaymentService {
         closeWithProcessPaymentResult(checkoutResult);
     }
 
+    private void notifyProcessPaymentActive() {
+        if (listener != null) {
+            listener.onProcessPaymentActive();
+        }
+    }
+
     private void closeWithProcessPaymentResult(final CheckoutResult checkoutResult) {
+        Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
+        if (listener != null) {
+            listener.onProcessPaymentResult(checkoutResult);
+        }
         this.applicationContext = null;
         this.redirectRequest = null;
         this.processPaymentData = null;
-
-        Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
-        listener.onProcessPaymentResult(checkoutResult);
     }
 }

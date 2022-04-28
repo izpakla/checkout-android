@@ -54,6 +54,7 @@ import com.payoneer.checkout.util.Resource;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -80,6 +81,7 @@ final class PaymentListViewModel extends AppContextViewModel {
     private PaymentSession paymentSession;
     private processPaymentData processPaymentData;
     private DeleteAccount deleteAccount;
+    private boolean paymentCardActionLocked;
 
     /**
      * Construct a new ProcessPaymentViewModel
@@ -144,6 +146,7 @@ final class PaymentListViewModel extends AppContextViewModel {
     void onPaymentListPause() {
         sessionInteractor.onStop();
         serviceInteractor.onStop();
+        accountInteractor.onStop();
     }
 
     void loadPaymentSession() {
@@ -153,23 +156,33 @@ final class PaymentListViewModel extends AppContextViewModel {
     }
 
     void processPaymentCard(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
-        if (paymentCard instanceof PresetCard) {
-            processPresetCard((PresetCard) paymentCard);
+        // ignore multiple click events
+        if (!lockPaymentCardAction()) {
             return;
         }
-        String networkCode = paymentCard.getNetworkCode();
-        String paymentMethod = paymentCard.getPaymentMethod();
-        try {
-            serviceInteractor.loadPaymentService(networkCode, paymentMethod);
-            processPaymentData = new processPaymentData(paymentSession.getListOperationType(), networkCode, paymentMethod, paymentCard.getOperationType(),
-                paymentCard.getLinks(), inputValues);
-            serviceInteractor.processPayment(processPaymentData, getApplicationContext());
-        } catch (PaymentException e) {
-            setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
+        if (paymentCard instanceof PresetCard) {
+            processPresetCard((PresetCard) paymentCard);
+        } else {
+            String networkCode = paymentCard.getNetworkCode();
+            String paymentMethod = paymentCard.getPaymentMethod();
+            try {
+                serviceInteractor.loadPaymentService(networkCode, paymentMethod);
+                processPaymentData = new processPaymentData(paymentSession.getListOperationType(), networkCode, paymentMethod,
+                    paymentCard.getOperationType(),
+                    paymentCard.getLinks(), inputValues);
+                serviceInteractor.processPayment(processPaymentData, getApplicationContext());
+            } catch (PaymentException e) {
+                setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
+            }
         }
+        unlockPaymentCardAction();
     }
 
     void deletePaymentCard(final PaymentCard paymentCard) {
+        // ignore multiple click events
+        if (!lockPaymentCardAction()) {
+            return;
+        }
         String networkCode = paymentCard.getNetworkCode();
         String paymentMethod = paymentCard.getPaymentMethod();
 
@@ -181,6 +194,7 @@ final class PaymentListViewModel extends AppContextViewModel {
         } catch (PaymentException e) {
             setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
         }
+        unlockPaymentCardAction();
     }
 
     private void initPaymentSessionObserver(final PaymentSessionInteractor interactor) {
@@ -532,5 +546,13 @@ final class PaymentListViewModel extends AppContextViewModel {
             return InteractionMessage.fromInteraction(interaction);
         }
         return InteractionMessage.fromOperationFlow(interaction, paymentSession.getListOperationType());
+    }
+
+    private boolean lockPaymentCardAction() {
+        return !paymentCardActionLocked && (paymentCardActionLocked = true);
+    }
+
+    private void unlockPaymentCardAction() {
+        this.paymentCardActionLocked = false;
     }
 }

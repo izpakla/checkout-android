@@ -24,12 +24,17 @@ public final class PaymentServiceInteractor {
 
     /**
      * Load the PaymentService given the code and paymentMethod. This will use the PaymentServiceLookup
+     * to find the PaymentService that can handle the payment request.
      *
      * @param networkCode code of the network e.g. VISA
      * @param paymentMethod method of the payment e.g. CREDIT_CARD
      * @throws PaymentException when the PaymentService could not be found or loaded
      */
     public void loadPaymentService(final String networkCode, final String paymentMethod) throws PaymentException {
+        if (paymentService != null) {
+            paymentService.setListener(null);
+            paymentService.stop();
+        }
         paymentService = PaymentServiceLookup.createService(networkCode, paymentMethod);
         if (paymentService == null) {
             throw new PaymentException("Missing PaymentService for: " + networkCode + ", " + paymentMethod);
@@ -66,7 +71,7 @@ public final class PaymentServiceInteractor {
      * @return true when resumed, false otherwise
      */
     public boolean onResume() {
-        return (paymentService != null) && paymentService.onResume();
+        return (paymentService != null) && paymentService.resume();
     }
 
     /**
@@ -74,7 +79,7 @@ public final class PaymentServiceInteractor {
      */
     public void onStop() {
         if (paymentService != null) {
-            paymentService.onStop();
+            paymentService.stop();
         }
     }
 
@@ -84,9 +89,11 @@ public final class PaymentServiceInteractor {
 
     public void processPayment(final processPaymentData processPaymentData, final Context applicationContext) {
         if (paymentService == null) {
-            throw new IllegalStateException("PaymentService must first be set before deleting an account");
+            throw new IllegalStateException("PaymentService must first be loaded by this interactor");
         }
-        paymentService.processPayment(processPaymentData, applicationContext);
+        if (!paymentService.isActive()) {
+            paymentService.processPayment(processPaymentData, applicationContext);
+        }
     }
 
     /**

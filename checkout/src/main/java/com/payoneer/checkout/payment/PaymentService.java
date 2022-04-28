@@ -40,14 +40,19 @@ public abstract class PaymentService {
     /**
      * Called when the payment service will be stopped, e.g. the user clicked the back button
      */
-    public abstract void onStop();
+    public abstract void stop();
 
     /**
      * Resume the service, this should only be called if isPending returns true.
      *
      * @return true when the PaymentService is resumed, false otherwise
      */
-    public abstract boolean onResume();
+    public abstract boolean resume();
+
+    /**
+     * Is this payment service currently active
+     */
+    public abstract boolean isActive();
 
     /**
      * Ask the payment service to process the payment.

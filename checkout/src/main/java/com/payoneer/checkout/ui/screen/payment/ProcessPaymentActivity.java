@@ -56,10 +56,6 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
         return intent;
     }
 
-    public static int getStartTransition() {
-        return R.anim.no_animation;
-    }
-
     @SuppressLint("WrongConstant")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -177,11 +173,6 @@ public final class ProcessPaymentActivity extends AppCompatActivity {
 
     private void close() {
         supportFinishAfterTransition();
-        setOverridePendingTransition();
         idlingResources.setCloseIdlingState(true);
-    }
-
-    private void setOverridePendingTransition() {
-        overridePendingTransition(R.anim.no_animation, R.anim.no_animation);
     }
 }

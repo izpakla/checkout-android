@@ -59,7 +59,6 @@ public final class Checkout {
     public void chargePresetAccount(final Activity activity, final int requestCode) {
         Intent intent = ProcessPaymentActivity.createStartIntent(activity, checkoutConfiguration);
         launchActivity(activity, intent, requestCode);
-        activity.overridePendingTransition(ProcessPaymentActivity.getStartTransition(), R.anim.no_animation);
     }
 
     /**
@@ -71,7 +70,6 @@ public final class Checkout {
     public void showPaymentList(final Activity activity, final int requestCode) {
         Intent intent = PaymentListActivity.createStartIntent(activity, checkoutConfiguration);
         launchActivity(activity, intent, requestCode);
-        activity.overridePendingTransition(PaymentListActivity.getStartTransition(), R.anim.no_animation);
     }
 
     /**

@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -34,10 +35,8 @@ import androidx.lifecycle.ViewModelProvider;
  * Fragment to show the GooglePay bottomsheet from Braintree
  */
 public class GooglePayBraintreeFragment extends Fragment {
-
-    private GooglePayClient googlePayClient;
     private PaymentServiceViewModel viewModel;
-    private ProgressView progressView;
+    private ProgressBar progressBar;
 
     public GooglePayBraintreeFragment() {
     }
@@ -56,18 +55,18 @@ public class GooglePayBraintreeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        progressView.setVisible(true);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        progressView.setVisible(false);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        progressView = new ProgressView(view.findViewById(com.payoneer.checkout.R.id.layout_progress));
+        progressBar = view.findViewById(R.id.progressbar);
         viewModel = new ViewModelProvider(requireActivity()).get(PaymentServiceViewModel.class);
         showGooglePay();
     }
@@ -77,7 +76,7 @@ public class GooglePayBraintreeFragment extends Fragment {
         GooglePayRequest googlePayRequest = requireArguments().getParcelable(GOOGLEPAY_REQUEST);
 
         BraintreeClient braintreeClient = new BraintreeClient(requireContext(), braintreeAuthorization);
-        googlePayClient = new GooglePayClient(this, braintreeClient);
+        GooglePayClient googlePayClient = new GooglePayClient(this, braintreeClient);
         googlePayClient.setListener(new GooglePayListener() {
             @Override
             public void onGooglePaySuccess(@NonNull final PaymentMethodNonce paymentMethodNonce) {

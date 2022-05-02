@@ -8,6 +8,10 @@
 
 package com.payoneer.checkout.ui.model;
 
+import static com.payoneer.checkout.core.PaymentLinkType.LANGUAGE;
+import static com.payoneer.checkout.core.PaymentLinkType.OPERATION;
+import static com.payoneer.checkout.core.PaymentLinkType.SELF;
+
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,11 +26,6 @@ import com.payoneer.checkout.model.ProviderParameters;
  * are supported: preset accounts, saved accounts and payment networks.
  */
 public final class PaymentSession {
-
-    public final static String LINK_SELF = "self";
-    public final static String LINK_OPERATION = "operation";
-    public final static String LINK_LOGO = "logo";
-    public final static String LINK_LANGUAGE = "lang";
 
     private final ListResult listResult;
     private final List<PaymentSection> paymentSections;
@@ -58,11 +57,11 @@ public final class PaymentSession {
     }
 
     public URL getListLanguageLink() {
-        return getListLink(LINK_LANGUAGE);
+        return getListLink(LANGUAGE);
     }
 
     public String getListSelfUrl() {
-        URL url = getListLink(LINK_SELF);
+        URL url = getListLink(SELF);
         return url != null ? url.toString() : null;
     }
 
@@ -96,7 +95,7 @@ public final class PaymentSession {
 
     public boolean containsOperationLink(URL url) {
         for (PaymentSection section : paymentSections) {
-            if (section.containsLink(LINK_OPERATION, url)) {
+            if (section.containsLink(OPERATION, url)) {
                 return true;
             }
         }

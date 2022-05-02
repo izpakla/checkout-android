@@ -29,7 +29,7 @@ import com.payoneer.checkout.sharedtest.service.ListService
 import com.payoneer.checkout.sharedtest.service.ListSettings
 import com.payoneer.checkout.sharedtest.view.ActivityHelper
 import com.payoneer.checkout.sharedtest.view.PaymentActions
-import com.payoneer.checkout.ui.page.ChargePaymentActivity
+import com.payoneer.checkout.ui.screen.payment.ProcessPaymentActivity
 import org.junit.After
 import org.junit.Before
 import java.net.MalformedURLException
@@ -91,9 +91,9 @@ open class AbstractTest {
             .perform(PaymentActions.scrollToView(), ViewActions.click())
     }
 
-    fun waitForChargePaymentActivityDisplayed() {
-        Intents.intended(IntentMatchers.hasComponent(ChargePaymentActivity::class.java.name))
-        Espresso.onView(withId(R.id.layout_chargepayment))
+    fun waitForProcessPaymentActivityDisplayed() {
+        Intents.intended(IntentMatchers.hasComponent(ProcessPaymentActivity::class.java.name))
+        Espresso.onView(withId(R.id.fragment_container_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
@@ -128,7 +128,7 @@ open class AbstractTest {
 
     private fun createListURL(stringUrl: String) =
         try {
-            URL(stringUrl);
+            URL(stringUrl)
         } catch (e: MalformedURLException) {
             e.printStackTrace()
             null

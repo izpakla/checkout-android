@@ -31,8 +31,8 @@ import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListService;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 import com.payoneer.checkout.sharedtest.view.UiDeviceHelper;
-import com.payoneer.checkout.ui.page.ChargePaymentActivity;
-import com.payoneer.checkout.ui.page.PaymentListActivity;
+import com.payoneer.checkout.ui.screen.list.PaymentListActivity;
+import com.payoneer.checkout.ui.screen.payment.ProcessPaymentActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -91,6 +91,7 @@ public abstract class BaseTest {
         String paymentApiListUrl = BuildConfig.paymentApiListUrl;
         String merchantCode = BuildConfig.merchantCode;
         String merchantPaymentToken = BuildConfig.merchantPaymentToken;
+        Log.i("AAA", "paymentApiListUrl: " + paymentApiListUrl);
         ListService service = ListService.createInstance(createListURL(paymentApiListUrl), merchantCode, merchantPaymentToken);
         return service.newListSelfUrl(settings);
     }
@@ -109,7 +110,7 @@ public abstract class BaseTest {
 
     protected void clickChargePresetAccountButton() {
         onView(withId(R.id.button_charge_preset_acount)).perform(click());
-        intended(hasComponent(ChargePaymentActivity.class.getName()));
+        intended(hasComponent(ProcessPaymentActivity.class.getName()));
     }
 
     protected void register(IdlingResource resource) {

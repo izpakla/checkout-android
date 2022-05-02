@@ -8,10 +8,9 @@
 
 package com.payoneer.checkout.ui.widget;
 
-import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.model.CheckboxMode;
 import com.payoneer.checkout.model.ExtraElement;
+import com.payoneer.checkout.payment.PaymentInputValues;
 
 /**
  * Widget for showing the ExtraElement element
@@ -23,7 +22,7 @@ public class ExtraElementWidget extends CheckboxWidget {
     }
 
     @Override
-    public void putValue(Operation operation) throws PaymentException {
+    public void putValue(PaymentInputValues inputValues) {
         // Until optional checkboxes are supported for ExtraElements, this widget does not add any
         // value to the operation
     }

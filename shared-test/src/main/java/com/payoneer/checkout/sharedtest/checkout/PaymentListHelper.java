@@ -39,8 +39,8 @@ import org.hamcrest.Matcher;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.sharedtest.view.ActivityHelper;
-import com.payoneer.checkout.ui.page.PaymentListActivity;
-import com.payoneer.checkout.ui.page.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
+import com.payoneer.checkout.ui.screen.list.PaymentListActivity;
 
 import android.view.View;
 import androidx.test.espresso.IdlingRegistry;

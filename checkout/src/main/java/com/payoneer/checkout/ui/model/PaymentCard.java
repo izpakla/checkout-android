@@ -8,15 +8,13 @@
 
 package com.payoneer.checkout.ui.model;
 
-import static com.payoneer.checkout.ui.model.PaymentSession.LINK_LOGO;
-import static com.payoneer.checkout.ui.model.PaymentSession.LINK_OPERATION;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.model.ExtraElement;
 import com.payoneer.checkout.model.ExtraElements;
 import com.payoneer.checkout.model.InputElement;
@@ -94,7 +92,7 @@ public abstract class PaymentCard {
      * @return the operation link or null if it does not exist
      */
     public URL getOperationLink() {
-        return getLink(LINK_OPERATION);
+        return getLink(PaymentLinkType.OPERATION);
     }
 
     /**
@@ -104,7 +102,7 @@ public abstract class PaymentCard {
      * @return the logo link or null if it does not exist
      */
     public URL getLogoLink() {
-        return getLink(LINK_LOGO);
+        return getLink(PaymentLinkType.LOGO);
     }
 
     /**

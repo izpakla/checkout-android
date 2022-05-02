@@ -1,0 +1,15 @@
+<!--
+  ~ Copyright (c) 2022 Payoneer Germany GmbH
+  ~ https://www.payoneer.com
+  ~
+  ~ This file is open source and available under the MIT license.
+  ~ See the LICENSE file for more information.
+  -->
+
+<resources>
+
+    <style name="ThemeOverlay.Checkoutandroid.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_900</item>
+        <item name="fullscreenTextColor">@color/light_blue_A400</item>
+    </style>
+</resources>

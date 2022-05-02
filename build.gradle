@@ -72,7 +72,10 @@ ext {
     hiltVersion = '2.38.1'
     coreKtxVersion = "1.7.0"
     gsonVersion = '2.8.9'
+
+    // Java language implementation
     androidMaterialVersion = '1.5.0'
+    androidxFragmentVersion = '1.4.1'
     androidxBrowserVersion = '1.4.0'
     androidxSwiperefreshlayoutVersion = '1.1.0'
     androidxTestCoreVersion = '1.4.0'

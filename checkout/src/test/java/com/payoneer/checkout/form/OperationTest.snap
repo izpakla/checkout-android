@@ -1,3 +1,0 @@
-com.payoneer.checkout.form.OperationTest.putValue_success=[
-  "{\"account\":{\"holderName\":\"John Doe\",\"number\":\"accountnumber123\",\"bankCode\":\"bankcode123\",\"bankName\":\"bankname123\",\"bic\":\"bic123\",\"branch\":\"branch123\",\"city\":\"city123\",\"expiryMonth\":\"12\",\"expiryYear\":\"2019\",\"iban\":\"iban123\",\"login\":\"login123\",\"optIn\":true,\"password\":\"password123\",\"verificationCode\":\"123\",\"customerBirthDay\":\"3\",\"customerBirthMonth\":\"12\",\"customerBirthYear\":\"72\",\"installmentPlanId\":\"72\"},\"autoRegistration\":true,\"allowRecurrence\":true,\"browserData\":{\"javaEnabled\":true,\"language\":\"en\",\"colorDepth\":24,\"timezone\":\"Berlin/Europe\",\"browserScreenHeight\":760,\"browserScreenWidth\":680}}"
-]

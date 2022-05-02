@@ -8,12 +8,10 @@
 
 package com.payoneer.checkout.ui.list;
 
-import java.util.Map;
-
+import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.model.PaymentSection;
 import com.payoneer.checkout.ui.model.PaymentSession;
-import com.payoneer.checkout.ui.widget.FormWidget;
 
 import android.app.Activity;
 import android.content.Context;
@@ -128,8 +126,8 @@ public final class PaymentList {
             }
 
             @Override
-            public void onActionClicked(PaymentCard paymentCard, Map<String, FormWidget> widgets) {
-                handleActionClicked(paymentCard, widgets);
+            public void onActionClicked(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
+                handleActionClicked(paymentCard, inputValues);
             }
 
             @Override
@@ -173,9 +171,9 @@ public final class PaymentList {
         listener.onExpiredIconClicked(networkCode);
     }
 
-    private void handleActionClicked(PaymentCard paymentCard, Map<String, FormWidget> widgets) {
+    private void handleActionClicked(final PaymentCard paymentCard, final PaymentInputValues inputValues) {
         hideKeyboard();
-        listener.onActionClicked(paymentCard, widgets);
+        listener.onActionClicked(paymentCard, inputValues);
     }
 
     private void handleCardClicked(int position) {

@@ -45,7 +45,6 @@ class SettingsActivity : BaseActivity() {
 
             val listURL = URL(stringUrl)
             val configuration = CheckoutConfiguration.createBuilder(listURL).build()
-
             val intent = createStartIntent(this, configuration)
             startActivity(intent)
         } catch (urlException: MalformedURLException) {

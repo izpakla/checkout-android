@@ -51,6 +51,27 @@ jobs:
           PAYMENTAPI_LISTURL: ${{ secrets.PAYMENTAPI_LISTURL }}
         run: ./gradlew testExampleAppsOnAppAutomate
 
+  test-paymentservices:
+    name: Test Payment Services
+    needs: test-checkout
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout with submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    - name: Clean checkout project
+      run: ./gradlew clean
+    - name: Build payment services
+      run: ./gradlew buildPaymentServices
+    - name: Run payment service unit-tests
+      run: ./gradlew testPaymentServices
+
   test-riskproviders:
     name: Test risk providers
     needs: test-checkout
@@ -73,7 +94,7 @@ jobs:
         run: ./gradlew testRiskProviders
 
   publish-checkout:
-    needs: [ test-examples, test-riskproviders ]
+    needs: [ test-examples, test-paymentservices, test-riskproviders ]
     name: Publish checkout snapshot artifact
     runs-on: ubuntu-latest
     steps:
@@ -92,6 +113,29 @@ jobs:
           NEXUS_USER: ${{ secrets.NEXUS_USER }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: ./gradlew publishCheckoutSnapshotVersion
+
+  publish-paymentservices:
+    needs: publish-checkout
+    name: Publish payment service snapshot artifacts
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout with submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    - name: Clean checkout project
+      run: ./gradlew clean
+    - name: Publish payment service artifacts
+      env:
+        NEXUS_USER: ${{ secrets.NEXUS_USER }}
+        NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
+      run: ./gradlew publishPaymentServicesSnapshotVersion
 
   publish-riskproviders:
     needs: publish-checkout

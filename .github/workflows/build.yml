@@ -52,7 +52,7 @@ jobs:
         run: ./gradlew testExampleAppsOnAppAutomate
 
   test-paymentservices:
-    name: Test Payment Services
+    name: Test payment services
     needs: test-checkout
     runs-on: ubuntu-latest
     steps:

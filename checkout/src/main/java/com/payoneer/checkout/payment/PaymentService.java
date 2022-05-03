@@ -24,7 +24,7 @@ import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.operation.Operation;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
-import com.payoneer.checkout.ui.model.ButtonConfiguration;
+import com.payoneer.checkout.ui.model.ButtonConfig;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -83,7 +83,7 @@ public abstract class PaymentService {
      *
      * @return button configuration or null if not available
      */
-    public ButtonConfiguration getButtonConfiguration() {
+    public ButtonConfig getButtonConfiguration() {
         return null;
     }
 

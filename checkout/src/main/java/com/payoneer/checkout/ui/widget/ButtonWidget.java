@@ -9,7 +9,9 @@
 package com.payoneer.checkout.ui.widget;
 
 import com.payoneer.checkout.R;
+import com.payoneer.checkout.ui.model.ButtonConfig;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,31 +22,38 @@ import android.widget.Button;
 public final class ButtonWidget extends FormWidget {
 
     private Button button;
+    private ButtonConfig configuration;
+    private int layoutResId;
 
-    public ButtonWidget(String category, String name) {
+    public ButtonWidget(final String category, final String name, final int layoutResId) {
         super(category, name);
+        this.layoutResId = layoutResId;
     }
 
     @Override
     public View inflate(ViewGroup parent) {
-        inflateWidgetView(parent, R.layout.widget_button);
-
+        inflateWidgetView(parent, (layoutResId == 0) ? R.layout.widget_button : layoutResId);
         button = widgetView.findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleOnClick();
-            }
-        });
+
+        setClickListener(button != null ? button : widgetView);
+        if (button != null) {
+            setClickListener(button);
+        }
         return widgetView;
     }
 
-    public void onBind(ButtonConfiguration config) {
-        this.layoutResId = layoutResId == 0 ? R.layout.widget_button : layoutResId;
-        button.setText(label);
+    private void setClickListener(final View view) {
+        widgetView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onActionClicked();
+            }
+        });
     }
 
-    private void handleOnClick() {
-        presenter.onActionClicked();
+    public void onBind(final String label) {
+        if (button != null) {
+            button.setText(label);
+        }
     }
 }

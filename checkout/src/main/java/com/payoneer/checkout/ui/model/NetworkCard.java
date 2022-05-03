@@ -95,8 +95,8 @@ public final class NetworkCard extends PaymentCard {
     }
 
     @Override
-    public String getButton() {
-        return getVisibleNetwork().getButton();
+    public ButtonConfig getButtonConfig() {
+        return getVisibleNetwork().getButtonConfig();
     }
 
     @Override

@@ -46,7 +46,7 @@ final class PresetCardViewHolder extends PaymentCardViewHolder {
 
         addExtraElementWidgets(presetCard.getTopExtraElements());
         addExtraElementWidgets(presetCard.getTopExtraElements());
-        addButtonWidget();
+        addButtonWidget(presetCard.getButtonConfig());
         layoutWidgets();
     }
 

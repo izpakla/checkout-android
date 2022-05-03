@@ -27,7 +27,7 @@ import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.operation.Operation;
 import com.payoneer.checkout.operation.OperationListener;
 import com.payoneer.checkout.operation.OperationService;
-import com.payoneer.checkout.ui.model.ButtonConfiguration;
+import com.payoneer.checkout.ui.model.ButtonConfig;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.ProcessPaymentData;
 import com.payoneer.checkout.redirect.RedirectService;
@@ -83,10 +83,10 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         });
     }
 
-    public ButtonConfiguration getButtonConfiguration(final String operationType) {
-        return new ButtonConfiguration(null, R.layout.googlepay_button);
+    @Override
+    public ButtonConfig getButtonConfiguration() {
+        return null;//return new ButtonConfig(null, R.layout.pay_with_googlepay_button_no_shadow);
     }
-
 
     /**
      * Get the instance of this BasicPaymentService

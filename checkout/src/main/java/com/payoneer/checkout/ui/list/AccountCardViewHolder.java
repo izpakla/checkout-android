@@ -50,7 +50,7 @@ public final class AccountCardViewHolder extends PaymentCardViewHolder {
         addExtraElementWidgets(accountCard.getTopExtraElements());
         addInputElementWidgets(accountCard.getInputElements());
         addExtraElementWidgets(accountCard.getBottomExtraElements());
-        addButtonWidget();
+        addButtonWidget(accountCard.getButtonConfig());
         layoutWidgets();
         setLastImeOptions();
     }

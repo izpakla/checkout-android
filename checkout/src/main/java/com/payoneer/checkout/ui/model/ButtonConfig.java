@@ -11,21 +11,25 @@ package com.payoneer.checkout.ui.model;
 /**
  * Class holding the configuration for this PaymentService
  */
-public final class ButtonConfiguration {
+public final class ButtonConfig {
 
     private final String labelKey;
     private final int layoutResourceId;
 
-    public ButtonConfiguration(final String labelKey, final int layoutResourceId) {
+    public ButtonConfig(final String labelKey, final int layoutResourceId) {
         this.labelKey = labelKey;
         this.layoutResourceId = layoutResourceId;
     }
 
-    public ButtonConfiguration(final String labelKey) {
+    public ButtonConfig(final String labelKey) {
         this(labelKey, 0);
     }
 
-    public int getButtonLayoutResourceId() {
+    public String getLabelKey() {
+        return labelKey;
+    }
+
+    public int getLayoutResourceId() {
         return layoutResourceId;
     }
 }

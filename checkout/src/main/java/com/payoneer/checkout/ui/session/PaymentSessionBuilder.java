@@ -37,7 +37,7 @@ import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.Networks;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.payment.PaymentService;
-import com.payoneer.checkout.ui.model.ButtonConfiguration;
+import com.payoneer.checkout.ui.model.ButtonConfig;
 import com.payoneer.checkout.payment.PaymentServiceLookup;
 import com.payoneer.checkout.resource.PaymentGroup;
 import com.payoneer.checkout.ui.model.AccountCard;
@@ -150,7 +150,7 @@ public final class PaymentSessionBuilder {
     }
 
     private PresetCard buildPresetCard(PresetAccount account, ListResult listResult) {
-        ButtonConfiguration buttonConfig = new ButtonConfiguration(LocalizationKey.operationButtonKey(PRESET));
+        ButtonConfig buttonConfig = new ButtonConfig(LocalizationKey.operationButtonKey(PRESET));
         ExtraElements extraElements = listResult.getExtraElements();
 
         PresetCard card = new PresetCard(account, buttonConfig, extraElements);
@@ -174,7 +174,7 @@ public final class PaymentSessionBuilder {
     }
 
     private AccountCard buildUpdateAccountCard(final AccountRegistration account, final ListResult listResult) {
-        ButtonConfiguration buttonConfig = new ButtonConfiguration(BUTTON_UPDATE_ACCOUNT);
+        ButtonConfig buttonConfig = new ButtonConfig(BUTTON_UPDATE_ACCOUNT);
         AccountCard card = new AccountCard(account, buttonConfig, listResult.getExtraElements());
         boolean deletable = PaymentUtils.toBoolean(listResult.getAllowDelete(), true);
         boolean hasFormElements = card.hasFormElements();
@@ -196,7 +196,7 @@ public final class PaymentSessionBuilder {
     }
 
     private AccountCard buildDefaultAccountCard(final AccountRegistration account, final ListResult listResult, final PaymentService paymentService) {
-        ButtonConfiguration buttonConfig = createButtonConfiguration(account.getOperationType(), paymentService);
+        ButtonConfig buttonConfig = createButtonConfiguration(account.getOperationType(), paymentService);
         AccountCard card = new AccountCard(account, buttonConfig, listResult.getExtraElements());
         card.setExpired(isExpired(card.getMaskedAccount()));
         boolean deletable = PaymentUtils.toBoolean(listResult.getAllowDelete(), false);
@@ -273,7 +273,7 @@ public final class PaymentSessionBuilder {
         if (paymentService == null) {
             return null;
         }
-        ButtonConfiguration buttonConfig = createButtonConfiguration(operationType, paymentService);
+        ButtonConfig buttonConfig = createButtonConfiguration(operationType, paymentService);
         RegistrationOptions options = new RegistrationOptionsBuilder()
             .setOperationType(operationType)
             .setRegistrationOptions(network.getRegistration(), network.getRecurrence())
@@ -310,13 +310,13 @@ public final class PaymentSessionBuilder {
         card.getSmartSwitch().addSelectionRegex(code, regex);
     }
 
-    private ButtonConfiguration createButtonConfiguration(final String operationType, final PaymentService paymentService) {
-        ButtonConfiguration config = null;
+    private ButtonConfig createButtonConfiguration(final String operationType, final PaymentService paymentService) {
+        ButtonConfig config = null;
         if (CHARGE.equals(operationType)) {
             config = paymentService.getButtonConfiguration();
         }
         if (config == null) {
-           config = new ButtonConfiguration(LocalizationKey.operationButtonKey(operationType));
+           config = new ButtonConfig(LocalizationKey.operationButtonKey(operationType));
         }
         return config;
     }

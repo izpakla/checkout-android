@@ -275,11 +275,11 @@ public abstract class PaymentCard {
     public abstract boolean containsLink(String name, URL url);
 
     /**
-     * Get the action button label
+     * Get the button configuration containing the optional label and layout resource ID
      *
-     * @return the action button label or null if not set
+     * @return the button configuration
      */
-    public abstract String getButton();
+    public abstract ButtonConfig getButtonConfig();
 
     /**
      * Put all language links stored in the payment card into the links map.

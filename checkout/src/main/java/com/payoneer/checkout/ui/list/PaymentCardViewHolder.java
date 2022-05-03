@@ -23,9 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.payoneer.checkout.R;
+import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.ExtraElement;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.InputElementType;
+import com.payoneer.checkout.ui.model.ButtonConfig;
 import com.payoneer.checkout.ui.model.PaymentCard;
 import com.payoneer.checkout.ui.widget.ButtonWidget;
 import com.payoneer.checkout.ui.widget.ExpiryDateWidget;
@@ -172,8 +174,8 @@ public abstract class PaymentCardViewHolder extends RecyclerView.ViewHolder {
         putFormWidget(widget);
     }
 
-    void addButtonWidget() {
-        ButtonWidget widget = new ButtonWidget(UIELEMENT, BUTTON);
+    void addButtonWidget(final ButtonConfig buttonConfig) {
+        ButtonWidget widget = new ButtonWidget(UIELEMENT, BUTTON, buttonConfig.getLayoutResourceId());
         putFormWidget(widget);
     }
 
@@ -309,7 +311,14 @@ public abstract class PaymentCardViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bindButtonWidget(ButtonWidget widget) {
-        widget.onBind(paymentCard.getButton());
+        ButtonConfig buttonConfig = paymentCard.getButtonConfig();
+        String labelKey = buttonConfig.getLabelKey();
+        String label = null;
+
+        if (!TextUtils.isEmpty(labelKey)) {
+            label = Localization.translate(paymentCard.getNetworkCode(), labelKey);
+        }
+        widget.onBind(label);
     }
 
     void bindVerificationCodeWidget(VerificationCodeWidget widget) {

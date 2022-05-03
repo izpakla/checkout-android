@@ -44,7 +44,7 @@ final class NetworkCardViewHolder extends PaymentCardViewHolder {
         addInputElementWidgets(networkCard.getInputElements());
         addRegistrationWidget();
         addExtraElementWidgets(networkCard.getBottomExtraElements());
-        addButtonWidget();
+        addButtonWidget(networkCard.getButtonConfig());
 
         layoutWidgets();
         setLastImeOptions();

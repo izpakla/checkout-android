@@ -39,17 +39,13 @@ public class GooglePayBraintreeFragment extends Fragment {
     private ProgressBar progressBar;
 
     public GooglePayBraintreeFragment() {
+        super(R.layout.fragment_googlepaybraintree);
     }
 
     public static GooglePayBraintreeFragment newInstance(final Bundle arguments) {
         GooglePayBraintreeFragment fragment = new GooglePayBraintreeFragment();
         fragment.setArguments(arguments);
         return fragment;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_googlepaybraintree, container, false);
     }
 
     @Override

@@ -19,6 +19,23 @@ task publishCheckoutReleaseVersion() {
     dependsOn ':checkout:publishReleaseVersion'
 }
 
+task buildPaymentServices() {
+    dependsOn ':paymentservice:googlepay-braintree:assembleRelease'
+}
+
+task testPaymentServices() {
+    dependsOn ':paymentservice:googlepay-braintree:test'
+}
+
+task publishPaymentServicesSnapshotVersion() {
+    dependsOn ':paymentservice:googlepay-braintree:publishSnapshotVersion'
+}
+
+task publishPaymentServicesReleaseVersion() {
+    dependsOn ':paymentservice:googlepay-braintree:publishReleaseVersion'
+}
+
+
 task buildRiskProviders() {
     dependsOn ':riskprovider:iovation:assembleRelease'
 }

@@ -11,6 +11,7 @@ package com.payoneer.checkout.payment.googlepaybraintree;
 import com.payoneer.checkout.core.PaymentNetworkCodes;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceFactory;
+import com.payoneer.checkout.payment.basic.BasicPaymentService;
 
 public class GooglePayBraintreePaymentServiceFactory implements PaymentServiceFactory {
 
@@ -21,6 +22,6 @@ public class GooglePayBraintreePaymentServiceFactory implements PaymentServiceFa
 
     @Override
     public PaymentService createService() {
-        return new GooglePayBraintreePaymentService();
+        return GooglePayBraintreePaymentService.getInstance();
     }
 }

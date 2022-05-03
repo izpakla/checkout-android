@@ -24,6 +24,7 @@ import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.operation.Operation;
 import com.payoneer.checkout.redirect.RedirectRequest;
 import com.payoneer.checkout.redirect.RedirectService;
+import com.payoneer.checkout.ui.model.ButtonConfiguration;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -75,6 +76,16 @@ public abstract class PaymentService {
      * @param processPaymentData containing the data to make the payment request
      */
     public abstract void processPayment(final ProcessPaymentData processPaymentData, final Context applicationContext);
+
+    /**
+     * Get the custom button configuration for the given operationType.
+     * This will contain the button layout resource id.
+     *
+     * @return button configuration or null if not available
+     */
+    public ButtonConfiguration getButtonConfiguration() {
+        return null;
+    }
 
     /**
      * Helper method to notify the listener of the process payment result.

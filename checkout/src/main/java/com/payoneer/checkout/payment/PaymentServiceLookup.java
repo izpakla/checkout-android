@@ -41,7 +41,7 @@ public class PaymentServiceLookup {
      * @param method to be used to lookup a NetworkService
      * @return the NetworkService that can handle the network or null if none found
      */
-    public static PaymentService createService(String code, String method) {
+    public static PaymentService getService(String code, String method) {
         PaymentServiceFactory factory = getFactory(code, method);
         return factory != null ? factory.createService() : null;
     }

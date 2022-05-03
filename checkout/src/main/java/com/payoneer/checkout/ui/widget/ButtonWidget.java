@@ -39,7 +39,8 @@ public final class ButtonWidget extends FormWidget {
         return widgetView;
     }
 
-    public void onBind(String label) {
+    public void onBind(ButtonConfiguration config) {
+        this.layoutResId = layoutResId == 0 ? R.layout.widget_button : layoutResId;
         button.setText(label);
     }
 

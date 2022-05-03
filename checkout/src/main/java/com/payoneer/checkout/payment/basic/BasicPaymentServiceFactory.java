@@ -47,6 +47,6 @@ public final class BasicPaymentServiceFactory implements PaymentServiceFactory {
      */
     @Override
     public PaymentService createService() {
-        return new BasicPaymentService();
+        return BasicPaymentService.getInstance();
     }
 }

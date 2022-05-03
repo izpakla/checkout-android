@@ -22,6 +22,7 @@ import com.payoneer.checkout.operation.OperationService;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.ProcessPaymentData;
 import com.payoneer.checkout.redirect.RedirectService;
+import com.payoneer.checkout.util.NetworkLogoLoader;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -47,7 +48,7 @@ public final class BasicPaymentService extends PaymentService {
      * Create a new BasicNetworkService, this service is a basic implementation
      * of the payment service that handles credit/debit cards and redirect networks.
      */
-    public BasicPaymentService() {
+    private BasicPaymentService() {
         operationService = new OperationService();
         operationService.setListener(new OperationListener() {
 
@@ -61,6 +62,15 @@ public final class BasicPaymentService extends PaymentService {
                 handleProcessPaymentError(cause);
             }
         });
+    }
+
+    /**
+     * Get the instance of this BasicPaymentService
+     *
+     * @return the instance of this BasicPaymentService
+     */
+    public static BasicPaymentService getInstance() {
+        return BasicPaymentService.InstanceHolder.INSTANCE;
     }
 
     @Override
@@ -144,5 +154,9 @@ public final class BasicPaymentService extends PaymentService {
         reset();
         Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
         notifyOnProcessPaymentResult(checkoutResult);
+    }
+
+    private static class InstanceHolder {
+        static final BasicPaymentService INSTANCE = new BasicPaymentService();
     }
 }

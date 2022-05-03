@@ -36,7 +36,7 @@ public final class PaymentServiceInteractor {
             paymentService.setListener(null);
             paymentService.reset();
         }
-        paymentService = PaymentServiceLookup.createService(networkCode, paymentMethod);
+        paymentService = PaymentServiceLookup.getService(networkCode, paymentMethod);
         if (paymentService == null) {
             throw new PaymentException("Missing PaymentService for: " + networkCode + ", " + paymentMethod);
         }

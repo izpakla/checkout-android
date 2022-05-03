@@ -16,6 +16,7 @@ import static com.payoneer.checkout.localization.LocalizationKey.LIST_HEADER_NET
 import static com.payoneer.checkout.localization.LocalizationKey.LIST_HEADER_NETWORKS_UPDATE;
 import static com.payoneer.checkout.localization.LocalizationKey.LIST_HEADER_PRESET;
 import static com.payoneer.checkout.localization.LocalizationKey.LIST_HEADER_PRESET_WARNING;
+import static com.payoneer.checkout.model.NetworkOperationType.CHARGE;
 import static com.payoneer.checkout.model.NetworkOperationType.PRESET;
 import static com.payoneer.checkout.model.NetworkOperationType.UPDATE;
 import static com.payoneer.checkout.model.RegistrationType.NONE;
@@ -35,6 +36,8 @@ import com.payoneer.checkout.model.ExtraElements;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.Networks;
 import com.payoneer.checkout.model.PresetAccount;
+import com.payoneer.checkout.payment.PaymentService;
+import com.payoneer.checkout.ui.model.ButtonConfiguration;
 import com.payoneer.checkout.payment.PaymentServiceLookup;
 import com.payoneer.checkout.resource.PaymentGroup;
 import com.payoneer.checkout.ui.model.AccountCard;
@@ -133,8 +136,9 @@ public final class PaymentSessionBuilder {
             return null;
         }
         for (AccountRegistration account : accounts) {
-            if (PaymentServiceLookup.supports(account.getCode(), account.getMethod())) {
-                cards.add(buildAccountCard(account, listResult));
+            AccountCard card = buildAccountCard(account, listResult);
+            if (card != null) {
+                cards.add(card);
             }
         }
         if (cards.size() == 0) {
@@ -146,10 +150,10 @@ public final class PaymentSessionBuilder {
     }
 
     private PresetCard buildPresetCard(PresetAccount account, ListResult listResult) {
-        String buttonKey = LocalizationKey.operationButtonKey(PRESET);
+        ButtonConfiguration buttonConfig = new ButtonConfiguration(LocalizationKey.operationButtonKey(PRESET));
         ExtraElements extraElements = listResult.getExtraElements();
 
-        PresetCard card = new PresetCard(account, buttonKey, extraElements);
+        PresetCard card = new PresetCard(account, buttonConfig, extraElements);
         card.setCheckable(true);
         card.setExpired(isExpired(card.getMaskedAccount()));
         card.setHideInputForm(true);
@@ -157,16 +161,21 @@ public final class PaymentSessionBuilder {
     }
 
     private AccountCard buildAccountCard(AccountRegistration account, ListResult listResult) {
+        PaymentService paymentService = PaymentServiceLookup.getService(account.getCode(), account.getMethod());
+        if (paymentService == null) {
+            return null;
+        }
         String operationType = account.getOperationType();
         if (UPDATE.equals(operationType)) {
             return buildUpdateAccountCard(account, listResult);
         } else {
-            return buildDefaultAccountCard(account, listResult);
+            return buildDefaultAccountCard(account, listResult, paymentService);
         }
     }
 
-    private AccountCard buildUpdateAccountCard(AccountRegistration account, ListResult listResult) {
-        AccountCard card = new AccountCard(account, BUTTON_UPDATE_ACCOUNT, listResult.getExtraElements());
+    private AccountCard buildUpdateAccountCard(final AccountRegistration account, final ListResult listResult) {
+        ButtonConfiguration buttonConfig = new ButtonConfiguration(BUTTON_UPDATE_ACCOUNT);
+        AccountCard card = new AccountCard(account, buttonConfig, listResult.getExtraElements());
         boolean deletable = PaymentUtils.toBoolean(listResult.getAllowDelete(), true);
         boolean hasFormElements = card.hasFormElements();
 
@@ -186,9 +195,9 @@ public final class PaymentSessionBuilder {
         return card;
     }
 
-    private AccountCard buildDefaultAccountCard(AccountRegistration account, ListResult listResult) {
-        String buttonKey = LocalizationKey.operationButtonKey(account.getOperationType());
-        AccountCard card = new AccountCard(account, buttonKey, listResult.getExtraElements());
+    private AccountCard buildDefaultAccountCard(final AccountRegistration account, final ListResult listResult, final PaymentService paymentService) {
+        ButtonConfiguration buttonConfig = createButtonConfiguration(account.getOperationType(), paymentService);
+        AccountCard card = new AccountCard(account, buttonConfig, listResult.getExtraElements());
         card.setExpired(isExpired(card.getMaskedAccount()));
         boolean deletable = PaymentUtils.toBoolean(listResult.getAllowDelete(), false);
 
@@ -241,35 +250,35 @@ public final class PaymentSessionBuilder {
             return items;
         }
         for (ApplicableNetwork network : an) {
-            String code = network.getCode();
-            if (supportsApplicableNetwork(listResult, network)) {
-                items.put(code, buildPaymentNetwork(network));
+            PaymentNetwork paymentNetwork = buildPaymentNetwork(listResult, network);
+            if (paymentNetwork != null) {
+                items.put(paymentNetwork.getNetworkCode(), paymentNetwork);
             }
         }
         return items;
     }
 
-    private boolean supportsApplicableNetwork(ListResult listResult, ApplicableNetwork network) {
-        String operationType = listResult.getOperationType();
+    private PaymentNetwork buildPaymentNetwork(final ListResult listResult, final ApplicableNetwork network) throws PaymentException {
+        String listOperationType = listResult.getOperationType();
+        String operationType = network.getOperationType();
         String recurrence = network.getRecurrence();
         String registration = network.getRegistration();
 
         // Special case to hide networks in Update flow with both registration settings set to NONE.
-        if (UPDATE.equals(operationType) && NONE.equals(recurrence) && NONE.equals(registration)) {
-            return false;
+        if (UPDATE.equals(listOperationType) && NONE.equals(recurrence) && NONE.equals(registration)) {
+            return null;
         }
-        return PaymentServiceLookup.supports(network.getCode(), network.getMethod());
-    }
 
-    private PaymentNetwork buildPaymentNetwork(ApplicableNetwork network) throws PaymentException {
-        String operationType = network.getOperationType();
-        String buttonKey = LocalizationKey.operationButtonKey(operationType);
-
+        PaymentService paymentService = PaymentServiceLookup.getService(network.getCode(), network.getMethod());
+        if (paymentService == null) {
+            return null;
+        }
+        ButtonConfiguration buttonConfig = createButtonConfiguration(operationType, paymentService);
         RegistrationOptions options = new RegistrationOptionsBuilder()
             .setOperationType(operationType)
             .setRegistrationOptions(network.getRegistration(), network.getRecurrence())
             .buildRegistrationOptions();
-        return new PaymentNetwork(network, buttonKey, options);
+        return new PaymentNetwork(network, buttonConfig, options);
     }
 
     private void addNetwork2SingleCard(Map<String, NetworkCard> cards, PaymentNetwork network, ListResult listResult) {
@@ -299,6 +308,17 @@ public final class PaymentSessionBuilder {
             return;
         }
         card.getSmartSwitch().addSelectionRegex(code, regex);
+    }
+
+    private ButtonConfiguration createButtonConfiguration(final String operationType, final PaymentService paymentService) {
+        ButtonConfiguration config = null;
+        if (CHARGE.equals(operationType)) {
+            config = paymentService.getButtonConfiguration();
+        }
+        if (config == null) {
+           config = new ButtonConfiguration(LocalizationKey.operationButtonKey(operationType));
+        }
+        return config;
     }
 
     /**

@@ -27,6 +27,7 @@ import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.operation.Operation;
 import com.payoneer.checkout.operation.OperationListener;
 import com.payoneer.checkout.operation.OperationService;
+import com.payoneer.checkout.ui.model.ButtonConfiguration;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.ProcessPaymentData;
 import com.payoneer.checkout.redirect.RedirectService;
@@ -66,7 +67,7 @@ public class GooglePayBraintreePaymentService extends PaymentService {
      * Create a new BasicNetworkService, this service is a basic implementation
      * of the payment service that handles credit/debit cards and redirect networks.
      */
-    public GooglePayBraintreePaymentService() {
+    private GooglePayBraintreePaymentService() {
         operationService = new OperationService();
         operationService.setListener(new OperationListener() {
 
@@ -80,6 +81,20 @@ public class GooglePayBraintreePaymentService extends PaymentService {
                 handleProcessPaymentError(cause);
             }
         });
+    }
+
+    public ButtonConfiguration getButtonConfiguration(final String operationType) {
+        return new ButtonConfiguration(null, R.layout.googlepay_button);
+    }
+
+
+    /**
+     * Get the instance of this BasicPaymentService
+     *
+     * @return the instance of this BasicPaymentService
+     */
+    public static GooglePayBraintreePaymentService getInstance() {
+        return GooglePayBraintreePaymentService.InstanceHolder.INSTANCE;
     }
 
     @Override
@@ -255,4 +270,9 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         Log.i(TAG, "closeWithProcessPaymentResult: " + checkoutResult);
         notifyOnProcessPaymentResult(checkoutResult);
     }
+
+    private static class InstanceHolder {
+        static final GooglePayBraintreePaymentService INSTANCE = new GooglePayBraintreePaymentService();
+    }
+
 }

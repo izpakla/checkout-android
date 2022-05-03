@@ -27,6 +27,7 @@ import com.payoneer.checkout.util.PaymentUtils;
 public final class AccountCard extends PaymentCard {
     private final AccountRegistration account;
     private final String buttonKey;
+    private final ButtonConfiguration buttonConfiguration;
     private boolean deletable;
     private AccountIcon accountIcon;
 

@@ -79,7 +79,6 @@ public final class PaymentListActivity extends AppCompatActivity {
         dialogHelper = new PaymentDialogHelper(idlingResources);
 
         initViewModels();
-        showPaymentListFragment();
     }
 
     @Override

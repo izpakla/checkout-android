@@ -8,7 +8,10 @@
 
 package com.payoneer.checkout.ui.screen.payment;
 
+import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
+import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 import static com.payoneer.checkout.model.InteractionCode.PROCEED;
+import static com.payoneer.checkout.model.InteractionCode.VERIFY;
 
 import java.util.Objects;
 
@@ -16,6 +19,7 @@ import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutResultHelper;
 import com.payoneer.checkout.core.PaymentException;
 import com.payoneer.checkout.localization.InteractionMessage;
+import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.InteractionCode;
@@ -28,6 +32,7 @@ import com.payoneer.checkout.ui.dialog.PaymentDialogData;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment;
 import com.payoneer.checkout.ui.dialog.PaymentDialogFragment.PaymentDialogListener;
 import com.payoneer.checkout.ui.model.PaymentSession;
+import com.payoneer.checkout.ui.screen.shared.ProgressSettings;
 import com.payoneer.checkout.ui.session.PaymentSessionInteractor;
 import com.payoneer.checkout.util.AppContextViewModel;
 import com.payoneer.checkout.util.ContentEvent;
@@ -44,7 +49,7 @@ import androidx.lifecycle.MutableLiveData;
  */
 final class ProcessPaymentViewModel extends AppContextViewModel {
 
-    private final MutableLiveData<ContentEvent<Boolean>> showProcessPaymentProgress = new MutableLiveData<>();
+    private final MutableLiveData<ContentEvent<ProgressSettings>> showProcessPaymentProgress = new MutableLiveData<>();
     private final MutableLiveData<ContentEvent<CheckoutResult>> closeWithCheckoutResult = new MutableLiveData<>();
     private final MutableLiveData<ContentEvent<PaymentDialogData>> showPaymentDialog = new MutableLiveData<>();
     private final MutableLiveData<Event> showProcessPaymentFragment = new MutableLiveData<>();
@@ -74,7 +79,7 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
         initPaymentServiceObserver(serviceInteractor);
     }
 
-    LiveData<ContentEvent<Boolean>> showProcessPaymentProgress() {
+    LiveData<ContentEvent<ProgressSettings>> showProcessPaymentProgress() {
         return showProcessPaymentProgress;
     }
 
@@ -116,13 +121,18 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
             }
 
             @Override
-            public void onProcessPaymentActive() {
-                setShowProcessPaymentProgress(true);
+            public void onProcessPaymentActive(final boolean finalizing) {
+                setShowProcessPaymentProgress(true, finalizing);
             }
 
             @Override
             public void onProcessPaymentResult(final CheckoutResult checkoutResult) {
                 handleOnProcessPaymentResult(checkoutResult);
+            }
+
+            @Override
+            public void onProcessPaymentInterrupted(final Exception exception) {
+                handleOnProcessPaymentInterrupted(exception);
             }
         });
     }
@@ -135,9 +145,12 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
         closeWithCheckoutResult.setValue(new ContentEvent<>(checkoutResult));
     }
 
-    private void setShowProcessPaymentProgress(final Boolean visible) {
+    private void setShowProcessPaymentProgress(final boolean visible, final boolean finalizing) {
+        String header = finalizing ? Localization.translate(CHARGE_TITLE) : null;
+        String info = finalizing ? Localization.translate(CHARGE_TEXT) : null;
+        ProgressSettings settings = new ProgressSettings(visible, header, info);
         showProcessPaymentFragment.setValue(new Event());
-        showProcessPaymentProgress.setValue(new ContentEvent<>(visible));
+        showProcessPaymentProgress.setValue(new ContentEvent<>(settings));
     }
 
     private void setShowConnectionErrorDialog(final PaymentDialogListener listener) {
@@ -163,8 +176,19 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
 
     void loadPaymentSession() {
         this.paymentSession = null;
-        setShowProcessPaymentProgress(true);
+        setShowProcessPaymentProgress(true, true);
         sessionInteractor.loadPaymentSession(getApplicationContext());
+    }
+
+    private void handleOnProcessPaymentInterrupted(final Exception exception) {
+        CheckoutResult checkoutResult;
+        if (exception == null) {
+            String message = "Payment processing of network[" + processPaymentData.getNetworkCode() + "] has been interrupted";
+            checkoutResult = CheckoutResultHelper.fromErrorMessage(message);
+        } else {
+            checkoutResult = CheckoutResultHelper.fromThrowable(exception);
+        }
+        setCloseWithCheckoutResult(checkoutResult);
     }
 
     private void handleOnPaymentSessionSuccess(PaymentSession session) {
@@ -180,18 +204,13 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
     }
 
     private void handleOnPaymentSessionError(final CheckoutResult result) {
-        setShowProcessPaymentProgress(false);
+        setShowProcessPaymentProgress(false, true);
 
         if (result.isNetworkFailure()) {
             handleLoadPaymentSessionNetworkFailure(result);
         } else {
             setCloseWithCheckoutResult(result);
         }
-    }
-
-    private void closeWithErrorMessage(final String message) {
-        CheckoutResult result = CheckoutResultHelper.fromErrorMessage(message);
-        setCloseWithCheckoutResult(result);
     }
 
     private void handleLoadPaymentSessionNetworkFailure(final CheckoutResult checkoutResult) {
@@ -216,7 +235,8 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
     private void handleLoadPaymentSessionProceed(PaymentSession paymentSession) {
         PresetAccount account = paymentSession.getListResult().getPresetAccount();
         if (account == null) {
-            closeWithErrorMessage("PresetAccount not found in ListResult");
+            CheckoutResult checkoutResult = CheckoutResultHelper.fromErrorMessage("PresetAccount not found in ListResult");
+            setCloseWithCheckoutResult(checkoutResult);
             return;
         }
         this.paymentSession = paymentSession;
@@ -225,7 +245,7 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
     }
 
     private void handleOnProcessPaymentResult(final CheckoutResult result) {
-        setShowProcessPaymentProgress(false);
+        setShowProcessPaymentProgress(false, false);
         if (result.isProceed()) {
             setCloseWithCheckoutResult(result);
         } else {

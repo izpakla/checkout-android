@@ -12,6 +12,7 @@ import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.core.PaymentException;
 
 import android.content.Context;
+import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -23,8 +24,8 @@ public final class PaymentServiceInteractor {
     private PaymentService paymentService;
 
     /**
-     * Load the PaymentService given the code and paymentMethod. This will use the PaymentServiceLookup
-     * to find the PaymentService that can handle the payment request.
+     * Load the PaymentService given the networkCode and paymentMethod. This will use the PaymentServiceLookup
+     * to locate the appropriate payment service.
      *
      * @param networkCode code of the network e.g. VISA
      * @param paymentMethod method of the payment e.g. CREDIT_CARD
@@ -33,7 +34,7 @@ public final class PaymentServiceInteractor {
     public void loadPaymentService(final String networkCode, final String paymentMethod) throws PaymentException {
         if (paymentService != null) {
             paymentService.setListener(null);
-            paymentService.stop();
+            paymentService.reset();
         }
         paymentService = PaymentServiceLookup.createService(networkCode, paymentMethod);
         if (paymentService == null) {
@@ -49,9 +50,9 @@ public final class PaymentServiceInteractor {
             }
 
             @Override
-            public void onProcessPaymentActive() {
+            public void onProcessPaymentActive(final boolean finalizing) {
                 if (observer != null) {
-                    observer.onProcessPaymentActive();
+                    observer.onProcessPaymentActive(finalizing);
                 }
             }
 
@@ -61,11 +62,18 @@ public final class PaymentServiceInteractor {
                     observer.onProcessPaymentResult(checkoutResult);
                 }
             }
+
+            @Override
+            public void onProcessPaymentInterrupted(final Exception exception) {
+                if (observer != null) {
+                    observer.onProcessPaymentInterrupted(exception);
+                }
+            }
         });
     }
 
     /**
-     * Ask the PaymentService if it needs to be resumed, e.g. if the PaymentService is waiting
+     * Ask the PaymentService to resume, e.g. if the PaymentService is waiting
      * for a redirect result.
      *
      * @return true when resumed, false otherwise
@@ -75,11 +83,18 @@ public final class PaymentServiceInteractor {
     }
 
     /**
-     * Notify PaymentService that it will be stopped. For example if the Activity is paused.
+     * Notify PaymentService that it will be stopped.
+     * For example if the LifeCycleOwner is paused.
      */
     public void onStop() {
         if (paymentService != null) {
             paymentService.stop();
+        }
+    }
+
+    public void onFragmentResult(final Bundle fragmentResult) {
+        if (paymentService != null) {
+            paymentService.onFragmentResult(fragmentResult);
         }
     }
 
@@ -103,8 +118,10 @@ public final class PaymentServiceInteractor {
 
         void showFragment(final Fragment fragment);
 
-        void onProcessPaymentActive();
+        void onProcessPaymentActive(final boolean finalizing);
 
         void onProcessPaymentResult(final CheckoutResult checkoutResult);
+
+        void onProcessPaymentInterrupted(final Exception exception);
     }
 }

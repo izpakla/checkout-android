@@ -9,12 +9,11 @@
 package com.payoneer.checkout.ui.screen.list;
 
 import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_INTERRUPTED;
-import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TEXT;
-import static com.payoneer.checkout.localization.LocalizationKey.CHARGE_TITLE;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.localization.Localization;
+import com.payoneer.checkout.ui.screen.shared.ProgressSettings;
 import com.payoneer.checkout.ui.screen.shared.ProgressView;
 
 import android.os.Bundle;
@@ -54,10 +53,9 @@ public final class TransactionFragment extends Fragment {
     private void initViewModels() {
         PaymentListViewModel viewModel = new ViewModelProvider(requireActivity()).get(PaymentListViewModel.class);
         viewModel.showTransactionProgress().observe(getViewLifecycleOwner(), contentEvent -> {
-            Boolean visible = (contentEvent != null) ? contentEvent.getContentIfNotHandled() : null;
-            if (visible != null) {
-                progressView.setLabels(Localization.translate(CHARGE_TITLE), Localization.translate(CHARGE_TEXT));
-                progressView.setVisible(visible);
+            ProgressSettings settings = contentEvent.getContentIfNotHandled();
+            if (settings != null) {
+                progressView.setProgressSettings(settings);
             }
         });
     }

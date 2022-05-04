@@ -2,6 +2,8 @@ include ':checkout',
         ':example-checkout',
         ':example-shop',
         ':shared-test',
-        ':riskprovider:iovation'
+        ':riskprovider:iovation',
+        ':paymentservice:googlepay-braintree'
+
 
 

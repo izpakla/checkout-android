@@ -20,7 +20,9 @@ public interface PaymentServiceListener {
 
     void showFragment(final Fragment fragment);
 
-    void onProcessPaymentActive();
+    void onProcessPaymentActive(final boolean finalizing);
 
     void onProcessPaymentResult(final CheckoutResult checkoutResult);
+
+    void onProcessPaymentInterrupted(final Exception exception);
 }

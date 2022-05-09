@@ -18,9 +18,10 @@ Brief description about solution/implementation
 - Test cases
 
 ## Tests
-<!--- Please describe in detail how you tested your changes. -->
-<!--- Mention if you have written test cases, etc. -->
-<!--- Include details of your testing environment (if needed), and the tests you ran -->
+- Describe in detail how the changes have been tested
+- Mention which test cases have been written
+- Include details of the test environment
+- Mention which tests have run
 
 ## Visuals
 ### BEFORE

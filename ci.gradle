@@ -35,7 +35,6 @@ task publishPaymentServicesReleaseVersion() {
     dependsOn ':paymentservice:googlepay-braintree:publishReleaseVersion'
 }
 
-
 task buildRiskProviders() {
     dependsOn ':riskprovider:iovation:assembleRelease'
 }

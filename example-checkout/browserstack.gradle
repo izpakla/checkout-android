@@ -7,7 +7,7 @@ task uploadToAppLive {
         logger.lifecycle('[BROWSERSTACK] Missing credentials')
         return
     }
-    dependsOn('uploadExampleCheckoutDebugToBrowserstackAppLive')
+    dependsOn("uploadToBrowserstackAppLive")
 }
 
 task testOnAppAutomate {
@@ -20,11 +20,13 @@ task testOnAppAutomate {
         logger.lifecycle('[BROWSERSTACK] Missing credentials')
         return
     }
-    dependsOn('executeExampleCheckoutDebugTestsOnBrowserstack')
+    dependsOn('executePycoExampleCheckoutDebugTestsOnBrowserstack')
 }
 
 browserStackConfig {
     username = rootProject.browserStackUser
     accessKey = rootProject.browserStackKey
+    customId = getBranchName()
+    debug = true
     configFilePath = 'example-checkout/browserstack.json'
 }

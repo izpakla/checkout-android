@@ -35,7 +35,12 @@ android {
     // the ExampleCheckout and ExampleShop app to Browserstack
     flavorDimensions "version"
     productFlavors {
-        ExampleCheckout {
+        exampleCheckout {
+            dimension "version"
+        }
+        // This is the Payoneer Checkout product flavor including
+        // the Iovation risk provider.
+        pycoExampleCheckout {
             dimension "version"
         }
     }
@@ -48,7 +53,7 @@ android {
 
             testVariants.all { testVariant ->
                 testVariant.outputs.all { output ->
-                    outputFileName = "ExampleCheckout-${testVariant.buildType.name}_${getBranchLabel()}-androidTest.apk"
+                    outputFileName = "${testVariant.productFlavors[0].name}-${testVariant.buildType.name}_${getBranchLabel()}-androidTest.apk"
                 }
             }
         }
@@ -61,7 +66,7 @@ android {
         }
         applicationVariants.all { variant ->
             variant.outputs.all {
-                outputFileName = "ExampleCheckout-${variant.buildType.name}_${getBranchLabel()}.apk"
+                outputFileName = "${variant.productFlavors[0].name}-${variant.buildType.name}_${getBranchLabel()}.apk"
             }
         }
     }
@@ -84,8 +89,8 @@ dependencies {
     implementation project(":checkout")
 
     // Uncomment the following two lines for enabling the Iovation FraudForce risk provider
-    // implementation project(":riskprovider:iovation")
-    // implementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
+    pycoExampleCheckoutImplementation project(":riskprovider:iovation")
+    //pycoExampleCheckoutImplementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
 
     // Comment the following line if the googlepay-braintree module should not be loaded
     implementation project(":paymentservice:googlepay-braintree")

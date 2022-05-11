@@ -28,7 +28,7 @@ android {
         }
         libraryVariants.all { variant ->
             variant.outputs.all {
-                outputFileName = "RiskProvider_Iovation_${variant.name}_${versionName}.aar"
+                outputFileName = "RiskProvider-Iovation-${variant.name}-${versionName}.aar"
             }
         }
         applicationVariants {

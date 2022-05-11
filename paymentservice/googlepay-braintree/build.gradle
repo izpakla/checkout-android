@@ -1,28 +1,12 @@
-plugins {
-    id 'com.android.library'
-}
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
 
-    defaultConfig {
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    testOptions {
+        unitTests {
+            includeAndroidResources true
         }
-    }
-
-    lintOptions {
-        abortOnError true
-        checkDependencies true
-        ignoreWarnings true
     }
 
     compileOptions {
@@ -30,24 +14,36 @@ android {
         targetCompatibility rootProject.javaCompatVersion
     }
 
-    testOptions {
-        unitTests {
-            includeAndroidResources true
-        }
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    sourceSets {
-        main {
-            res {
-                srcDirs 'src/main/res'
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+        libraryVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "PaymentService-GooglePayBraintree-${variant.name}-${versionName}.aar"
             }
         }
+        applicationVariants {
+        }
+    }
+    lint {
+        abortOnError true
+        checkDependencies true
+        ignoreWarnings true
     }
 }
 
 dependencies {
     compileOnly project(":checkout")
-    implementation "com.google.android.gms:play-services-wallet:16.0.1"
-    implementation "com.braintreepayments.api:google-pay:4.+"
+    implementation "com.braintreepayments.api:google-pay:4.10.1"
     implementation "com.google.android.material:material:${rootProject.androidMaterialVersion}"
 
     testImplementation project(":checkout")
@@ -55,3 +51,6 @@ dependencies {
     testImplementation "androidx.test:core:${rootProject.androidxTestCoreVersion}"
     testImplementation "junit:junit:${rootProject.junitVersion}"
 }
+
+// import the script for publishing release builds to Nexus and Packagecloud
+apply from: 'publish.gradle'

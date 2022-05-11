@@ -32,7 +32,7 @@ android {
         }
         libraryVariants.all { variant ->
             variant.outputs.all {
-                outputFileName = "PayoneerCheckout_${variant.name}_${versionName}.aar"
+                outputFileName = "PayoneerCheckout-${variant.name}-${versionName}.aar"
             }
         }
         applicationVariants {

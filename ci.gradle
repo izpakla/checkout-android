@@ -51,12 +51,25 @@ task publishRiskProvidersReleaseVersion() {
     dependsOn ':riskprovider:iovation:publishReleaseVersion'
 }
 
+task uploadExampleAppsToAppLive() {
+    dependsOn 'uploadExampleCheckoutToAppLive'
+    dependsOn 'uploadExampleShopToAppLive'
+}
+
 task uploadExampleCheckoutToAppLive() {
-    dependsOn ':example-checkout:uploadToAppLive'
+    def deleteFromAppLive = tasks.findByPath(':example-checkout:deleteFromAppLive')
+    def uploadToAppLive = tasks.findByPath(':example-checkout:uploadToAppLive')
+    dependsOn deleteFromAppLive
+    dependsOn uploadToAppLive
+    uploadToAppLive.mustRunAfter(deleteFromAppLive)
 }
 
 task uploadExampleShopToAppLive() {
-    dependsOn ':example-shop:uploadToAppLive'
+    def deleteFromAppLive = tasks.findByPath(':example-shop:deleteFromAppLive')
+    def uploadToAppLive = tasks.findByPath(':example-shop:uploadToAppLive')
+    dependsOn deleteFromAppLive
+    dependsOn uploadToAppLive
+    uploadToAppLive.mustRunAfter(deleteFromAppLive)
 }
 
 task testExampleCheckoutOnAppAutomate() {

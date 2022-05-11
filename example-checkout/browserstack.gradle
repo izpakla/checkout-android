@@ -1,13 +1,25 @@
+import groovy.json.JsonSlurper
+
 /*
  * Gradle file with tasks for uploading the ExampleCheckout app to Browserstack
  */
+
+task deleteFromAppLive {
+    if (rootProject.browserStackUser == null || rootProject.browserStackKey == null) {
+        logger.lifecycle('[BROWSERSTACK] Missing credentials')
+        return
+    }
+    doLast {
+        rootProject.deleteAppLiveWithCustomId("ExampleCheckout-${getBranchName()}")
+    }
+}
 
 task uploadToAppLive {
     if (rootProject.browserStackUser == null || rootProject.browserStackKey == null) {
         logger.lifecycle('[BROWSERSTACK] Missing credentials')
         return
     }
-    dependsOn("uploadToBrowserstackAppLive")
+    dependsOn "uploadExampleCheckoutDebugToBrowserstackAppLive"
 }
 
 task testOnAppAutomate {
@@ -20,13 +32,12 @@ task testOnAppAutomate {
         logger.lifecycle('[BROWSERSTACK] Missing credentials')
         return
     }
-    dependsOn('executePycoExampleCheckoutDebugTestsOnBrowserstack')
+    dependsOn('executeExampleCheckoutDebugTestsOnBrowserstack')
 }
 
 browserStackConfig {
     username = rootProject.browserStackUser
     accessKey = rootProject.browserStackKey
-    customId = getBranchName()
-    debug = true
+    customId = "ExampleCheckout-${getBranchName()}"
     configFilePath = 'example-checkout/browserstack.json'
 }

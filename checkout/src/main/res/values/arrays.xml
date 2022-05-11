@@ -47,20 +47,22 @@
         <item>ELO-R,elo-r.png</item>
         <item>ELVDE,elvde.png</item>
         <item>EPS,eps.png</item>
+        <item>ERATY,eraty.png</item>4
         <item>EURO6000,euro6000.png</item>
         <item>GETINBANK,getinbank.png</item>
         <item>GIROPAY,giropay.png</item>
         <item>GOOGLEPAY,googlepay.png</item>
+        <item>GRABPAY,grabpay.png</item>
         <item>HIPERCARD-R,hipercard-r.png</item>
         <item>IDEAL,ideal.png</item>
         <item>IDEBIT,idebit.png</item>
         <item>INGBANK,ingbank.png</item>
         <item>INSTADEBIT,instadebit.png</item>
-        <item>INSTALLMENT_OPEN_INVOICE,installment_open_invoice.png</item>
-        <item>INSTALLMENT_SEPA,installment_sepa.png</item>
+        <item>INSTALLMENT_OPEN_INVOICE,installmentopeninvoice.png</item>
+        <item>INSTALLMENT_SEPA,installmentsepa.png</item>
         <item>INSTANTEFT,instanteft.png</item>
-        <item>INTERAC_ETRANSFER,interac_etransfer.png</item>
-        <item>INTERAC_ONLINE,interac_online.png</item>
+        <item>INTERAC_ETRANSFER,interacetransfer.png</item>
+        <item>INTERAC_ONLINE,interaconline.png</item>
         <item>INVESTBANK,investbank.png</item>
         <item>INVOICE,invoice.png</item>
         <item>ITAU,itau.png</item>
@@ -77,12 +79,14 @@
         <item>MUCHBETTER,muchbetter.png</item>
         <item>MULTIBANCO,multibanco.png</item>
         <item>MULTITRANSFER,multitransfer.png</item>
+        <item>NARANJAX,naranjax.png</item>
         <item>NETELLER,neteller.png</item>
-        <item>ONLINE_BANKING,online_banking.png</item>
+        <item>ONLINE_BANKING,onlinebanking.png</item>
         <item>OTP,otp.png</item>
+        <item>PAYBRIGHT,paybright.png</item>
         <item>PAYDIREKT,paydirekt.png</item>
         <item>PAYFAST,payfast.png</item>
-        <item>PAYOLUTION.images,payolution.images.png</item>
+        <item>PAYOLUTION,payolution.png</item>
         <item>PAYPAL,paypal.png</item>
         <item>PAYSAFECARD,paysafecard.png</item>
         <item>PAYU,payu.png</item>
@@ -100,8 +104,8 @@
         <item>PLACZNORDEA,placznordea.png</item>
         <item>POLBANKEFG,polbankefg.png</item>
         <item>POSTEPAY,postepay.png</item>
-        <item>POSTFINANCE_CARD,postfinance_card.png</item>
-        <item>POSTFINANCE_EFINANCE,postfinance_efinance.png</item>
+        <item>POSTFINANCE_CARD,postfinancecard.png</item>
+        <item>POSTFINANCE_EFINANCE,postfinanceefinance.png</item>
         <item>PPRO,ppro.png</item>
         <item>PRZELEW24,przelew24.png</item>
         <item>RATEPAY,ratepay.png</item>
@@ -109,29 +113,32 @@
         <item>SAFETYPAY,safetypay.png</item>
         <item>SEPADD,sepadd.png</item>
         <item>SERVIRED,servired.png</item>
+        <item>SEZZLE,sezzle.png</item>
         <item>SKRILL,skrill.png</item>
         <item>SNAPSCAN,snapscan.png</item>
         <item>SNS,sns.png</item>
-        <item>SOFORT-INPAGE,sofort-inpage.png</item>
         <item>SOFORT,sofort.png</item>
+        <item>SOFORT-INPAGE,sofortinpage.png</item>
         <item>SOFORTUEBERWEISUNG,sofortueberweisung.png</item>
         <item>SOLO,solo.png</item>
-        <item>TEAMBANK_EC,teambank_ec.png</item>
+        <item>TEAMBANK_EC,teambankec.png</item>
         <item>TINGG,tingg.png</item>
-        <item>TRADE_UK,trade_uk.png</item>
+        <item>TRADE_UK,tradeuk.png</item>
         <item>TRUSTLY,trustly.png</item>
-        <item>TRUSTPAY_ONLINE,trustpay_online.png</item>
-        <item>TWISTO_INVOICE,twisto_invoice.png</item>
+        <item>TRUSTPAY_ONLINE,trustpayonline.png</item>
+        <item>TWINT,twint.png</item>
+        <item>TWISTO,twisto.png</item>
         <item>UNIONPAY,unionpay.png</item>
         <item>VERKKOPANKKI,verkkopankki.png</item>
         <item>VISA,visa.png</item>
-        <item>VISA_CHECKOUT,visa_checkout.png</item>
-        <item>VISA_DANKORT,visa_dankort.png</item>
+        <item>VISA_CHECKOUT,visacheckout.png</item>
+        <item>VISA_DANKORT,visadankort.png</item>
         <item>VISAELECTRON,visaelectron.png</item>
         <item>VOLKSWAGENBANK,volkswagenbank.png</item>
         <item>VORKASSE,vorkasse.png</item>
         <item>VWFSWALLET-R,vwfswallet-r.png</item>
         <item>WECHAT,wechat.png</item>
         <item>ZAPPER,zapper.png</item>
+        <item>ZIP,zip.png</item>
     </string-array>
 </resources>

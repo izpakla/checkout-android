@@ -92,8 +92,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.lifecycleVersion}"
 
     // Uncomment the following two lines for enabling the Iovation FraudForce risk provider
-    // implementation project(":riskprovider:iovation")
-    // implementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
+    implementation project(":riskprovider:iovation")
+    implementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
 
     androidTestImplementation project(":shared-test")
     androidTestImplementation "androidx.test:runner:${rootProject.androidxTestRunnerVersion}"

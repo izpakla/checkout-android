@@ -86,6 +86,7 @@ dependencies {
     // Comment the following two lines to disable the Iovation FraudForce risk provider
     implementation project(":riskprovider:iovation")
     implementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
+
     // Comment the following line if the googlepay-braintree module should not be loaded
     implementation project(":paymentservice:googlepay-braintree")
 

@@ -8,7 +8,7 @@ task deleteFromAppLive {
         return
     }
     doLast {
-        rootProject.deleteAppLiveWithCustomId("ExampleShop-${getBranchName()}")
+        rootProject.deleteAppLiveWithCustomId("Android-ExampleShop-${getBranchName()}")
     }
 }
 
@@ -36,6 +36,6 @@ task testOnAppAutomate {
 browserStackConfig {
     username = rootProject.browserStackUser
     accessKey = rootProject.browserStackKey
-    customId = "ExampleShop-${getBranchName()}"
+    customId = "Android-ExampleShop-${getBranchName()}"
     configFilePath = 'example-shop/browserstack.json'
 }

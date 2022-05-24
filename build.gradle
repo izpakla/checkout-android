@@ -97,11 +97,11 @@ ext {
 static def getBranchName() {
     def gitHeadRef = System.getenv('GITHUB_HEAD_REF')
     if (gitHeadRef != null) {
-        return "HR" + gitHeadRef
+        return gitHeadRef
     }
     def gitRefName = System.getenv('GITHUB_REF_NAME')
     if (gitRefName != null) {
-        return "RN" + gitRefName
+        return gitRefName
     }
     def branch = ''
     def proc = 'git rev-parse --abbrev-ref HEAD'.execute()

@@ -10,6 +10,8 @@ package com.payoneer.checkout.sharedtest.view;
 
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.By;
@@ -27,6 +29,7 @@ public final class UiDeviceHelper {
     public static void checkUiObjectContainsText(String text) {
         UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         UiObject2 uiObject = uiDevice.wait(Until.findObject(By.text(text)), TIMEOUT);
+        assertThat(uiObject, is(notNullValue()));
         assertThat(uiObject.getText(), containsString(text));
     }
 
@@ -34,6 +37,7 @@ public final class UiDeviceHelper {
         UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
         UiObject2 uiObject = uiDevice.wait(Until.findObject(By.res(resourceName)), TIMEOUT);
+        assertThat(uiObject, is(notNullValue()));
         uiObject.wait(Until.enabled(true), TIMEOUT);
         uiObject.click();
     }

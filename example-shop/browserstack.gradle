@@ -2,6 +2,16 @@
  * Gradle file with tasks for uploading the ExampleShop app to Browserstack
  */
 
+task deleteFromAppLive {
+    if (rootProject.browserStackUser == null || rootProject.browserStackKey == null) {
+        logger.lifecycle('[BROWSERSTACK] Missing credentials')
+        return
+    }
+    doLast {
+        rootProject.deleteAppLiveWithCustomId("Android-ExampleShop-${getBranchName()}")
+    }
+}
+
 task uploadToAppLive {
     if (rootProject.browserStackUser == null || rootProject.browserStackKey == null) {
         logger.lifecycle('[BROWSERSTACK] Missing credentials')
@@ -26,5 +36,6 @@ task testOnAppAutomate {
 browserStackConfig {
     username = rootProject.browserStackUser
     accessKey = rootProject.browserStackKey
+    customId = "Android-ExampleShop-${getBranchName()}"
     configFilePath = 'example-shop/browserstack.json'
 }

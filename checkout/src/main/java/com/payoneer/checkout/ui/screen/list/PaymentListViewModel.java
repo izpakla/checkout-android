@@ -141,9 +141,14 @@ final class PaymentListViewModel extends AppContextViewModel {
     }
 
     void onPaymentListResume() {
-        if (!serviceInteractor.onResume()) {
-            loadPaymentSession();
+        if (serviceInteractor.onResume()) {
+            return;
         }
+        if (paymentSession != null) {
+            setShowPaymentSession(Resource.SUCCESS, paymentSession);
+            return;
+        }
+        loadPaymentSession();
     }
 
     void onPaymentListPause() {

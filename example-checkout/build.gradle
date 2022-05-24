@@ -48,7 +48,7 @@ android {
 
             testVariants.all { testVariant ->
                 testVariant.outputs.all { output ->
-                    outputFileName = "ExampleCheckout-${testVariant.buildType.name}-${getBranchLabel()}-androidTest.apk"
+                    outputFileName = "${testVariant.productFlavors[0].name}-${testVariant.buildType.name}_${getBranchLabel()}-androidTest.apk"
                 }
             }
         }
@@ -61,7 +61,7 @@ android {
         }
         applicationVariants.all { variant ->
             variant.outputs.all {
-                outputFileName = "ExampleCheckout-${variant.buildType.name}-${getBranchLabel()}.apk"
+                outputFileName = "${variant.productFlavors[0].name}-${variant.buildType.name}_${getBranchLabel()}.apk"
             }
         }
     }
@@ -74,6 +74,7 @@ android {
         checkDependencies true
         ignoreWarnings true
     }
+    namespace 'com.payoneer.checkout.examplecheckout'
 }
 
 dependencies {
@@ -86,6 +87,7 @@ dependencies {
     // Comment the following two lines to disable the Iovation FraudForce risk provider
     implementation project(":riskprovider:iovation")
     implementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
+
     // Comment the following line if the googlepay-braintree module should not be loaded
     implementation project(":paymentservice:googlepay-braintree")
 

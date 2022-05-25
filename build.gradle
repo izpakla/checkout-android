@@ -1,5 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 apply from: 'version.gradle'
+apply from: 'browserstack.gradle'
 
 buildscript {
     repositories {
@@ -12,7 +13,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.browserstack.gradle:browserstack-gradle-plugin:3.0.3'
+        classpath localGroovy()
+        classpath 'gradle.plugin.com.browserstack.gradle:browserstack-gradle-plugin:3.0.4'
         classpath 'com.android.tools.build:gradle:7.1.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21"
         classpath "com.google.dagger:hilt-android-gradle-plugin:2.41"
@@ -104,7 +106,7 @@ static def getBranchName() {
 }
 
 static def getBranchLabel() {
-    return getBranchName().replace('/', '-')
+    return getBranchName().replace('[^A-Za-z0-9]', '-')
 }
 
 apply from: 'ci.gradle'

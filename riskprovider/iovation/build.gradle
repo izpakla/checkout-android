@@ -39,7 +39,6 @@ android {
         checkDependencies true
         ignoreWarnings true
     }
-    namespace 'com.payoneer.checkout.risk.iovation'
 }
 
 dependencies {

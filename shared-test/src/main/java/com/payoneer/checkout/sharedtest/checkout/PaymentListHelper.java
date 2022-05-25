@@ -109,9 +109,28 @@ public final class PaymentListHelper {
         onView(withId(R.id.recyclerview_paymentlist)).perform(actionOnViewInPaymentCard(cardIndex, click(), R.id.viewswitcher_icon));
     }
 
+    public static void checkHasVisibleExpiredIcon(final int cardIndex) {
+        intended(hasComponent(PaymentListActivity.class.getName()));
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInPaymentCard(cardIndex, isDisplayed(), R.id.image_expired_icon)));
+    }
+
+    public static void checkIsPaymentCardExpanded(final int cardIndex) {
+        intended(hasComponent(PaymentListActivity.class.getName()));
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInPaymentCard(cardIndex, isDisplayed(), R.id.layout_form)));
+    }
+
     public static void matchesPaymentCardTitle(int cardIndex, String title) {
+        intended(hasComponent(PaymentListActivity.class.getName()));
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInPaymentCard(cardIndex, withText(title), R.id.text_title)));
+    }
+
+    public static void matchesPaymentCardSubtitle(final int cardIndex, final String subtitle) {
+        intended(hasComponent(PaymentListActivity.class.getName()));
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInPaymentCard(cardIndex, withText(subtitle), R.id.text_subtitle)));
     }
 
     public static void matchesPaymentDialogTitle(String title) {

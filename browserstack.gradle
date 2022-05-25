@@ -13,7 +13,7 @@ ext.deleteAppLiveWithCustomId = { customId ->
     }
     def json = new JsonSlurper().parseText(response.toString())
     if (!(json instanceof List<Map>)) {
-        logger.lifecycle("[BROWSERSTACK] No apps to delete for customId[${customId}] [${json}]")
+        logger.lifecycle("[BROWSERSTACK] No apps to delete for customId[${customId}] response[${json}]")
         return
     }
     for (def app : (List<Map>) json) {

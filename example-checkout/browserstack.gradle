@@ -10,7 +10,7 @@ task deleteFromAppLive {
         return
     }
     doLast {
-        rootProject.deleteAppLiveWithCustomId("Android-ExampleCheckout-${getBranchName()}")
+        rootProject.deleteAppLiveWithCustomId("Android-ExampleCheckout-${getBranchLabel()}")
     }
 }
 
@@ -38,6 +38,6 @@ task testOnAppAutomate {
 browserStackConfig {
     username = rootProject.browserStackUser
     accessKey = rootProject.browserStackKey
-    customId = "Android-ExampleCheckout-${getBranchName()}"
+    customId = "Android-ExampleCheckout-${getBranchLabel()}"
     configFilePath = 'example-checkout/browserstack.json'
 }

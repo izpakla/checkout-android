@@ -92,9 +92,9 @@ jobs:
       - name: Run risk provider unit-tests
         run: ./gradlew testRiskProviders
 
-  upload-examples:
+  upload-examplecheckout:
     needs: [ test-examples, test-paymentservices, test-riskproviders ]
-    name: Upload examples to Browserstack AppLive
+    name: Upload ExampleCheckout to Browserstack AppLive
     runs-on: ubuntu-latest
     steps:
       - name: Checkout with submodules
@@ -108,7 +108,7 @@ jobs:
           distribution: 'adopt'
       - name: Clean checkout project
         run: ./gradlew clean
-      - name: Upload examples to Browserstack AppLive
+      - name: Upload ExampleCheckout to Browserstack AppLive
         env:
           BROWSERSTACK_USER: ${{ secrets.BROWSERSTACK_USER }}
           BROWSERSTACK_KEY: ${{ secrets.BROWSERSTACK_KEY }}

@@ -24,7 +24,7 @@ import androidx.test.uiautomator.Until;
  */
 public final class UiDeviceHelper {
 
-    public final static long TIMEOUT = 20000;
+    public final static long TIMEOUT = 50000;
 
     public static void checkUiObjectContainsText(String text) {
         UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());

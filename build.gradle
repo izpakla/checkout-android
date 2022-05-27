@@ -97,14 +97,12 @@ ext {
 }
 
 static def getBranchName() {
+    // Get branch name for pull requests
     def gitHeadRef = System.getenv('GITHUB_HEAD_REF')
     if ((gitHeadRef != null) && (gitHeadRef.length() > 0)) {
         return gitHeadRef
     }
-    def gitRefName = System.getenv('GITHUB_REF_NAME')
-    if ((gitRefName != null) && (gitRefName.length() > 0)) {
-        return gitRefName
-    }
+    // get branch name for push
     def branch = ''
     def proc = 'git rev-parse --abbrev-ref HEAD'.execute()
     proc.in.eachLine { line -> branch = line }

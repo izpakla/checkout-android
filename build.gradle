@@ -117,8 +117,4 @@ static def getBranchLabel() {
     return getBranchName().replace('[^A-Za-z0-9]', '-')
 }
 
-task testBranch() {
-    printf "test: " + getBranchLabel()
-}
-
 apply from: 'ci.gradle'

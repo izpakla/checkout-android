@@ -10,7 +10,6 @@ assemble.dependsOn('lint')
 
 android {
 
-
     compileOptions {
         sourceCompatibility rootProject.javaCompatVersion
         targetCompatibility rootProject.javaCompatVersion

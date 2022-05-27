@@ -98,11 +98,11 @@ ext {
 
 static def getBranchName() {
     def gitHeadRef = System.getenv('GITHUB_HEAD_REF')
-    if (gitHeadRef != null) {
+    if ((gitHeadRef != null) && (gitHeadRef.length() > 0)) {
         return gitHeadRef
     }
     def gitRefName = System.getenv('GITHUB_REF_NAME')
-    if (gitRefName != null) {
+    if ((gitRefName != null) && (gitRefName.length() > 0)) {
         return gitRefName
     }
     def branch = ''
@@ -115,6 +115,10 @@ static def getBranchName() {
 
 static def getBranchLabel() {
     return getBranchName().replace('[^A-Za-z0-9]', '-')
+}
+
+task testBranch() {
+    printf "test: " + getBranchLabel()
 }
 
 apply from: 'ci.gradle'

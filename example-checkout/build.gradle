@@ -11,6 +11,10 @@ android {
         targetCompatibility rootProject.javaCompatVersion
     }
 
+    testOptions {
+        animationsDisabled = true
+    }
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {

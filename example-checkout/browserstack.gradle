@@ -1,13 +1,25 @@
+import groovy.json.JsonSlurper
+
 /*
  * Gradle file with tasks for uploading the ExampleCheckout app to Browserstack
  */
+
+task deleteFromAppLive {
+    if (rootProject.browserStackUser == null || rootProject.browserStackKey == null) {
+        logger.lifecycle('[BROWSERSTACK] Missing credentials')
+        return
+    }
+    doLast {
+        rootProject.deleteAppLiveWithCustomId("Android-ExampleCheckout-${getBranchLabel()}")
+    }
+}
 
 task uploadToAppLive {
     if (rootProject.browserStackUser == null || rootProject.browserStackKey == null) {
         logger.lifecycle('[BROWSERSTACK] Missing credentials')
         return
     }
-    dependsOn('uploadExampleCheckoutDebugToBrowserstackAppLive')
+    dependsOn "uploadExampleCheckoutDebugToBrowserstackAppLive"
 }
 
 task testOnAppAutomate {
@@ -26,5 +38,6 @@ task testOnAppAutomate {
 browserStackConfig {
     username = rootProject.browserStackUser
     accessKey = rootProject.browserStackKey
+    customId = "Android-ExampleCheckout-${getBranchLabel()}"
     configFilePath = 'example-checkout/browserstack.json'
 }

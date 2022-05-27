@@ -10,10 +10,13 @@ assemble.dependsOn('lint')
 
 android {
 
-
     compileOptions {
         sourceCompatibility rootProject.javaCompatVersion
         targetCompatibility rootProject.javaCompatVersion
+    }
+
+    testOptions {
+        animationsDisabled = true
     }
 
     compileSdkVersion rootProject.compileSdkVersion

@@ -22,7 +22,6 @@ android {
         sourceCompatibility rootProject.javaCompatVersion
         targetCompatibility rootProject.javaCompatVersion
     }
-    namespace 'com.payoneer.checkout.sharedtest'
 }
 
 dependencies {

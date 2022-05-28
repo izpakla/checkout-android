@@ -1,7 +1,7 @@
 {
     "devices": [
-        "Google Pixel 4-11.0",
-        "Samsung Galaxy Tab S4-8.1"
+        "Google Pixel 6-12.0",
+        "Samsung Galaxy Tab S10-9.0"
     ],
     "deviceLogs": true,
     "networkLogs": true,

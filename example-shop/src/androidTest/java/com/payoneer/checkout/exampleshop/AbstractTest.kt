@@ -73,8 +73,10 @@ open class AbstractTest {
         val summaryActivity = ActivityHelper.getCurrentActivity() as SummaryActivity
         val loadIdlingResource = summaryActivity.getLoadIdlingResource()
         register(loadIdlingResource)
+
         Espresso.onView(withId(R.id.layout_coordinator))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
         unregister(loadIdlingResource)
         return summaryActivity
     }
@@ -89,12 +91,6 @@ open class AbstractTest {
         Intents.intended(IntentMatchers.hasComponent(SummaryActivity::class.java.name))
         Espresso.onView(withId(R.id.button_edit))
             .perform(PaymentActions.scrollToView(), ViewActions.click())
-    }
-
-    fun waitForProcessPaymentActivityDisplayed() {
-        Intents.intended(IntentMatchers.hasComponent(ProcessPaymentActivity::class.java.name))
-        Espresso.onView(withId(R.id.fragment_container_view))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     fun waitForConfirmActivityLoaded(resultHandledIdlingResource: IdlingResource?): ConfirmActivity? {

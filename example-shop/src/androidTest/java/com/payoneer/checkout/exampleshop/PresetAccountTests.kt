@@ -51,17 +51,6 @@ class PresetAccountTests : AbstractTest() {
         clickSummaryEditButton()
 
         PaymentListHelper.waitForPaymentListLoaded(2)
-
-
-        val list: Matcher<View> = withId(R.id.recyclerview_paymentlist)
-        Espresso.onView(list).check(
-            ViewAssertions.matches(
-                PaymentMatchers.isViewInPaymentCard(
-                    presetCardIndex,
-                    ViewMatchers.withText("PayPal"),
-                    R.id.text_title
-                )
-            )
-        )
+        PaymentListHelper.matchesPaymentCardTitle(presetCardIndex, "PayPal");
     }
 }

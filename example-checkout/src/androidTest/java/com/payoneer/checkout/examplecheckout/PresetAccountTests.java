@@ -72,6 +72,7 @@ public class PresetAccountTests extends BaseKotlinTest {
     @Test
     public void testChargingPresetAccountWithRedirectNetwork_PROCEED_OK() {
         IdlingResource resultIdlingResource = getResultIdlingResource();
+
         ListSettings settings = createDefaultListSettings();
         settings.setOperationType(NetworkOperationType.PRESET);
         enterListUrl(createListUrl(settings));
@@ -89,6 +90,10 @@ public class PresetAccountTests extends BaseKotlinTest {
         clickChargePresetAccountButton();
         register(resultIdlingResource);
         clickCustomerDecisionPageButton("customer-accept");
+        waitForAppRelaunch();
+
+        register(resultIdlingResource);
+        matchResultInteraction(InteractionCode.PROCEED, InteractionReason.OK);
         unregister(resultIdlingResource);
     }
 

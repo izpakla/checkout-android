@@ -91,7 +91,6 @@ public abstract class BaseTest {
         String paymentApiListUrl = BuildConfig.paymentApiListUrl;
         String merchantCode = BuildConfig.merchantCode;
         String merchantPaymentToken = BuildConfig.merchantPaymentToken;
-        Log.i("AAA", "paymentApiListUrl: " + paymentApiListUrl);
         ListService service = ListService.createInstance(createListURL(paymentApiListUrl), merchantCode, merchantPaymentToken);
         return service.newListSelfUrl(settings);
     }
@@ -105,12 +104,10 @@ public abstract class BaseTest {
 
     protected void clickShowPaymentListButton() {
         onView(withId(R.id.button_show_payment_list)).perform(click());
-        intended(hasComponent(PaymentListActivity.class.getName()));
     }
 
     protected void clickChargePresetAccountButton() {
         onView(withId(R.id.button_charge_preset_acount)).perform(click());
-        intended(hasComponent(ProcessPaymentActivity.class.getName()));
     }
 
     protected void register(IdlingResource resource) {

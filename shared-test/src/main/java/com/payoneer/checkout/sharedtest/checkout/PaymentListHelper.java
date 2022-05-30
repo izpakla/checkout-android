@@ -49,7 +49,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 
 public final class PaymentListHelper {
 
-    public static PaymentListActivity waitForPaymentListLoaded(int count) {
+    public static PaymentListActivity waitForPaymentListLoaded(final int count) {
         intended(hasComponent(PaymentListActivity.class.getName()), times(count));
         PaymentListActivity listActivity = (PaymentListActivity) ActivityHelper.getCurrentActivity();
         PaymentIdlingResources idlingResources = listActivity.getPaymentIdlingResources();
@@ -94,41 +94,34 @@ public final class PaymentListHelper {
     }
 
     public static void clickExtraElementLinkWithText(int cardIndex, String widgetName, String linkText) {
-        intended(hasComponent(PaymentListActivity.class.getName()));
         onView(withId(R.id.recyclerview_paymentlist))
             .perform(actionOnViewInWidget(cardIndex, clickClickableSpan(linkText), widgetName, R.id.label_checkbox));
     }
 
     public static void clickPaymentListCardButton(int cardIndex) {
-        intended(hasComponent(PaymentListActivity.class.getName()));
         onView(withId(R.id.recyclerview_paymentlist)).perform(actionOnViewInWidget(cardIndex, click(), "uielement.button", R.id.button));
     }
 
     public static void clickPaymentListCardIcon(int cardIndex) {
-        intended(hasComponent(PaymentListActivity.class.getName()));
         onView(withId(R.id.recyclerview_paymentlist)).perform(actionOnViewInPaymentCard(cardIndex, click(), R.id.viewswitcher_icon));
     }
 
     public static void checkHasVisibleExpiredIcon(final int cardIndex) {
-        intended(hasComponent(PaymentListActivity.class.getName()));
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInPaymentCard(cardIndex, isDisplayed(), R.id.image_expired_icon)));
     }
 
     public static void checkIsPaymentCardExpanded(final int cardIndex) {
-        intended(hasComponent(PaymentListActivity.class.getName()));
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInPaymentCard(cardIndex, isDisplayed(), R.id.layout_form)));
     }
 
     public static void matchesPaymentCardTitle(int cardIndex, String title) {
-        intended(hasComponent(PaymentListActivity.class.getName()));
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInPaymentCard(cardIndex, withText(title), R.id.text_title)));
     }
 
     public static void matchesPaymentCardSubtitle(final int cardIndex, final String subtitle) {
-        intended(hasComponent(PaymentListActivity.class.getName()));
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInPaymentCard(cardIndex, withText(subtitle), R.id.text_subtitle)));
     }
@@ -143,13 +136,11 @@ public final class PaymentListHelper {
     }
 
     public static void matchesErrorTextInWidget(int cardIndex, String widgetName, String errorText) {
-        intended(hasComponent(PaymentListActivity.class.getName()));
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInWidget(cardIndex, hasTextInputLayoutError(errorText), widgetName, R.id.textinputlayout)));
     }
 
     public static void matchesInputTextInWidget(int cardIndex, String widgetName, String value) {
-        intended(hasComponent(PaymentListActivity.class.getName()));
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInWidget(cardIndex, hasTextInputLayoutValue(value), widgetName, R.id.textinputlayout)));
     }

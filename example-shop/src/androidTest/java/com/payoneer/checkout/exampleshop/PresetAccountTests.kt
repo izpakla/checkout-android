@@ -41,22 +41,16 @@ class PresetAccountTests : AbstractTest() {
         PaymentListHelper.waitForPaymentListLoaded(1)
         PaymentListHelper.openPaymentListCard(networkCardIndex, "card.network")
         PaymentListHelper.clickPaymentListCardButton(networkCardIndex)
+
         register(checkoutResultHandledIdlingResource)
         waitForSummaryActivityLoaded()
         unregister(checkoutResultHandledIdlingResource)
+
         Espresso.onView(withId(R.id.label_title))
             .check(ViewAssertions.matches(ViewMatchers.withText("PAYPAL")))
         clickSummaryEditButton()
+
         PaymentListHelper.waitForPaymentListLoaded(2)
-        val list: Matcher<View> = withId(R.id.recyclerview_paymentlist)
-        Espresso.onView(list).check(
-            ViewAssertions.matches(
-                PaymentMatchers.isViewInPaymentCard(
-                    presetCardIndex,
-                    ViewMatchers.withText("PayPal"),
-                    R.id.text_title
-                )
-            )
-        )
+        PaymentListHelper.matchesPaymentCardTitle(presetCardIndex, "PayPal");
     }
 }

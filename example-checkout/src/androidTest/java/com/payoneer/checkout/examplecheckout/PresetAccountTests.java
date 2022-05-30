@@ -88,7 +88,6 @@ public class PresetAccountTests extends BaseKotlinTest {
         unregister(resultIdlingResource);
 
         clickChargePresetAccountButton();
-        register(resultIdlingResource);
         clickCustomerDecisionPageButton("customer-accept");
         waitForAppRelaunch();
 

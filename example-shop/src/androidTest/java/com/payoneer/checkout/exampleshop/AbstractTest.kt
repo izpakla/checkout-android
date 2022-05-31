@@ -29,7 +29,7 @@ import com.payoneer.checkout.sharedtest.service.ListService
 import com.payoneer.checkout.sharedtest.service.ListSettings
 import com.payoneer.checkout.sharedtest.view.ActivityHelper
 import com.payoneer.checkout.sharedtest.view.PaymentActions
-import com.payoneer.checkout.ui.screen.payment.ProcessPaymentActivity
+import com.payoneer.checkout.sharedtest.view.PaymentActions.forceClick
 import org.junit.After
 import org.junit.Before
 import java.net.MalformedURLException
@@ -60,7 +60,7 @@ open class AbstractTest {
     fun clickCheckoutButton() {
         Intents.intended(IntentMatchers.hasComponent(CheckoutActivity::class.java.name))
         Espresso.onView(withId(R.id.button_checkout))
-            .perform(PaymentActions.scrollToView(), ViewActions.click())
+            .perform(PaymentActions.scrollToView(), forceClick())
     }
 
     fun fillPaymentListCardData(cardIndex: Int) {
@@ -84,13 +84,13 @@ open class AbstractTest {
     fun clickSummaryPayButton() {
         Intents.intended(IntentMatchers.hasComponent(SummaryActivity::class.java.name))
         Espresso.onView(withId(R.id.button_pay))
-            .perform(PaymentActions.scrollToView(), ViewActions.click())
+            .perform(PaymentActions.scrollToView(), forceClick())
     }
 
     fun clickSummaryEditButton() {
         Intents.intended(IntentMatchers.hasComponent(SummaryActivity::class.java.name))
         Espresso.onView(withId(R.id.button_edit))
-            .perform(PaymentActions.scrollToView(), ViewActions.click())
+            .perform(PaymentActions.scrollToView(), forceClick())
     }
 
     fun waitForConfirmActivityLoaded(resultHandledIdlingResource: IdlingResource?): ConfirmActivity? {

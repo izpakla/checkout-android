@@ -17,6 +17,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.payoneer.checkout.sharedtest.view.PaymentActions.forceClick;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -103,11 +104,11 @@ public abstract class BaseTest {
     }
 
     protected void clickShowPaymentListButton() {
-        onView(withId(R.id.button_show_payment_list)).perform(click());
+        onView(withId(R.id.button_show_payment_list)).perform(forceClick());
     }
 
     protected void clickChargePresetAccountButton() {
-        onView(withId(R.id.button_charge_preset_acount)).perform(click());
+        onView(withId(R.id.button_charge_preset_acount)).perform(forceClick());
     }
 
     protected void register(IdlingResource resource) {

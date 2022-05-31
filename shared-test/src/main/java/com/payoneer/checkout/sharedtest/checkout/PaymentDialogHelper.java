@@ -12,6 +12,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.payoneer.checkout.sharedtest.view.PaymentActions.forceClick;
 
 import com.payoneer.checkout.R;
 
@@ -20,7 +21,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 public final class PaymentDialogHelper {
 
     public static void clickPaymentDialogButton(String buttonLabel) {
-        onView(withText(buttonLabel)).perform(click());
+        onView(withText(buttonLabel)).perform(forceClick());
     }
 
     public static void matchesPaymentDialogTitle(String title) {

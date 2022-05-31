@@ -10,8 +10,10 @@ package com.payoneer.checkout.sharedtest.view;
 
 import static androidx.test.espresso.intent.Checks.checkNotNull;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anyOf;
@@ -173,6 +175,25 @@ public final class PaymentActions {
         };
     }
 
+    public static ViewAction forceClick() {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return allOf(isClickable(), isEnabled());
+            }
+
+            @Override
+            public String getDescription() {
+                return "force click";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                view.performClick();
+                uiController.loopMainThreadUntilIdle();
+            }
+        };
+    }
 
     /**
      * Scroll to the view action

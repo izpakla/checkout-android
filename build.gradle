@@ -94,6 +94,8 @@ ext {
     robolectricVersion = '4.8.1'
     jsonsnapshotVersion = '1.0.17'
     tngDataProviderVersion = '2.9'
+    androidxTestJunitVersion = '1.1.3'
+    androidxArchCore = "2.1.0"
 }
 
 static def getBranchName() {

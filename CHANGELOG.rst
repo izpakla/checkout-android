@@ -1,12 +1,35 @@
 Changelog - Payoneer Checkout SDK for Android-based devices
 -----------------------
 
+**Version checkout-android 0.92.0**
+
+**Bug**
+
+* [PCX-3493] - Remove deleteRecurrence and deleteRegistration flags from the DELETE body
+* [PCX-3442] - Automated test testChargingPresetAccountWith3DS2_PROCEED_OK fails on Browserstack
+* [PCX-3317] - List reloads after clicking/returning from ExtraElement external link
+* [PCX-3279] - Fix build script for GooglePay Braintree
+
+**Feature**
+
+* [PCX-3437] - Link Android documentation in README to checkoutdocs
+* [PCX-3367] - Disable GooglePay through Braintree in Example apps
+* [PCX-3340] - Automatically updating PR (develop) versions of Example Checkout to AppLive
+* [PCX-3313] - Delete previous versions before uploading app to Browserstack AppLive
+* [PCX-3277] - Enable Iovation in the Example apps of the Android Checkout SDK
+* [PCX-3234] - Update network logos in Android Checkout SDK
+* [PCX-2934] - Create Payment Service framework for networks like GooglePay
+* [PCX-2919] - Support PRESET with GooglePay through Braintree
+* [PCX-2893] - Automatically updating develop BrowserStack artifact
+* [PCX-2891] - Automatically updating latest release BrowserStack artifact
+* [PCX-2789] - Support CHARGE with GooglePay through Braintree
+* [PCX-3263] - Add pullrequest template to Android Checkout SDK
+
 **Version checkout-android 0.91.0**
 
 **Bug**
 
 * [PCX-3191] - Risk Provider libraries not released to nexus and packagecloud
-
 
 **Version checkout-android 0.90.0**
 This is a major version update with a breaking change of the public classes to initiate and use the

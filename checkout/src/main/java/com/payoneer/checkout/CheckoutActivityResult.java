@@ -66,6 +66,16 @@ public final class CheckoutActivityResult {
         }
     }
 
+    public static int getResultCode(final CheckoutResult checkoutResult) {
+        if (checkoutResult == null) {
+            return Activity.RESULT_CANCELED;
+        }
+        if (checkoutResult.isProceed()) {
+            return RESULT_CODE_PROCEED;
+        }
+        return RESULT_CODE_ERROR;
+    }
+
     public int getRequestCode() {
         return requestCode;
     }

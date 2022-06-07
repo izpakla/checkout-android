@@ -29,6 +29,25 @@ public final class ExtraElementTests extends BaseKotlinTest {
     private final static String EXTRAELEMENTS_TOPBOTTOM_CONFIG = "UITests-ExtraElements-TopBottom";
 
     @Test
+    public void testPaymentList_notReloaded() {
+        ListSettings settings = createDefaultListSettings();
+        settings.setDivision(DIVISION);
+        settings.setCheckoutConfigurationName(EXTRAELEMENTS_BOTTOM_CONFIG);
+        enterListUrl(createListUrl(settings));
+        clickShowPaymentListButton();
+
+        int networkCardIndex = 2;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(networkCardIndex, "card.network");
+
+        PaymentListHelper.clickExtraElementLinkWithText(networkCardIndex, "extraelement.bottomelement2", "Number 2");
+        clickBrowserPageButton("two", CHROME_CLOSE_BUTTON);
+
+        waitForAppRelaunch();
+        PaymentListHelper.checkIsPaymentCardExpanded(networkCardIndex);
+    }
+
+    @Test
     public void testGroupedNetworks_topElement_clickLink() {
         ListSettings settings = createDefaultListSettings();
         settings.setDivision(DIVISION);

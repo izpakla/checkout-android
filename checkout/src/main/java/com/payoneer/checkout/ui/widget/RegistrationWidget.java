@@ -13,9 +13,8 @@ import static com.payoneer.checkout.model.RegistrationType.FORCED_DISPLAYED;
 import static com.payoneer.checkout.model.RegistrationType.OPTIONAL;
 import static com.payoneer.checkout.model.RegistrationType.OPTIONAL_PRESELECTED;
 
-import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.localization.Localization;
+import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.ui.model.RegistrationOptions;
 import com.payoneer.checkout.ui.model.RegistrationOptions.RegistrationOption;
 
@@ -31,13 +30,13 @@ public class RegistrationWidget extends CheckboxWidget {
     }
 
     @Override
-    public void putValue(Operation operation) throws PaymentException {
+    public void putValue(final PaymentInputValues inputValues) {
         for (RegistrationOption option : registrationOptions.getRegistrationOptions()) {
-            putRegistrationValue(operation, option);
+            putRegistrationValue(inputValues, option);
         }
     }
 
-    private void putRegistrationValue(Operation operation, RegistrationOption option) throws PaymentException {
+    private void putRegistrationValue(final PaymentInputValues inputValues, RegistrationOption option) {
         boolean value;
         switch (option.getType()) {
             case FORCED:
@@ -51,7 +50,7 @@ public class RegistrationWidget extends CheckboxWidget {
             default:
                 value = false;
         }
-        operation.putBooleanValue(category, option.getName(), value);
+        inputValues.putBooleanValue(category, option.getName(), value);
     }
 
     /**

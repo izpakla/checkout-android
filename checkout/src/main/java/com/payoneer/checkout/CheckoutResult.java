@@ -13,6 +13,7 @@ import static com.payoneer.checkout.model.InteractionReason.COMMUNICATION_FAILUR
 import com.google.gson.JsonSyntaxException;
 import com.payoneer.checkout.model.ErrorInfo;
 import com.payoneer.checkout.model.Interaction;
+import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.util.GsonHelper;
 
@@ -90,6 +91,10 @@ public final class CheckoutResult implements Parcelable {
 
     public ErrorInfo getErrorInfo() {
         return errorInfo;
+    }
+
+    public boolean isProceed() {
+        return InteractionCode.PROCEED.equals(getInteraction().getCode());
     }
 
     public Throwable getCause() {

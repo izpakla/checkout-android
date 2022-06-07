@@ -19,6 +19,22 @@ task publishCheckoutReleaseVersion() {
     dependsOn ':checkout:publishReleaseVersion'
 }
 
+task buildPaymentServices() {
+    dependsOn ':paymentservice:googlepay-braintree:assembleRelease'
+}
+
+task testPaymentServices() {
+    dependsOn ':paymentservice:googlepay-braintree:test'
+}
+
+task publishPaymentServicesSnapshotVersion() {
+    dependsOn ':paymentservice:googlepay-braintree:publishSnapshotVersion'
+}
+
+task publishPaymentServicesReleaseVersion() {
+    dependsOn ':paymentservice:googlepay-braintree:publishReleaseVersion'
+}
+
 task buildRiskProviders() {
     dependsOn ':riskprovider:iovation:assembleRelease'
 }
@@ -35,12 +51,25 @@ task publishRiskProvidersReleaseVersion() {
     dependsOn ':riskprovider:iovation:publishReleaseVersion'
 }
 
+task uploadExampleAppsToAppLive() {
+    dependsOn 'uploadExampleCheckoutToAppLive'
+    dependsOn 'uploadExampleShopToAppLive'
+}
+
 task uploadExampleCheckoutToAppLive() {
-    dependsOn ':example-checkout:uploadToAppLive'
+    def deleteFromAppLive = tasks.findByPath(':example-checkout:deleteFromAppLive')
+    def uploadToAppLive = tasks.findByPath(':example-checkout:uploadToAppLive')
+    dependsOn deleteFromAppLive
+    dependsOn uploadToAppLive
+    uploadToAppLive.mustRunAfter(deleteFromAppLive)
 }
 
 task uploadExampleShopToAppLive() {
-    dependsOn ':example-shop:uploadToAppLive'
+    def deleteFromAppLive = tasks.findByPath(':example-shop:deleteFromAppLive')
+    def uploadToAppLive = tasks.findByPath(':example-shop:uploadToAppLive')
+    dependsOn deleteFromAppLive
+    dependsOn uploadToAppLive
+    uploadToAppLive.mustRunAfter(deleteFromAppLive)
 }
 
 task testExampleCheckoutOnAppAutomate() {

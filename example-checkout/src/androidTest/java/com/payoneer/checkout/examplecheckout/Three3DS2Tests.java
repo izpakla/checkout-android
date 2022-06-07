@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 
 import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.InteractionReason;
-import com.payoneer.checkout.sharedtest.checkout.ChargePaymentHelper;
+import com.payoneer.checkout.sharedtest.checkout.ProcessPaymentHelper;
 import com.payoneer.checkout.sharedtest.checkout.MagicNumbers;
 import com.payoneer.checkout.sharedtest.checkout.PaymentDialogHelper;
 import com.payoneer.checkout.sharedtest.checkout.PaymentListHelper;
@@ -93,7 +93,7 @@ public final class Three3DS2Tests extends BaseKotlinTest {
         clickCustomerDecisionPageButton("customer-abort");
         waitForAppRelaunch();
 
-        ChargePaymentHelper.waitForChargePaymentDialog();
+        PaymentListHelper.waitForPaymentListDialog();
         PaymentDialogHelper.clickPaymentDialogButton("OK");
 
         PaymentListHelper.waitForPaymentListLoaded(1);

@@ -10,11 +10,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <application android:hardwareAccelerated="true">
         <activity
-            android:name="com.payoneer.checkout.ui.page.PaymentListActivity"
+            android:name="com.payoneer.checkout.ui.screen.list.PaymentListActivity"
             android:exported="true"
-            android:theme="@style/CheckoutTheme" />
+            android:theme="@style/CheckoutTheme.Toolbar" />
         <activity
-            android:name="com.payoneer.checkout.ui.page.ChargePaymentActivity"
+            android:name="com.payoneer.checkout.ui.screen.payment.ProcessPaymentActivity"
             android:exported="true"
             android:theme="@style/CheckoutTheme" />
     </application>

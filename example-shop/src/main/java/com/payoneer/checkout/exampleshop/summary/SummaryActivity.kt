@@ -29,7 +29,7 @@ import com.payoneer.checkout.exampleshop.util.Resource
 import com.payoneer.checkout.model.AccountMask
 import com.payoneer.checkout.model.PaymentMethod
 import com.payoneer.checkout.model.PresetAccount
-import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
+import com.payoneer.checkout.ui.screen.idlingresource.SimpleIdlingResource
 import com.payoneer.checkout.util.AccountMaskUtils
 import com.payoneer.checkout.util.NetworkLogoLoader
 import dagger.hilt.android.AndroidEntryPoint

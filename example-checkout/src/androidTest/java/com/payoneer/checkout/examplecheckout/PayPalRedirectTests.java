@@ -18,10 +18,10 @@ import org.junit.runner.RunWith;
 
 import com.payoneer.checkout.model.InteractionCode;
 import com.payoneer.checkout.model.InteractionReason;
-import com.payoneer.checkout.sharedtest.checkout.ChargePaymentHelper;
+import com.payoneer.checkout.sharedtest.checkout.ProcessPaymentHelper;
 import com.payoneer.checkout.sharedtest.checkout.PaymentDialogHelper;
 import com.payoneer.checkout.sharedtest.checkout.PaymentListHelper;
-import com.payoneer.checkout.ui.page.PaymentListActivity;
+import com.payoneer.checkout.ui.screen.list.PaymentListActivity;
 
 import androidx.test.espresso.IdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -82,7 +82,7 @@ public final class PayPalRedirectTests extends BaseKotlinTest {
         clickCustomerDecisionPageButton("customer-abort");
         waitForAppRelaunch();
 
-        ChargePaymentHelper.waitForChargePaymentDialog();
+        PaymentListHelper.waitForPaymentListDialog();
         PaymentDialogHelper.clickPaymentDialogButton("OK");
         intended(hasComponent(PaymentListActivity.class.getName()));
     }

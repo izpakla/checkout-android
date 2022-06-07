@@ -18,7 +18,7 @@ import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.CheckoutTheme;
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding;
 import com.payoneer.checkout.model.Interaction;
-import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource;
+import com.payoneer.checkout.ui.screen.idlingresource.SimpleIdlingResource;
 
 import android.content.Context;
 import android.content.Intent;

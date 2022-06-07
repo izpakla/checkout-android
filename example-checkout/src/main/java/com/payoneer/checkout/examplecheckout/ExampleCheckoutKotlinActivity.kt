@@ -26,7 +26,7 @@ import com.payoneer.checkout.CheckoutActivityResult
 import com.payoneer.checkout.CheckoutConfiguration
 import com.payoneer.checkout.CheckoutTheme
 import com.payoneer.checkout.examplecheckout.databinding.ActivityExamplecheckoutBinding
-import com.payoneer.checkout.ui.page.idlingresource.SimpleIdlingResource
+import com.payoneer.checkout.ui.screen.idlingresource.SimpleIdlingResource
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -121,8 +121,10 @@ class ExampleCheckoutKotlinActivity : AppCompatActivity() {
 
     private fun createCheckoutConfiguration(): CheckoutConfiguration? {
         return try {
-            val stringUrl: String = binding.inputListurl.text.toString().trim()
-
+            var stringUrl: String = binding.inputListurl.text.toString().trim()
+            if (TextUtils.isEmpty(stringUrl)) {
+                stringUrl = "https://raw.githubusercontent.com/optile/checkout-android/develop/shared-test/lists/listresult.json"
+            }
             val listUrl = URL(stringUrl)
 
             CheckoutConfiguration.createBuilder(listUrl)

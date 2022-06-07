@@ -27,7 +27,7 @@ public final class InteractionMessage {
      * @param interaction containing the code and reason of the interaction
      * @param flow optional value describing the flow, e.g. delete or operation
      */
-    private InteractionMessage(Interaction interaction, String flow) {
+    private InteractionMessage(final Interaction interaction, final String flow) {
         this.interaction = interaction;
         this.flow = flow;
     }
@@ -38,7 +38,7 @@ public final class InteractionMessage {
      * @param interaction containing a recommendation how to proceed
      * @return newly created InteractionMessage
      */
-    public static InteractionMessage fromInteraction(Interaction interaction) {
+    public static InteractionMessage fromInteraction(final Interaction interaction) {
         if (interaction == null) {
             throw new IllegalArgumentException("interaction cannot be null");
         }

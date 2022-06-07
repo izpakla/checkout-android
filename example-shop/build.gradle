@@ -10,10 +10,13 @@ assemble.dependsOn('lint')
 
 android {
 
-
     compileOptions {
         sourceCompatibility rootProject.javaCompatVersion
         targetCompatibility rootProject.javaCompatVersion
+    }
+
+    testOptions {
+        animationsDisabled = true
     }
 
     compileSdkVersion rootProject.compileSdkVersion
@@ -51,7 +54,7 @@ android {
 
             testVariants.all { testVariant ->
                 testVariant.outputs.all { output ->
-                    outputFileName = "ExampleShop-${testVariant.buildType.name}_${getBranchLabel()}-androidTest.apk"
+                    outputFileName = "ExampleShop-${testVariant.buildType.name}-${getBranchLabel()}-androidTest.apk"
                 }
             }
         }
@@ -64,7 +67,7 @@ android {
         }
         applicationVariants.all { variant ->
             variant.outputs.all {
-                outputFileName = "ExampleShop-${variant.buildType.name}_${getBranchLabel()}.apk"
+                outputFileName = "ExampleShop-${variant.buildType.name}-${getBranchLabel()}.apk"
             }
         }
     }
@@ -91,9 +94,9 @@ dependencies {
     implementation "androidx.activity:activity-ktx:${rootProject.activityVersion}"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.lifecycleVersion}"
 
-    // Uncomment the following two lines for enabling the Iovation FraudForce risk provider
-    // implementation project(":riskprovider:iovation")
-    // implementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
+    // Comment the following two lines to disable the Iovation FraudForce risk provider
+    implementation project(":riskprovider:iovation")
+    implementation files('../riskprovider/iovation/FraudForce/fraudforce-lib-release-4.3.2.aar')
 
     androidTestImplementation project(":shared-test")
     androidTestImplementation "androidx.test:runner:${rootProject.androidxTestRunnerVersion}"

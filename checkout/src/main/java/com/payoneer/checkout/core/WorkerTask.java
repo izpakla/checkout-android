@@ -12,6 +12,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import com.payoneer.checkout.util.Resource;
+
 import android.os.Handler;
 import android.os.Looper;
 
@@ -67,14 +69,11 @@ public final class WorkerTask<V> extends FutureTask<V> {
      * previously subscribed.
      *
      * @param workerTask to unsubscribe, may be null
-     * @return true when unsubscribed, false otherwise
      */
-    public static boolean unsubscribe(WorkerTask workerTask) {
+    public static <V> void unsubscribe(WorkerTask<V> workerTask) {
         if (workerTask != null && workerTask.isSubscribed()) {
             workerTask.unsubscribe();
-            return true;
         }
-        return false;
     }
 
     /**
@@ -83,7 +82,7 @@ public final class WorkerTask<V> extends FutureTask<V> {
      * @param workerTask to be checked
      * @return true when subscribed, false otherwise
      */
-    public static boolean isSubscribed(WorkerTask workerTask) {
+    public static <V> boolean isSubscribed(WorkerTask<V> workerTask) {
         return workerTask != null && workerTask.isSubscribed();
     }
 

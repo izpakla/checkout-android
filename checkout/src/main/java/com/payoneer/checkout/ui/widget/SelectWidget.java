@@ -11,11 +11,10 @@ package com.payoneer.checkout.ui.widget;
 import java.util.List;
 
 import com.payoneer.checkout.R;
-import com.payoneer.checkout.core.PaymentException;
-import com.payoneer.checkout.form.Operation;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.SelectOption;
+import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.util.PaymentUtils;
 
 import android.view.View;
@@ -61,11 +60,11 @@ public final class SelectWidget extends FormWidget {
     }
 
     @Override
-    public void putValue(Operation operation) throws PaymentException {
+    public void putValue(final PaymentInputValues inputValues) {
         SpinnerItem selected = (SpinnerItem) spinner.getSelectedItem();
 
         if (selected != null) {
-            operation.putStringValue(category, name, selected.value);
+            inputValues.putStringValue(category, name, selected.value);
         }
     }
 

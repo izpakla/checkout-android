@@ -17,6 +17,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.payoneer.checkout.sharedtest.view.PaymentActions.forceClick;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,8 +32,8 @@ import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListService;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 import com.payoneer.checkout.sharedtest.view.UiDeviceHelper;
-import com.payoneer.checkout.ui.page.ChargePaymentActivity;
-import com.payoneer.checkout.ui.page.PaymentListActivity;
+import com.payoneer.checkout.ui.screen.list.PaymentListActivity;
+import com.payoneer.checkout.ui.screen.payment.ProcessPaymentActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -103,13 +104,11 @@ public abstract class BaseTest {
     }
 
     protected void clickShowPaymentListButton() {
-        onView(withId(R.id.button_show_payment_list)).perform(click());
-        intended(hasComponent(PaymentListActivity.class.getName()));
+        onView(withId(R.id.button_show_payment_list)).perform(forceClick());
     }
 
     protected void clickChargePresetAccountButton() {
-        onView(withId(R.id.button_charge_preset_acount)).perform(click());
-        intended(hasComponent(ChargePaymentActivity.class.getName()));
+        onView(withId(R.id.button_charge_preset_acount)).perform(forceClick());
     }
 
     protected void register(IdlingResource resource) {

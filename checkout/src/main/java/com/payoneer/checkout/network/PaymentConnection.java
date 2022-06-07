@@ -44,8 +44,6 @@ public final class PaymentConnection extends BaseConnection {
             conn = createDeleteConnection(account.getURL());
             conn.setRequestProperty(HEADER_CONTENT_TYPE, VALUE_APP_JSON);
             conn.setRequestProperty(HEADER_ACCEPT, VALUE_APP_JSON);
-
-            writeToOutputStream(conn, account.toJson());
             conn.connect();
             final int rc = conn.getResponseCode();
             if (rc == HttpURLConnection.HTTP_OK) {

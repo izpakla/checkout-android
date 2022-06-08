@@ -20,11 +20,14 @@ import androidx.test.core.app.ApplicationProvider;
 import com.payoneer.checkout.CheckoutConfiguration;
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.account.DeleteAccountInteractor;
+import com.payoneer.checkout.model.AccountRegistration;
+import com.payoneer.checkout.model.ExtraElements;
 import com.payoneer.checkout.model.Interaction;
 import com.payoneer.checkout.model.Parameter;
 import com.payoneer.checkout.model.PresetAccount;
 import com.payoneer.checkout.model.Redirect;
 import com.payoneer.checkout.payment.PaymentServiceInteractor;
+import com.payoneer.checkout.ui.model.AccountCard;
 import com.payoneer.checkout.ui.model.PaymentSession;
 import com.payoneer.checkout.ui.model.PresetCard;
 import com.payoneer.checkout.ui.session.PaymentSessionInteractor;
@@ -63,7 +66,7 @@ public class PaymentListViewModelTest {
     }
 
     @Test
-    public void processPaymentCard_shouldSetCorrectDataForPresetCard() throws InterruptedException {
+    public void processPaymentCard_shouldSetCorrectCheckoutDataForPresetCard() throws InterruptedException {
         List<Parameter> parameters = new ArrayList<>();
         Parameter codeParam = new Parameter();
         codeParam.setName(INTERACTION_CODE);
@@ -88,6 +91,47 @@ public class PaymentListViewModelTest {
         assertNotNull(interaction);
         assertEquals(interaction.getCode(), "code");
         assertEquals(interaction.getReason(), "reason");
+    }
+
+    @Test
+    public void processPaymentCard_shouldAbortForPresetCard() throws InterruptedException {
+        List<Parameter> parameters = new ArrayList<>();
+
+        Redirect redirect = new Redirect();
+        redirect.setParameters(parameters);
+        PresetAccount account = new PresetAccount();
+        account.setRedirect(redirect);
+
+        PresetCard card = new PresetCard(account, "", null);
+
+        viewModel.processPaymentCard(card, null);
+
+        ContentEvent<CheckoutResult> resultContentEvent = LiveDataUtil.getOrAwaitValue(viewModel.closeWithCheckoutResult());
+        Interaction interaction = resultContentEvent.getContentIfNotHandled().getInteraction();
+        assertNotNull(interaction);
+        assertEquals(interaction.getCode(), "ABORT");
+        assertEquals(interaction.getReason(), "CLIENTSIDE_ERROR");
+    }
+
+    @Test
+    public void processPaymentCard_shouldFailForNullProcessPaymentData() throws InterruptedException {
+        List<Parameter> parameters = new ArrayList<>();
+
+        Redirect redirect = new Redirect();
+        redirect.setParameters(parameters);
+
+        AccountRegistration registration = new AccountRegistration();
+        registration.setCode("code");
+        registration.setMethod("someMethod");
+        AccountCard card = new AccountCard(registration, "", new ExtraElements());
+
+        viewModel.processPaymentCard(card, null);
+
+        ContentEvent<CheckoutResult> resultContentEvent = LiveDataUtil.getOrAwaitValue(viewModel.closeWithCheckoutResult());
+        Interaction interaction = resultContentEvent.getContentIfNotHandled().getInteraction();
+        assertNotNull(interaction);
+        assertEquals(interaction.getCode(), "ABORT");
+        assertEquals(interaction.getReason(), "CLIENTSIDE_ERROR");
     }
 
     private URL createUrl() {

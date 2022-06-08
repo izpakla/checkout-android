@@ -545,7 +545,7 @@ final class PaymentListViewModel extends AppContextViewModel {
         String code = PaymentUtils.getParameterValue(INTERACTION_CODE, parameters);
         String reason = PaymentUtils.getParameterValue(INTERACTION_REASON, parameters);
         if (TextUtils.isEmpty(code) || TextUtils.isEmpty(reason)) {
-            closeWithErrorMessage("Missing Interaction code and reason inside PresetAccount.redirect");
+            closeWithErrorMessage("Missing Interaction code and reason inside PresetAccount redirect");
             return;
         }
         OperationResult result = new OperationResult();

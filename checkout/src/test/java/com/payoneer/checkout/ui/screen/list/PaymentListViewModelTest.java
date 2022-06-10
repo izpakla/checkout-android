@@ -134,6 +134,23 @@ public class PaymentListViewModelTest {
         assertEquals(interaction.getReason(), "CLIENTSIDE_ERROR");
     }
 
+    @Test
+    public void deletePaymentCard_withErrorSetsErrorLiveDataCorrectly() throws InterruptedException {
+        AccountRegistration registration = new AccountRegistration();
+        registration.setCode("code");
+        registration.setMethod("someMethod");
+        AccountCard card = new AccountCard(registration, "", new ExtraElements());
+
+        viewModel.deletePaymentCard(card);
+
+        ContentEvent<CheckoutResult> error = LiveDataUtil.getOrAwaitValue(viewModel.closeWithCheckoutResult());
+        CheckoutResult result = error.getContentIfNotHandled();
+        Interaction interaction = result.getInteraction();
+        assertNotNull(result);
+        assertEquals(interaction.getCode(), "ABORT");
+        assertEquals(interaction.getReason(), "CLIENTSIDE_ERROR");
+    }
+
     private URL createUrl() {
         try {
             return new URL("https://raw.githubusercontent.com/optile/checkout-android/develop/shared-test/lists/listresult.json");

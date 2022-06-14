@@ -35,6 +35,7 @@ import com.payoneer.checkout.util.ContentEvent;
 import com.payoneer.checkout.util.LiveDataUtil;
 import com.payoneer.checkout.util.Resource;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -47,14 +48,18 @@ import java.util.List;
 @RunWith(RobolectricTestRunner.class)
 public class PaymentListViewModelTest {
 
-    private final CheckoutConfiguration configuration =
-            CheckoutConfiguration.createBuilder(createUrl()).build();
     private final PaymentServiceInteractor serviceInteractor = new PaymentServiceInteractor();
-    private final PaymentSessionInteractor sessionInteractor = new PaymentSessionInteractor(configuration);
     private final DeleteAccountInteractor accountInteractor = new DeleteAccountInteractor();
 
-    private final PaymentListViewModel viewModel =
-            new PaymentListViewModel(ApplicationProvider.getApplicationContext(), sessionInteractor, serviceInteractor, accountInteractor);
+    private PaymentListViewModel viewModel;
+
+    @Before
+    public void setup() throws MalformedURLException {
+        URL url = new URL("https://example.com/");
+        final CheckoutConfiguration configuration = CheckoutConfiguration.createBuilder(url).build();
+        final PaymentSessionInteractor sessionInteractor = new PaymentSessionInteractor(configuration);
+        viewModel = new PaymentListViewModel(ApplicationProvider.getApplicationContext(), sessionInteractor, serviceInteractor, accountInteractor);
+    }
 
     @Test
     public void loadPaymentSession_setsLoadingLiveDataCorrectly() throws InterruptedException {
@@ -152,13 +157,4 @@ public class PaymentListViewModelTest {
         assertEquals(interaction.getReason(), "CLIENTSIDE_ERROR");
     }
 
-    private URL createUrl() {
-        URL url = null;
-        try {
-            url = new URL("https://example.com/");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
-    }
 }

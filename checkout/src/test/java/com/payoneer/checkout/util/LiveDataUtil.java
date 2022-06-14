@@ -25,7 +25,7 @@ public class LiveDataUtil {
         final T[] data = (T[]) new Object[]{null};
         CountDownLatch latch = new CountDownLatch(1);
 
-        Observer<T> observer1 = new Observer<T>() {
+        Observer<T> observer = new Observer<T>() {
             @Override
             public void onChanged(T t) {
                 data[0] = t;
@@ -34,7 +34,7 @@ public class LiveDataUtil {
             }
         };
 
-        liveData.observeForever(observer1);
+        liveData.observeForever(observer);
 
         // Don't wait indefinitely if the LiveData is not set.
         if (!latch.await(LATCH_WAIT_TIMEOUT, TimeUnit.SECONDS)) {

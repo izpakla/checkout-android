@@ -39,6 +39,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,7 +156,7 @@ public class PaymentListViewModelTest {
         URL url = null;
         try {
             url = new URL("https://example.com/");
-        } catch (Exception e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         return url;

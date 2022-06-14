@@ -18,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 
 public class LiveDataUtil {
 
+    private static final int LATCH_WAIT_TIMEOUT = 2;
+
     @SuppressWarnings("unchecked")
     public static <T> T getOrAwaitValue(LiveData<T> liveData) throws InterruptedException {
         final T[] data = (T[]) new Object[]{null};
@@ -35,7 +37,7 @@ public class LiveDataUtil {
         liveData.observeForever(observer1);
 
         // Don't wait indefinitely if the LiveData is not set.
-        if (!latch.await(2, TimeUnit.SECONDS)) {
+        if (!latch.await(LATCH_WAIT_TIMEOUT, TimeUnit.SECONDS)) {
             throw new InterruptedException("LiveData value was never set.");
         }
 

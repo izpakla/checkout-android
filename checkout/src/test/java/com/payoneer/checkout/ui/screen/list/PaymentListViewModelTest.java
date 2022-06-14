@@ -152,10 +152,12 @@ public class PaymentListViewModelTest {
     }
 
     private URL createUrl() {
+        URL url = null;
         try {
-            return new URL("https://raw.githubusercontent.com/optile/checkout-android/develop/shared-test/lists/listresult.json");
+            url = new URL("https://raw.githubusercontent.com/optile/checkout-android/develop/shared-test/lists/listresult.json");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        return url;
     }
 }

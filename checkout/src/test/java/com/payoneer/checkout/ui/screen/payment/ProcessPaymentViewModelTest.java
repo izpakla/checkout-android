@@ -51,7 +51,7 @@ public class ProcessPaymentViewModelTest {
     private URL createUrl() {
         URL url = null;
         try {
-            url = new URL("https://raw.githubusercontent.com/optile/checkout-android/develop/shared-test/lists/listresult.json");
+            url = new URL("https://example.com/");
         } catch (Exception e) {
             e.printStackTrace();
         }

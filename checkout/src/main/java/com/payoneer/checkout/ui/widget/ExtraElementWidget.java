@@ -8,6 +8,9 @@
 
 package com.payoneer.checkout.ui.widget;
 
+import android.view.View;
+
+import com.payoneer.checkout.markdown.MarkdownSpannableStringBuilder;
 import com.payoneer.checkout.model.CheckboxMode;
 import com.payoneer.checkout.model.ExtraElement;
 import com.payoneer.checkout.payment.PaymentInputValues;
@@ -23,8 +26,7 @@ public class ExtraElementWidget extends CheckboxWidget {
 
     @Override
     public void putValue(PaymentInputValues inputValues) {
-        // Until optional checkboxes are supported for ExtraElements, this widget does not add any
-        // value to the operation
+     super.putValue(inputValues);
     }
 
     /**
@@ -33,7 +35,29 @@ public class ExtraElementWidget extends CheckboxWidget {
      * @param extraElement containing the label and optional checkbox
      */
     public void onBind(ExtraElement extraElement) {
-        String checkboxMode = (extraElement.getCheckbox() == null) ? CheckboxMode.FORCED_DISPLAYED : CheckboxMode.NONE;
-        super.onBind(checkboxMode, extraElement.getLabel());
+        String mode = (extraElement.getCheckbox() != null) ? extraElement.getCheckbox().getMode() : CheckboxMode.NONE;
+        labelView.setText(MarkdownSpannableStringBuilder.createFromText(extraElement.getLabel()));
+        switch (mode) {
+            case CheckboxMode.OPTIONAL:
+            case CheckboxMode.REQUIRED:
+                setVisible(true);
+                switchView.setVisibility(View.VISIBLE);
+                switchView.setChecked(false);
+                break;
+            case CheckboxMode.OPTIONAL_PRESELECTED:
+                setVisible(true);
+                switchView.setVisibility(View.VISIBLE);
+                switchView.setChecked(true);
+                break;
+            case CheckboxMode.FORCED_DISPLAYED:
+                setVisible(true);
+                switchView.setVisibility(View.GONE);
+                switchView.setChecked(true);
+                break;
+            default:
+                setVisible(false);
+                switchView.setVisibility(View.GONE);
+                switchView.setChecked(false);
+        }
     }
 }

@@ -8,6 +8,7 @@
 
 package com.payoneer.checkout.payment;
 
+import static com.payoneer.checkout.core.PaymentInputCategory.EXTRAELEMENT;
 import static com.payoneer.checkout.core.PaymentInputCategory.INPUTELEMENT;
 import static com.payoneer.checkout.core.PaymentInputCategory.REGISTRATION;
 
@@ -126,6 +127,9 @@ public final class PaymentInputValues implements Parcelable {
             case REGISTRATION:
                 copyRegistrationBooleanValueInto(operationData, inputValue);
                 break;
+            case EXTRAELEMENT:
+                copyExtraElementsBooleanValueInto(operationData, inputValue);
+                break;
             default:
                 String msg = "Operation.putBooleanValue failed for category: " + inputValue.category;
                 Log.w("checkout-sdk", msg);
@@ -166,6 +170,12 @@ public final class PaymentInputValues implements Parcelable {
             default:
                 String msg = "Operation.Registration.setBooleanValue failed for name: " + inputValue.name;
                 Log.w("checkout-sdk", msg);
+        }
+    }
+
+    private void copyExtraElementsBooleanValueInto(OperationData operationData, BooleanInputValue inputValue) {
+        switch (inputValue.name) {
+            // TODO What goes here?
         }
     }
 

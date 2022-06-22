@@ -24,11 +24,6 @@ public class ExtraElementWidget extends CheckboxWidget {
         super(category, name);
     }
 
-    @Override
-    public void putValue(PaymentInputValues inputValues) {
-     super.putValue(inputValues);
-    }
-
     /**
      * Bind this ExtraElementWidget to the ExtraElement
      *

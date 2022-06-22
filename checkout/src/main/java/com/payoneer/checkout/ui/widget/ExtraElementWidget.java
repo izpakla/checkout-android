@@ -13,7 +13,6 @@ import android.view.View;
 import com.payoneer.checkout.markdown.MarkdownSpannableStringBuilder;
 import com.payoneer.checkout.model.CheckboxMode;
 import com.payoneer.checkout.model.ExtraElement;
-import com.payoneer.checkout.payment.PaymentInputValues;
 
 /**
  * Widget for showing the ExtraElement element
@@ -40,8 +39,13 @@ public class ExtraElementWidget extends CheckboxWidget {
                 switchView.setChecked(false);
                 break;
             case CheckboxMode.OPTIONAL_PRESELECTED:
+                setVisible(true);
+                switchView.setVisibility(View.VISIBLE);
+                switchView.setChecked(true);
+                break;
             case CheckboxMode.FORCED_DISPLAYED:
                 setVisible(true);
+                switchView.setEnabled(false);
                 switchView.setVisibility(View.VISIBLE);
                 switchView.setChecked(true);
                 break;

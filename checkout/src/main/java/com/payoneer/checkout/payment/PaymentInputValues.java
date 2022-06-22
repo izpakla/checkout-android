@@ -177,6 +177,7 @@ public final class PaymentInputValues implements Parcelable {
             extraElementCheckboxes = new HashMap<>();
         }
         extraElementCheckboxes.put(inputValue.name, inputValue.value);
+        operationData.setCheckboxes(extraElementCheckboxes);
     }
 
     private void copyInputElementStringValueInto(final OperationData operationData, final StringInputValue inputValue) {

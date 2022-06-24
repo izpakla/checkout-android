@@ -123,6 +123,20 @@ public final class PaymentMatchers {
         };
     }
 
+    public static Matcher<View> hasContextWithClass(final Class clazz) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public boolean matchesSafely(View view) {
+                return view.getContext().getClass().equals(clazz);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText(PaymentUtils.format("Match view with Context with Class %s", clazz.getName()));
+            }
+        };
+    }
+
     public static Matcher<View> linearLayoutWithChildCount(final int childCount) {
         return new TypeSafeMatcher<View>() {
             @Override

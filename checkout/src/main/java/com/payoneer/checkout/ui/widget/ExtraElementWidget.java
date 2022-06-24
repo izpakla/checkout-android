@@ -39,11 +39,13 @@ public class ExtraElementWidget extends CheckboxWidget {
                 switchView.setChecked(false);
                 break;
             case CheckboxMode.OPTIONAL_PRESELECTED:
+            case CheckboxMode.REQUIRED_PRESELECTED:
                 setVisible(true);
                 switchView.setVisibility(View.VISIBLE);
                 switchView.setChecked(true);
                 break;
             case CheckboxMode.FORCED_DISPLAYED:
+            case CheckboxMode.FORCED:
                 setVisible(true);
                 switchView.setEnabled(false);
                 switchView.setVisibility(View.VISIBLE);

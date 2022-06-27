@@ -27,6 +27,7 @@ import static com.payoneer.checkout.sharedtest.view.PaymentActions.clickClickabl
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.hasTextInputLayoutError;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.hasTextInputLayoutValue;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isCardWithTestId;
+import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isSwitchMaterialCheckedValue;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isViewInPaymentCard;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isViewInWidget;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.linearLayoutWithChildCount;
@@ -143,5 +144,20 @@ public final class PaymentListHelper {
     public static void matchesInputTextInWidget(int cardIndex, String widgetName, String value) {
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInWidget(cardIndex, hasTextInputLayoutValue(value), widgetName, R.id.textinputlayout)));
+    }
+
+    public static void matchesCheckboxInWidget(int cardIndex, String widgetName, boolean value) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInWidget(cardIndex, isSwitchMaterialCheckedValue(value), widgetName, R.id.switch_checkbox)));
+    }
+
+    public static void checkHasVisibleCheckboxInWidget(final int cardIndex, String widgetName) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInWidget(cardIndex, isDisplayed(), widgetName, R.id.switch_checkbox)));
+    }
+
+    public static void clickCheckboxInWidget(final int cardIndex, String widgetName) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(withId(R.id.recyclerview_paymentlist)).perform(actionOnViewInWidget(cardIndex, click(), widgetName, R.id.switch_checkbox));
     }
 }

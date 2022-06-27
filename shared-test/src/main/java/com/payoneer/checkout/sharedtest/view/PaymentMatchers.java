@@ -14,6 +14,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.payoneer.checkout.ui.list.PaymentCardViewHolder;
 import com.payoneer.checkout.ui.widget.FormWidget;
@@ -170,6 +171,22 @@ public final class PaymentMatchers {
                 }
                 String value = ((TextInputLayout) view).getEditText().getText().toString();
                 return value.equals(expectedValue);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        };
+    }
+
+    public static Matcher<View> isSwitchMaterialCheckedValue(final boolean expectedValue) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public boolean matchesSafely(View view) {
+                if (!(view instanceof SwitchMaterial)) {
+                    return false;
+                }
+                return ((SwitchMaterial) view).isChecked() == expectedValue;
             }
 
             @Override

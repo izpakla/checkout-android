@@ -110,8 +110,8 @@ jobs:
         run: ./gradlew clean
       - name: Publish checkout artifact
         env:
-          NEXUS_USER: ${{ secrets.NEXUS_USER }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          NEXUS_USER: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_USER }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_PASSWORD }}
         run: ./gradlew publishCheckoutSnapshotVersion
 
   upload-examplecheckout:
@@ -154,8 +154,8 @@ jobs:
         run: ./gradlew clean
       - name: Publish payment service artifacts
         env:
-          NEXUS_USER: ${{ secrets.NEXUS_USER }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          NEXUS_USER: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_USER }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_PASSWORD }}
           PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
         run: ./gradlew publishPaymentServicesSnapshotVersion
 
@@ -177,6 +177,6 @@ jobs:
         run: ./gradlew clean
       - name: Publish risk provider artifacts
         env:
-          NEXUS_USER: ${{ secrets.NEXUS_USER }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          NEXUS_USER: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_USER }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_PASSWORD }}
         run: ./gradlew publishRiskProvidersSnapshotVersion

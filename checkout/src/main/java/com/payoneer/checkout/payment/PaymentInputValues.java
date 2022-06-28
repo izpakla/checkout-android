@@ -12,20 +12,20 @@ import static com.payoneer.checkout.core.PaymentInputCategory.EXTRAELEMENT;
 import static com.payoneer.checkout.core.PaymentInputCategory.INPUTELEMENT;
 import static com.payoneer.checkout.core.PaymentInputCategory.REGISTRATION;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.payoneer.checkout.core.PaymentInputType;
-import com.payoneer.checkout.model.AccountInputData;
-import com.payoneer.checkout.model.OperationData;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import com.payoneer.checkout.core.PaymentInputType;
+import com.payoneer.checkout.model.AccountInputData;
+import com.payoneer.checkout.model.OperationData;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * Class for storing input values provided by the user, this class can contain
@@ -74,8 +74,8 @@ public final class PaymentInputValues implements Parcelable {
      * Depending on the category and name of the value it will be added to the correct place in the Operation Json Object.
      *
      * @param category category the input value belongs to
-     * @param name     name identifying the value
-     * @param value    containing the value of the input
+     * @param name name identifying the value
+     * @param value containing the value of the input
      */
     public void putBooleanValue(final String category, final String name, final Boolean value) {
         if (TextUtils.isEmpty(category)) {
@@ -92,8 +92,8 @@ public final class PaymentInputValues implements Parcelable {
      * Depending on the category and name of the value it will be added to the correct place in the Operation Json Object.
      *
      * @param category category the input value belongs to
-     * @param name     name identifying the value
-     * @param value    containing the value of the input
+     * @param name name identifying the value
+     * @param value containing the value of the input
      */
     public void putStringValue(final String category, final String name, final String value) {
         if (TextUtils.isEmpty(category)) {
@@ -130,7 +130,7 @@ public final class PaymentInputValues implements Parcelable {
                 copyRegistrationBooleanValueInto(operationData, inputValue);
                 break;
             case EXTRAELEMENT:
-                copyExtraElementsBooleanValueInto(operationData, inputValue);
+                copyExtraElementBooleanValueInto(operationData, inputValue);
                 break;
             default:
                 String msg = "Operation.putBooleanValue failed for category: " + inputValue.category;
@@ -171,7 +171,7 @@ public final class PaymentInputValues implements Parcelable {
         }
     }
 
-    private void copyExtraElementsBooleanValueInto(OperationData operationData, BooleanInputValue inputValue) {
+    private void copyExtraElementBooleanValueInto(OperationData operationData, BooleanInputValue inputValue) {
         Map<String, Boolean> extraElementCheckboxes = operationData.getCheckboxes();
         if (extraElementCheckboxes == null) {
             extraElementCheckboxes = new HashMap<>();

@@ -40,6 +40,7 @@ import org.hamcrest.Matcher;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.sharedtest.view.ActivityHelper;
+import com.payoneer.checkout.sharedtest.view.PaymentActions;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
 import com.payoneer.checkout.ui.screen.list.PaymentListActivity;
 
@@ -52,7 +53,7 @@ public final class PaymentListHelper {
 
     public static PaymentListActivity waitForPaymentListLoaded(final int count) {
         intended(hasComponent(PaymentListActivity.class.getName()), times(count));
-        PaymentListActivity listActivity = (PaymentListActivity) ActivityHelper.getCurrentActivity();
+        PaymentListActivity listActivity = (PaymentListActivity) PaymentActions.getActivityWithClass(PaymentListActivity.class);
         PaymentIdlingResources idlingResources = listActivity.getPaymentIdlingResources();
         IdlingResource loadIdlingResource = idlingResources.getLoadIdlingResource();
 

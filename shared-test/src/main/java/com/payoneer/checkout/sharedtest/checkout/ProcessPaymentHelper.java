@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 import com.payoneer.checkout.R;
-import com.payoneer.checkout.sharedtest.view.ActivityHelper;
+import com.payoneer.checkout.sharedtest.view.PaymentActions;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
 import com.payoneer.checkout.ui.screen.payment.ProcessPaymentActivity;
 
@@ -30,7 +30,7 @@ public final class ProcessPaymentHelper {
 
     public static void waitForProcessPaymentDialog() {
         intended(hasComponent(ProcessPaymentActivity.class.getName()));
-        ProcessPaymentActivity paymentActivity = (ProcessPaymentActivity) ActivityHelper.getCurrentActivity();
+        ProcessPaymentActivity paymentActivity = (ProcessPaymentActivity) PaymentActions.getActivityWithClass(ProcessPaymentActivity.class);
         PaymentIdlingResources idlingResources = paymentActivity.getPaymentIdlingResources();
         IdlingResource dialogIdlingResource = idlingResources.getDialogIdlingResource();
 

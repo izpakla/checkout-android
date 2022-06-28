@@ -10,9 +10,9 @@
 
 package com.payoneer.checkout.examplecheckout;
 
-import org.junit.Rule;
+import static com.payoneer.checkout.sharedtest.view.PaymentActions.getActivityWithClass;
 
-import com.payoneer.checkout.sharedtest.view.ActivityHelper;
+import org.junit.Rule;
 
 import androidx.test.espresso.IdlingResource;
 import androidx.test.rule.ActivityTestRule;
@@ -24,7 +24,7 @@ public abstract class BaseJavaTest extends BaseTest {
     public ActivityTestRule<ExampleCheckoutJavaActivity> rule = new ActivityTestRule<>(ExampleCheckoutJavaActivity.class);
 
     protected IdlingResource getResultIdlingResource() {
-        ExampleCheckoutJavaActivity activity = (ExampleCheckoutJavaActivity) ActivityHelper.getCurrentActivity();
+        ExampleCheckoutJavaActivity activity = (ExampleCheckoutJavaActivity) getActivityWithClass(ExampleCheckoutJavaActivity.class);
         return activity.getResultHandledIdlingResource();
     }
 }

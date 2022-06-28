@@ -119,7 +119,7 @@ public final class ExtraElementTests extends BaseKotlinTest {
     }
 
     @Test
-    public void testingAllModes_confirmVisibilityAndState() {
+    public void testingAllModes_confirmVisibilityAndState_noClicking() {
         ListSettings settings = createDefaultListSettings();
         settings.setDivision(DIVISION);
         settings.setCheckoutConfigurationName(EXTRAELEMENTS_ALL_MODES);
@@ -140,6 +140,32 @@ public final class ExtraElementTests extends BaseKotlinTest {
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL_PRESELECTED", true);
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED", false);
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED", true);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED", true);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED", true);
+    }
+
+    @Test
+    public void testingAllModes_confirmVisibilityAndState_withClicking() {
+        ListSettings settings = createDefaultListSettings();
+        settings.setDivision(DIVISION);
+        settings.setCheckoutConfigurationName(EXTRAELEMENTS_ALL_MODES);
+        enterListUrl(createListUrl(settings));
+        clickShowPaymentListButton();
+
+        int groupCardIndex = 1;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(groupCardIndex, "card.group");
+
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL");
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL_PRESELECTED");
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED");
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED");
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.FORCED");
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED");
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL", true);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL_PRESELECTED", false);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED", true);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED", false);
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED", true);
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED", true);
     }

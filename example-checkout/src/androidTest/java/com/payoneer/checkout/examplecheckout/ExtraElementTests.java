@@ -10,14 +10,14 @@
 
 package com.payoneer.checkout.examplecheckout;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 
 import com.payoneer.checkout.sharedtest.checkout.PaymentListHelper;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -25,6 +25,7 @@ public final class ExtraElementTests extends BaseKotlinTest {
 
     private final static String DIVISION = "ExtraElements";
     private final static String EXTRAELEMENTS_BOTTOM_CONFIG = "UITests-ExtraElements-Bottom";
+    private final static String EXTRAELEMENTS_ALL_MODES = "UITests-ExtraElements-Modes";
     private final static String EXTRAELEMENTS_TOP_CONFIG = "UITests-ExtraElements-Top";
     private final static String EXTRAELEMENTS_TOPBOTTOM_CONFIG = "UITests-ExtraElements-TopBottom";
 
@@ -115,5 +116,31 @@ public final class ExtraElementTests extends BaseKotlinTest {
         waitForAppRelaunch();
         PaymentListHelper.clickExtraElementLinkWithText(networkCardIndex, "extraelement.bottomelement2", "Number 2");
         clickBrowserPageButton("two", CHROME_CLOSE_BUTTON);
+    }
+
+    @Test
+    public void testingAllModes_confirmVisibilityAndState() {
+        ListSettings settings = createDefaultListSettings();
+        settings.setDivision(DIVISION);
+        settings.setCheckoutConfigurationName(EXTRAELEMENTS_ALL_MODES);
+        enterListUrl(createListUrl(settings));
+        clickShowPaymentListButton();
+
+        int groupCardIndex = 1;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(groupCardIndex, "card.group");
+
+        PaymentListHelper.checkHasVisibleCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL");
+        PaymentListHelper.checkHasVisibleCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL_PRESELECTED");
+        PaymentListHelper.checkHasVisibleCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED");
+        PaymentListHelper.checkHasVisibleCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED");
+        PaymentListHelper.checkHasVisibleCheckboxInWidget(groupCardIndex, "extraelement.FORCED");
+        PaymentListHelper.checkHasVisibleCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED");
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL", false);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL_PRESELECTED", true);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED", false);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED", true);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED", true);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED", true);
     }
 }

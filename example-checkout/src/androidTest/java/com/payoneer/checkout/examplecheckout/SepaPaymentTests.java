@@ -42,5 +42,20 @@ public final class SepaPaymentTests extends BaseKotlinTest {
         matchResultInteraction(InteractionCode.PROCEED, InteractionReason.SCHEDULED);
         unregister(resultIdlingResource);
     }
+
+    @Test
+    public void testSepa_registration_test() {
+        enterListUrl(createListUrl());
+        clickShowPaymentListButton();
+
+        int cardIndex = 2;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(cardIndex, "card.network");
+
+        PaymentListHelper.checkHasVisibleCheckboxInWidget(cardIndex, "registration.registrationOptions");
+        PaymentListHelper.matchesCheckboxInWidget(cardIndex, "registration.registrationOptions", false);
+        PaymentListHelper.clickCheckboxInWidget(cardIndex, "registration.registrationOptions");
+        PaymentListHelper.matchesCheckboxInWidget(cardIndex, "registration.registrationOptions", true);
+    }
 }
 

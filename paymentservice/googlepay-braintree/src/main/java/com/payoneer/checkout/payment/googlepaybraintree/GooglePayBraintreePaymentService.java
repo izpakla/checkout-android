@@ -60,6 +60,7 @@ public class GooglePayBraintreePaymentService extends PaymentService {
     private Context applicationContext;
     private ProcessPaymentData processPaymentData;
     private Bundle fragmentResult;
+    private String providerCode;
     private int state;
 
     /**
@@ -137,6 +138,10 @@ public class GooglePayBraintreePaymentService extends PaymentService {
             closeWithProcessErrorMessage("Missing GooglePayBraintree fragment result after onResume");
             return;
         }
+        if (providerCode == null) {
+            closeWithProcessErrorMessage("Missing GooglePayBraintree provider code");
+            return;
+        }
         if (!(fragmentResult.containsKey(BRAINTREE_NONCE))) {
             Exception exception = (Exception) fragmentResult.getSerializable(BRAINTREE_ERROR);
             closeWithProcessPaymentInterrupted(exception);
@@ -144,7 +149,7 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         }
         PaymentMethodNonce nonce = fragmentResult.getParcelable(BRAINTREE_NONCE);
         ProviderParameters providerRequest = new ProviderParameters();
-        providerRequest.setProviderCode(processPaymentData.getNetworkCode());
+        providerRequest.setProviderCode(providerCode);
 
         List<Parameter> params = new ArrayList<>();
         Parameter param = new Parameter();
@@ -202,6 +207,13 @@ public class GooglePayBraintreePaymentService extends PaymentService {
             closeWithProcessErrorMessage("Missing GooglePayBraintree [" + BRAINTREE_AUTHORIZATION + "] parameter");
             return;
         }
+
+        this.providerCode = PaymentUtils.getProviderCode(operationResult);
+        if (TextUtils.isEmpty(this.providerCode)) {
+            closeWithProcessErrorMessage("Missing GooglePayBraintree provider code");
+            return;
+        }
+
         try {
             GooglePayRequest request = GooglePayRequestBuilder.of(operationResult);
             Bundle arguments = new Bundle();

@@ -94,6 +94,7 @@ public class GooglePayBraintreePaymentService extends PaymentService {
         this.processPaymentData = null;
         this.applicationContext = null;
         this.fragmentResult = null;
+        this.providerCode = null;
         operationService.stop();
     }
 
@@ -208,10 +209,12 @@ public class GooglePayBraintreePaymentService extends PaymentService {
             return;
         }
 
-        this.providerCode = PaymentUtils.getProviderCode(operationResult);
-        if (TextUtils.isEmpty(this.providerCode)) {
+        String providerCode = PaymentUtils.getProviderCode(operationResult);
+        if (TextUtils.isEmpty(providerCode)) {
             closeWithProcessErrorMessage("Missing GooglePayBraintree provider code");
             return;
+        } else {
+            this.providerCode = providerCode;
         }
 
         try {

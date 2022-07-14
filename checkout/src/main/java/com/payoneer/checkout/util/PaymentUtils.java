@@ -340,6 +340,23 @@ public final class PaymentUtils {
     }
 
     /**
+     * Get the provider code from the operation result
+     *
+     * @param result the operation result
+     * @return the provider code or null if not found
+     */
+    public static String getProviderCode(OperationResult result) {
+        if (result == null) {
+            return null;
+        }
+        ProviderParameters parameters = result.getProviderResponse();
+        if (parameters == null) {
+            return null;
+        }
+        return parameters.getProviderCode();
+    }
+
+    /**
      * Check if the redirect type exists in the OperationResult
      *
      * @param operationResult contains the Redirect object

@@ -8,6 +8,10 @@
 
 package com.payoneer.checkout.payment;
 
+import java.util.List;
+
+import androidx.annotation.Nullable;
+
 /**
  * Interface for all payment service factories.
  * A payment service factory is capable of creating a PaymentService instance for a specific PaymentNetwork type.
@@ -19,9 +23,10 @@ public interface PaymentServiceFactory {
      *
      * @param code to be checked if it is supported by this factory
      * @param method to be checked if it is supported by this factory
+     * @param providers to be checked if it is supported by this factory
      * @return true when supported, false otherwise
      */
-    boolean supports(String code, String method);
+    boolean supports(String code, String method, @Nullable List<String> providers);
 
     /**
      * Create a payment service for this specific payment network

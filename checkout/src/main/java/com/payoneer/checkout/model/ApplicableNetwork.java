@@ -23,6 +23,8 @@ public class ApplicableNetwork {
     /** Simple API, always present */
     @PaymentMethod.Definition
     private String method;
+    /** Payment providers **/
+    private List<String> providers;
     /** Simple API, always present */
     private String grouping;
     /** Simple API, always present */
@@ -171,6 +173,10 @@ public class ApplicableNetwork {
         this.contractData = contractData;
     }
 
+    public List<String> getProviders() {
+        return providers;
+    }
+
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
@@ -183,6 +189,9 @@ public class ApplicableNetwork {
         }
         if (method != null) {
             builder.append("method=").append(method).append(", ");
+        }
+        if (providers != null) {
+            builder.append("providers=").append('[').append(String.join(", ", providers)).append(']').append(", ");
         }
         if (grouping != null) {
             builder.append("grouping=").append(grouping).append(", ");

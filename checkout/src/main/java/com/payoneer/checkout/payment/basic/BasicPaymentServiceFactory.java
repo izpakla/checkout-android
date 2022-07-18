@@ -8,10 +8,14 @@
 
 package com.payoneer.checkout.payment.basic;
 
+import java.util.List;
+
 import com.payoneer.checkout.core.PaymentNetworkCodes;
 import com.payoneer.checkout.model.PaymentMethod;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceFactory;
+
+import androidx.annotation.Nullable;
 
 /**
  * Specific implementation for basic networks like i.e. Visa, mastercard and sepa.
@@ -22,7 +26,7 @@ public final class BasicPaymentServiceFactory implements PaymentServiceFactory {
      * {@inheritDoc}
      */
     @Override
-    public boolean supports(String code, String method) {
+    public boolean supports(String code, String method, @Nullable final List<String> providers) {
         switch (method) {
             case PaymentMethod.CREDIT_CARD:
             case PaymentMethod.DEBIT_CARD:

@@ -14,6 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.text.TextUtils;
 import android.util.Log;
+import androidx.annotation.Nullable;
 
 /**
  * Class for looking up a Paymentervice given the code and payment method.
@@ -27,10 +28,11 @@ public class PaymentServiceLookup {
      *
      * @param code to be checked if it is supported
      * @param method to be checked if it is supported
+     * @param providers to be checked if it is supported
      * @return true when supported, false otherwise
      */
-    public static boolean supports(String code, String method) {
-        PaymentServiceFactory factory = getFactory(code, method);
+    public static boolean supports(String code, String method, @Nullable final List<String> providers) {
+        PaymentServiceFactory factory = getFactory(code, method, providers);
         return factory != null;
     }
 
@@ -39,14 +41,15 @@ public class PaymentServiceLookup {
      *
      * @param code to be used to lookup a NetworkService
      * @param method to be used to lookup a NetworkService
+     * @param providers to be used to lookup a NetworkService
      * @return the NetworkService that can handle the network or null if none found
      */
-    public static PaymentService createService(String code, String method) {
-        PaymentServiceFactory factory = getFactory(code, method);
+    public static PaymentService createService(String code, String method, @Nullable final List<String> providers) {
+        PaymentServiceFactory factory = getFactory(code, method, providers);
         return factory != null ? factory.createService() : null;
     }
 
-    private static PaymentServiceFactory getFactory(String code, String method) {
+    private static PaymentServiceFactory getFactory(String code, String method, @Nullable final List<String> providers) {
         if (TextUtils.isEmpty(code)) {
             throw new IllegalArgumentException("Code cannot be null or empty");
         }
@@ -57,7 +60,7 @@ public class PaymentServiceLookup {
             initFactories();
         }
         for (PaymentServiceFactory factory : factories) {
-            if (factory.supports(code, method)) {
+            if (factory.supports(code, method, providers)) {
                 return factory;
             }
         }

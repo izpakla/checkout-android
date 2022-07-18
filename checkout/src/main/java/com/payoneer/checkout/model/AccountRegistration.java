@@ -23,6 +23,8 @@ public class AccountRegistration {
     /** Simple API, always present */
     @PaymentMethod.Definition
     private String method;
+    /** Payment providers **/
+    private List<String> providers;
     /** Simple API, always present */
     private String label;
     /** Simple API, always present */
@@ -129,6 +131,10 @@ public class AccountRegistration {
         this.contractData = contractData;
     }
 
+    public List<String> getProviders() {
+        return providers;
+    }
+
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
@@ -141,6 +147,9 @@ public class AccountRegistration {
         }
         if (method != null) {
             builder.append("method=").append(method).append(", ");
+        }
+        if (providers != null) {
+            builder.append("providers=").append('[').append(String.join(", ", providers)).append(']').append(", ");
         }
         if (label != null) {
             builder.append("label=").append(label).append(", ");

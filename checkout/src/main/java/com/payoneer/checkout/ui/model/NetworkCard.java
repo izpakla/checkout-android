@@ -77,6 +77,11 @@ public final class NetworkCard extends PaymentCard {
     }
 
     @Override
+    public List<String> getProviders() {
+        return getVisibleNetwork().getProviders();
+    }
+
+    @Override
     public String getTitle() {
         if (networks.size() == 1) {
             return getVisibleNetwork().getTitle();

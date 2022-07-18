@@ -14,6 +14,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.junit.Test;
 
 import com.payoneer.checkout.payment.PaymentService;
@@ -23,9 +27,16 @@ public class GooglePayBraintreePaymentServiceFactoryTest {
     @Test
     public void supports() {
         GooglePayBraintreePaymentServiceFactory factory = new GooglePayBraintreePaymentServiceFactory();
-        assertTrue(factory.supports("GOOGLEPAY", null));
-        assertFalse(factory.supports(null, null));
-        assertFalse(factory.supports("foo", "foo"));
+        assertTrue(factory.supports("GOOGLEPAY", null, Collections.singletonList("BRAINTREE")));
+
+        assertFalse(factory.supports(null, null, new ArrayList<>()));
+
+        assertFalse(factory.supports("foo", "foo", null));
+        assertFalse(factory.supports("foo", "foo", new ArrayList<>()));
+
+        assertFalse(factory.supports("GOOGLEPAY", "", new ArrayList<>()));
+        assertFalse(factory.supports("GOOGLEPAY", null, Arrays.asList("foo", "BRAINTREE")));
+        assertFalse(factory.supports("GOOGLEPAY", "", null));
     }
 
     @Test

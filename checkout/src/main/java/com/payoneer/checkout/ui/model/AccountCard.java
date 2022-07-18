@@ -60,6 +60,11 @@ public final class AccountCard extends PaymentCard {
     }
 
     @Override
+    public List<String> getProviders() {
+        return account.getProviders();
+    }
+
+    @Override
     public String getTitle() {
         String networkLabel = Localization.translateNetworkLabel(account.getCode());
         AccountMask accountMask = account.getMaskedAccount();

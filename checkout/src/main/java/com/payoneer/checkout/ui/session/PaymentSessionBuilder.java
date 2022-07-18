@@ -133,7 +133,7 @@ public final class PaymentSessionBuilder {
             return null;
         }
         for (AccountRegistration account : accounts) {
-            if (PaymentServiceLookup.supports(account.getCode(), account.getMethod())) {
+            if (PaymentServiceLookup.supports(account.getCode(), account.getMethod(), account.getProviders())) {
                 cards.add(buildAccountCard(account, listResult));
             }
         }
@@ -258,7 +258,7 @@ public final class PaymentSessionBuilder {
         if (UPDATE.equals(operationType) && NONE.equals(recurrence) && NONE.equals(registration)) {
             return false;
         }
-        return PaymentServiceLookup.supports(network.getCode(), network.getMethod());
+        return PaymentServiceLookup.supports(network.getCode(), network.getMethod(), network.getProviders());
     }
 
     private PaymentNetwork buildPaymentNetwork(ApplicableNetwork network) throws PaymentException {

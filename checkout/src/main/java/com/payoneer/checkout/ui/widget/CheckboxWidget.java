@@ -116,13 +116,9 @@ public class CheckboxWidget extends FormWidget {
             case CheckboxMode.OPTIONAL_PRESELECTED:
             case CheckboxMode.REQUIRED_PRESELECTED:
             case CheckboxMode.FORCED_DISPLAYED:
+            case CheckboxMode.FORCED:
                 setVisible(true);
                 switchView.setVisibility(View.VISIBLE);
-                switchView.setChecked(true);
-                break;
-            case CheckboxMode.FORCED:
-                setVisible(false);
-                switchView.setVisibility(View.GONE);
                 switchView.setChecked(true);
                 break;
             default:

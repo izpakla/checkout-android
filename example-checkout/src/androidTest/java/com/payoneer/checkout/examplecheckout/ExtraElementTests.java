@@ -10,14 +10,15 @@
 
 package com.payoneer.checkout.examplecheckout;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
-
-import com.payoneer.checkout.sharedtest.checkout.PaymentListHelper;
-import com.payoneer.checkout.sharedtest.service.ListSettings;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.payoneer.checkout.sharedtest.checkout.PaymentListHelper;
+import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
+import com.payoneer.checkout.sharedtest.service.ListSettings;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -166,7 +167,7 @@ public final class ExtraElementTests extends BaseKotlinTest {
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL_PRESELECTED", false);
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED", true);
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED", false);
-        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED", true);
-        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED", true);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED", false);
+        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED", false);
     }
 }

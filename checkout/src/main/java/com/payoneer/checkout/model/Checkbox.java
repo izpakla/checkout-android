@@ -8,6 +8,8 @@
 
 package com.payoneer.checkout.model;
 
+import androidx.annotation.NonNull;
+
 /**
  * This class is designed to hold information checkbox element that is displayed on payment page.
  */
@@ -26,6 +28,15 @@ public class Checkbox {
         this.mode = mode;
     }
 
+    public void setRequiredMessage(final String requiredMessage) {
+        this.requiredMessage = requiredMessage;
+    }
+
+    public String getRequiredMessage() {
+        return requiredMessage;
+    }
+
+    @NonNull
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();

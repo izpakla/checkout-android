@@ -170,4 +170,28 @@ public final class ExtraElementTests extends BaseKotlinTest {
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED", false);
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED", false);
     }
+
+    @Test
+    public void testingAllModes_confirmVisibilityAndState_withClickingPayButtonAndTogglingCheckBoxes() {
+        ListSettings settings = createDefaultListSettings();
+        settings.setDivision(DIVISION);
+        settings.setCheckoutConfigurationName(EXTRAELEMENTS_ALL_MODES);
+        enterListUrl(createListUrl(settings));
+        clickShowPaymentListButton();
+
+        int groupCardIndex = 1;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(groupCardIndex, "card.group");
+        PaymentListHelper.fillPaymentListCard(groupCardIndex, TestDataProvider.visaCardTestData());
+        PaymentListHelper.clickPaymentListCardButton(groupCardIndex);
+
+        PaymentListHelper.scrollToTop();
+        PaymentListHelper.matchesValidationErrorText(groupCardIndex, "extraelement.REQUIRED", "REQUIRED error message");
+
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED");
+        PaymentListHelper.checkHasGoneValidationErroText(groupCardIndex, "extraelement.REQUIRED");
+
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED");
+        PaymentListHelper.matchesValidationErrorText(groupCardIndex, "extraelement.REQUIRED_PRESELECTED", "REQUIRED_PRESELECTED error message");
+    }
 }

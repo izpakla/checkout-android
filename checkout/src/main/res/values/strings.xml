@@ -24,6 +24,4 @@
     <string name="accounts_expired_badge_text">This card has expired. Please update it, or use another payment method.</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

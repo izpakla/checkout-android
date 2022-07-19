@@ -14,14 +14,17 @@ import com.payoneer.checkout.core.PaymentNetworkCodes;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceFactory;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class GooglePayBraintreePaymentServiceFactory implements PaymentServiceFactory {
 
+    private static final String BRAINTREE_PROVIDER_CODE = "BRAINTREE";
+
     @Override
-    public boolean supports(String code, String method, @Nullable final List<String> providers) {
+    public boolean supports(@NonNull String code, @NonNull String method, @Nullable List<String> providers) {
         boolean isGooglePay = PaymentNetworkCodes.GOOGLEPAY.equals(code);
-        boolean isBraintree = providers != null && !providers.isEmpty() && providers.get(0).equals("BRAINTREE");
+        boolean isBraintree = providers != null && !providers.isEmpty() && providers.get(0).equals(BRAINTREE_PROVIDER_CODE);
         return isGooglePay && isBraintree;
     }
 

@@ -15,6 +15,7 @@ import com.payoneer.checkout.model.PaymentMethod;
 import com.payoneer.checkout.payment.PaymentService;
 import com.payoneer.checkout.payment.PaymentServiceFactory;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
@@ -26,7 +27,10 @@ public final class BasicPaymentServiceFactory implements PaymentServiceFactory {
      * {@inheritDoc}
      */
     @Override
-    public boolean supports(String code, String method, @Nullable final List<String> providers) {
+    public boolean supports(@NonNull String code, @NonNull String method, @Nullable List<String> providers) {
+        if (providers != null && !providers.isEmpty()) {
+            return false;
+        }
         switch (method) {
             case PaymentMethod.CREDIT_CARD:
             case PaymentMethod.DEBIT_CARD:
@@ -36,7 +40,7 @@ public final class BasicPaymentServiceFactory implements PaymentServiceFactory {
         }
     }
 
-    private boolean supportsCode(String code) {
+    private boolean supportsCode(@NonNull String code) {
         switch (code) {
             case PaymentNetworkCodes.SEPADD:
             case PaymentNetworkCodes.PAYPAL:

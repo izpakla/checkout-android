@@ -27,15 +27,15 @@ public class GooglePayBraintreePaymentServiceFactoryTest {
     @Test
     public void supports() {
         GooglePayBraintreePaymentServiceFactory factory = new GooglePayBraintreePaymentServiceFactory();
-        assertTrue(factory.supports("GOOGLEPAY", null, Collections.singletonList("BRAINTREE")));
+        assertTrue(factory.supports("GOOGLEPAY", "", Collections.singletonList("BRAINTREE")));
 
-        assertFalse(factory.supports(null, null, new ArrayList<>()));
+        assertFalse(factory.supports("", "", new ArrayList<>()));
 
         assertFalse(factory.supports("foo", "foo", null));
         assertFalse(factory.supports("foo", "foo", new ArrayList<>()));
 
         assertFalse(factory.supports("GOOGLEPAY", "", new ArrayList<>()));
-        assertFalse(factory.supports("GOOGLEPAY", null, Arrays.asList("foo", "BRAINTREE")));
+        assertFalse(factory.supports("GOOGLEPAY", "", Arrays.asList("foo", "BRAINTREE")));
         assertFalse(factory.supports("GOOGLEPAY", "", null));
     }
 

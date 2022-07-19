@@ -10,6 +10,7 @@ package com.payoneer.checkout.payment;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
@@ -26,7 +27,7 @@ public interface PaymentServiceFactory {
      * @param providers to be checked if it is supported by this factory
      * @return true when supported, false otherwise
      */
-    boolean supports(String code, String method, @Nullable List<String> providers);
+    boolean supports(@NonNull String code, @NonNull String method, @Nullable List<String> providers);
 
     /**
      * Create a payment service for this specific payment network

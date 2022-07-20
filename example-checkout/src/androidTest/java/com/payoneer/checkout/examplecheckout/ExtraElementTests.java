@@ -189,7 +189,7 @@ public final class ExtraElementTests extends BaseKotlinTest {
         PaymentListHelper.matchesValidationErrorText(groupCardIndex, "extraelement.REQUIRED", "REQUIRED error message");
 
         PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED");
-        PaymentListHelper.checkHasGoneValidationErroText(groupCardIndex, "extraelement.REQUIRED");
+        PaymentListHelper.checkHasGoneValidationErrorText(groupCardIndex, "extraelement.REQUIRED");
 
         PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED");
         PaymentListHelper.matchesValidationErrorText(groupCardIndex, "extraelement.REQUIRED_PRESELECTED", "REQUIRED_PRESELECTED error message");

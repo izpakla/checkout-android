@@ -164,7 +164,7 @@ public final class PaymentListHelper {
         onView(withId(R.id.recyclerview_paymentlist)).perform(scrollToPosition(0));
     }
 
-    public static void checkHasGoneValidationErroText(final int cardIndex, String widgetName) {
+    public static void checkHasGoneValidationErrorText(final int cardIndex, String widgetName) {
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(
             matches(isViewInWidget(cardIndex, withEffectiveVisibility(ViewMatchers.Visibility.GONE), widgetName, R.id.error_view)));

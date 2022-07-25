@@ -14,16 +14,19 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.times;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.payoneer.checkout.sharedtest.view.PaymentActions.actionOnViewInPaymentCard;
 import static com.payoneer.checkout.sharedtest.view.PaymentActions.actionOnViewInWidget;
 import static com.payoneer.checkout.sharedtest.view.PaymentActions.clickClickableSpan;
+import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.hasTextError;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.hasTextInputLayoutError;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.hasTextInputLayoutValue;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isCardWithTestId;
@@ -142,9 +145,29 @@ public final class PaymentListHelper {
         onView(list).check(matches(isViewInWidget(cardIndex, hasTextInputLayoutError(errorText), widgetName, R.id.textinputlayout)));
     }
 
+    public static void matchesTextViewErrorTextInWidget(int cardIndex, String widgetName, String errorText) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInWidget(cardIndex, hasTextInputLayoutError(errorText), widgetName, R.id.error_view)));
+    }
+
     public static void matchesInputTextInWidget(int cardIndex, String widgetName, String value) {
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInWidget(cardIndex, hasTextInputLayoutValue(value), widgetName, R.id.textinputlayout)));
+    }
+
+    public static void matchesValidationErrorText(final int cardIndex, String widgetName, final String errorMessage) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInWidget(cardIndex, hasTextError(errorMessage), widgetName, R.id.error_view)));
+    }
+
+    public static void scrollToTop() {
+        onView(withId(R.id.recyclerview_paymentlist)).perform(scrollToPosition(0));
+    }
+
+    public static void checkValidationErrorTextIsGone(final int cardIndex, String widgetName) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(
+            matches(isViewInWidget(cardIndex, withEffectiveVisibility(ViewMatchers.Visibility.GONE), widgetName, R.id.error_view)));
     }
 
     public static void matchesCheckboxInWidget(int cardIndex, String widgetName, boolean value) {

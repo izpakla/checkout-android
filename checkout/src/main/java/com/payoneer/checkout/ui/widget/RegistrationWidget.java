@@ -13,10 +13,14 @@ import static com.payoneer.checkout.model.RegistrationType.FORCED_DISPLAYED;
 import static com.payoneer.checkout.model.RegistrationType.OPTIONAL;
 import static com.payoneer.checkout.model.RegistrationType.OPTIONAL_PRESELECTED;
 
+import java.util.Objects;
+
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.payment.PaymentInputValues;
 import com.payoneer.checkout.ui.model.RegistrationOptions;
 import com.payoneer.checkout.ui.model.RegistrationOptions.RegistrationOption;
+
+import android.view.View;
 
 /**
  * Widget for showing the RegistrationOptions, e.g. allowRecurrence and autoRegistration
@@ -61,6 +65,9 @@ public class RegistrationWidget extends CheckboxWidget {
     public void onBind(RegistrationOptions registrationOptions) {
         this.registrationOptions = registrationOptions;
         String label = Localization.translate(registrationOptions.getLabelKey());
-        super.onBind(registrationOptions.getCheckboxMode(), label);
+        super.onBind(registrationOptions.getCheckboxMode(), label, null);
+        if (Objects.equals(mode, FORCED_DISPLAYED)) {
+            switchView.setVisibility(View.GONE);
+        }
     }
 }

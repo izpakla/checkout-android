@@ -61,6 +61,9 @@ public final class LocalizationKey {
     public final static String DIALOG_EXPIRED_BADGE_TITLE = "accounts.expired.badge.title";
     public static final String DIALOG_EXPIRED_BADGE_TEXT = "accounts.expired.badge.text";
 
+    public final static String DIALOG_FORCED_CHECKBOX_MESSAGE_TITLE = "messages.checkbox.forced.title";
+    public final static String DIALOG_FORCED_CHECKBOX_MESSAGE_TEXT = "messages.checkbox.forced.text";
+
     public static String errorKey(String error) {
         return "error." + error;
     }

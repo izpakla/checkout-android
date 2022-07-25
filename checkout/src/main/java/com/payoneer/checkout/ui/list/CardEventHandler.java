@@ -70,6 +70,14 @@ class CardEventHandler implements WidgetPresenter {
         }
     }
 
+    @Override
+    public void showForcedCheckboxDialog() {
+        if (holder.hasValidPosition()) {
+            PaymentCard card = holder.getPaymentCard();
+            getCardListener().onShowForcedCheckBoxDialog(card.getNetworkCode());
+        }
+    }
+
     public void onExpiredIconClicked() {
         if (holder.hasValidPosition()) {
             PaymentCard card = holder.getPaymentCard();

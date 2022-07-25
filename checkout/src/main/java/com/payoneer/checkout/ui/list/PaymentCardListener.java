@@ -64,4 +64,9 @@ interface PaymentCardListener {
      * @param position of the card in the adapter
      */
     void onCardClicked(int position);
+
+    /**
+     * Notify this listener that the message why checkbox cannot be deselected should be shown
+     */
+    void onShowForcedCheckBoxDialog(String networkCode);
 }

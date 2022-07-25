@@ -182,6 +182,6 @@ public final class PaymentListHelper {
 
     public static void clickCheckboxInWidget(final int cardIndex, String widgetName) {
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
-        onView(withId(R.id.recyclerview_paymentlist)).perform(actionOnViewInWidget(cardIndex, click(), widgetName, R.id.switch_checkbox));
+        onView(list).perform(actionOnViewInWidget(cardIndex, click(), widgetName, R.id.switch_checkbox));
     }
 }

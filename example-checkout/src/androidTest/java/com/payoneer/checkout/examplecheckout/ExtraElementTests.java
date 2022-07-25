@@ -13,6 +13,7 @@ package com.payoneer.checkout.examplecheckout;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.payoneer.checkout.sharedtest.checkout.PaymentDialogHelper;
 import com.payoneer.checkout.sharedtest.checkout.PaymentListHelper;
 import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
@@ -161,14 +162,10 @@ public final class ExtraElementTests extends BaseKotlinTest {
         PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL_PRESELECTED");
         PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED");
         PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED");
-        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.FORCED");
-        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED");
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL", true);
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.OPTIONAL_PRESELECTED", false);
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED", true);
         PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED", false);
-        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED", false);
-        PaymentListHelper.matchesCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED", false);
     }
 
     @Test
@@ -192,6 +189,28 @@ public final class ExtraElementTests extends BaseKotlinTest {
         PaymentListHelper.checkValidationErrorTextIsGone(groupCardIndex, "extraelement.REQUIRED");
 
         PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED_PRESELECTED");
-        PaymentListHelper.matchesValidationErrorText(groupCardIndex, "extraelement.REQUIRED_PRESELECTED", "REQUIRED_PRESELECTED error message");
+        PaymentListHelper.matchesValidationErrorText(groupCardIndex, "extraelement.REQUIRED_PRESELECTED",
+            "REQUIRED_PRESELECTED error message");
+    }
+
+    @Test
+    public void clicking_forced_checkboxes_shows_dialog() {
+        ListSettings settings = createDefaultListSettings();
+        settings.setDivision(DIVISION);
+        settings.setCheckoutConfigurationName(EXTRAELEMENTS_ALL_MODES);
+        enterListUrl(createListUrl(settings));
+        clickShowPaymentListButton();
+
+        int groupCardIndex = 1;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(groupCardIndex, "card.group");
+
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.FORCED");
+        PaymentListHelper.matchesPaymentDialogTitle("Oops!");
+        PaymentDialogHelper.clickPaymentDialogButton("OK");
+
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED");
+        PaymentListHelper.matchesPaymentDialogTitle("Oops!");
+        PaymentDialogHelper.clickPaymentDialogButton("OK");
     }
 }

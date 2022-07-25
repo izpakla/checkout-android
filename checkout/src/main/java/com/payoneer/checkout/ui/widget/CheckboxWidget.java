@@ -100,8 +100,8 @@ public class CheckboxWidget extends FormWidget {
             if (!isChecked) {
                 switchView.setChecked(true);
             }
+            presenter.showForcedCheckboxDialog();
         }
-        presenter.showForcedCheckboxDialog();
     }
 
     /**

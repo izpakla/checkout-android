@@ -8,11 +8,14 @@
 
 package com.payoneer.checkout.payment;
 
+import java.util.List;
+
 import com.payoneer.checkout.CheckoutResult;
 import com.payoneer.checkout.core.PaymentException;
 
 import android.content.Context;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -29,14 +32,15 @@ public final class PaymentServiceInteractor {
      *
      * @param networkCode code of the network e.g. VISA
      * @param paymentMethod method of the payment e.g. CREDIT_CARD
+     * @param providers payment providers e.g. BRAINTREE
      * @throws PaymentException when the PaymentService could not be found or loaded
      */
-    public void loadPaymentService(final String networkCode, final String paymentMethod) throws PaymentException {
+    public void loadPaymentService(final String networkCode, final String paymentMethod, @Nullable final List<String> providers) throws PaymentException {
         if (paymentService != null) {
             paymentService.setListener(null);
             paymentService.reset();
         }
-        paymentService = PaymentServiceLookup.createService(networkCode, paymentMethod);
+        paymentService = PaymentServiceLookup.createService(networkCode, paymentMethod, providers);
         if (paymentService == null) {
             throw new PaymentException("Missing PaymentService for: " + networkCode + ", " + paymentMethod);
         }

@@ -69,6 +69,11 @@ public final class PresetCard extends PaymentCard {
     }
 
     @Override
+    public List<String> getProviders() {
+        return account.getProviders();
+    }
+
+    @Override
     public boolean containsLink(final String name, final URL url) {
         return PaymentUtils.equalsAsString(getLink(name), url);
     }

@@ -19,6 +19,8 @@ import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.hasContextWi
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anyOf;
 
+import java.util.Objects;
+
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.AllOf;
@@ -125,6 +127,29 @@ public final class PaymentActions {
                     throw createPerformException("Could not find the View inside the card at position: " + position, "cardView");
                 }
                 action.perform(uiController, cardView);
+            }
+        };
+    }
+
+    public static ViewAction scrollToBottom() {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return allOf(isAssignableFrom(RecyclerView.class), isDisplayed());
+            }
+
+            @Override
+            public String getDescription() {
+                return "scroll RecyclerView to bottom";
+            }
+
+            @Override
+            public void perform(final UiController uiController, final View view) {
+                RecyclerView recyclerView = ((RecyclerView) view);
+                int itemCount = Objects.requireNonNull(recyclerView.getAdapter()).getItemCount();
+                int position = itemCount - 1;
+                recyclerView.scrollToPosition(position);
+                uiController.loopMainThreadUntilIdle();
             }
         };
     }

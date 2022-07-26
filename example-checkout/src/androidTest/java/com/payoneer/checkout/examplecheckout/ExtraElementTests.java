@@ -13,11 +13,14 @@ package com.payoneer.checkout.examplecheckout;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.payoneer.checkout.model.InteractionCode;
+import com.payoneer.checkout.model.InteractionReason;
 import com.payoneer.checkout.sharedtest.checkout.PaymentDialogHelper;
 import com.payoneer.checkout.sharedtest.checkout.PaymentListHelper;
 import com.payoneer.checkout.sharedtest.checkout.TestDataProvider;
 import com.payoneer.checkout.sharedtest.service.ListSettings;
 
+import androidx.test.espresso.IdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
@@ -212,5 +215,31 @@ public final class ExtraElementTests extends BaseKotlinTest {
         PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.FORCED_DISPLAYED");
         PaymentListHelper.matchesPaymentDialogTitle("Oops!");
         PaymentDialogHelper.clickPaymentDialogButton("OK");
+    }
+
+    @Test
+    public void clicking_pay_returns_success() {
+        IdlingResource resultIdlingResource = getResultIdlingResource();
+
+        ListSettings settings = createDefaultListSettings();
+        settings.setDivision(DIVISION);
+        settings.setCheckoutConfigurationName(EXTRAELEMENTS_ALL_MODES);
+        enterListUrl(createListUrl(settings));
+        clickShowPaymentListButton();
+
+        int groupCardIndex = 1;
+        PaymentListHelper.waitForPaymentListLoaded(1);
+        PaymentListHelper.openPaymentListCard(groupCardIndex, "card.group");
+        PaymentListHelper.fillPaymentListCard(groupCardIndex, TestDataProvider.visaCardTestData());
+
+        PaymentListHelper.scrollToTop();
+        PaymentListHelper.clickCheckboxInWidget(groupCardIndex, "extraelement.REQUIRED");
+
+        PaymentListHelper.scrollToBottom();
+        PaymentListHelper.clickPaymentListCardButton(groupCardIndex);
+
+        register(resultIdlingResource);
+        matchResultInteraction(InteractionCode.PROCEED, InteractionReason.OK);
+        unregister(resultIdlingResource);
     }
 }

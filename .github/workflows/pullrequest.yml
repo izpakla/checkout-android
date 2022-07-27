@@ -25,7 +25,7 @@ jobs:
       - name: Run checkout unit-tests
         run: ./gradlew testCheckout
 
-  test-examples:
+  test-example:
     name: Test example apps
     needs: test-checkout
     runs-on: ubuntu-latest
@@ -41,14 +41,14 @@ jobs:
           distribution: 'adopt'
       - name: Clean checkout project
         run: ./gradlew clean
-      - name: Test examples on Browserstack
+      - name: Test example on Browserstack
         env:
           MOBILE_MERCHANT_CODE: ${{ secrets.MOBILE_MERCHANT_CODE }}
           MOBILE_MERCHANT_PAYMENT_TOKEN: ${{ secrets.MOBILE_MERCHANT_PAYMENT_TOKEN }}
           BROWSERSTACK_USER: ${{ secrets.BROWSERSTACK_USER }}
           BROWSERSTACK_KEY: ${{ secrets.BROWSERSTACK_KEY }}
           PAYMENTAPI_LISTURL: ${{ secrets.PAYMENTAPI_LISTURL }}
-        run: ./gradlew testExampleAppsOnAppAutomate
+        run: ./gradlew testExampleCheckoutOnAppAutomate
 
   test-paymentservices:
     name: Test payment services
@@ -93,7 +93,7 @@ jobs:
         run: ./gradlew testRiskProviders
 
   upload-examplecheckout:
-    needs: [ test-examples, test-paymentservices, test-riskproviders ]
+    needs: [ test-example, test-paymentservices, test-riskproviders ]
     name: Upload ExampleCheckout to Browserstack AppLive
     runs-on: ubuntu-latest
     steps:

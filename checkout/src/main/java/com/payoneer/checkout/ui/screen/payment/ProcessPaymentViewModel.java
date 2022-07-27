@@ -255,7 +255,8 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
 
     private void processPayment() {
         try {
-            serviceInteractor.loadPaymentService(processPaymentData.getNetworkCode(), processPaymentData.getPaymentMethod());
+            serviceInteractor.loadPaymentService(processPaymentData.getNetworkCode(), processPaymentData.getPaymentMethod(),
+                processPaymentData.getProviders());
             serviceInteractor.processPayment(processPaymentData, getApplicationContext());
         } catch (PaymentException e) {
             setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
@@ -324,6 +325,7 @@ final class ProcessPaymentViewModel extends AppContextViewModel {
             presetAccount.getCode(),
             presetAccount.getMethod(),
             presetAccount.getOperationType(),
+            presetAccount.getProviders(),
             presetAccount.getLinks(),
             new PaymentInputValues());
     }

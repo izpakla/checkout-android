@@ -60,6 +60,10 @@ public final class PaymentNetwork {
         return network.getCode();
     }
 
+    public List<String> getProviders() {
+        return network.getProviders();
+    }
+
     public String getTitle() {
         return Localization.translateNetworkLabel(getNetworkCode());
     }

@@ -9,6 +9,7 @@
 package com.payoneer.checkout.model;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +30,8 @@ public class PresetAccount {
     /** Simple API, always present */
     @PaymentMethod.Definition
     private String method;
+    /** Payment providers **/
+    private List<String> providers;
     /** The following three booleans determine the visibility of the preset warning text */
     private boolean registered;
     private boolean autoRegistration;
@@ -106,6 +109,10 @@ public class PresetAccount {
         this.allowRecurrence = allowRecurrence;
     }
 
+    public List<String> getProviders() {
+        return providers;
+    }
+
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
@@ -127,6 +134,9 @@ public class PresetAccount {
         }
         if (method != null) {
             builder.append("method=").append(method).append(", ");
+        }
+        if (providers != null) {
+            builder.append("providers=").append('[').append(String.join(", ", providers)).append(']').append(", ");
         }
         builder.append("registered=").append(registered).append(", ");
         builder.append("autoRegistration=").append(autoRegistration).append(", ");

@@ -8,11 +8,18 @@
 
 package com.payoneer.checkout.ui.widget;
 
-import android.view.View;
+import static com.payoneer.checkout.model.CheckboxMode.FORCED;
+import static com.payoneer.checkout.model.CheckboxMode.FORCED_DISPLAYED;
+import static com.payoneer.checkout.model.CheckboxMode.REQUIRED;
+import static com.payoneer.checkout.model.CheckboxMode.REQUIRED_PRESELECTED;
 
-import com.payoneer.checkout.markdown.MarkdownSpannableStringBuilder;
+import java.util.Objects;
+
+import com.payoneer.checkout.model.Checkbox;
 import com.payoneer.checkout.model.CheckboxMode;
 import com.payoneer.checkout.model.ExtraElement;
+
+import android.view.View;
 
 /**
  * Widget for showing the ExtraElement element
@@ -29,32 +36,17 @@ public class ExtraElementWidget extends CheckboxWidget {
      * @param extraElement containing the label and optional checkbox
      */
     public void onBind(ExtraElement extraElement) {
-        String mode = (extraElement.getCheckbox() != null) ? extraElement.getCheckbox().getMode() : CheckboxMode.NONE;
-        labelView.setText(MarkdownSpannableStringBuilder.createFromText(extraElement.getLabel()));
-        switch (mode) {
-            case CheckboxMode.OPTIONAL:
-            case CheckboxMode.REQUIRED:
-                setVisible(true);
-                switchView.setVisibility(View.VISIBLE);
-                switchView.setChecked(false);
-                break;
-            case CheckboxMode.OPTIONAL_PRESELECTED:
-            case CheckboxMode.REQUIRED_PRESELECTED:
-                setVisible(true);
-                switchView.setVisibility(View.VISIBLE);
-                switchView.setChecked(true);
-                break;
-            case CheckboxMode.FORCED_DISPLAYED:
-            case CheckboxMode.FORCED:
-                setVisible(true);
-                switchView.setEnabled(false);
-                switchView.setVisibility(View.VISIBLE);
-                switchView.setChecked(true);
-                break;
-            default:
-                setVisible(false);
-                switchView.setVisibility(View.GONE);
-                switchView.setChecked(false);
+        Checkbox checkbox = extraElement.getCheckbox();
+        String mode;
+        if (checkbox != null) {
+            mode = extraElement.getCheckbox().getMode();
+            requiredMessage = checkbox.getRequiredMessage();
+        } else {
+            mode = CheckboxMode.NONE;
+        }
+        super.onBind(mode, extraElement.getLabel(), requiredMessage);
+        if (Objects.equals(mode, FORCED) || Objects.equals(mode, FORCED_DISPLAYED)){
+            switchView.setEnabled(false);
         }
     }
 }

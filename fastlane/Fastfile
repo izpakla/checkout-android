@@ -33,18 +33,6 @@ platform :android do
     # You can also use other beta testing services here
   end
 
-  desc "Shop Example - Deploy internal version to PlayStore"
-  lane :uploadShopExample do
-    gradle(task: "clean")
-    gradle(task: ":example-shop:assembleRelease")
-    supply(
-        track: 'internal',
-	package_name: 'com.payoneer.checkout.exampleshop'
-    )
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
-  end
-
   # You can define as many lanes as you want
 
   after_all do |lane|

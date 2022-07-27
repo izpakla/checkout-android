@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <color name="pm_green700">#008940</color>
-
     <color name="pm_gray800">#424242</color>
     <color name="pm_gray100">#F5F5F5</color>
     <color name="pm_gray300">#E0E0E0</color>

@@ -53,7 +53,6 @@ task publishRiskProvidersReleaseVersion() {
 
 task uploadExampleAppsToAppLive() {
     dependsOn 'uploadExampleCheckoutToAppLive'
-    dependsOn 'uploadExampleShopToAppLive'
 }
 
 task uploadExampleCheckoutToAppLive() {
@@ -64,26 +63,6 @@ task uploadExampleCheckoutToAppLive() {
     uploadToAppLive.mustRunAfter(deleteFromAppLive)
 }
 
-task uploadExampleShopToAppLive() {
-    def deleteFromAppLive = tasks.findByPath(':example-shop:deleteFromAppLive')
-    def uploadToAppLive = tasks.findByPath(':example-shop:uploadToAppLive')
-    dependsOn deleteFromAppLive
-    dependsOn uploadToAppLive
-    uploadToAppLive.mustRunAfter(deleteFromAppLive)
-}
-
 task testExampleCheckoutOnAppAutomate() {
     dependsOn ':example-checkout:testOnAppAutomate'
-}
-
-task testExampleShopOnAppAutomate() {
-    dependsOn ':example-shop:testOnAppAutomate'
-}
-
-task testExampleAppsOnAppAutomate() {
-    def testExampleCheckout = tasks.findByPath(':example-checkout:testOnAppAutomate')
-    def testExampleShop = tasks.findByPath(':example-shop:testOnAppAutomate')
-    dependsOn testExampleCheckout
-    dependsOn testExampleShop
-    testExampleShop.mustRunAfter(testExampleCheckout)
 }

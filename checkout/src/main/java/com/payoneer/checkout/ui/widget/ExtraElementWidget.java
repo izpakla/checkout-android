@@ -8,18 +8,9 @@
 
 package com.payoneer.checkout.ui.widget;
 
-import static com.payoneer.checkout.model.CheckboxMode.FORCED;
-import static com.payoneer.checkout.model.CheckboxMode.FORCED_DISPLAYED;
-import static com.payoneer.checkout.model.CheckboxMode.REQUIRED;
-import static com.payoneer.checkout.model.CheckboxMode.REQUIRED_PRESELECTED;
-
-import java.util.Objects;
-
 import com.payoneer.checkout.model.Checkbox;
 import com.payoneer.checkout.model.CheckboxMode;
 import com.payoneer.checkout.model.ExtraElement;
-
-import android.view.View;
 
 /**
  * Widget for showing the ExtraElement element
@@ -45,8 +36,5 @@ public class ExtraElementWidget extends CheckboxWidget {
             mode = CheckboxMode.NONE;
         }
         super.onBind(mode, extraElement.getLabel(), requiredMessage);
-        if (Objects.equals(mode, FORCED) || Objects.equals(mode, FORCED_DISPLAYED)){
-            switchView.setEnabled(false);
-        }
     }
 }

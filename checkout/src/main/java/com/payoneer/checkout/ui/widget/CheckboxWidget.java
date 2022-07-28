@@ -13,8 +13,6 @@ import static com.payoneer.checkout.model.CheckboxMode.FORCED_DISPLAYED;
 import static com.payoneer.checkout.model.CheckboxMode.REQUIRED;
 import static com.payoneer.checkout.model.CheckboxMode.REQUIRED_PRESELECTED;
 
-import java.util.Objects;
-
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.markdown.MarkdownSpannableStringBuilder;
@@ -57,7 +55,16 @@ public class CheckboxWidget extends FormWidget {
     }
 
     private void handleSwitchClicked(final boolean isChecked) {
-        showRequiredMessage(!isChecked && (Objects.equals(mode, REQUIRED) || Objects.equals(mode, REQUIRED_PRESELECTED)));
+        switch (mode) {
+            case REQUIRED:
+            case REQUIRED_PRESELECTED:
+                showRequiredMessage(!isChecked);
+                break;
+            case FORCED:
+            case FORCED_DISPLAYED:
+                handleForcedCheckBoxClick(isChecked);
+                break;
+        }
     }
 
     @Override
@@ -90,6 +97,13 @@ public class CheckboxWidget extends FormWidget {
         } else {
             errorView.setVisibility(View.GONE);
         }
+    }
+
+    private void handleForcedCheckBoxClick(final boolean isChecked) {
+        if (!isChecked) {
+            switchView.setChecked(true);
+        }
+        presenter.showForcedCheckboxDialog();
     }
 
     /**

@@ -92,4 +92,10 @@ public class PaymentDialogHelper {
     public void showPaymentDialog(final FragmentManager fragmentManager, final PaymentDialogFragment dialogFragment) {
         dialogFragment.showDialog(fragmentManager, idlingResources);
     }
+
+    public void showForcedMessageDialog(final FragmentManager fragmentManager, final String networkCode,
+        final PaymentDialogListener listener) {
+        PaymentDialogFragment dialog = PaymentDialogFactory.createForcedCheckboxDialog(networkCode, listener);
+        showPaymentDialog(fragmentManager, dialog);
+    }
 }

@@ -43,4 +43,9 @@ public interface PaymentListListener {
      * Notify that the user clicked the expired hint button in the payment card.
      */
     void onExpiredIconClicked(String networkCode);
+
+    /**
+     * Notify that the user clicked on a checkbox that should not be deselected
+     */
+    void onShowForcedMessage(String networkCode);
 }

@@ -76,4 +76,9 @@ public interface WidgetPresenter {
      * @param text new text of the textInput
      */
     void onTextInputChanged(String type, String text);
+
+    /**
+     * Ask the presenter to show message why checkbox cannot be deselected
+     */
+    void showForcedCheckboxDialog();
 }

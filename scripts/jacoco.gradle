@@ -1,0 +1,28 @@
+apply plugin: 'jacoco'
+
+afterEvaluate { project ->
+    setupReporting()
+}
+
+def setupReporting() {
+    tasks.withType(Test) {
+        jacoco.includeNoLocationClasses true
+        jacoco.excludes = ['jdk.internal.*']
+    }
+    task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+        reports {
+            csv.enabled false
+            xml.enabled true
+            html.enabled true
+        }
+
+        def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+
+        def debugTree = fileTree(dir: "$buildDir/intermediates/javac/debug/classes", excludes: fileFilter)
+        def mainSrc = "$projectDir/src/main/java"
+
+        sourceDirectories.from = files([mainSrc])
+        classDirectories.from = files([debugTree])
+        executionData.from = fileTree(dir: buildDir, includes: ['jacoco/testDebugUnitTest.exec'])
+    }
+}

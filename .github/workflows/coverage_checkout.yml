@@ -1,11 +1,17 @@
-name: Coverage report
+# Workflow for generating coverage report for Checkout module
+
+name: "ACTION: Coverage report for Checkout module"
+
 on:
   workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   create-coverage:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11

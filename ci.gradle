@@ -66,3 +66,11 @@ task uploadExampleCheckoutToAppLive() {
 task testExampleCheckoutOnAppAutomate() {
     dependsOn ':example-checkout:testOnAppAutomate'
 }
+
+task generateCoverageReportForCheckout() {
+    def runUnitTests = tasks.findByPath(':checkout:testDebugUnitTest')
+    def generateReport = tasks.findByPath(':checkout:jacocoTestReport')
+    dependsOn runUnitTests
+    dependsOn generateReport
+    generateReport.mustRunAfter(runUnitTests)
+}

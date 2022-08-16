@@ -1,6 +1,29 @@
 Changelog - Payoneer Checkout SDK for Android-based devices
 -----------------------
 
+**Version checkout-android-0.93.0**
+
+**Bug**
+
+* [PCX-3630] - GooglePay - Braintree charge fails for both direct charge and preset flow
+* [PCX-3608] - Update NEXUS secrets in Android workflow files
+* [PCX-3605] - Fix getActivity problem in automated UI Tests
+* [PCX-3561] - Fix automated UI ExtraElement tests
+* [PCX-3560] - Remove test URL from Example Checkout app when clicking showPaymentList button
+
+**feature**
+
+* [PCX-3730] - Update library versions and gradle for Android Checkout SDK
+* [PCX-3726] - Enable GooglePay - Braintree PaymentService for release
+* [PCX-3653] - Change primary color for Android Checkout SDK
+* [PCX-3648] - Update AMEX logo for Android Checkout SDK
+* [PCX-3617] - Lookup of PaymentServices in Android SDK using optional providerCode
+* [PCX-3616] - Remove Example Shop from the checkout-android SDK
+* [PCX-3506] - Show information why extra element cannot be unchecked
+* [PCX-3503] - Validate checkbox states
+* [PCX-3458] - Add unit tests  in the Checkout SDK
+* [PCX-3269] - Display and submit checkbox states
+
 **Version checkout-android 0.92.0**
 
 **Bug**

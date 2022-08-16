@@ -11,7 +11,7 @@ Changelog - Payoneer Checkout SDK for Android-based devices
 * [PCX-3561] - Fix automated UI ExtraElement tests
 * [PCX-3560] - Remove test URL from Example Checkout app when clicking showPaymentList button
 
-**feature**
+**Feature**
 
 * [PCX-3730] - Update library versions and gradle for Android Checkout SDK
 * [PCX-3726] - Enable GooglePay - Braintree PaymentService for release

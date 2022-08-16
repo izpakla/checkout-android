@@ -12,6 +12,8 @@ import com.payoneer.checkout.model.Checkbox;
 import com.payoneer.checkout.model.CheckboxMode;
 import com.payoneer.checkout.model.ExtraElement;
 
+import android.text.TextUtils;
+
 /**
  * Widget for showing the ExtraElement element
  */
@@ -31,10 +33,18 @@ public class ExtraElementWidget extends CheckboxWidget {
         String mode;
         if (checkbox != null) {
             mode = extraElement.getCheckbox().getMode();
-            requiredMessage = checkbox.getRequiredMessage();
         } else {
             mode = CheckboxMode.NONE;
         }
+        requiredMessage = getRequiredMessage(extraElement);
         super.onBind(mode, extraElement.getLabel(), requiredMessage);
+    }
+
+    private String getRequiredMessage(final ExtraElement extraElement) {
+        String requiredMessage = extraElement.getCheckbox().getRequiredMessage();
+        if (TextUtils.isEmpty(requiredMessage)) {
+            return extraElement.getName() + ".requiredMessage";
+        }
+        return requiredMessage;
     }
 }

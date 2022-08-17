@@ -125,7 +125,7 @@ public final class PaymentSessionBuilder {
         }
     }
 
-    private PaymentSection buildAccountSection(ListResult listResult) {
+    private PaymentSection buildAccountSection(ListResult listResult) throws PaymentException {
         List<PaymentCard> cards = new ArrayList<>();
         List<AccountRegistration> accounts = listResult.getAccounts();
 
@@ -133,7 +133,7 @@ public final class PaymentSessionBuilder {
             return null;
         }
         for (AccountRegistration account : accounts) {
-            if (PaymentServiceLookup.supports(account.getCode(), account.getMethod())) {
+            if (isPaymentServiceSupported(account.getCode(), account.getMethod(), account.getProviders())) {
                 cards.add(buildAccountCard(account, listResult));
             }
         }
@@ -143,6 +143,13 @@ public final class PaymentSessionBuilder {
         String labelKey = UPDATE.equals(listResult.getOperationType()) ?
             LIST_HEADER_ACCOUNTS_UPDATE : LIST_HEADER_ACCOUNTS;
         return new PaymentSection(labelKey, cards);
+    }
+
+    private boolean isPaymentServiceSupported(String code, String method, List<String> providers) throws PaymentException {
+        if (code == null || method == null) {
+            throw new PaymentException("Network code and payment method must not be null");
+        }
+        return PaymentServiceLookup.supports(code, method, providers);
     }
 
     private PresetCard buildPresetCard(PresetAccount account, ListResult listResult) {
@@ -249,7 +256,7 @@ public final class PaymentSessionBuilder {
         return items;
     }
 
-    private boolean supportsApplicableNetwork(ListResult listResult, ApplicableNetwork network) {
+    private boolean supportsApplicableNetwork(ListResult listResult, ApplicableNetwork network) throws PaymentException {
         String operationType = listResult.getOperationType();
         String recurrence = network.getRecurrence();
         String registration = network.getRegistration();
@@ -258,7 +265,7 @@ public final class PaymentSessionBuilder {
         if (UPDATE.equals(operationType) && NONE.equals(recurrence) && NONE.equals(registration)) {
             return false;
         }
-        return PaymentServiceLookup.supports(network.getCode(), network.getMethod());
+        return isPaymentServiceSupported(network.getCode(), network.getMethod(), network.getProviders());
     }
 
     private PaymentNetwork buildPaymentNetwork(ApplicableNetwork network) throws PaymentException {

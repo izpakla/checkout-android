@@ -311,6 +311,13 @@ public abstract class PaymentCard {
     public abstract String getNetworkCode();
 
     /**
+     * Get payment providers of this PaymentCard.
+     *
+     * @return payment providers of this PaymentCard
+     */
+    public abstract List<String> getProviders();
+
+    /**
      * Get the title of this PaymentCard
      *
      * @return title of this PaymentCard

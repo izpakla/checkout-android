@@ -10,9 +10,9 @@ package com.payoneer.checkout.payment;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -25,6 +25,7 @@ public class ProcessPaymentData implements Parcelable {
     private final String networkCode;
     private final String paymentMethod;
     private final String operationType;
+    private final List<String> providers;
     private final Map<String, URL> links;
     private final PaymentInputValues inputValues;
 
@@ -39,11 +40,12 @@ public class ProcessPaymentData implements Parcelable {
     };
 
     public ProcessPaymentData(final String listOperationType, final String networkCode, final String paymentMethod, final String operationType,
-        final Map<String, URL> links, final PaymentInputValues inputValues) {
+        final List<String> providers, final Map<String, URL> links, final PaymentInputValues inputValues) {
         this.listOperationType = listOperationType;
         this.networkCode = networkCode;
         this.paymentMethod = paymentMethod;
         this.operationType = operationType;
+        this.providers = providers;
         this.links = links;
         this.inputValues = inputValues;
     }
@@ -53,6 +55,7 @@ public class ProcessPaymentData implements Parcelable {
         this.networkCode = in.readString();
         this.paymentMethod = in.readString();
         this.operationType = in.readString();
+        this.providers = in.createStringArrayList();
         this.inputValues = in.readParcelable(PaymentInputValues.class.getClassLoader());
         this.links = new HashMap<>();
         in.readMap(links, URL.class.getClassLoader());
@@ -69,6 +72,7 @@ public class ProcessPaymentData implements Parcelable {
         out.writeString(networkCode);
         out.writeString(paymentMethod);
         out.writeString(operationType);
+        out.writeStringList(providers);
         out.writeParcelable(inputValues, 0);
         out.writeMap(links);
     }
@@ -99,5 +103,9 @@ public class ProcessPaymentData implements Parcelable {
 
     public URL getLink(final String link) {
         return links.get(link);
+    }
+
+    public List<String> getProviders() {
+        return providers;
     }
 }

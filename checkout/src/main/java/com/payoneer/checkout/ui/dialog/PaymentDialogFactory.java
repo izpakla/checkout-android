@@ -18,6 +18,8 @@ import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_REFRESH;
 import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_RETRY;
 import static com.payoneer.checkout.localization.LocalizationKey.DIALOG_EXPIRED_BADGE_TEXT;
 import static com.payoneer.checkout.localization.LocalizationKey.DIALOG_EXPIRED_BADGE_TITLE;
+import static com.payoneer.checkout.localization.LocalizationKey.DIALOG_FORCED_CHECKBOX_MESSAGE_TEXT;
+import static com.payoneer.checkout.localization.LocalizationKey.DIALOG_FORCED_CHECKBOX_MESSAGE_TITLE;
 import static com.payoneer.checkout.localization.LocalizationKey.ERROR_CONNECTION_TEXT;
 import static com.payoneer.checkout.localization.LocalizationKey.ERROR_CONNECTION_TITLE;
 import static com.payoneer.checkout.localization.LocalizationKey.ERROR_DEFAULT_TEXT;
@@ -71,6 +73,16 @@ public class PaymentDialogFactory {
         dialog.setTitle(Localization.translate(networkCode, DIALOG_EXPIRED_BADGE_TITLE));
         dialog.setMessage(Localization.translate(networkCode, DIALOG_EXPIRED_BADGE_TEXT));
         dialog.setTag("dialog_expired_icon");
+        dialog.setPositiveButton(Localization.translate(BUTTON_OK));
+        dialog.setListener(listener);
+        return dialog;
+    }
+
+    public static PaymentDialogFragment createForcedCheckboxDialog(final String networkCode, final PaymentDialogListener listener) {
+        PaymentDialogFragment dialog = new PaymentDialogFragment();
+        dialog.setTitle(Localization.translate(networkCode, DIALOG_FORCED_CHECKBOX_MESSAGE_TITLE));
+        dialog.setMessage(Localization.translate(networkCode, DIALOG_FORCED_CHECKBOX_MESSAGE_TEXT));
+        dialog.setTag("dialog_forced_message");
         dialog.setPositiveButton(Localization.translate(BUTTON_OK));
         dialog.setListener(listener);
         return dialog;

@@ -37,10 +37,9 @@ afterEvaluate {
                             (publication == publishing.publications.nexusReleases) &&
                             (rootProject.isReleaseVersion()))
 
-            // TODO: Uploading of this GooglePay-Braintree PaymentService to PackageCloud is disabled until it is officially supported.
-            //((repository == publishing.repositories.packagecloud) &&
-            //        (publication == publishing.publications.packagecloud) &&
-            //        (rootProject.isReleaseVersion()))
+            ((repository == publishing.repositories.packagecloud) &&
+                    (publication == publishing.publications.packagecloud) &&
+                    (rootProject.isReleaseVersion()))
         }
     }
     publishing {

@@ -26,7 +26,7 @@ jobs:
       - name: Run Checkout unit-tests
         run: ./gradlew testCheckout
 
-  test-examples:
+  test-example:
     name: Test example apps
     needs: test-checkout
     runs-on: ubuntu-latest
@@ -42,14 +42,14 @@ jobs:
           distribution: 'adopt'
       - name: Clean checkout project
         run: ./gradlew clean
-      - name: Test examples on Browserstack
+      - name: Test example on Browserstack
         env:
           MOBILE_MERCHANT_CODE: ${{ secrets.MOBILE_MERCHANT_CODE }}
           MOBILE_MERCHANT_PAYMENT_TOKEN: ${{ secrets.MOBILE_MERCHANT_PAYMENT_TOKEN }}
           BROWSERSTACK_USER: ${{ secrets.BROWSERSTACK_USER }}
           BROWSERSTACK_KEY: ${{ secrets.BROWSERSTACK_KEY }}
           PAYMENTAPI_LISTURL: ${{ secrets.PAYMENTAPI_LISTURL }}
-        run: ./gradlew testExampleAppsOnAppAutomate
+        run: ./gradlew testExampleCheckoutOnAppAutomate
 
   test-paymentservices:
     name: Test payment services
@@ -95,7 +95,7 @@ jobs:
         run: ./gradlew testRiskProviders
 
   create-release:
-    needs: [ test-examples, test-paymentservices, test-riskproviders ]
+    needs: [ test-example, test-paymentservices, test-riskproviders ]
     runs-on: ubuntu-latest
     name: Create release tag
     steps:
@@ -140,8 +140,8 @@ jobs:
         run: ./gradlew clean
       - name: Publish release artifact
         env:
-          NEXUS_USER: ${{ secrets.NEXUS_USER }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          NEXUS_USER: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_USER }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_PASSWORD }}
           PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
         run: ./gradlew publishCheckoutReleaseVersion
 
@@ -185,8 +185,8 @@ jobs:
         run: ./gradlew clean
       - name: Publish payment service artifacts
         env:
-          NEXUS_USER: ${{ secrets.NEXUS_USER }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          NEXUS_USER: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_USER }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_PASSWORD }}
           PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
         run: ./gradlew publishPaymentServicesReleaseVersion
 
@@ -208,7 +208,7 @@ jobs:
         run: ./gradlew clean
       - name: Publish risk provider artifacts
         env:
-          NEXUS_USER: ${{ secrets.NEXUS_USER }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          NEXUS_USER: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_USER }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_ARTIFACT_ROOT_ACCESS_PASSWORD }}
           PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
         run: ./gradlew publishRiskProvidersReleaseVersion

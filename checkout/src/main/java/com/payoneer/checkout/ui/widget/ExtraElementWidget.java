@@ -8,9 +8,9 @@
 
 package com.payoneer.checkout.ui.widget;
 
+import com.payoneer.checkout.model.Checkbox;
 import com.payoneer.checkout.model.CheckboxMode;
 import com.payoneer.checkout.model.ExtraElement;
-import com.payoneer.checkout.payment.PaymentInputValues;
 
 /**
  * Widget for showing the ExtraElement element
@@ -21,19 +21,20 @@ public class ExtraElementWidget extends CheckboxWidget {
         super(category, name);
     }
 
-    @Override
-    public void putValue(PaymentInputValues inputValues) {
-        // Until optional checkboxes are supported for ExtraElements, this widget does not add any
-        // value to the operation
-    }
-
     /**
      * Bind this ExtraElementWidget to the ExtraElement
      *
      * @param extraElement containing the label and optional checkbox
      */
     public void onBind(ExtraElement extraElement) {
-        String checkboxMode = (extraElement.getCheckbox() == null) ? CheckboxMode.FORCED_DISPLAYED : CheckboxMode.NONE;
-        super.onBind(checkboxMode, extraElement.getLabel());
+        Checkbox checkbox = extraElement.getCheckbox();
+        String mode;
+        if (checkbox != null) {
+            mode = extraElement.getCheckbox().getMode();
+            requiredMessage = checkbox.getRequiredMessage();
+        } else {
+            mode = CheckboxMode.NONE;
+        }
+        super.onBind(mode, extraElement.getLabel(), requiredMessage);
     }
 }

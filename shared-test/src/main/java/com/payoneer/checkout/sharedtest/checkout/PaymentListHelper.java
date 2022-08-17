@@ -11,22 +11,28 @@ package com.payoneer.checkout.sharedtest.checkout;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.times;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.payoneer.checkout.sharedtest.view.PaymentActions.actionOnViewInPaymentCard;
 import static com.payoneer.checkout.sharedtest.view.PaymentActions.actionOnViewInWidget;
 import static com.payoneer.checkout.sharedtest.view.PaymentActions.clickClickableSpan;
+import static com.payoneer.checkout.sharedtest.view.PaymentActions.scrollToView;
+import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.hasTextError;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.hasTextInputLayoutError;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.hasTextInputLayoutValue;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isCardWithTestId;
+import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isSwitchMaterialCheckedValue;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isViewInPaymentCard;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.isViewInWidget;
 import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.linearLayoutWithChildCount;
@@ -39,6 +45,7 @@ import org.hamcrest.Matcher;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.sharedtest.view.ActivityHelper;
+import com.payoneer.checkout.sharedtest.view.PaymentActions;
 import com.payoneer.checkout.ui.screen.idlingresource.PaymentIdlingResources;
 import com.payoneer.checkout.ui.screen.list.PaymentListActivity;
 
@@ -51,7 +58,7 @@ public final class PaymentListHelper {
 
     public static PaymentListActivity waitForPaymentListLoaded(final int count) {
         intended(hasComponent(PaymentListActivity.class.getName()), times(count));
-        PaymentListActivity listActivity = (PaymentListActivity) ActivityHelper.getCurrentActivity();
+        PaymentListActivity listActivity = (PaymentListActivity) PaymentActions.getActivityWithClass(PaymentListActivity.class);
         PaymentIdlingResources idlingResources = listActivity.getPaymentIdlingResources();
         IdlingResource loadIdlingResource = idlingResources.getLoadIdlingResource();
 
@@ -140,8 +147,47 @@ public final class PaymentListHelper {
         onView(list).check(matches(isViewInWidget(cardIndex, hasTextInputLayoutError(errorText), widgetName, R.id.textinputlayout)));
     }
 
+    public static void matchesTextViewErrorTextInWidget(int cardIndex, String widgetName, String errorText) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInWidget(cardIndex, hasTextInputLayoutError(errorText), widgetName, R.id.error_view)));
+    }
+
     public static void matchesInputTextInWidget(int cardIndex, String widgetName, String value) {
         Matcher<View> list = withId(R.id.recyclerview_paymentlist);
         onView(list).check(matches(isViewInWidget(cardIndex, hasTextInputLayoutValue(value), widgetName, R.id.textinputlayout)));
+    }
+
+    public static void matchesValidationErrorText(final int cardIndex, String widgetName, final String errorMessage) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInWidget(cardIndex, hasTextError(errorMessage), widgetName, R.id.error_view)));
+    }
+
+    public static void scrollToTop() {
+        onView(withId(R.id.recyclerview_paymentlist)).perform(scrollToPosition(0));
+    }
+
+    public static void scrollToBottom() {
+        onView(withId(R.id.recyclerview_paymentlist)).perform(PaymentActions.scrollToBottom());
+    }
+
+    public static void checkValidationErrorTextIsGone(final int cardIndex, String widgetName) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(
+            matches(isViewInWidget(cardIndex, withEffectiveVisibility(ViewMatchers.Visibility.GONE), widgetName, R.id.error_view)));
+    }
+
+    public static void matchesCheckboxInWidget(int cardIndex, String widgetName, boolean value) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInWidget(cardIndex, isSwitchMaterialCheckedValue(value), widgetName, R.id.switch_checkbox)));
+    }
+
+    public static void checkHasVisibleCheckboxInWidget(final int cardIndex, String widgetName) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).check(matches(isViewInWidget(cardIndex, isDisplayed(), widgetName, R.id.switch_checkbox)));
+    }
+
+    public static void clickCheckboxInWidget(final int cardIndex, String widgetName) {
+        Matcher<View> list = withId(R.id.recyclerview_paymentlist);
+        onView(list).perform(actionOnViewInWidget(cardIndex, click(), widgetName, R.id.switch_checkbox));
     }
 }

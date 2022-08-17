@@ -8,11 +8,14 @@
 
 package com.payoneer.checkout.payment;
 
+import static com.payoneer.checkout.core.PaymentInputCategory.EXTRAELEMENT;
 import static com.payoneer.checkout.core.PaymentInputCategory.INPUTELEMENT;
 import static com.payoneer.checkout.core.PaymentInputCategory.REGISTRATION;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import com.payoneer.checkout.core.PaymentInputType;
@@ -126,6 +129,9 @@ public final class PaymentInputValues implements Parcelable {
             case REGISTRATION:
                 copyRegistrationBooleanValueInto(operationData, inputValue);
                 break;
+            case EXTRAELEMENT:
+                copyExtraElementBooleanValueInto(operationData, inputValue);
+                break;
             default:
                 String msg = "Operation.putBooleanValue failed for category: " + inputValue.category;
                 Log.w("checkout-sdk", msg);
@@ -133,25 +139,21 @@ public final class PaymentInputValues implements Parcelable {
     }
 
     private void copyStringValueInto(final OperationData operationData, final StringInputValue inputValue) {
-        switch (inputValue.category) {
-            case INPUTELEMENT:
-                copyInputElementStringValueInto(operationData, inputValue);
-                break;
-            default:
-                String msg = "Operation.putStringValue failed for category: " + inputValue.category;
-                Log.w("checkout-sdk", msg);
+        if (INPUTELEMENT.equals(inputValue.category)) {
+            copyInputElementStringValueInto(operationData, inputValue);
+        } else {
+            String msg = "Operation.putStringValue failed for category: " + inputValue.category;
+            Log.w("checkout-sdk", msg);
         }
     }
 
     private void copyInputElementBooleanValueInto(final OperationData operationData, final String name, final boolean value) {
         AccountInputData account = operationData.getAccount();
-        switch (name) {
-            case PaymentInputType.OPTIN:
-                account.setOptIn(value);
-                break;
-            default:
-                String msg = "Operation.Account.putBooleanValue failed for name: " + name;
-                Log.w("checkout-sdk", msg);
+        if (PaymentInputType.OPTIN.equals(name)) {
+            account.setOptIn(value);
+        } else {
+            String msg = "Operation.Account.putBooleanValue failed for name: " + name;
+            Log.w("checkout-sdk", msg);
         }
     }
 
@@ -167,6 +169,15 @@ public final class PaymentInputValues implements Parcelable {
                 String msg = "Operation.Registration.setBooleanValue failed for name: " + inputValue.name;
                 Log.w("checkout-sdk", msg);
         }
+    }
+
+    private void copyExtraElementBooleanValueInto(OperationData operationData, BooleanInputValue inputValue) {
+        Map<String, Boolean> extraElementCheckboxes = operationData.getCheckboxes();
+        if (extraElementCheckboxes == null) {
+            extraElementCheckboxes = new HashMap<>();
+        }
+        extraElementCheckboxes.put(inputValue.name, inputValue.value);
+        operationData.setCheckboxes(extraElementCheckboxes);
     }
 
     private void copyInputElementStringValueInto(final OperationData operationData, final StringInputValue inputValue) {

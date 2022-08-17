@@ -15,16 +15,21 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static com.payoneer.checkout.sharedtest.view.PaymentMatchers.hasContextWithClass;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anyOf;
 
+import java.util.Objects;
+
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.hamcrest.core.AllOf;
 
 import com.payoneer.checkout.ui.list.PaymentCardViewHolder;
 import com.payoneer.checkout.ui.widget.FormWidget;
 import com.payoneer.checkout.util.PaymentUtils;
 
+import android.app.Activity;
 import android.text.SpannableString;
 import android.text.style.ClickableSpan;
 import android.view.View;
@@ -34,6 +39,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
@@ -121,6 +127,29 @@ public final class PaymentActions {
                     throw createPerformException("Could not find the View inside the card at position: " + position, "cardView");
                 }
                 action.perform(uiController, cardView);
+            }
+        };
+    }
+
+    public static ViewAction scrollToBottom() {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return allOf(isAssignableFrom(RecyclerView.class), isDisplayed());
+            }
+
+            @Override
+            public String getDescription() {
+                return "scroll RecyclerView to bottom";
+            }
+
+            @Override
+            public void perform(final UiController uiController, final View view) {
+                RecyclerView recyclerView = ((RecyclerView) view);
+                int itemCount = Objects.requireNonNull(recyclerView.getAdapter()).getItemCount();
+                int position = itemCount - 1;
+                recyclerView.scrollToPosition(position);
+                uiController.loopMainThreadUntilIdle();
             }
         };
     }
@@ -245,6 +274,27 @@ public final class PaymentActions {
                 ((NumberPicker) view).setValue(value);
             }
         };
+    }
+
+    public static Activity getActivityWithClass(final Class<? extends Activity> clazz) {
+        final Activity[] currentActivity = new Activity[1];
+        Espresso.onView(AllOf.allOf(ViewMatchers.withId(android.R.id.content), isDisplayed())).perform(new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return hasContextWithClass(clazz);
+            }
+
+            @Override
+            public String getDescription() {
+                return "get payment activity with provided class";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                currentActivity[0] = ((Activity) view.getContext());
+            }
+        });
+        return currentActivity[0];
     }
 
     private static PerformException createPerformException(String actionDescription, String viewDescription) {

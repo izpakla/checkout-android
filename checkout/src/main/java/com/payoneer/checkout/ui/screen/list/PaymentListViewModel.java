@@ -173,11 +173,11 @@ final class PaymentListViewModel extends AppContextViewModel {
         } else {
             String networkCode = paymentCard.getNetworkCode();
             String paymentMethod = paymentCard.getPaymentMethod();
+            List<String> providers = paymentCard.getProviders();
             try {
-                serviceInteractor.loadPaymentService(networkCode, paymentMethod);
+                serviceInteractor.loadPaymentService(networkCode, paymentMethod, providers);
                 processPaymentData = new ProcessPaymentData(paymentSession.getListOperationType(), networkCode, paymentMethod,
-                    paymentCard.getOperationType(),
-                    paymentCard.getLinks(), inputValues);
+                    paymentCard.getOperationType(), providers, paymentCard.getLinks(), inputValues);
                 serviceInteractor.processPayment(processPaymentData, getApplicationContext());
             } catch (PaymentException e) {
                 setCloseWithCheckoutResult(CheckoutResultHelper.fromThrowable(e));
@@ -193,9 +193,9 @@ final class PaymentListViewModel extends AppContextViewModel {
         }
         String networkCode = paymentCard.getNetworkCode();
         String paymentMethod = paymentCard.getPaymentMethod();
-
+        List<String> providers = paymentCard.getProviders();
         try {
-            serviceInteractor.loadPaymentService(networkCode, paymentMethod);
+            serviceInteractor.loadPaymentService(networkCode, paymentMethod, providers);
             URL url = paymentCard.getLink(PaymentLinkType.SELF);
             deleteAccount = new DeleteAccount(url);
             accountInteractor.deleteAccount(deleteAccount, getApplicationContext());
@@ -545,7 +545,7 @@ final class PaymentListViewModel extends AppContextViewModel {
         String code = PaymentUtils.getParameterValue(INTERACTION_CODE, parameters);
         String reason = PaymentUtils.getParameterValue(INTERACTION_REASON, parameters);
         if (TextUtils.isEmpty(code) || TextUtils.isEmpty(reason)) {
-            closeWithErrorMessage("Missing Interaction code and reason inside PresetAccount.redirect");
+            closeWithErrorMessage("Missing Interaction code and reason inside PresetAccount redirect");
             return;
         }
         OperationResult result = new OperationResult();

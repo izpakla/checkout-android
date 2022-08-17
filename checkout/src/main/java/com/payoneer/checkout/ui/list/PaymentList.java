@@ -136,6 +136,11 @@ public final class PaymentList {
             }
 
             @Override
+            public void onShowForcedCheckBoxDialog(final String networkCode) {
+                handleShowForcedCheckBoxDialog(networkCode);
+            }
+
+            @Override
             public void onExpiredIconClicked(String networkCode) {
                 handleExpiredIconClicked(networkCode);
             }
@@ -165,6 +170,10 @@ public final class PaymentList {
 
     private void handleHintClicked(String networkCode, String type) {
         listener.onHintClicked(networkCode, type);
+    }
+
+    private void handleShowForcedCheckBoxDialog(final String networkCode) {
+        listener.onShowForcedMessage(networkCode);
     }
 
     private void handleExpiredIconClicked(String networkCode) {

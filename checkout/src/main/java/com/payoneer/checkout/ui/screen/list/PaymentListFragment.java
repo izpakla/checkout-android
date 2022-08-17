@@ -97,6 +97,11 @@ public final class PaymentListFragment extends Fragment {
             public void onExpiredIconClicked(final String networkCode) {
                 dialogHelper.showExpiredDialog(getParentFragmentManager(), networkCode, null);
             }
+
+            @Override
+            public void onShowForcedMessage(final String networkCode) {
+                dialogHelper.showForcedMessageDialog(getParentFragmentManager(), networkCode, null);
+            }
         };
         paymentList = new PaymentList(requireActivity(), listener, view.findViewById(R.id.recyclerview_paymentlist));
     }

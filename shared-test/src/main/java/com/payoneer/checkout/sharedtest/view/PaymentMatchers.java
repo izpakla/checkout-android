@@ -14,6 +14,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.payoneer.checkout.ui.list.PaymentCardViewHolder;
 import com.payoneer.checkout.ui.widget.FormWidget;
@@ -21,6 +22,7 @@ import com.payoneer.checkout.util.PaymentUtils;
 
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
@@ -123,6 +125,20 @@ public final class PaymentMatchers {
         };
     }
 
+    public static Matcher<View> hasContextWithClass(final Class clazz) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public boolean matchesSafely(View view) {
+                return view.getContext().getClass().equals(clazz);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText(PaymentUtils.format("Match view with Context with Class %s", clazz.getName()));
+            }
+        };
+    }
+
     public static Matcher<View> linearLayoutWithChildCount(final int childCount) {
         return new TypeSafeMatcher<View>() {
             @Override
@@ -178,6 +194,22 @@ public final class PaymentMatchers {
         };
     }
 
+    public static Matcher<View> isSwitchMaterialCheckedValue(final boolean expectedValue) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public boolean matchesSafely(View view) {
+                if (!(view instanceof SwitchMaterial)) {
+                    return false;
+                }
+                return ((SwitchMaterial) view).isChecked() == expectedValue;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        };
+    }
+
     public static Matcher<View> hasTextInputLayoutError(final String expectedError) {
         return new TypeSafeMatcher<View>() {
             @Override
@@ -186,6 +218,27 @@ public final class PaymentMatchers {
                     return false;
                 }
                 CharSequence errorSequence = ((TextInputLayout) view).getError();
+                String inputError = "";
+                if (errorSequence != null) {
+                    inputError = errorSequence.toString();
+                }
+                return inputError.equals(expectedError);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        };
+    }
+
+    public static Matcher<View> hasTextError(final String expectedError) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public boolean matchesSafely(View view) {
+                if (!(view instanceof TextView)) {
+                    return false;
+                }
+                CharSequence errorSequence = ((TextView) view).getText();
                 String inputError = "";
                 if (errorSequence != null) {
                     inputError = errorSequence.toString();

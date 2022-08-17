@@ -54,7 +54,7 @@
         <item name="strokeColor">@color/payment_card_stroke_color</item>
     </style>
 
-    <style name="Widget.Checkout.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+    <style name="Widget.Checkout.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.Checkout.TextInputLayout</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Checkout.SmallComponent</item>
         <item name="errorIconDrawable">@null</item>

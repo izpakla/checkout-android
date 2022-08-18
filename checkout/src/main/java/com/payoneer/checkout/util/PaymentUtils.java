@@ -420,8 +420,10 @@ public final class PaymentUtils {
         switch (checkbox.getMode()) {
             case CheckboxMode.REQUIRED:
             case CheckboxMode.REQUIRED_PRESELECTED:
-                String reqMessage = checkbox.getRequiredMessage();
-                return TextUtils.isEmpty(reqMessage) ? extraElement.getName() + ".requiredMessage" : reqMessage;
+                String requiredMessage = checkbox.getRequiredMessage();
+                boolean isRequiredMessageEmpty = TextUtils.isEmpty(requiredMessage);
+                String fallbackMessage = extraElement.getName() + ".requiredMessage";
+                return isRequiredMessageEmpty ? fallbackMessage : requiredMessage;
             default:
                 return null;
         }

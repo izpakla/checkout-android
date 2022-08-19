@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import com.payoneer.checkout.model.Parameter;
 
 import android.content.res.Resources;
 import androidx.test.core.app.ApplicationProvider;
+import net.bytebuddy.pool.TypePool;
 
 /**
  * Class for testing the PaymentUtils class
@@ -130,8 +132,26 @@ public class PaymentUtilsTest {
         assertTrue(PaymentUtils.containsExpiryDate(elements));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void createExpiryYear_negativeYear_throwIllegalArgumentException() {
+        PaymentUtils.createExpiryYear(-1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void createExpiryYear_invalidYear_throwIllegalArgumentException() {
+        PaymentUtils.createExpiryYear(100);
+    }
+
     @Test
-    public void createExpiryYear() {
+    public void createExpiryYear_validYear_success() {
+        int year = PaymentUtils.createExpiryYear(40);
+        assertEquals(2040, year);
+    }
+
+    @Test
+    public void createExpiryYear_expiredYear_success() {
+        int year = PaymentUtils.createExpiryYear(22);
+        assertEquals(2022, year);
     }
 
     @Test(expected = IOException.class)

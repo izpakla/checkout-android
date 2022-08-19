@@ -54,14 +54,4 @@ public class ProcessPaymentViewModelTest {
         assertNotNull(progressSettings);
         assertTrue(progressSettings.visible);
     }
-
-    private URL createUrl() {
-        URL url = null;
-        try {
-            url = new URL("https://example.com/");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
-    }
 }

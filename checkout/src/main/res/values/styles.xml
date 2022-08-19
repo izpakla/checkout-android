@@ -58,7 +58,6 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.Checkout.TextInputLayout</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Checkout.SmallComponent</item>
         <item name="errorIconDrawable">@null</item>
-        <item name="boxBackgroundColor">@color/pm_gray100</item>
         <item name="android:textColorHint">@color/pm_gray_dark</item>
         <item name="helperTextTextColor">?attr/colorPrimary</item>
         <item name="endIconTint">@color/payment_filled_icon_tint</item>
@@ -68,7 +67,7 @@
     <style name="ThemeOverlay.Checkout.TextInputLayout" parent="">
         <item name="textAppearanceSubtitle1">@style/TextAppearance.Checkout.Body1</item>
         <item name="android:textColorPrimary">?attr/colorOnBackground</item>
-        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.FilledBox</item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox</item>
     </style>
 
     <style name="Widget.Checkout.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">

@@ -53,7 +53,7 @@
         <item name="strokeColor">@color/custom_card_stroke_color</item>
     </style>
 
-    <style name="Widget.Custom.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="Widget.Custom.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.Custom.TextInputLayout</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Custom.SmallComponent</item>
         <item name="errorIconDrawable">@null</item>

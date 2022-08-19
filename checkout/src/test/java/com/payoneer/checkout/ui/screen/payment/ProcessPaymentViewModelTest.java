@@ -11,6 +11,7 @@
 package com.payoneer.checkout.ui.screen.payment;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -53,5 +54,7 @@ public class ProcessPaymentViewModelTest {
         assertNotNull(event);
         assertNotNull(progressSettings);
         assertTrue(progressSettings.visible);
+        Event handledEvent = LiveDataUtil.getOrAwaitValue(viewModel.showProcessPaymentFragment()).getIfNotHandled();
+        assertNull(handledEvent);
     }
 }

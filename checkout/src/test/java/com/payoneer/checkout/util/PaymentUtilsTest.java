@@ -32,9 +32,15 @@ import org.robolectric.RobolectricTestRunner;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentInputType;
+import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.ListResult;
+import com.payoneer.checkout.model.Networks;
+import com.payoneer.checkout.model.OperationData;
+import com.payoneer.checkout.model.OperationResult;
 import com.payoneer.checkout.model.Parameter;
+import com.payoneer.checkout.model.ProviderParameters;
+import com.payoneer.checkout.model.Redirect;
 
 import android.content.res.Resources;
 import androidx.test.core.app.ApplicationProvider;
@@ -99,34 +105,54 @@ public class PaymentUtilsTest {
     }
 
     @Test
-    public void containsExpiryDate() {
+    public void containsExpiryDate_emptyList_returnFalse() {
         List<InputElement> elements = new ArrayList<>();
         assertFalse(PaymentUtils.containsExpiryDate(elements));
+    }
 
+    @Test
+    public void containsExpiryDate_incorrectInputElementName_returnFalse() {
+        List<InputElement> elements = new ArrayList<>();
         InputElement foo = new InputElement();
         foo.setName("foo");
         elements.add(foo);
         assertFalse(PaymentUtils.containsExpiryDate(elements));
+    }
 
-        elements.clear();
+    @Test
+    public void containsExpiryDate_emptyInputElementName_returnFalse() {
+        List<InputElement> elements = new ArrayList<>();
         InputElement empty = new InputElement();
         empty.setName("");
         elements.add(empty);
         assertFalse(PaymentUtils.containsExpiryDate(elements));
+    }
 
-        elements.clear();
+    @Test
+    public void containsExpiryDate_missingYearInputElement_returnFalse() {
+        List<InputElement> elements = new ArrayList<>();
         InputElement month = new InputElement();
         month.setName(PaymentInputType.EXPIRY_MONTH);
         elements.add(month);
         assertFalse(PaymentUtils.containsExpiryDate(elements));
+    }
 
-        elements.clear();
+    @Test
+    public void containsExpiryDate_missingMonthInputElement_returnFalse() {
+        List<InputElement> elements = new ArrayList<>();
         InputElement year = new InputElement();
         year.setName(PaymentInputType.EXPIRY_YEAR);
         elements.add(year);
         assertFalse(PaymentUtils.containsExpiryDate(elements));
+    }
 
-        elements.clear();
+    @Test
+    public void containsExpiryDate_containsMonthYearInputElement_returnTrue() {
+        List<InputElement> elements = new ArrayList<>();
+        InputElement month = new InputElement();
+        month.setName(PaymentInputType.EXPIRY_MONTH);
+        InputElement year = new InputElement();
+        year.setName(PaymentInputType.EXPIRY_YEAR);
         elements.add(month);
         elements.add(year);
         assertTrue(PaymentUtils.containsExpiryDate(elements));
@@ -167,14 +193,18 @@ public class PaymentUtilsTest {
     }
 
     @Test
-    public void getParameterValue() {
+    public void getParameterValue_invalidInput_returnNull() {
         assertNull(PaymentUtils.getParameterValue(null, null));
         assertNull(PaymentUtils.getParameterValue("foo", null));
 
         List<Parameter> params = new ArrayList<>();
         assertNull(PaymentUtils.getParameterValue(null, params));
         assertNull(PaymentUtils.getParameterValue("foo", params));
+    }
 
+    @Test
+    public void getParameterValue_validInput_returnParameterValue() {
+        List<Parameter> params = new ArrayList<>();
         Parameter param = new Parameter();
         param.setName("name");
         param.setValue("value");
@@ -185,13 +215,20 @@ public class PaymentUtilsTest {
     }
 
     @Test
-    public void getSelfURL() throws MalformedURLException {
+    public void getSelfURL_missingSelfURL_returnNull() {
         ListResult listResult = new ListResult();
         assertNull(PaymentUtils.getSelfURL(listResult));
 
         Map<String, URL> links = new HashMap<>();
         listResult.setLinks(links);
         assertNull(PaymentUtils.getSelfURL(listResult));
+    }
+
+    @Test
+    public void getSelfURL_containsSelfURL_returnSelfURL() throws MalformedURLException {
+        ListResult listResult = new ListResult();
+        Map<String, URL> links = new HashMap<>();
+        listResult.setLinks(links);
 
         URL url = new URL("http://localhost");
         links.put("self", url);
@@ -199,34 +236,163 @@ public class PaymentUtilsTest {
     }
 
     @Test
-    public void getURL() throws MalformedURLException {
+    public void getURL_missingURL_returnNull() throws MalformedURLException {
         assertNull(PaymentUtils.getURL(null, null));
         assertNull(PaymentUtils.getURL("foo", null));
 
         Map<String, URL> urls = new HashMap<>();
         assertNull(PaymentUtils.getURL(null, urls));
         assertNull(PaymentUtils.getURL("foo", urls));
+    }
 
+    @Test
+    public void getURL_containsURLWrongKey_returnNull() throws MalformedURLException {
+        Map<String, URL> urls = new HashMap<>();
         URL url = new URL("http://localhost");
         urls.put("url", url);
         assertNull(PaymentUtils.getURL("foo", urls));
+    }
+
+    @Test
+    public void getURL_containsURL_returnURL() throws MalformedURLException {
+        Map<String, URL> urls = new HashMap<>();
+        URL url = new URL("http://localhost");
+        urls.put("url", url);
         assertNotNull(PaymentUtils.getURL("url", urls));
     }
 
     @Test
-    public void getApplicableNetwork() {
+    public void getApplicableNetwork_missingNetworks_returnNull() {
+        ListResult listResult = new ListResult();
+        assertNull(PaymentUtils.getApplicableNetwork(listResult, "VISA"));
     }
 
     @Test
-    public void getCustomerRegistrationId() {
+    public void getApplicableNetwork_missingApplicableNetwork_returnNull() {
+        ListResult listResult = new ListResult();
+        Networks networks = new Networks();
+        listResult.setNetworks(networks);
+        assertNull(PaymentUtils.getApplicableNetwork(listResult, "VISA"));
+
+        List<ApplicableNetwork> list = new ArrayList<>();
+        networks.setApplicable(list);
+        assertNull(PaymentUtils.getApplicableNetwork(listResult, "VISA"));
+    }
+
+    @Test
+    public void getApplicableNetwork_containsApplicableNetworkWrongKey_returnNull() {
+        ListResult listResult = new ListResult();
+        Networks networks = new Networks();
+        listResult.setNetworks(networks);
+
+        ApplicableNetwork network = new ApplicableNetwork();
+        network.setCode("VISA");
+        List<ApplicableNetwork> list = new ArrayList<>();
+        list.add(network);
+        networks.setApplicable(list);
+
+        assertNull(PaymentUtils.getApplicableNetwork(listResult, "foo"));
+    }
+
+    @Test
+    public void getApplicableNetwork_containsApplicableNetwork_returnApplicableNetwork() {
+        ListResult listResult = new ListResult();
+        Networks networks = new Networks();
+        listResult.setNetworks(networks);
+
+        ApplicableNetwork network = new ApplicableNetwork();
+        network.setCode("VISA");
+        List<ApplicableNetwork> list = new ArrayList<>();
+        list.add(network);
+        networks.setApplicable(list);
+
+        assertEquals(network, PaymentUtils.getApplicableNetwork(listResult,"VISA"));
+    }
+
+    @Test
+    public void getCustomerRegistrationId_missingRegistrationId_returnNull() {
+        assertNull(PaymentUtils.getCustomerRegistrationId(null));
+
+        OperationResult operationResult = new OperationResult();
+        assertNull(PaymentUtils.getCustomerRegistrationId(operationResult));
+
+        Redirect redirect = new Redirect();
+        operationResult.setRedirect(redirect);
+        assertNull(PaymentUtils.getCustomerRegistrationId(operationResult));
+    }
+
+    @Test
+    public void getCustomerRegistrationId_containsRegistrationId_returnRegistrationId() {
+        OperationResult operationResult = new OperationResult();
+
+        Parameter parameter = createParameter("customerRegistrationId", "reg123");
+        List<Parameter> params = new ArrayList<>();
+        params.add(parameter);
+        Redirect redirect = new Redirect();
+        redirect.setParameters(params);
+        operationResult.setRedirect(redirect);
+
+        assertEquals("reg123", PaymentUtils.getCustomerRegistrationId(operationResult));
     }
 
     @Test
     public void putProviderRequests() {
+        OperationData operationData = new OperationData();
+        List<ProviderParameters> list = createTestProviderRequests(2, 2);
+        PaymentUtils.putProviderRequests(operationData, list);
+        assertTrue(operationData.getProviderRequests().containsAll(list));
     }
 
     @Test
-    public void getProviderRequestIndex() {
+    public void getProviderRequestIndex_missingList_returnMinOne() {
+        OperationData operationData = new OperationData();
+        ProviderParameters request = createTestProviderRequest("code", "type", 2);
+        assertEquals(-1, PaymentUtils.getProviderRequestIndex(operationData, request));
+    }
+
+    @Test
+    public void getProviderRequestIndex_emptyList_returnMinOne() {
+        OperationData operationData = new OperationData();
+        ProviderParameters request = createTestProviderRequest("code", "type", 2);
+        List<ProviderParameters> emptyList = createTestProviderRequests(0, 0);
+        operationData.setProviderRequests(emptyList);
+        assertEquals(-1, PaymentUtils.getProviderRequestIndex(operationData, request));
+    }
+
+    @Test
+    public void getProviderRequestIndex_missingProviderRequest_returnMinOne() {
+        OperationData operationData = new OperationData();
+        ProviderParameters request = createTestProviderRequest("code", "type", 2);
+        List<ProviderParameters> list = createTestProviderRequests(2, 2);
+        operationData.setProviderRequests(list);
+        assertEquals(-1, PaymentUtils.getProviderRequestIndex(operationData, request));
+    }
+
+    @Test
+    public void getProviderRequestIndex_invalidProviderRequestCode_returnMinOne() {
+        OperationData operationData = new OperationData();
+        ProviderParameters request = createTestProviderRequest("code", "type0", 2);
+        List<ProviderParameters> list = createTestProviderRequests(2, 2);
+        operationData.setProviderRequests(list);
+        assertEquals(-1, PaymentUtils.getProviderRequestIndex(operationData, request));
+    }
+
+    @Test
+    public void getProviderRequestIndex_invalidProviderRequestType_returnMinOne() {
+        OperationData operationData = new OperationData();
+        ProviderParameters request = createTestProviderRequest("code0", "type", 2);
+        List<ProviderParameters> list = createTestProviderRequests(2, 2);
+        operationData.setProviderRequests(list);
+        assertEquals(-1, PaymentUtils.getProviderRequestIndex(operationData, request));
+    }
+
+    @Test
+    public void getProviderRequestIndex_containsProviderRequest_returnOne() {
+        OperationData operationData = new OperationData();
+        ProviderParameters request = createTestProviderRequest("code1", "type1", 2);
+        List<ProviderParameters> list = createTestProviderRequests(2, 2);
+        operationData.setProviderRequests(list);
+        assertEquals(1, PaymentUtils.getProviderRequestIndex(operationData, request));
     }
 
     @Test
@@ -256,17 +422,45 @@ public class PaymentUtilsTest {
         assertNotNull(PaymentUtils.emptyMapIfNull(null));
     }
 
-
-
-
-
-
     @Test
     public void readRawResource() {
     }
 
 
+    private List<ProviderParameters> createTestProviderRequests(final int requestSize, final int paramSize) {
+        List<ProviderParameters> list = new ArrayList<>();
 
+        for (int i = 0 ; i < requestSize ; i++) {
+            ProviderParameters request = new ProviderParameters();
+            request.setProviderCode("code" + i);
+            request.setProviderType("type" + i);
+            request.setParameters(createTestParameterList(paramSize));
+            list.add(request);
+        }
+        return list;
+    }
 
+    private ProviderParameters createTestProviderRequest(final String code, final String type, final int paramSize) {
+        ProviderParameters request = new ProviderParameters();
+        request.setProviderCode(code);
+        request.setProviderType(type);
+        request.setParameters(createTestParameterList(paramSize));
+        return request;
+    }
 
+    private List<Parameter> createTestParameterList(final int size) {
+        List<Parameter> list = new ArrayList<>();
+
+        for (int i = 0 ; i < size ; i++) {
+            list.add(createParameter("name" + i, "value" + i));
+        }
+        return list;
+    }
+
+    private Parameter createParameter(final String name, final String value) {
+        Parameter param = new Parameter();
+        param.setName(name);
+        param.setValue(value);
+        return param;
+    }
 }

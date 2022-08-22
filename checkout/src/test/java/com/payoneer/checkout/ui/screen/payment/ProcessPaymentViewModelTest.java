@@ -11,6 +11,7 @@
 package com.payoneer.checkout.ui.screen.payment;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -53,15 +54,7 @@ public class ProcessPaymentViewModelTest {
         assertNotNull(event);
         assertNotNull(progressSettings);
         assertTrue(progressSettings.visible);
-    }
-
-    private URL createUrl() {
-        URL url = null;
-        try {
-            url = new URL("https://example.com/");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
+        Event handledEvent = LiveDataUtil.getOrAwaitValue(viewModel.showProcessPaymentFragment()).getIfNotHandled();
+        assertNull(handledEvent);
     }
 }

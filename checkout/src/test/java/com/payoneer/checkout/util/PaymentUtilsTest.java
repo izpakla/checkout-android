@@ -427,6 +427,50 @@ public class PaymentUtilsTest {
     public void readRawResource() {
     }
 
+    @Test
+    public void getCheckboxRequiredMessage_withEmptyRequiredMessage_formatFallbackMessage() {
+        ExtraElement extraElement = new ExtraElement();
+        extraElement.setName("REQUIRED");
+        extraElement.setLabel("Lorem ipsum dolor sit er elit lamet");
+        Checkbox checkbox = new Checkbox();
+        checkbox.setRequiredMessage("");
+        checkbox.setMode(CheckboxMode.REQUIRED);
+        extraElement.setCheckbox(checkbox);
+
+        assertEquals(PaymentUtils.getCheckboxRequiredMessage(extraElement), "REQUIRED.requiredMessage");
+    }
+
+    @Test
+    public void getCheckboxRequiredMessage_withNullRequiredMessage_formatFallbackMessage() {
+        ExtraElement extraElement = new ExtraElement();
+        extraElement.setName("REQUIRED");
+        Checkbox checkbox = new Checkbox();
+        checkbox.setRequiredMessage(null);
+        checkbox.setMode(CheckboxMode.REQUIRED);
+        extraElement.setCheckbox(checkbox);
+
+        assertEquals(PaymentUtils.getCheckboxRequiredMessage(extraElement), "REQUIRED.requiredMessage");
+    }
+
+    @Test
+    public void getCheckboxRequiredMessage_withNullCheckbox_returnNullMessage() {
+        ExtraElement extraElement = new ExtraElement();
+        extraElement.setCheckbox(null);
+
+        assertNull(PaymentUtils.getCheckboxRequiredMessage(extraElement));
+    }
+
+    @Test
+    public void getCheckboxRequiredMessage_withValidRequiredMessage_returnTheMessage() {
+        ExtraElement extraElement = new ExtraElement();
+        extraElement.setName("REQUIRED");
+        Checkbox checkbox = new Checkbox();
+        checkbox.setRequiredMessage("REQUIRED checkbox message");
+        checkbox.setMode(CheckboxMode.REQUIRED);
+        extraElement.setCheckbox(checkbox);
+
+        assertEquals(PaymentUtils.getCheckboxRequiredMessage(extraElement), "REQUIRED checkbox message");
+    }
 
     private List<ProviderParameters> createTestProviderRequests(final int requestSize, final int paramSize) {
         List<ProviderParameters> list = new ArrayList<>();
@@ -463,50 +507,5 @@ public class PaymentUtilsTest {
         param.setName(name);
         param.setValue(value);
         return param;
-    }
-
-    @Test
-    public void withEmptyRequiredMessage_formatFallbackMessage() {
-        ExtraElement extraElement = new ExtraElement();
-        extraElement.setName("REQUIRED");
-        extraElement.setLabel("Lorem ipsum dolor sit er elit lamet");
-        Checkbox checkbox = new Checkbox();
-        checkbox.setRequiredMessage("");
-        checkbox.setMode(CheckboxMode.REQUIRED);
-        extraElement.setCheckbox(checkbox);
-
-        assertEquals(PaymentUtils.getCheckboxRequiredMessage(extraElement), "REQUIRED.requiredMessage");
-    }
-
-    @Test
-    public void withnullRequiredMessage_formatFallbackMessage() {
-        ExtraElement extraElement = new ExtraElement();
-        extraElement.setName("REQUIRED");
-        Checkbox checkbox = new Checkbox();
-        checkbox.setRequiredMessage(null);
-        checkbox.setMode(CheckboxMode.REQUIRED);
-        extraElement.setCheckbox(checkbox);
-
-        assertEquals(PaymentUtils.getCheckboxRequiredMessage(extraElement), "REQUIRED.requiredMessage");
-    }
-
-    @Test
-    public void withnullCheckbox_returnNullMessage() {
-        ExtraElement extraElement = new ExtraElement();
-        extraElement.setCheckbox(null);
-
-        assertNull(PaymentUtils.getCheckboxRequiredMessage(extraElement));
-    }
-
-    @Test
-    public void withvalidRequiredMessage_returnTheMessage() {
-        ExtraElement extraElement = new ExtraElement();
-        extraElement.setName("REQUIRED");
-        Checkbox checkbox = new Checkbox();
-        checkbox.setRequiredMessage("REQUIRED checkbox message");
-        checkbox.setMode(CheckboxMode.REQUIRED);
-        extraElement.setCheckbox(checkbox);
-
-        assertEquals(PaymentUtils.getCheckboxRequiredMessage(extraElement), "REQUIRED checkbox message");
     }
 }

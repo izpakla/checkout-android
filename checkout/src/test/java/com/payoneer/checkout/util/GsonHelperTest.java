@@ -10,6 +10,7 @@ package com.payoneer.checkout.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -57,10 +58,23 @@ public class GsonHelperTest {
     }
 
     @Test
+    public void fromNullJson_class() {
+        InputElement element = GsonHelper.getInstance().fromJson(null, InputElement.class);
+        assertNull(element);
+    }
+
+    @Test
     public void fromJson_type() {
         Type listType = new TypeToken<ArrayList<InputElement>>() { }.getType();
         List<InputElement> items = GsonHelper.getInstance().fromJson(jsonArray, listType);
         assertNotNull(items);
         assertEquals(items.size(), 2);
+    }
+
+    @Test
+    public void fromNullJson_type() {
+        Type listType = new TypeToken<ArrayList<InputElement>>() { }.getType();
+        List<InputElement> items = GsonHelper.getInstance().fromJson(null, listType);
+        assertNull(items);
     }
 }

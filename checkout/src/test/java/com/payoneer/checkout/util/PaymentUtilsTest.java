@@ -14,6 +14,7 @@ import static com.payoneer.checkout.model.PaymentMethod.WALLET;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -28,6 +29,9 @@ import org.robolectric.RobolectricTestRunner;
 
 import com.payoneer.checkout.R;
 import com.payoneer.checkout.core.PaymentInputType;
+import com.payoneer.checkout.model.Checkbox;
+import com.payoneer.checkout.model.CheckboxMode;
+import com.payoneer.checkout.model.ExtraElement;
 import com.payoneer.checkout.model.InputElement;
 
 import android.content.res.Resources;
@@ -106,5 +110,50 @@ public class PaymentUtilsTest {
     public void readRawResource_contains_resource() throws IOException {
         Resources res = ApplicationProvider.getApplicationContext().getResources();
         assertNotNull(PaymentUtils.readRawResource(res, R.raw.groups));
+    }
+
+    @Test
+    public void withEmptyRequiredMessage_formatFallbackMessage() {
+        ExtraElement extraElement = new ExtraElement();
+        extraElement.setName("REQUIRED");
+        extraElement.setLabel("Lorem ipsum dolor sit er elit lamet");
+        Checkbox checkbox = new Checkbox();
+        checkbox.setRequiredMessage("");
+        checkbox.setMode(CheckboxMode.REQUIRED);
+        extraElement.setCheckbox(checkbox);
+
+        assertEquals(PaymentUtils.getCheckboxRequiredMessage(extraElement), "REQUIRED.requiredMessage");
+    }
+
+    @Test
+    public void withnullRequiredMessage_formatFallbackMessage() {
+        ExtraElement extraElement = new ExtraElement();
+        extraElement.setName("REQUIRED");
+        Checkbox checkbox = new Checkbox();
+        checkbox.setRequiredMessage(null);
+        checkbox.setMode(CheckboxMode.REQUIRED);
+        extraElement.setCheckbox(checkbox);
+
+        assertEquals(PaymentUtils.getCheckboxRequiredMessage(extraElement), "REQUIRED.requiredMessage");
+    }
+
+    @Test
+    public void withnullCheckbox_returnNullMessage() {
+        ExtraElement extraElement = new ExtraElement();
+        extraElement.setCheckbox(null);
+
+        assertNull(PaymentUtils.getCheckboxRequiredMessage(extraElement));
+    }
+
+    @Test
+    public void withvalidRequiredMessage_returnTheMessage() {
+        ExtraElement extraElement = new ExtraElement();
+        extraElement.setName("REQUIRED");
+        Checkbox checkbox = new Checkbox();
+        checkbox.setRequiredMessage("REQUIRED checkbox message");
+        checkbox.setMode(CheckboxMode.REQUIRED);
+        extraElement.setCheckbox(checkbox);
+
+        assertEquals(PaymentUtils.getCheckboxRequiredMessage(extraElement), "REQUIRED checkbox message");
     }
 }

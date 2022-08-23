@@ -45,6 +45,7 @@ import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.model.Redirect;
 
 import android.content.res.Resources;
+import android.view.View;
 import androidx.test.core.app.ApplicationProvider;
 
 /**
@@ -326,7 +327,7 @@ public class PaymentUtilsTest {
     public void getCustomerRegistrationId_containsRegistrationId_returnRegistrationId() {
         OperationResult operationResult = new OperationResult();
 
-        Parameter parameter = createParameter("customerRegistrationId", "reg123");
+        Parameter parameter = createTestParameter("customerRegistrationId", "reg123");
         List<Parameter> params = new ArrayList<>();
         params.add(parameter);
         Redirect redirect = new Redirect();
@@ -337,25 +338,39 @@ public class PaymentUtilsTest {
     }
 
     @Test
-    public void putProviderRequests() {
+    public void putProviderRequests_withNullParametersList_allAdded() {
         OperationData operationData = new OperationData();
-        List<ProviderParameters> list = createTestProviderRequests(2, 2);
-        PaymentUtils.putProviderRequests(operationData, list);
-        assertTrue(operationData.getProviderRequests().containsAll(list));
+        List<ProviderParameters> newList = createTestProviderParametersList(2, 2);
+        PaymentUtils.putProviderRequests(operationData, newList);
+        assertTrue(operationData.getProviderRequests().containsAll(newList));
+        assertEquals(newList.size(), operationData.getProviderRequests().size());
     }
+
+    @Test
+    public void putProviderRequests_withParametersList_allAdded() {
+        OperationData operationData = new OperationData();
+        List<ProviderParameters> list = createTestProviderParametersList(2, 2);
+        operationData.setProviderRequests(list);
+
+        List<ProviderParameters> newList = createTestProviderParametersList(4, 4);
+        PaymentUtils.putProviderRequests(operationData, newList);
+        assertTrue(operationData.getProviderRequests().containsAll(newList));
+        assertEquals(newList.size(), operationData.getProviderRequests().size());
+    }
+
 
     @Test
     public void getProviderRequestIndex_missingList_returnMinOne() {
         OperationData operationData = new OperationData();
-        ProviderParameters request = createTestProviderRequest("code", "type", 2);
+        ProviderParameters request = createTestProviderParameters("code", "type", 2);
         assertEquals(-1, PaymentUtils.getProviderRequestIndex(operationData, request));
     }
 
     @Test
     public void getProviderRequestIndex_emptyList_returnMinOne() {
         OperationData operationData = new OperationData();
-        ProviderParameters request = createTestProviderRequest("code", "type", 2);
-        List<ProviderParameters> emptyList = createTestProviderRequests(0, 0);
+        ProviderParameters request = createTestProviderParameters("code", "type", 2);
+        List<ProviderParameters> emptyList = createTestProviderParametersList(0, 0);
         operationData.setProviderRequests(emptyList);
         assertEquals(-1, PaymentUtils.getProviderRequestIndex(operationData, request));
     }
@@ -363,8 +378,8 @@ public class PaymentUtilsTest {
     @Test
     public void getProviderRequestIndex_missingProviderRequest_returnMinOne() {
         OperationData operationData = new OperationData();
-        ProviderParameters request = createTestProviderRequest("code", "type", 2);
-        List<ProviderParameters> list = createTestProviderRequests(2, 2);
+        ProviderParameters request = createTestProviderParameters("code", "type", 2);
+        List<ProviderParameters> list = createTestProviderParametersList(2, 2);
         operationData.setProviderRequests(list);
         assertEquals(-1, PaymentUtils.getProviderRequestIndex(operationData, request));
     }
@@ -372,8 +387,8 @@ public class PaymentUtilsTest {
     @Test
     public void getProviderRequestIndex_invalidProviderRequestCode_returnMinOne() {
         OperationData operationData = new OperationData();
-        ProviderParameters request = createTestProviderRequest("code", "type0", 2);
-        List<ProviderParameters> list = createTestProviderRequests(2, 2);
+        ProviderParameters request = createTestProviderParameters("code", "type0", 2);
+        List<ProviderParameters> list = createTestProviderParametersList(2, 2);
         operationData.setProviderRequests(list);
         assertEquals(-1, PaymentUtils.getProviderRequestIndex(operationData, request));
     }
@@ -381,8 +396,8 @@ public class PaymentUtilsTest {
     @Test
     public void getProviderRequestIndex_invalidProviderRequestType_returnMinOne() {
         OperationData operationData = new OperationData();
-        ProviderParameters request = createTestProviderRequest("code0", "type", 2);
-        List<ProviderParameters> list = createTestProviderRequests(2, 2);
+        ProviderParameters request = createTestProviderParameters("code0", "type", 2);
+        List<ProviderParameters> list = createTestProviderParametersList(2, 2);
         operationData.setProviderRequests(list);
         assertEquals(-1, PaymentUtils.getProviderRequestIndex(operationData, request));
     }
@@ -390,24 +405,107 @@ public class PaymentUtilsTest {
     @Test
     public void getProviderRequestIndex_containsProviderRequest_returnOne() {
         OperationData operationData = new OperationData();
-        ProviderParameters request = createTestProviderRequest("code1", "type1", 2);
-        List<ProviderParameters> list = createTestProviderRequests(2, 2);
+        ProviderParameters request = createTestProviderParameters("code1", "type1", 2);
+        List<ProviderParameters> list = createTestProviderParametersList(2, 2);
         operationData.setProviderRequests(list);
         assertEquals(1, PaymentUtils.getProviderRequestIndex(operationData, request));
     }
 
     @Test
-    public void getProviderParameterValue() {
+    public void getProviderParameterValue_withNullOperationResult_returnNull() {
+        assertNull(PaymentUtils.getProviderParameterValue("name0", null));
     }
 
     @Test
-    public void getProviderCode() {
+    public void getProviderParameterValue_withNullProviderParameters_returnNull() {
+        OperationResult operationResult = new OperationResult();
+        assertNull(PaymentUtils.getProviderParameterValue("name0", operationResult));
     }
 
     @Test
-    public void containsRedirectType() {
+    public void getProviderParameterValue_withNullParameterList_returnNull() {
+        OperationResult operationResult = new OperationResult();
+        ProviderParameters response = createTestProviderParameters("code", "type", -1);
+        operationResult.setProviderResponse(response);
+        assertNull(PaymentUtils.getProviderParameterValue("name0", operationResult));
     }
 
+    @Test
+    public void getProviderParameterValue_withEmptyParameterList_returnNull() {
+        OperationResult operationResult = new OperationResult();
+        ProviderParameters response = createTestProviderParameters("code", "type", 0);
+        operationResult.setProviderResponse(response);
+        assertNull(PaymentUtils.getProviderParameterValue("name0", operationResult));
+    }
+
+    @Test
+    public void getProviderParameterValue_withMissingParameter_returnNull() {
+        OperationResult operationResult = new OperationResult();
+        ProviderParameters response = createTestProviderParameters("code", "type", 2);
+        operationResult.setProviderResponse(response);
+        assertNull(PaymentUtils.getProviderParameterValue("name12", operationResult));
+    }
+
+    @Test
+    public void getProviderParameterValue_withMParameter_returnValue() {
+        OperationResult operationResult = new OperationResult();
+        ProviderParameters response = createTestProviderParameters("code", "type", 2);
+        operationResult.setProviderResponse(response);
+        assertEquals("value0", PaymentUtils.getProviderParameterValue("name0", operationResult));
+    }
+
+    @Test
+    public void getProviderCode_withNullOperationResult_returnNull() {
+        assertNull(PaymentUtils.getProviderCode(null));
+    }
+
+    @Test
+    public void getProviderCode_withNullProviderParameters_returnNull() {
+        OperationResult operationResult = new OperationResult();
+        assertNull(PaymentUtils.getProviderCode(operationResult));
+    }
+
+    @Test
+    public void getProviderCode_withProviderParameters_returnCode() {
+        OperationResult operationResult = new OperationResult();
+        ProviderParameters parameters = new ProviderParameters();
+        parameters.setProviderCode("code");
+        operationResult.setProviderResponse(parameters);
+        assertEquals("code", PaymentUtils.getProviderCode(operationResult));
+    }
+
+    @Test
+    public void containsRedirectType_withNullOperationResult_returnFalse() {
+        String redirectType = "SUMMARY";
+        assertFalse(PaymentUtils.containsRedirectType(null, redirectType));
+    }
+
+    @Test
+    public void containsRedirectType_withMissingRedirect_returnFalse() {
+        String redirectType = "SUMMARY";
+        OperationResult operationResult = new OperationResult();
+        assertFalse(PaymentUtils.containsRedirectType(operationResult, redirectType));
+    }
+
+    @Test
+    public void containsRedirectType_withInvalidRedirect_returnFalse() {
+        String redirectType = "SUMMARY";
+        OperationResult operationResult = new OperationResult();
+        Redirect redirect = new Redirect();
+        redirect.setType("foo");
+        operationResult.setRedirect(redirect);
+        assertFalse(PaymentUtils.containsRedirectType(operationResult, redirectType));
+    }
+
+    @Test
+    public void containsRedirectType_withInvalidRedirect_returnTrue() {
+        String redirectType = "SUMMARY";
+        OperationResult operationResult = new OperationResult();
+        Redirect redirect = new Redirect();
+        redirect.setType(redirectType);
+        operationResult.setRedirect(redirect);
+        assertTrue(PaymentUtils.containsRedirectType(operationResult, redirectType));
+    }
 
     @Test
     public void emptyListIfNull() {
@@ -421,10 +519,6 @@ public class PaymentUtilsTest {
         Map<String, String> map = new HashMap<>();
         assertEquals(map, PaymentUtils.emptyMapIfNull(map));
         assertNotNull(PaymentUtils.emptyMapIfNull(null));
-    }
-
-    @Test
-    public void readRawResource() {
     }
 
     @Test
@@ -461,6 +555,18 @@ public class PaymentUtilsTest {
     }
 
     @Test
+    public void getCheckboxRequiredMessage_withInvalidCheckboxMode_returnNullMessage() {
+        ExtraElement extraElement = new ExtraElement();
+        extraElement.setName("OPTIONAL");
+        Checkbox checkbox = new Checkbox();
+        checkbox.setRequiredMessage("OPTIOnAL checkbox message");
+        checkbox.setMode(CheckboxMode.OPTIONAL);
+        extraElement.setCheckbox(checkbox);
+
+        assertNull(PaymentUtils.getCheckboxRequiredMessage(extraElement));
+    }
+
+    @Test
     public void getCheckboxRequiredMessage_withValidRequiredMessage_returnTheMessage() {
         ExtraElement extraElement = new ExtraElement();
         extraElement.setName("REQUIRED");
@@ -469,13 +575,20 @@ public class PaymentUtilsTest {
         checkbox.setMode(CheckboxMode.REQUIRED);
         extraElement.setCheckbox(checkbox);
 
-        assertEquals(PaymentUtils.getCheckboxRequiredMessage(extraElement), "REQUIRED checkbox message");
+        assertEquals("REQUIRED checkbox message", PaymentUtils.getCheckboxRequiredMessage(extraElement));
     }
 
-    private List<ProviderParameters> createTestProviderRequests(final int requestSize, final int paramSize) {
+    @Test
+    public void setTestId() {
+        View view = new View(ApplicationProvider.getApplicationContext());
+        PaymentUtils.setTestId(view, "type", "name");
+        assertEquals("type.name", view.getContentDescription());
+    }
+
+    private List<ProviderParameters> createTestProviderParametersList(final int providerSize, final int paramSize) {
         List<ProviderParameters> list = new ArrayList<>();
 
-        for (int i = 0 ; i < requestSize ; i++) {
+        for (int i = 0; i < providerSize; i++) {
             ProviderParameters request = new ProviderParameters();
             request.setProviderCode("code" + i);
             request.setProviderType("type" + i);
@@ -485,7 +598,7 @@ public class PaymentUtilsTest {
         return list;
     }
 
-    private ProviderParameters createTestProviderRequest(final String code, final String type, final int paramSize) {
+    private ProviderParameters createTestProviderParameters(final String code, final String type, final int paramSize) {
         ProviderParameters request = new ProviderParameters();
         request.setProviderCode(code);
         request.setProviderType(type);
@@ -494,15 +607,17 @@ public class PaymentUtilsTest {
     }
 
     private List<Parameter> createTestParameterList(final int size) {
+        if (size == -1) {
+            return null;
+        }
         List<Parameter> list = new ArrayList<>();
-
-        for (int i = 0 ; i < size ; i++) {
-            list.add(createParameter("name" + i, "value" + i));
+        for (int i = 0; i < size; i++) {
+            list.add(createTestParameter("name" + i, "value" + i));
         }
         return list;
     }
 
-    private Parameter createParameter(final String name, final String value) {
+    private Parameter createTestParameter(final String name, final String value) {
         Parameter param = new Parameter();
         param.setName(name);
         param.setValue(value);

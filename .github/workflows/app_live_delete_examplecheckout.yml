@@ -7,7 +7,7 @@ on:
       - closed
 
 jobs:
-  upload-app-live:
+  delete-from-app-live:
     name: Delete example-checkout from App Live
     # Don't clean binaries for PRs where head (from) branch is develop or master to avoid double deletion
     if: github.head_ref != 'develop' && github.head_ref != 'master'
@@ -25,9 +25,6 @@ jobs:
           distribution: 'adopt'
       - name: Delete example-checkout from App Live
         env:
-          MOBILE_MERCHANT_CODE: ${{ secrets.MOBILE_MERCHANT_CODE }}
-          MOBILE_MERCHANT_PAYMENT_TOKEN: ${{ secrets.MOBILE_MERCHANT_PAYMENT_TOKEN }}
           BROWSERSTACK_USER: ${{ secrets.BROWSERSTACK_USER }}
           BROWSERSTACK_KEY: ${{ secrets.BROWSERSTACK_KEY }}
-          PAYMENTAPI_LISTURL: ${{ secrets.PAYMENTAPI_LISTURL }}
         run: ./gradlew deleteExampleCheckoutFromAppLive

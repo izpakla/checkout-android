@@ -1,32 +1,32 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="TextAppearance.Custom.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="fontFamily">@font/georgia_bold</item>
+        <item name="fontFamily">@font/roboto_condensed_regular</item>
     </style>
 
     <style name="TextAppearance.Custom.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="fontFamily">@font/georgia_bold</item>
+        <item name="fontFamily">@font/roboto_condensed_regular</item>
     </style>
 
     <style name="TextAppearance.Custom.Body1" parent="TextAppearance.MaterialComponents.Body1">
-        <item name="fontFamily">@font/georgia</item>
+        <item name="fontFamily">@font/roboto_condensed_regular</item>
     </style>
 
     <style name="TextAppearance.Custom.Body2" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="fontFamily">@font/georgia</item>
+        <item name="fontFamily">@font/roboto_condensed_regular</item>
     </style>
 
     <style name="TextAppearance.Custom.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="fontFamily">@font/georgia_bold</item>
+        <item name="fontFamily">@font/roboto_condensed_regular</item>
     </style>
 
     <style name="TextAppearance.Custom.Button" parent="TextAppearance.MaterialComponents.Button">
-        <item name="fontFamily">@font/georgia_bold</item>
+        <item name="fontFamily">@font/roboto_condensed_regular</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="TextAppearance.Custom.Caption" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="fontFamily">@font/georgia</item>
+        <item name="fontFamily">@font/roboto_condensed_regular</item>
     </style>
 
     <style name="Widget.Custom.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
@@ -53,12 +53,11 @@
         <item name="strokeColor">@color/custom_card_stroke_color</item>
     </style>
 
-    <style name="Widget.Custom.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+    <style name="Widget.Custom.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.Custom.TextInputLayout</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Custom.SmallComponent</item>
         <item name="errorIconDrawable">@null</item>
-        <item name="boxBackgroundColor">@color/custom_lightgray</item>
-        <item name="android:textColorHint">@color/custom_darkgray_alpha32</item>
+        <item name="android:textColorHint">@color/pm_gray_dark</item>
         <item name="helperTextTextColor">?attr/colorPrimary</item>
         <item name="endIconTint">@color/custom_filled_icon_tint</item>
         <item name="boxStrokeColor">@color/custom_textinputlayout_stroke_color</item>
@@ -67,7 +66,7 @@
     <style name="ThemeOverlay.Custom.TextInputLayout" parent="">
         <item name="textAppearanceSubtitle1">@style/TextAppearance.Custom.Body1</item>
         <item name="android:textColorPrimary">?attr/colorOnBackground</item>
-        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.FilledBox</item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox</item>
     </style>
 
     <style name="Widget.Custom.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">

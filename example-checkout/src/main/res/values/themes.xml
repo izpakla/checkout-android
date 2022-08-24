@@ -8,10 +8,10 @@
 
         <item name="colorOnPrimary">@color/pm_white</item>
         <item name="android:colorBackground">@color/pm_white</item>
-        <item name="colorOnBackground">@color/custom_darkgray</item>
+        <item name="colorOnBackground">@color/pm_gray800</item>
         <item name="colorSurface">@color/pm_white</item>
-        <item name="colorOnSurface">@color/custom_darkgray</item>
-        <item name="colorError">@color/custom_red</item>
+        <item name="colorOnSurface">@color/pm_gray800</item>
+        <item name="colorError">@color/pm_red</item>
 
         <item name="textAppearanceSubtitle1">@style/TextAppearance.Custom.Subtitle1</item>
         <item name="textAppearanceSubtitle2">@style/TextAppearance.Custom.Subtitle2</item>

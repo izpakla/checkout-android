@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="custom_darkgray">#333333</color>
-    <color name="custom_darkgray_alpha32">#CC333333</color>
-    <color name="custom_gray">#8F9499</color>
-    <color name="custom_lightgray">#F0F1F3</color>
-    <color name="custom_blue">#0043AA</color>
-    <color name="custom_red">#FF4800</color>
+    <color name="custom_blue">#1994F1</color>
 </resources>

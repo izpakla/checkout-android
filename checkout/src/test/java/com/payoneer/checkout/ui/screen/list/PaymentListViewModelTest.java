@@ -14,6 +14,7 @@ import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_CODE;
 import static com.payoneer.checkout.redirect.RedirectService.INTERACTION_REASON;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -97,6 +98,8 @@ public class PaymentListViewModelTest {
         assertNotNull(interaction);
         assertEquals(interaction.getCode(), "code");
         assertEquals(interaction.getReason(), "reason");
+        CheckoutResult result = resultContentEvent.getContentIfNotHandled();
+        assertNull(result);
     }
 
     @Test
@@ -117,6 +120,8 @@ public class PaymentListViewModelTest {
         assertNotNull(interaction);
         assertEquals(interaction.getCode(), "ABORT");
         assertEquals(interaction.getReason(), "CLIENTSIDE_ERROR");
+        CheckoutResult result = resultContentEvent.getContentIfNotHandled();
+        assertNull(result);
     }
 
     @Test

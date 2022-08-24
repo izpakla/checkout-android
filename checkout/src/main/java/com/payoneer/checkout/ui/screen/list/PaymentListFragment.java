@@ -53,7 +53,6 @@ public final class PaymentListFragment extends Fragment {
 
     public PaymentListFragment() {
         super(R.layout.fragment_payment_list);
-
     }
 
     @Override

@@ -26,6 +26,9 @@ import java.util.Objects;
 
 import com.payoneer.checkout.core.PaymentInputType;
 import com.payoneer.checkout.model.ApplicableNetwork;
+import com.payoneer.checkout.model.Checkbox;
+import com.payoneer.checkout.model.CheckboxMode;
+import com.payoneer.checkout.model.ExtraElement;
 import com.payoneer.checkout.model.InputElement;
 import com.payoneer.checkout.model.ListResult;
 import com.payoneer.checkout.model.Networks;
@@ -36,6 +39,7 @@ import com.payoneer.checkout.model.ProviderParameters;
 import com.payoneer.checkout.model.Redirect;
 
 import android.content.res.Resources;
+import android.text.TextUtils;
 import android.view.View;
 
 /**
@@ -400,5 +404,28 @@ public final class PaymentUtils {
      */
     public static void setTestId(View view, String type, String name) {
         view.setContentDescription(type + "." + name);
+    }
+
+    /**
+     * Get the required message formatted properly
+     *
+     * @param extraElement is the element being bound on screen
+     * @return the required message for a checkbox
+     */
+    public static String getCheckboxRequiredMessage(final ExtraElement extraElement) {
+        Checkbox checkbox = extraElement.getCheckbox();
+        if (checkbox == null) {
+            return null;
+        }
+        switch (checkbox.getMode()) {
+            case CheckboxMode.REQUIRED:
+            case CheckboxMode.REQUIRED_PRESELECTED:
+                String requiredMessage = checkbox.getRequiredMessage();
+                boolean isRequiredMessageEmpty = TextUtils.isEmpty(requiredMessage);
+                String fallbackMessage = extraElement.getName() + ".requiredMessage";
+                return isRequiredMessageEmpty ? fallbackMessage : requiredMessage;
+            default:
+                return null;
+        }
     }
 }

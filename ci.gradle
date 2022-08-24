@@ -63,6 +63,10 @@ task uploadExampleCheckoutToAppLive() {
     uploadToAppLive.mustRunAfter(deleteFromAppLive)
 }
 
+task deleteExampleCheckoutFromAppLive() {
+    dependsOn ':example-checkout:deleteFromAppLive'
+}
+
 task testExampleCheckoutOnAppAutomate() {
     dependsOn ':example-checkout:testOnAppAutomate'
 }

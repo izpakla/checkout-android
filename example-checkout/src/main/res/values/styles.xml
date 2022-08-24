@@ -57,7 +57,7 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.Custom.TextInputLayout</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Custom.SmallComponent</item>
         <item name="errorIconDrawable">@null</item>
-        <item name="android:textColorHint">@color/custom_darkgray_alpha32</item>
+        <item name="android:textColorHint">@color/pm_gray_dark</item>
         <item name="helperTextTextColor">?attr/colorPrimary</item>
         <item name="endIconTint">@color/custom_filled_icon_tint</item>
         <item name="boxStrokeColor">@color/custom_textinputlayout_stroke_color</item>

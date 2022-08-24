@@ -14,6 +14,7 @@ import static com.payoneer.checkout.model.PaymentMethod.ONLINE_BANK_TRANSFER;
 import static com.payoneer.checkout.model.PaymentMethod.WALLET;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
@@ -84,44 +85,114 @@ public class AccountMaskUtilsTest {
     }
 
     @Test
-    public void given_past_date_return_expired_true() {
-        AccountMask accountMask = createAccountMask(12, 2021);
-
+    public void isExpired_zero_month_return_expired_false() {
+        AccountMask accountMask = createAccountMask(0, 2021);
         boolean isExpired = AccountMaskUtils.isExpired(accountMask);
+        assertFalse(isExpired);
+    }
 
+    @Test
+    public void isExpired_zero_year_return_expired_false() {
+        AccountMask accountMask = createAccountMask(1, 0);
+        boolean isExpired = AccountMaskUtils.isExpired(accountMask);
+        assertFalse(isExpired);
+    }
+
+    @Test
+    public void isExpired_zero_date_return_expired_false() {
+        AccountMask accountMask = createAccountMask(0, 0);
+        boolean isExpired = AccountMaskUtils.isExpired(accountMask);
+        assertFalse(isExpired);
+    }
+
+    @Test
+    public void isExpired_past_date_return_expired_true() {
+        AccountMask accountMask = createAccountMask(12, 2021);
+        boolean isExpired = AccountMaskUtils.isExpired(accountMask);
         assertTrue(isExpired);
     }
 
     @Test
-    public void given_no_date_return_false() {
-        AccountMask accountMask = createAccountMask(null, null);
-
-        boolean isExpired = AccountMaskUtils.isExpired(accountMask);
-
-        assertFalse(isExpired);
-    }
-
-    @Test
-    public void given_future_date_return_expired_false() {
+    public void isExpired_future_date_return_expired_false() {
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR) + 10;
         AccountMask accountMask = createAccountMask(1, year);
-
         boolean isExpired = AccountMaskUtils.isExpired(accountMask);
-
         assertFalse(isExpired);
     }
 
     @Test
-    public void given_current_date_return_expired_false() {
+    public void isExpired_null_date_return_false() {
+        AccountMask accountMask = createAccountMask(null, null);
+        boolean isExpired = AccountMaskUtils.isExpired(accountMask);
+        assertFalse(isExpired);
+    }
+
+    @Test
+    public void isDateExpired_past_date_return_expired_true() {
+        boolean isDateExpired = AccountMaskUtils.isDateExpired(12, 2021);
+        assertTrue(isDateExpired);
+    }
+
+    @Test
+    public void isDateExpired_future_date_return_expired_false() {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR) + 10;
+        boolean isDateExpired = AccountMaskUtils.isDateExpired(1, year);
+        assertFalse(isDateExpired);
+    }
+
+    @Test
+    public void isDateExpired_next_month_return_expired_false() {
+        Calendar cal = Calendar.getInstance();
+        cal.roll(Calendar.MONTH, true);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        boolean isDateExpired = AccountMaskUtils.isDateExpired(month, year);
+        assertFalse(isDateExpired);
+    }
+
+    @Test
+    public void isDateExpired_previous_month_return_expired_true() {
+        Calendar cal = Calendar.getInstance();
+        cal.roll(Calendar.MONTH, false);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        boolean isDateExpired = AccountMaskUtils.isDateExpired(month, year);
+        assertTrue(isDateExpired);
+    }
+
+    @Test
+    public void isDateExpired_current_date_return_expired_false() {
+        Calendar cal = Calendar.getInstance();
+        int curMonth = cal.get(Calendar.MONTH) + 1;
+        int curYear = cal.get(Calendar.YEAR);
+        boolean isDateExpired = AccountMaskUtils.isDateExpired(curMonth, curYear);
+        assertFalse(isDateExpired);
+    }
+
+    @Test
+    public void getExpiryDateString_valid_expiryDate() {
         Calendar cal = Calendar.getInstance();
         int curMonth = cal.get(Calendar.MONTH) + 1;
         int curYear = cal.get(Calendar.YEAR);
         AccountMask accountMask = createAccountMask(curMonth, curYear);
+        String expiryDate = AccountMaskUtils.getExpiryDateString(accountMask);
+        assertEquals("08 / 22", expiryDate);
+    }
 
-        boolean isExpired = AccountMaskUtils.isExpired(accountMask);
+    @Test
+    public void getExpiryDateString_invalid_expiryMonth() {
+        AccountMask accountMask = createAccountMask(0, 2022);
+        String expiryDate = AccountMaskUtils.getExpiryDateString(accountMask);
+        assertNull(expiryDate);
+    }
 
-        assertFalse(isExpired);
+    @Test
+    public void getExpiryDateString_invalid_expiryYear() {
+        AccountMask accountMask = createAccountMask(1, 0);
+        String expiryDate = AccountMaskUtils.getExpiryDateString(accountMask);
+        assertNull(expiryDate);
     }
 
     private AccountMask createAccountMask(final Integer month, final Integer year) {

@@ -20,10 +20,6 @@ public class ContentEvent<T> {
         this.content = content;
     }
 
-    public boolean hasBeenHandled() {
-        return hasBeenHandled;
-    }
-
     public T getContentIfNotHandled() {
         if (hasBeenHandled) {
             return null;

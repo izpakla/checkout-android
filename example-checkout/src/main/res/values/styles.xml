@@ -53,11 +53,10 @@
         <item name="strokeColor">@color/custom_card_stroke_color</item>
     </style>
 
-    <style name="Widget.Custom.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+    <style name="Widget.Custom.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.Custom.TextInputLayout</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Custom.SmallComponent</item>
         <item name="errorIconDrawable">@null</item>
-        <item name="boxBackgroundColor">@color/custom_lightgray</item>
         <item name="android:textColorHint">@color/custom_darkgray_alpha32</item>
         <item name="helperTextTextColor">?attr/colorPrimary</item>
         <item name="endIconTint">@color/custom_filled_icon_tint</item>
@@ -67,7 +66,7 @@
     <style name="ThemeOverlay.Custom.TextInputLayout" parent="">
         <item name="textAppearanceSubtitle1">@style/TextAppearance.Custom.Body1</item>
         <item name="android:textColorPrimary">?attr/colorOnBackground</item>
-        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.FilledBox</item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox</item>
     </style>
 
     <style name="Widget.Custom.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">

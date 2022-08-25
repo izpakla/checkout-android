@@ -5,4 +5,4 @@ minimum effort from you and your team, and without requiring a high level of PCI
 For information about integrating the Android Checkout SDK into your app, visit
 the [documentation portal](https://checkoutdocs.payoneer.com/docs/checkout-android-sdk).
 
-<img src="docs/payment_methods.png" width="33%"/><img src="docs/card.png" width="33%"/>
+<img src="docs/list.png" width="40%"/> <img src="docs/card.png" width="40%"/>

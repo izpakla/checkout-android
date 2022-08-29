@@ -9,7 +9,10 @@
 package com.payoneer.checkout.network;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -28,6 +31,8 @@ import androidx.test.core.app.ApplicationProvider;
  */
 @RunWith(RobolectricTestRunner.class)
 public class ListConnectionTest {
+
+    private final static String HEADER_USER_AGENT = "User-Agent";
 
     /**
      * Create payment session invalid baseUrl
@@ -87,6 +92,33 @@ public class ListConnectionTest {
         HttpURLConnection connection = conn.createDeleteConnection(createTestURL());
         PaymentException paymentException = conn.createPaymentException(2, connection);
         assertEquals(paymentException.getMessage(), "Received HTTP statusCode: " + 2 + "from the Payment API");
+    }
+
+    @Test
+    public void initialiseConnectionTwice_userAgentNotNull() throws IOException {
+        ListConnection conn = createListConnection();
+        BaseConnection.userAgent = null;
+        HttpURLConnection connection = conn.createGetConnection(createTestURL());
+        assertNull(connection.getRequestProperty(HEADER_USER_AGENT));
+    }
+
+    @Test
+    public void withnonNullErrorStream_returnPaymentException() {
+        ListConnection conn = createListConnection();
+        MockHttpURLConnection connection = new MockHttpURLConnection(createTestURL());
+        byte[] errorStream = { 1, 2 };
+        connection.setErrorStream(new ByteArrayInputStream(errorStream));
+        connection.setContentType("application/json");
+        PaymentException paymentException = conn.createPaymentException(2, connection);
+        assertEquals(paymentException.getMessage(), "Received HTTP statusCode: " + 2 + "from the Payment API");
+    }
+
+    @Test
+    public void withThrowable_createPaymentException() {
+        ListConnection conn = createListConnection();
+        PaymentException paymentException = conn.createPaymentException(new IllegalArgumentException("Some message"), false);
+        assertEquals(paymentException.getCause().getMessage(), "Some message");
+        assertFalse(paymentException.getNetworkFailure());
     }
 
     private ListConnection createListConnection() {

@@ -33,4 +33,10 @@ public class PaymentConnectionTest {
         conn.initialize(ApplicationProvider.getApplicationContext());
         conn.postOperation(null);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void createDeleteConnection_nullAccount_exception() throws PaymentException {
+        PaymentConnection conn = new PaymentConnection();
+        conn.deleteAccount(null);
+    }
 }

@@ -8,6 +8,10 @@
 
 package com.payoneer.checkout.network;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -67,6 +71,22 @@ public class ListConnectionTest {
     public void getListResult_invalidURL_IllegalArgumentException() throws PaymentException {
         ListConnection conn = createListConnection();
         conn.getListResult(null);
+    }
+
+    @Test
+    public void createPostPaymentException_nullErrorStream_returnPaymentException() throws IOException {
+        ListConnection conn = createListConnection();
+        HttpURLConnection connection = conn.createPostConnection(createTestURL());
+        PaymentException paymentException = conn.createPaymentException(2, connection);
+        assertEquals(paymentException.getMessage(), "Received HTTP statusCode: " + 2 + "from the Payment API");
+    }
+
+    @Test
+    public void createDeletePaymentException_nullErrorStream_returnPaymentException() throws IOException {
+        ListConnection conn = createListConnection();
+        HttpURLConnection connection = conn.createDeleteConnection(createTestURL());
+        PaymentException paymentException = conn.createPaymentException(2, connection);
+        assertEquals(paymentException.getMessage(), "Received HTTP statusCode: " + 2 + "from the Payment API");
     }
 
     private ListConnection createListConnection() {

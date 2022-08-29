@@ -33,4 +33,10 @@ public class LocalizationConnectionTest {
         conn.initialize((context));
         conn.loadLocalization(null);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void loadLocalizationHolder_nullContext_IllegalArgumentException() {
+        LocalizationConnection conn = new LocalizationConnection();
+        conn.initialize((null));
+    }
 }

@@ -103,7 +103,7 @@ public class ListConnectionTest {
     }
 
     @Test
-    public void initialiseConnectionTwice_userAgentNotNull() throws IOException {
+    public void initialiseConnection_userAgentNull_headerUserAgentNull() throws IOException {
         ListConnection conn = createListConnection();
         BaseConnection.userAgent = null;
         HttpURLConnection connection = conn.createGetConnection(createTestURL());

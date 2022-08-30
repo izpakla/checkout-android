@@ -56,16 +56,18 @@ public class MockHttpURLConnection extends HttpURLConnection {
     }
 
     public void setErrorStream(InputStream is) {
-        assert is != null;
-        if (errorStream == null) {
-            errorStream = is;
+        if (is != null){
+            if (errorStream == null) {
+                errorStream = is;
+            }
         }
     }
 
     public void setContentType(final String contenttype) {
-        assert contenttype != null;
-        if (contentType == null) {
-            this.contentType = contenttype;
+        if (contenttype != null) {
+            if (contentType == null) {
+                this.contentType = contenttype;
+            }
         }
     }
 

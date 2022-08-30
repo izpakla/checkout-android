@@ -23,6 +23,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import com.payoneer.checkout.core.PaymentException;
+import com.payoneer.checkout.model.InteractionCode;
+import com.payoneer.checkout.model.InteractionReason;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -33,7 +35,12 @@ import androidx.test.core.app.ApplicationProvider;
 public class ListConnectionTest {
 
     private final static String HEADER_USER_AGENT = "User-Agent";
-
+    private final byte[] errorStream =
+        { 123, 34, 114, 101, 115, 117, 108, 116, 73, 110, 102, 111, 34, 58, 34, 114, 101, 115, 117, 108, 116, 73, 110, 102, 111, 34, 44, 34,
+            105, 110, 116, 101, 114, 97, 99, 116, 105, 111, 110, 34, 58, 123, 34, 99, 111, 100, 101, 34, 58, 34, 65, 66, 79, 82, 84, 34, 44,
+            34, 114, 101, 97, 115, 111, 110, 34, 58, 34, 67, 76, 73, 69, 78, 84, 83, 73, 68, 69, 95, 69, 82, 82, 79, 82, 34, 125, 125 };
+    private final byte[] invalidErrorStream = { 1, 2 };
+    private final byte[] emptyErrorStream = { };
     /**
      * Create payment session invalid baseUrl
      *
@@ -103,14 +110,55 @@ public class ListConnectionTest {
     }
 
     @Test
-    public void withnonNullErrorStream_returnPaymentException() {
+    public void withNonNullInvalidErrorStream_returnPaymentException() {
         ListConnection conn = createListConnection();
         MockHttpURLConnection connection = new MockHttpURLConnection(createTestURL());
-        byte[] errorStream = { 1, 2 };
-        connection.setErrorStream(new ByteArrayInputStream(errorStream));
+        connection.setErrorStream(new ByteArrayInputStream(invalidErrorStream));
         connection.setContentType("application/json");
         PaymentException paymentException = conn.createPaymentException(2, connection);
         assertEquals(paymentException.getMessage(), "Received HTTP statusCode: " + 2 + "from the Payment API");
+    }
+
+    @Test
+    public void withEmptyErrorStream_returnPaymentException() {
+        ListConnection conn = createListConnection();
+        MockHttpURLConnection connection = new MockHttpURLConnection(createTestURL());
+        connection.setErrorStream(new ByteArrayInputStream(emptyErrorStream));
+        connection.setContentType("application/json");
+        PaymentException paymentException = conn.createPaymentException(2, connection);
+        assertEquals(paymentException.getMessage(), "Received HTTP statusCode: " + 2 + "from the Payment API");
+    }
+
+    @Test
+    public void withEmptyContentType_returnPaymentException() {
+        ListConnection conn = createListConnection();
+        MockHttpURLConnection connection = new MockHttpURLConnection(createTestURL());
+        connection.setErrorStream(new ByteArrayInputStream(invalidErrorStream));
+        connection.setContentType("");
+        PaymentException paymentException = conn.createPaymentException(2, connection);
+        assertEquals(paymentException.getMessage(), "Received HTTP statusCode: " + 2 + "from the Payment API");
+    }
+
+    @Test
+    public void withNullContentType_returnPaymentException() {
+        ListConnection conn = createListConnection();
+        MockHttpURLConnection connection = new MockHttpURLConnection(createTestURL());
+        connection.setErrorStream(new ByteArrayInputStream(invalidErrorStream));
+        connection.setContentType(null);
+        PaymentException paymentException = conn.createPaymentException(2, connection);
+        assertEquals(paymentException.getMessage(), "Received HTTP statusCode: " + 2 + "from the Payment API");
+    }
+
+    @Test
+    public void withValidNonNullErrorStream_returnPaymentException() {
+        ListConnection conn = createListConnection();
+        MockHttpURLConnection connection = new MockHttpURLConnection(createTestURL());
+        connection.setErrorStream(new ByteArrayInputStream(errorStream));
+        connection.setContentType("application/json");
+        PaymentException paymentException = conn.createPaymentException(2, connection);
+        assertEquals(paymentException.getErrorInfo().getResultInfo(), "resultInfo");
+        assertEquals(paymentException.getErrorInfo().getInteraction().getReason(), InteractionReason.CLIENTSIDE_ERROR);
+        assertEquals(paymentException.getErrorInfo().getInteraction().getCode(), InteractionCode.ABORT);
     }
 
     @Test

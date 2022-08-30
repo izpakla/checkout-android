@@ -40,7 +40,8 @@ public class ListConnectionTest {
             105, 110, 116, 101, 114, 97, 99, 116, 105, 111, 110, 34, 58, 123, 34, 99, 111, 100, 101, 34, 58, 34, 65, 66, 79, 82, 84, 34, 44,
             34, 114, 101, 97, 115, 111, 110, 34, 58, 34, 67, 76, 73, 69, 78, 84, 83, 73, 68, 69, 95, 69, 82, 82, 79, 82, 34, 125, 125 };
     private final byte[] invalidErrorStream = { 1, 2 };
-    private final byte[] emptyErrorStream = { };
+    private final byte[] emptyErrorStream = {};
+
     /**
      * Create payment session invalid baseUrl
      *

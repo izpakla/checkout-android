@@ -13,6 +13,9 @@
     <string name="messages_checkbox_forced_title">Oops!</string>
     <string name="messages_checkbox_forced_text">This option is mandatory and cannot be deselected.</string>
 
+    <string name="messages_button_charge_amount">Pay ${amount}</string>
+    <string name="messages_button_payout_amount">Credit ${amount}</string>
+
     <string name="button_cancel_label">Cancel</string>
     <string name="button_retry_label">Retry</string>
     <string name="button_ok_label">OK</string>

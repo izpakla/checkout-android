@@ -18,6 +18,7 @@ import com.payoneer.checkout.model.AccountMask;
 import com.payoneer.checkout.model.AccountRegistration;
 import com.payoneer.checkout.model.ExtraElements;
 import com.payoneer.checkout.model.InputElement;
+import com.payoneer.checkout.ui.model.button.ActionButton;
 import com.payoneer.checkout.util.AccountMaskUtils;
 import com.payoneer.checkout.util.PaymentUtils;
 
@@ -26,14 +27,14 @@ import com.payoneer.checkout.util.PaymentUtils;
  */
 public final class AccountCard extends PaymentCard {
     private final AccountRegistration account;
-    private final String buttonKey;
+    private final ActionButton actionButton;
     private boolean deletable;
     private AccountIcon accountIcon;
 
-    public AccountCard(AccountRegistration account, String buttonKey, ExtraElements extraElements) {
+    public AccountCard(AccountRegistration account, ActionButton actionButton, ExtraElements extraElements) {
         super(extraElements);
         this.account = account;
-        this.buttonKey = buttonKey;
+        this.actionButton = actionButton;
     }
 
     @Override
@@ -92,7 +93,7 @@ public final class AccountCard extends PaymentCard {
 
     @Override
     public String getButton() {
-        return Localization.translate(getNetworkCode(), buttonKey);
+        return actionButton.getButtonLabel(getNetworkCode());
     }
 
     @Override

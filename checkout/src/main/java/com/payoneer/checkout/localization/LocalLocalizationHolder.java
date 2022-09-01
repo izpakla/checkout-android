@@ -9,7 +9,9 @@
 package com.payoneer.checkout.localization;
 
 import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_CANCEL;
+import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_CHARGE_AMOUNT;
 import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_OK;
+import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_PAYOUT_AMOUNT;
 import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_REFRESH;
 import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_RETRY;
 import static com.payoneer.checkout.localization.LocalizationKey.BUTTON_UPDATE_ACCOUNT;
@@ -69,5 +71,8 @@ public final class LocalLocalizationHolder extends MapLocalizationHolder {
 
         map.put(DIALOG_FORCED_CHECKBOX_MESSAGE_TITLE,context.getString(R.string.messages_checkbox_forced_title));
         map.put(DIALOG_FORCED_CHECKBOX_MESSAGE_TEXT, context.getString(R.string.messages_checkbox_forced_text));
+
+        map.put(BUTTON_CHARGE_AMOUNT, context.getString(R.string.messages_button_charge_amount));
+        map.put(BUTTON_PAYOUT_AMOUNT, context.getString(R.string.messages_button_payout_amount));
     }
 }

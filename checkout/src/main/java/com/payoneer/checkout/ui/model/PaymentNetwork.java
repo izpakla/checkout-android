@@ -16,6 +16,7 @@ import com.payoneer.checkout.core.PaymentLinkType;
 import com.payoneer.checkout.localization.Localization;
 import com.payoneer.checkout.model.ApplicableNetwork;
 import com.payoneer.checkout.model.InputElement;
+import com.payoneer.checkout.ui.model.button.ActionButton;
 import com.payoneer.checkout.util.PaymentUtils;
 
 /**
@@ -24,12 +25,12 @@ import com.payoneer.checkout.util.PaymentUtils;
 public final class PaymentNetwork {
 
     private final ApplicableNetwork network;
-    private final String buttonKey;
+    private final ActionButton actionButton;
     private final RegistrationOptions registrationOptions;
 
-    public PaymentNetwork(ApplicableNetwork network, String buttonKey, RegistrationOptions registrationOptions) {
+    public PaymentNetwork(ApplicableNetwork network, ActionButton actionButton, RegistrationOptions registrationOptions) {
         this.network = network;
-        this.buttonKey = buttonKey;
+        this.actionButton = actionButton;
         this.registrationOptions = registrationOptions;
     }
 
@@ -69,7 +70,7 @@ public final class PaymentNetwork {
     }
 
     public String getButton() {
-        return Localization.translate(getNetworkCode(), buttonKey);
+        return actionButton.getButtonLabel(getNetworkCode());
     }
 
     public RegistrationOptions getRegistrationOptions() {
